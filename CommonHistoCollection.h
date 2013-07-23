@@ -127,7 +127,11 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 		inputHistoCollection.h_jeteta->Fill(inputEventCollection.jet[j]->eta); //fill jet-eta-histogram
 		
 		//find first leading jet in pt
-		if (temp_jet1_pt < inputEventCollection.jet[j]->pt) {temp_jet1index = j; temp_jet1_pt = inputEventCollection.jet[j]->pt;}
+		if (temp_jet1_pt < inputEventCollection.jet[j]->pt){
+			if(temp_jet2_pt < temp_jet1_pt){temp_jet2_pt=temp_jet1_pt; temp_jet2index=temp_jet1_index;} //if second jet has less pt than the hitherto first jet, replace it
+			temp_jet1index = j;
+			temp_jet1_pt = inputEventCollection.jet[j]->pt;
+		}
 		//find second leading jet in pt
                 if ( (temp_jet2_pt < inputEventCollection.jet[j]->pt) && (temp_jet1_pt > inputEventCollection.jet[j]->pt)) {temp_jet2index = j; temp_jet2_pt = inputEventCollection.jet[j]->pt;} 
 		
@@ -195,7 +199,11 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 	 
 	 for(unsigned int t =0;t<inputEventCollection.tau.size();++t){
 	    //find two leading taus in pt
-	    if (temp_tau1_pt < inputEventCollection.tau[t]->pt) {temp_tau1index = t; temp_tau1_pt = inputEventCollection.tau[t]->pt;} 
+	    if (temp_tau1_pt < inputEventCollection.tau[t]->pt) {
+	    	if(temp_tau2_pt < temp_tau1_pt){temp_tau2_pt=temp_tau1_pt; temp_tau2index=temp_tau1_index;} //if second tau has less pt than the hitherto first tau, replace it
+	    	temp_tau1index = t; 
+	    	temp_tau1_pt = inputEventCollection.tau[t]->pt;
+	    } 
             if ( (temp_tau2_pt < inputEventCollection.tau[t]->pt) && ( temp_tau1_pt > inputEventCollection.tau[t]->pt) ) {temp_tau2index = t; temp_tau2_pt = inputEventCollection.tau[t]->pt;} 
 	    
 	    //add up scalar sum of tau pt to ht
