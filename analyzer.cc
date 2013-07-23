@@ -148,11 +148,9 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
        
 		double invmassDiJet = 0.;
 
-		for(unsigned int j1 = 0;j1<inputEventCollection.jet.size();++j1){
+		for(unsigned int j1 = 1;j1<inputEventCollection.jet.size();++j1){
 
-			for (unsigned int j2 = 0;j2<inputEventCollection.jet.size();++j2){
-
-				if (j1 == j2) continue;
+			for (unsigned int j2 = 0;j2<j1;++j2){
 
             			TLorentzVector jet1_4v;
             			TLorentzVector jet2_4v;
