@@ -4,7 +4,6 @@
 // Created:     Fri Apr  5 13:23:28 2013 by mkntanalyzer.py
 // Author:      Daniele Marconi
 //-----------------------------------------------------------------------------
-#include "analyzer.h"
 
 #ifdef PROJECT_NAME
 #include "PhysicsTools/TheNtupleMaker/interface/pdg.h"
@@ -12,10 +11,9 @@
 #include "pdg.h"
 #endif
 
-using namespace std;
+#include "analyzer.h"
 
-// Random message from lv
-// Another random message from lv
+using namespace std;
 
 // Structs useful for Analyzer
 
@@ -114,132 +112,150 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 	// ---------------------
 	// -- fill histograms --
 	// ---------------------	  
-
-          unsigned int temp_jet1index = 99999;
-          unsigned int temp_jet2index = 99999;
-          double temp_jet1_pt = -99999.;
-          double temp_jet2_pt = -99999.;
+	  
+	  
+        //JETS	  
+	  
+	//set indizes and pt-values for jets to default values
+        unsigned int temp_jet1index = 99999;
+        unsigned int temp_jet2index = 99999;	  
+        double temp_jet1_pt = -99999.;
+        double temp_jet2_pt = -99999.;
+	  
+	//set default value for 2-jet-mass
+	double invmassDiJet = 0.;
+        unsigned int temp_jet1index_m = 99999;
+        unsigned int temp_jet2index_m = 99999;
+	TLorentzVector jet1_4v;
+        TLorentzVector jet2_4v;
+	
+	//define ht
+	double ht_jets=0;
 
         //JET SEL
 	for (unsigned int j = 0;j<inputEventCollection.jet.size();++j){
-		inputHistoCollection.h_jetpt->Fill(inputEventCollection.jet[j]->pt);
-		inputHistoCollection.h_jeteta->Fill(inputEventCollection.jet[j]->eta);
+		inputHistoCollection.h_jetpt->Fill(inputEventCollection.jet[j]->pt); //fill jet-pt-histogram
+		inputHistoCollection.h_jeteta->Fill(inputEventCollection.jet[j]->eta); //fill jet-eta-histogram
+		
+		//find first leading jet in pt
 		if (temp_jet1_pt < inputEventCollection.jet[j]->pt) {temp_jet1index = j; temp_jet1_pt = inputEventCollection.jet[j]->pt;}
+		//find second leading jet in pt
                 if ( (temp_jet2_pt < inputEventCollection.jet[j]->pt) && (temp_jet1_pt > inputEventCollection.jet[j]->pt)) {temp_jet2index = j; temp_jet2_pt = inputEventCollection.jet[j]->pt;} 
+		
+		
+		
+		//do all 2-jet-combinations
+		for (unsigned int j2 = 0;j2<j1;++j2){
+ 
+	        	jet1_4v.SetPtEtaPhiE(inputEventCollection.jet[j1]->pt, inputEventCollection.jet[j1]->eta, inputEventCollection.jet[j1]->phi, inputEventCollection.jet[j1]->energy);
+	        	jet2_4v.SetPtEtaPhiE(inputEventCollection.jet[j2]->pt, inputEventCollection.jet[j2]->eta, inputEventCollection.jet[j2]->phi, inputEventCollection.jet[j2]->energy);
+
+            		TLorentzVector dijet_4v = jet1_4v + jet2_4v;
+
+			double temp_invmassDiJet =  dijet_4v.M(); 
+			//find highest 2-jet-inv. mass
+			if (     invmassDiJet < temp_invmassDiJet   ) {invmassDiJet = temp_invmassDiJet; temp_jet1index_m = j1; temp_jet2index_m = j2;}
+
+		}
+		
+		//add up scalar pt to ht
+	        ht_jets+=inputEventCollection.jet[j]->pt;
          }
+	 
 
-          inputHistoCollection.h_njet->Fill( (int)inputEventCollection.jet.size() );
+	 //fill jet count
+         inputHistoCollection.h_njet->Fill( (int)inputEventCollection.jet.size() );
 
+	 //fill jet pt indizes
          if (temp_jet1index < 99999) {
              inputHistoCollection.h_jet1pt->Fill(inputEventCollection.jet[temp_jet1index]->pt);
              inputHistoCollection.h_jet1eta->Fill(inputEventCollection.jet[temp_jet1index]->eta);
           }
-
          if (temp_jet2index < 99999) {
             inputHistoCollection.h_jet2pt->Fill(inputEventCollection.jet[temp_jet2index]->pt);
             inputHistoCollection.h_jet2eta->Fill(inputEventCollection.jet[temp_jet2index]->eta);
          }
 
-         if ( (temp_jet1index < 99999) && (temp_jet2index < 99999) ) {
-       
-		double invmassDiJet = 0.;
 
-		for(unsigned int j1 = 1;j1<inputEventCollection.jet.size();++j1){
+	 //fill 2-jet-event inv. mass and eta-difference
+         if ( (temp_jet1index_m < 99999) && (temp_jet2index_m < 99999) ) {
 
-			for (unsigned int j2 = 0;j2<j1;++j2){
-
-            			TLorentzVector jet1_4v;
-            			TLorentzVector jet2_4v;
- 
-	        		jet1_4v.SetPtEtaPhiE(inputEventCollection.jet[j1]->pt, inputEventCollection.jet[j1]->eta, inputEventCollection.jet[j1]->phi, inputEventCollection.jet[j1]->energy);
-	        		jet2_4v.SetPtEtaPhiE(inputEventCollection.jet[j2]->pt, inputEventCollection.jet[j2]->eta, inputEventCollection.jet[j2]->phi, inputEventCollection.jet[j2]->energy);
-
-            			TLorentzVector dijet_4v = jet1_4v + jet2_4v;
-
-				double temp_invmassDiJet =  dijet_4v.M(); 
-				if (     invmassDiJet < temp_invmassDiJet   ) {invmassDiJet = temp_invmassDiJet; temp_jet1index = j1; temp_jet2index = j2;}
-
-			}
-
-		}
-
-            double deltaeta =  fabs (inputEventCollection.jet[temp_jet1index]->eta - inputEventCollection.jet[temp_jet2index]->eta);
+            double deltaeta =  fabs (inputEventCollection.jet[temp_jet1index_m]->eta - inputEventCollection.jet[temp_jet2index_m]->eta);
             inputHistoCollection.h_dijetinvariantmass ->Fill(invmassDiJet);
             inputHistoCollection.h_dijetdeltaeta ->Fill(deltaeta);
 
          }
 
+	 //fill ht distribution
+	 inputHistoCollection.h_ht -> Fill(ht_jets);
+	 
+//____________________________________________________________________________________________
+
          //TAUS
 
-	          unsigned int temp_tau1index = 99999;
-	          unsigned int temp_tau2index = 99999;
-	          double temp_tau1_pt = -99999.;
-	          double temp_tau2_pt = -99999.;
-	          TLorentzVector tau1_4v;
-	          TLorentzVector tau2_4v;
+         //set indizes and pt-values for taus to default values
+	 unsigned int temp_tau1index = 99999;
+	 unsigned int temp_tau2index = 99999;
+	 double temp_tau1_pt = -99999.;
+	 double temp_tau2_pt = -99999.;
+	 TLorentzVector tau1_4v;
+	 TLorentzVector tau2_4v;
          
-	          for(unsigned int t =0;t<inputEventCollection.tau.size();++t){
-	               if (temp_tau1_pt < inputEventCollection.tau[t]->pt) {temp_tau1index = t; temp_tau1_pt = inputEventCollection.tau[t]->pt;} 
-	               if ( (temp_tau2_pt < inputEventCollection.tau[t]->pt) && ( temp_tau1_pt > inputEventCollection.tau[t]->pt) ) {temp_tau2index = t; temp_tau2_pt = inputEventCollection.tau[t]->pt;} 
-	          }
+	 //set ht of taus to default
+	 ht_jetsPtau=ht_jets;
+	 
+	 for(unsigned int t =0;t<inputEventCollection.tau.size();++t){
+	    //find two leading taus in pt
+	    if (temp_tau1_pt < inputEventCollection.tau[t]->pt) {temp_tau1index = t; temp_tau1_pt = inputEventCollection.tau[t]->pt;} 
+            if ( (temp_tau2_pt < inputEventCollection.tau[t]->pt) && ( temp_tau1_pt > inputEventCollection.tau[t]->pt) ) {temp_tau2index = t; temp_tau2_pt = inputEventCollection.tau[t]->pt;} 
+	    
+	    //add up scalar sum of tau pt to ht
+	    ht_jetsPtau+=inputEventCollection.tau[t]->pt;
+	 }
 
-	         double invmassDiTau = 99999.;
+         //determine leading two tau invariant mass
+	 double invmassDiTau = 99999.;
 
-	         if ( (temp_tau1index < 99999) && (temp_tau2index < 99999) ) {
+	 if ( (temp_tau1index < 99999) && (temp_tau2index < 99999) ) {
 
  
-	            tau1_4v.SetPtEtaPhiE(inputEventCollection.tau[temp_tau1index]->pt, inputEventCollection.tau[temp_tau1index]->eta, inputEventCollection.tau[temp_tau1index]->phi, inputEventCollection.tau[temp_tau1index]->energy);
-	            tau2_4v.SetPtEtaPhiE(inputEventCollection.tau[temp_tau2index]->pt, inputEventCollection.tau[temp_tau2index]->eta, inputEventCollection.tau[temp_tau2index]->phi, inputEventCollection.tau[temp_tau2index]->energy);
+	      tau1_4v.SetPtEtaPhiE(inputEventCollection.tau[temp_tau1index]->pt, inputEventCollection.tau[temp_tau1index]->eta, inputEventCollection.tau[temp_tau1index]->phi, inputEventCollection.tau[temp_tau1index]->energy);
+	      tau2_4v.SetPtEtaPhiE(inputEventCollection.tau[temp_tau2index]->pt, inputEventCollection.tau[temp_tau2index]->eta, inputEventCollection.tau[temp_tau2index]->phi, inputEventCollection.tau[temp_tau2index]->energy);
 
-	            TLorentzVector ditau_4v = tau1_4v + tau2_4v;
+	      TLorentzVector ditau_4v = tau1_4v + tau2_4v;
 
-	            invmassDiTau = ditau_4v.M();
-	         }
+	      invmassDiTau = ditau_4v.M();
+	      inputHistoCollection.h_ditauinvariantmass ->Fill(invmassDiTau);
+	 }
 
-          if (temp_tau1index < 99999) {
-             inputHistoCollection.h_tau1pt->Fill(inputEventCollection.tau[temp_tau1index]->pt);
-             inputHistoCollection.h_tau1eta->Fill(inputEventCollection.tau[temp_tau1index]->eta);
-          }
+	 //fill tau pt and eta
+         if (temp_tau1index < 99999) {
+              inputHistoCollection.h_tau1pt->Fill(inputEventCollection.tau[temp_tau1index]->pt);
+              inputHistoCollection.h_tau1eta->Fill(inputEventCollection.tau[temp_tau1index]->eta);
+         }
+         if (temp_tau2index < 99999) {
+              inputHistoCollection.h_tau2pt->Fill(inputEventCollection.tau[temp_tau2index]->pt);
+              inputHistoCollection.h_tau2eta->Fill(inputEventCollection.tau[temp_tau2index]->eta);
+         }
 
-          if (temp_tau2index < 99999) {
-             inputHistoCollection.h_tau2pt->Fill(inputEventCollection.tau[temp_tau2index]->pt);
-             inputHistoCollection.h_tau2eta->Fill(inputEventCollection.tau[temp_tau2index]->eta);
-          }
-
+         //fill tau charge and  cosdeltaphi
          if ( (temp_tau1index < 99999) && (temp_tau2index < 99999) ) {
 
-            double chargeDiTau = inputEventCollection.tau[temp_tau1index]->charge * inputEventCollection.tau[temp_tau2index]->charge;
-
-            double cosdeltaphiDiTau = cos(tau1_4v.DeltaPhi(tau2_4v));
-            inputHistoCollection.h_ditauinvariantmass ->Fill(invmassDiTau);
-            inputHistoCollection.h_ditaucharge ->Fill(chargeDiTau);
-            inputHistoCollection.h_ditaucosdeltaphi ->Fill(cosdeltaphiDiTau);
+              double chargeDiTau = inputEventCollection.tau[temp_tau1index]->charge * inputEventCollection.tau[temp_tau2index]->charge;
+              double cosdeltaphiDiTau = cos(tau1_4v.DeltaPhi(tau2_4v));
+	      
+              inputHistoCollection.h_ditaucharge ->Fill(chargeDiTau);
+              inputHistoCollection.h_ditaucosdeltaphi ->Fill(cosdeltaphiDiTau);
 
          }
+	
+	//fill ht with taus included
+	inputHistoCollection.h_ht_withtau -> Fill(ht_jetsPtau);
 
         // MET
 
         inputHistoCollection.h_met -> Fill(inputEventCollection.met[0]->pt);
 
-       // HT NEEDS TO BE DEFINED AND IMPLEMENTED!!!!!!!!!!
-	TLorentzVector ht_4v;
-
-	for(unsigned int j = 0;j<inputEventCollection.jet.size();++j){
-		TLorentzVector tempjet_4v;
-	        tempjet_4v.SetPtEtaPhiE(inputEventCollection.jet[j]->pt, inputEventCollection.jet[j]->eta, inputEventCollection.jet[j]->phi, inputEventCollection.jet[j]->energy);
-		ht_4v += tempjet_4v;
-	}
-
-	inputHistoCollection.h_ht -> Fill(ht_4v.Pt());
-
-	for(unsigned int t = 0;t<inputEventCollection.tau.size();++t){
-
-		TLorentzVector temptau_4v;
-		temptau_4v.SetPtEtaPhiE(inputEventCollection.tau[t]->pt, inputEventCollection.tau[t]->eta, inputEventCollection.tau[t]->phi, inputEventCollection.tau[t]->energy);
-		ht_4v += temptau_4v;
-	}
-
-	inputHistoCollection.h_ht_withtau -> Fill(ht_4v.Pt());
 } 
 
 //-----------------------------------------------------------------------------
