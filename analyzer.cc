@@ -125,19 +125,15 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 		inputHistoCollection.h_jetpt->Fill(inputEventCollection.jet[j]->pt);
 		inputHistoCollection.h_jeteta->Fill(inputEventCollection.jet[j]->eta);
 		if (temp_jet1_pt < inputEventCollection.jet[j]->pt) {temp_jet1index = j; temp_jet1_pt = inputEventCollection.jet[j]->pt;}
-	}
+                if ( (temp_jet2_pt < inputEventCollection.jet[j]->pt) && (temp_jet1_pt > inputEventCollection.jet[j]->pt)) {temp_jet2index = j; temp_jet2_pt = inputEventCollection.jet[j]->pt;} 
+         }
 
           inputHistoCollection.h_njet->Fill( (int)inputEventCollection.jet.size() );
 
-          if (temp_jet1index < 99999) {
+         if (temp_jet1index < 99999) {
              inputHistoCollection.h_jet1pt->Fill(inputEventCollection.jet[temp_jet1index]->pt);
              inputHistoCollection.h_jet1eta->Fill(inputEventCollection.jet[temp_jet1index]->eta);
           }
-
-         for(unsigned int j = 0;j<inputEventCollection.jet.size();++j){
-            if (j == temp_jet1index) continue;
-            if ((temp_jet2_pt < inputEventCollection.jet[j]->pt) && (temp_jet1_pt > inputEventCollection.jet[j]->pt)) {temp_jet2index = j; temp_jet2_pt = inputEventCollection.jet[j]->pt;} 
-         }
 
          if (temp_jet2index < 99999) {
             inputHistoCollection.h_jet2pt->Fill(inputEventCollection.jet[temp_jet2index]->pt);
@@ -184,9 +180,6 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
          
 	          for(unsigned int t =0;t<inputEventCollection.tau.size();++t){
 	               if (temp_tau1_pt < inputEventCollection.tau[t]->pt) {temp_tau1index = t; temp_tau1_pt = inputEventCollection.tau[t]->pt;} 
-	          }
-
-	          for(unsigned int t =0;t<inputEventCollection.tau.size();++t){
 	               if ( (temp_tau2_pt < inputEventCollection.tau[t]->pt) && ( temp_tau1_pt > inputEventCollection.tau[t]->pt) ) {temp_tau2index = t; temp_tau2_pt = inputEventCollection.tau[t]->pt;} 
 	          }
 
