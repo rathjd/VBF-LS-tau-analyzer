@@ -246,8 +246,8 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 	}
 
 	inputHistoCollection.h_ht_withtau -> Fill(ht_4v.Pt(),weight);
-} 
-
+}
+ 
 //-----------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
@@ -417,8 +417,8 @@ int main(int argc, char** argv)
 
           // jet baseline selection
 	  for(unsigned int j = 0;j<jet.size();++j){
-	    if(!(      jet[j].pt >= 15.                                                                      )) continue;
-	    if(!(      fabs(jet[j].eta) <= 2.5                                                               )) continue;
+	    if(!(      jet[j].pt >= 45.                                                                      )) continue;
+	    if(!(      fabs(jet[j].eta) <= 2.1                                                               )) continue;
 	    JetLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	  }
 
@@ -671,9 +671,7 @@ int main(int argc, char** argv)
 	         myHistoColl_CR1.h_count->Fill("DiTauInaviantMassCut",eventweight_2tau);
  
 	         //DiTauSignCut
-	         int chargeDiTau = mainObjectSelectionCollection.tau[temp_tau1index]->charge * mainObjectSelectionCollection.tau[temp_tau2index]->charge;
-	         if(!(                          chargeDiTau < 0.                                          )) break; //NOW REQUIRING OPPOSITE SIGN
-	         myHistoColl_CR1.h_count->Fill("DiTauSignCut",eventweight_2tau);
+	         myHistoColl_CR1.h_count->Fill("DiTauSignCut",eventweight_2tau);                           //NO CHARGE REQUIREMENTS
 		 fillHistoCollection (myHistoColl_CR1, mainObjectSelectionCollection,eventweight_2tau);
 
                  break;
