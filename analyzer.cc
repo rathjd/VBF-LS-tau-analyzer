@@ -130,7 +130,7 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
         TLorentzVector jet2_4v;
 	
 	//define ht
-	double ht_jets=0;
+	double ht_jets=0.;
 
         //JET SEL
 	for (unsigned int j = 0;j<inputEventCollection.jet.size();++j){
@@ -145,16 +145,16 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 		
 		
 		//do all 2-jet-combinations
-		for (unsigned int j2 = 0;j2<j1;++j2){
+		for (unsigned int j2 = 0;j2<j;++j2){
  
-	        	jet1_4v.SetPtEtaPhiE(inputEventCollection.jet[j1]->pt, inputEventCollection.jet[j1]->eta, inputEventCollection.jet[j1]->phi, inputEventCollection.jet[j1]->energy);
+	        	jet1_4v.SetPtEtaPhiE(inputEventCollection.jet[j]->pt, inputEventCollection.jet[j]->eta, inputEventCollection.jet[j]->phi, inputEventCollection.jet[j]->energy);
 	        	jet2_4v.SetPtEtaPhiE(inputEventCollection.jet[j2]->pt, inputEventCollection.jet[j2]->eta, inputEventCollection.jet[j2]->phi, inputEventCollection.jet[j2]->energy);
 
             		TLorentzVector dijet_4v = jet1_4v + jet2_4v;
 
 			double temp_invmassDiJet =  dijet_4v.M(); 
 			//find highest 2-jet-inv. mass
-			if (     invmassDiJet < temp_invmassDiJet   ) {invmassDiJet = temp_invmassDiJet; temp_jet1index_m = j1; temp_jet2index_m = j2;}
+			if (     invmassDiJet < temp_invmassDiJet   ) {invmassDiJet = temp_invmassDiJet; temp_jet1index_m = j; temp_jet2index_m = j2;}
 
 		}
 		
@@ -202,7 +202,7 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 	 TLorentzVector tau2_4v;
          
 	 //set ht of taus to default
-	 ht_jetsPtau=ht_jets;
+	 double ht_jetsPtau=ht_jets;
 	 
 	 for(unsigned int t =0;t<inputEventCollection.tau.size();++t){
 	    //find two leading taus in pt
