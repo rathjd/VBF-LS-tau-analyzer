@@ -96,7 +96,7 @@ struct MyHistoCollection {
 	}
 };
 
-void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollection inputEventCollection) {
+void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollection inputEventCollection, double weight) {
 
 	// ---------------------
 	// -- fill histograms --
@@ -123,12 +123,12 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 
         //JET SEL
 	for (unsigned int j = 0;j<inputEventCollection.jet.size();++j){
-		inputHistoCollection.h_jetpt->Fill(inputEventCollection.jet[j]->pt); //fill jet-pt-histogram
-		inputHistoCollection.h_jeteta->Fill(inputEventCollection.jet[j]->eta); //fill jet-eta-histogram
+		inputHistoCollection.h_jetpt->Fill(inputEventCollection.jet[j]->pt,weight); //fill jet-pt-histogram
+		inputHistoCollection.h_jeteta->Fill(inputEventCollection.jet[j]->eta,weight); //fill jet-eta-histogram
 		
 		//find first leading jet in pt
 		if (temp_jet1_pt < inputEventCollection.jet[j]->pt){
-			if(temp_jet2_pt < temp_jet1_pt){temp_jet2_pt=temp_jet1_pt; temp_jet2index=temp_jet1_index;} //if second jet has less pt than the hitherto first jet, replace it
+			if(temp_jet2_pt < temp_jet1_pt){temp_jet2_pt=temp_jet1_pt; temp_jet2index=temp_jet1index;} //if second jet has less pt than the hitherto first jet, replace it
 			temp_jet1index = j;
 			temp_jet1_pt = inputEventCollection.jet[j]->pt;
 		}
@@ -157,16 +157,16 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 	 
 
 	 //fill jet count
-         inputHistoCollection.h_njet->Fill( (int)inputEventCollection.jet.size() );
+         inputHistoCollection.h_njet->Fill( (int)inputEventCollection.jet.size(),weight );
 
 	 //fill jet pt indizes
          if (temp_jet1index < 99999) {
-             inputHistoCollection.h_jet1pt->Fill(inputEventCollection.jet[temp_jet1index]->pt);
-             inputHistoCollection.h_jet1eta->Fill(inputEventCollection.jet[temp_jet1index]->eta);
+             inputHistoCollection.h_jet1pt->Fill(inputEventCollection.jet[temp_jet1index]->pt,weight);
+             inputHistoCollection.h_jet1eta->Fill(inputEventCollection.jet[temp_jet1index]->eta,weight);
           }
          if (temp_jet2index < 99999) {
-            inputHistoCollection.h_jet2pt->Fill(inputEventCollection.jet[temp_jet2index]->pt);
-            inputHistoCollection.h_jet2eta->Fill(inputEventCollection.jet[temp_jet2index]->eta);
+            inputHistoCollection.h_jet2pt->Fill(inputEventCollection.jet[temp_jet2index]->pt,weight);
+            inputHistoCollection.h_jet2eta->Fill(inputEventCollection.jet[temp_jet2index]->eta,weight);
          }
 
 
@@ -174,13 +174,13 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
          if ( (temp_jet1index_m < 99999) && (temp_jet2index_m < 99999) ) {
 
             double deltaeta =  fabs (inputEventCollection.jet[temp_jet1index_m]->eta - inputEventCollection.jet[temp_jet2index_m]->eta);
-            inputHistoCollection.h_dijetinvariantmass ->Fill(invmassDiJet);
-            inputHistoCollection.h_dijetdeltaeta ->Fill(deltaeta);
+            inputHistoCollection.h_dijetinvariantmass ->Fill(invmassDiJet,weight);
+            inputHistoCollection.h_dijetdeltaeta ->Fill(deltaeta,weight);
 
          }
 
 	 //fill ht distribution
-	 inputHistoCollection.h_ht -> Fill(ht_jets);
+	 inputHistoCollection.h_ht -> Fill(ht_jets,weight);
 	 
 //____________________________________________________________________________________________
 
@@ -200,7 +200,7 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 	 for(unsigned int t =0;t<inputEventCollection.tau.size();++t){
 	    //find two leading taus in pt
 	    if (temp_tau1_pt < inputEventCollection.tau[t]->pt) {
-	    	if(temp_tau2_pt < temp_tau1_pt){temp_tau2_pt=temp_tau1_pt; temp_tau2index=temp_tau1_index;} //if second tau has less pt than the hitherto first tau, replace it
+	    	if(temp_tau2_pt < temp_tau1_pt){temp_tau2_pt=temp_tau1_pt; temp_tau2index=temp_tau1index;} //if second tau has less pt than the hitherto first tau, replace it
 	    	temp_tau1index = t; 
 	    	temp_tau1_pt = inputEventCollection.tau[t]->pt;
 	    } 
@@ -222,17 +222,17 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 	      TLorentzVector ditau_4v = tau1_4v + tau2_4v;
 
 	      invmassDiTau = ditau_4v.M();
-	      inputHistoCollection.h_ditauinvariantmass ->Fill(invmassDiTau);
+	      inputHistoCollection.h_ditauinvariantmass ->Fill(invmassDiTau,weight);
 	 }
 
 	 //fill tau pt and eta
          if (temp_tau1index < 99999) {
-              inputHistoCollection.h_tau1pt->Fill(inputEventCollection.tau[temp_tau1index]->pt);
-              inputHistoCollection.h_tau1eta->Fill(inputEventCollection.tau[temp_tau1index]->eta);
+              inputHistoCollection.h_tau1pt->Fill(inputEventCollection.tau[temp_tau1index]->pt,weight);
+              inputHistoCollection.h_tau1eta->Fill(inputEventCollection.tau[temp_tau1index]->eta,weight);
          }
          if (temp_tau2index < 99999) {
-              inputHistoCollection.h_tau2pt->Fill(inputEventCollection.tau[temp_tau2index]->pt);
-              inputHistoCollection.h_tau2eta->Fill(inputEventCollection.tau[temp_tau2index]->eta);
+              inputHistoCollection.h_tau2pt->Fill(inputEventCollection.tau[temp_tau2index]->pt,weight);
+              inputHistoCollection.h_tau2eta->Fill(inputEventCollection.tau[temp_tau2index]->eta,weight);
          }
 
          //fill tau charge and  cosdeltaphi
@@ -241,17 +241,17 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
               double chargeDiTau = inputEventCollection.tau[temp_tau1index]->charge * inputEventCollection.tau[temp_tau2index]->charge;
               double cosdeltaphiDiTau = cos(tau1_4v.DeltaPhi(tau2_4v));
 	      
-              inputHistoCollection.h_ditaucharge ->Fill(chargeDiTau);
-              inputHistoCollection.h_ditaucosdeltaphi ->Fill(cosdeltaphiDiTau);
+              inputHistoCollection.h_ditaucharge ->Fill(chargeDiTau,weight);
+              inputHistoCollection.h_ditaucosdeltaphi ->Fill(cosdeltaphiDiTau,weight);
 
          }
 	
 	//fill ht with taus included
-	inputHistoCollection.h_ht_withtau -> Fill(ht_jetsPtau);
+	inputHistoCollection.h_ht_withtau -> Fill(ht_jetsPtau,weight);
 
         // MET
 
-        inputHistoCollection.h_met -> Fill(inputEventCollection.met[0]->pt);
+        inputHistoCollection.h_met -> Fill(inputEventCollection.met[0]->pt,weight);
 
 } 
 
