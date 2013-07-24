@@ -88,6 +88,8 @@ int main(int argc, char** argv)
   // Histogram Collection Init
   //---------------------------------------------------------------------------
 
+	double weight = 1.;
+
 	MyHistoCollection myHistoColl_Skim (ofile.file_, "Skim");
 
 	MyHistoCollection myHistoColl_SignalRegion(ofile.file_, "SignalRegion");
@@ -292,7 +294,7 @@ int main(int argc, char** argv)
 		if(!(             ( (int)baselineObjectSelectionCollection.tau.size() >= 2 )                 )) break;
 		myHistoColl_Skim.h_count->Fill("AtLeast2Loosetau",1);
 
-		fillHistoCollection (myHistoColl_Skim, mainObjectSelectionCollection);
+		fillHistoCollection (myHistoColl_Skim, mainObjectSelectionCollection,weight);
 
 		break;		
 
@@ -446,7 +448,7 @@ int main(int argc, char** argv)
 		myHistoColl_SignalRegion.h_count->Fill("DiJetEtaCut",1);
 
 
-		fillHistoCollection (myHistoColl_SignalRegion, mainObjectSelectionCollection);
+		fillHistoCollection (myHistoColl_SignalRegion, mainObjectSelectionCollection, weight);
 
 		//INVERTED VBF CUT
 		//if((    (leadjetpt >= 75.) && (fabs(leadjeteta)< 5.) && (subleadjetpt >= 50.) && (fabs(subleadjeteta) < 5.) && (passedDiJetDeltaRCut) && (passedDiJetEtaSignCut) && (passedDiJetEtaCut) && (passedDiJetMassCut)   )) continue;
@@ -531,7 +533,7 @@ int main(int argc, char** argv)
 		}
 		if(!(                      (leadjetpt >= 75.) && (fabs(leadjeteta) < 5.)              )) {
 			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
 			break;
 		}
 
@@ -544,7 +546,7 @@ int main(int argc, char** argv)
 		}
 		if(!(                      (subleadjetpt >= 50.) && (fabs(subleadjeteta) < 5.)          )) {
 			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
 			break;
 		}
 
@@ -586,7 +588,7 @@ int main(int argc, char** argv)
 		if (     dealtaRDiJet >= 0.3   ) passedDiJetDeltaRCut = true;
 		if(!(                      passedDiJetDeltaRCut                                       )) {
 			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
 			break;
 		}
 
@@ -594,14 +596,14 @@ int main(int argc, char** argv)
 		if (     invmassDiJet > 700.   ) passedDiJetMassCut = true;
 		if(!(                      passedDiJetMassCut                                         )) {
 			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
 			break;
 		}
 
 		if (     (mainObjectSelectionCollection.jet[jet1index]->eta * mainObjectSelectionCollection.jet[jet2index]->eta ) < 0.         ) passedDiJetEtaSignCut = true;
 		if(!(                      passedDiJetEtaSignCut                                      )) {
 			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
 			break;
 		}
 
@@ -609,7 +611,7 @@ int main(int argc, char** argv)
 
 		if(!(                      passedDiJetEtaCut                                          )) {
 			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
 			break;
 		}
 
@@ -618,7 +620,7 @@ int main(int argc, char** argv)
 		if((    (leadjetpt >= 75.) && (fabs(leadjeteta)< 5.) && (subleadjetpt >= 50.) && (fabs(subleadjeteta) < 5.) && (passedDiJetDeltaRCut) && (passedDiJetEtaSignCut) && (passedDiJetEtaCut) && (passedDiJetMassCut)   )) break;
 		myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
 
-		fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection);
+		fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
 
 
 		break;
@@ -699,7 +701,7 @@ int main(int argc, char** argv)
 		}
 		if(!(                      (leadjetpt >= 75.) && (fabs(leadjeteta) < 5.)              )) {
 			myHistoColl_CR3.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection, weight);
 			break;
 		}
 
@@ -712,7 +714,7 @@ int main(int argc, char** argv)
 		}
 		if(!(                      (subleadjetpt >= 50.) && (fabs(subleadjeteta) < 5.)          )) {
 			myHistoColl_CR3.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection, weight);
 			break;
 		}
 
@@ -754,7 +756,7 @@ int main(int argc, char** argv)
 		if (     dealtaRDiJet >= 0.3   ) passedDiJetDeltaRCut = true;
 		if(!(                      passedDiJetDeltaRCut                                       )) {
 			myHistoColl_CR3.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection, weight);
 			break;
 		}
 
@@ -762,14 +764,14 @@ int main(int argc, char** argv)
 		if (     invmassDiJet > 700.   ) passedDiJetMassCut = true;
 		if(!(                      passedDiJetMassCut                                         )) {
 			myHistoColl_CR3.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection, weight);
 			break;
 		}
 
 		if (     (TauMediumIsoObjectSelectionCollection.jet[jet1index]->eta * TauMediumIsoObjectSelectionCollection.jet[jet2index]->eta ) < 0.         ) passedDiJetEtaSignCut = true;
 		if(!(                      passedDiJetEtaSignCut                                      )) {
 			myHistoColl_CR3.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection, weight);
 			break;
 		}
 
@@ -777,7 +779,7 @@ int main(int argc, char** argv)
 
 		if(!(                      passedDiJetEtaCut                                          )) {
 			myHistoColl_CR3.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection, weight);
 			break;
 		}
 
@@ -786,7 +788,7 @@ int main(int argc, char** argv)
 		if((    (leadjetpt >= 75.) && (fabs(leadjeteta)< 5.) && (subleadjetpt >= 50.) && (fabs(subleadjeteta) < 5.) && (passedDiJetDeltaRCut) && (passedDiJetEtaSignCut) && (passedDiJetEtaCut) && (passedDiJetMassCut)   )) break;
 		myHistoColl_CR3.h_count->Fill("InvertedVBFCut",1);
 
-		fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection);
+		fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection, weight);
 
 
 		break;
@@ -867,7 +869,7 @@ int main(int argc, char** argv)
 		}
 		if(!(                      (leadjetpt >= 75.) && (fabs(leadjeteta) < 5.)              )) {
 			myHistoColl_CR4.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection, weight);
 			break;
 		}
 
@@ -880,7 +882,7 @@ int main(int argc, char** argv)
 		}
 		if(!(                      (subleadjetpt >= 50.) && (fabs(subleadjeteta) < 5.)          )) {
 			myHistoColl_CR4.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection, weight);
 			break;
 		}
 
@@ -922,7 +924,7 @@ int main(int argc, char** argv)
 		if (     dealtaRDiJet >= 0.3   ) passedDiJetDeltaRCut = true;
 		if(!(                      passedDiJetDeltaRCut                                       )) {
 			myHistoColl_CR4.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection, weight);
 			break;
 		}
 
@@ -930,14 +932,14 @@ int main(int argc, char** argv)
 		if (     invmassDiJet > 700.   ) passedDiJetMassCut = true;
 		if(!(                      passedDiJetMassCut                                         )) {
 			myHistoColl_CR4.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection, weight);
 			break;
 		}
 
 		if (     (TauLooseIsoObjectSelectionCollection.jet[jet1index]->eta * TauLooseIsoObjectSelectionCollection.jet[jet2index]->eta ) < 0.         ) passedDiJetEtaSignCut = true;
 		if(!(                      passedDiJetEtaSignCut                                      )) {
 			myHistoColl_CR4.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection, weight);
 			break;
 		}
 
@@ -945,7 +947,7 @@ int main(int argc, char** argv)
 
 		if(!(                      passedDiJetEtaCut                                          )) {
 			myHistoColl_CR4.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection);
+			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection, weight);
 			break;
 		}
 
@@ -954,7 +956,7 @@ int main(int argc, char** argv)
 		if((    (leadjetpt >= 75.) && (fabs(leadjeteta)< 5.) && (subleadjetpt >= 50.) && (fabs(subleadjeteta) < 5.) && (passedDiJetDeltaRCut) && (passedDiJetEtaSignCut) && (passedDiJetEtaCut) && (passedDiJetMassCut)   )) break;
 		myHistoColl_CR4.h_count->Fill("InvertedVBFCut",1);
 
-		fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection);
+		fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection, weight);
 
 
 		break;
@@ -1042,7 +1044,7 @@ int main(int argc, char** argv)
 	         int chargeDiTau = mainObjectSelectionCollection.tau[temp_tau1index]->charge * mainObjectSelectionCollection.tau[temp_tau2index]->charge;
 	         if(!(                          chargeDiTau < 0.                                          )) break; //NOW REQUIRING OPPOSITE SIGN
 	         myHistoColl_CR1.h_count->Fill("DiTauSignCut",1);
-		 fillHistoCollection (myHistoColl_CR1, mainObjectSelectionCollection);
+		 fillHistoCollection (myHistoColl_CR1, mainObjectSelectionCollection, weight);
 
                  break;
         	}        
