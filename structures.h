@@ -10,12 +10,38 @@ struct MassAndIndex {
 	unsigned int first;
 	unsigned int second;
 	double Mass;
+	double dR;
+	int signEta;
+	double dEta;
 	
 	MassAndIndex (const std::string & inputlabel){
 	  label = inputlabel;
 	  first = 99999;
 	  second = 99999;
-	  Mass =0.;
+	  Mass = -1.;
+	  dR = 0.;
+	  signEta = 1;
+	  dEta = 0;
+	}
+};
+
+struct TauProperties {
+	std::string label;
+	unsigned int first;
+	unsigned int second;
+	double Mass;
+	double dR;
+	double cosDphi;
+	int charge;
+	
+	TauProperties (const std::string & inputlabel){
+	  label = inputlabel;
+	  first = 99999;
+	  second = 99999;
+	  Mass = -1.;
+	  dR = 0.;
+	  cosDphi = 1;
+	  charge = -1;
 	}
 };
 
