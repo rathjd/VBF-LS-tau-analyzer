@@ -60,7 +60,7 @@ pair<unsigned int,unsigned int> LeadingTaus(MyEventCollection collection)
   }
   
 //--------------------------
-//2-jet max inv. mass finder
+//2-jet max inv. mass finder and properties of dijet system
 //__________________________
 
 MassAndIndex Inv2jMassIndex(MyEventCollection collection)
@@ -68,7 +68,6 @@ MassAndIndex Inv2jMassIndex(MyEventCollection collection)
     struct MassAndIndex Inv2jMass("Inv2jMass");
     TLorentzVector jet1_4v;
     TLorentzVector jet2_4v; 
-    bool filled=false;
     
     double Mass=0.;
     unsigned int first=99999;
@@ -82,50 +81,57 @@ MassAndIndex Inv2jMassIndex(MyEventCollection collection)
 	    jet2_4v.SetPtEtaPhiE(collection.jet[j2]->pt, collection.jet[j2]->eta, collection.jet[j2]->phi, collection.jet[j2]->energy);
 	    
 	    TLorentzVector dijet_4v = jet1_4v + jet2_4v;
-	    if(Mass < dijet_4v.M()) { filled = true; Mass = dijet_4v.M(); first = j1; second = j2; }
+	    if(Mass < dijet_4v.M()) { Mass = dijet_4v.M(); first = j1; second = j2; }
 	  }
       }
-    if(!filled) Inv2jMass.Mass=-1;
-    else Inv2jMass.Mass=Mass;
-    Inv2jMass.first=first;
-    Inv2jMass.second=second;
-    
+    if(first < 99999 && second < 99999)
+      {
+        double dR=jet1_4v.DeltaR(jet2_4v);
+        int sign=collection.jet[first]->eta*collection.jet[second]->eta;
+        double dEta=fabs(collection.jet[first]->eta - collection.jet[second]->eta);
+        Inv2jMass.Mass=Mass;
+        Inv2jMass.first=first;
+        Inv2jMass.second=second;
+        Inv2jMass.dR=dR;
+        Inv2jMass.signEta=sign;
+        Inv2jMass.dEta=dEta;
+      }    
     return Inv2jMass;
   }
   
 //--------------------------
-//2-tau invariant mass
-//__________________________
+//2-tau system properties
+//__________________________  
 
-double tauMass(MyEventCollection collection, unsigned int t1, unsigned int t2)
+TauProperties Inv2tMassIndex(MyEventCollection collection)
   {
+    struct TauProperties Inv2tMass("Inv2tMass");
     TLorentzVector tau1_4v;
-    TLorentzVector tau2_4v;
+    TLorentzVector tau2_4v; 
+    bool filled=false;
     
-    tau1_4v.SetPtEtaPhiE(collection.tau[t1]->pt, collection.tau[t1]->eta, collection.tau[t1]->phi, collection.tau[t1]->energy);
-    tau2_4v.SetPtEtaPhiE(collection.tau[t2]->pt, collection.tau[t2]->eta, collection.tau[t2]->phi, collection.tau[t2]->energy);//add up scalar pt to ht
+    pair<unsigned int,unsigned int> tauIndex=LeadingTaus(collection);
+    Inv2tMass.first = tauIndex.first;
+    Inv2tMass.second = tauIndex.second;
     
-    TLorentzVector ditau_4v = tau1_4v + tau2_4v;
+    if(tauIndex.first < 99999 && tauIndex.second < 99999)
+      {
+        tau1_4v.SetPtEtaPhiE(collection.tau[tauIndex.first]->pt, collection.tau[tauIndex.first]->eta, collection.tau[tauIndex.first]->phi, collection.tau[tauIndex.first]->energy);
+        tau2_4v.SetPtEtaPhiE(collection.tau[tauIndex.second]->pt, collection.tau[tauIndex.second]->eta, collection.tau[tauIndex.second]->phi, collection.tau[tauIndex.second]->energy);
     
-    return ditau_4v.M();
-  }
-  
-//--------------------------
-//2-tau charge and CosDeltaPhi
-//__________________________
-  
-pair<double,double> ChargeCosDeltaPhi(MyEventCollection collection, unsigned int t1, unsigned int t2)
-  {
-    double charge = collection.tau[t1]->charge * collection.tau[t2]->charge;
+        TLorentzVector ditau_4v = tau1_4v + tau2_4v;
+	
+         double dR=tau1_4v.DeltaR(tau2_4v);
+         int charge = collection.tau[tauIndex.first]->charge * collection.tau[tauIndex.second]->charge;
+         double cosdeltaphiDiTau = cos(tau1_4v.DeltaPhi(tau2_4v));
     
-    TLorentzVector tau1_4v;
-    TLorentzVector tau2_4v;
-    
-    tau1_4v.SetPtEtaPhiE(collection.tau[t1]->pt, collection.tau[t1]->eta, collection.tau[t1]->phi, collection.tau[t1]->energy);
-    tau2_4v.SetPtEtaPhiE(collection.tau[t2]->pt, collection.tau[t2]->eta, collection.tau[t2]->phi, collection.tau[t2]->energy);//add up scalar pt to ht
-    double cosdeltaphiDiTau = cos(tau1_4v.DeltaPhi(tau2_4v));
-    
-    return std::make_pair(charge,cosdeltaphiDiTau);
+         if(!filled) Inv2tMass.Mass = -1;
+         else Inv2tMass.Mass = ditau_4v.M();
+         Inv2tMass.dR = dR;
+         Inv2tMass.charge = charge;
+         Inv2tMass.cosDphi = cosdeltaphiDiTau;
+      }
+    return Inv2tMass;
   }
   
 #endif
