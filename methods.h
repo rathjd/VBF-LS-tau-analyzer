@@ -108,7 +108,6 @@ TauProperties Inv2tMassIndex(MyEventCollection collection)
     struct TauProperties Inv2tMass("Inv2tMass");
     TLorentzVector tau1_4v;
     TLorentzVector tau2_4v; 
-    bool filled=false;
     
     pair<unsigned int,unsigned int> tauIndex=LeadingTaus(collection);
     Inv2tMass.first = tauIndex.first;
@@ -125,8 +124,7 @@ TauProperties Inv2tMassIndex(MyEventCollection collection)
          int charge = collection.tau[tauIndex.first]->charge * collection.tau[tauIndex.second]->charge;
          double cosdeltaphiDiTau = cos(tau1_4v.DeltaPhi(tau2_4v));
     
-         if(!filled) Inv2tMass.Mass = -1;
-         else Inv2tMass.Mass = ditau_4v.M();
+         Inv2tMass.Mass = ditau_4v.M();
          Inv2tMass.dR = dR;
          Inv2tMass.charge = charge;
          Inv2tMass.cosDphi = cosdeltaphiDiTau;
