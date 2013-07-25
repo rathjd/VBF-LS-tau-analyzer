@@ -119,7 +119,7 @@ int main(int argc, char** argv)
 	  // can be set as needed. Call saveSelectedObjects() before a call to
 	  // addEvent if you wish to save only the selected objects.
 	  
-	   fillObjects();
+	  fillObjects();
            
 	  //if(entry%1000==0)
 	  //cout << "--processing entry " << entry << " of " << nevents << endl;
@@ -132,11 +132,11 @@ int main(int argc, char** argv)
 
           if(!(         vertex.size() > 0                                 )) goodVertex = false;
 	  if(goodVertex){
-	    if( goodVertex ) {
-		mainObjectSelectionCollection.goodVertex = true;
-	        TauMediumIsoObjectSelectionCollection.goodVertex = true;
-	        TauLooseIsoObjectSelectionCollection.goodVertex = true;
-	    }
+	    	if( goodVertex ) {
+		  mainObjectSelectionCollection.goodVertex = true;
+	          TauMediumIsoObjectSelectionCollection.goodVertex = true;
+	          TauLooseIsoObjectSelectionCollection.goodVertex = true;
+	    	}
 	  }
 
           //trigger selection
@@ -163,21 +163,21 @@ int main(int argc, char** argv)
 
 	  // muon selection
 	  for(unsigned int m =0;m<muon.size();++m){
-	    if(!(       fabs(muon[m].eta) < 2.4                                        )) continue;
-	    if(!(       muon[m].pt > 20                                                )) continue;
-	    if(!(       muon[m].isGlobalMuon                                           )) continue;
-	    if(!(       muon[m].isTrackerMuon                                          )) continue;
-	    if(!(       muon[m].isPFMuon                                               )) continue;
-	    if(!(       muon[m].numberOfMatchedStations > 1                            )) continue;
-	    if(!((       fabs(muon[m].muonBestTrack_dxy) < 0.2           ))  &&
-                 (       fabs(muon[m]. muonBestTrack_dz) < 0.5                         )) continue;
-	    if(!(       muon[m].globalTrack_normalizedChi2 < 10.                       )) continue;
-	    if(!(       muon[m].globalTrack_hitPattern_numberOfValidMuonHits > 0       )) continue;
-	    if(!(       muon[m].innerTrack_hitPattern_numberOfValidPixelHits > 0       )) continue;
-	    if(!(       muon[m].innerTrack_hitPattern_pixelLayersWithMeasurement > 5   )) continue;
-	    if(!(       muon[m].innerTrack_normalizedChi2 < 1.8                        )) continue;
-	    if(!(       fabs(muon[m].innerTrack_dxy) < 3.                              )) continue;
-	    if(!(       fabs(muon[m].innerTrack_dz) < 30.                              )) continue;
+	    if(!(       fabs(muon[m].eta) < 2.4                                        	)) continue;
+	    if(!(       muon[m].pt > 20                                                	)) continue;
+	    if(!(       muon[m].isGlobalMuon                                           	)) continue;
+	    if(!(       muon[m].isTrackerMuon                                          	)) continue;
+	    if(!(       muon[m].isPFMuon                                               	)) continue;
+	    if(!(       muon[m].numberOfMatchedStations > 1                            	)) continue;
+	    if(!((      fabs(muon[m].muonBestTrack_dxy) < 0.2           ))  &&
+                 (      fabs(muon[m]. muonBestTrack_dz) < 0.5                          	)) continue;
+	    if(!(       muon[m].globalTrack_normalizedChi2 < 10.                       	)) continue;
+	    if(!(       muon[m].globalTrack_hitPattern_numberOfValidMuonHits > 0       	)) continue;
+	    if(!(       muon[m].innerTrack_hitPattern_numberOfValidPixelHits > 0       	)) continue;
+	    if(!(       muon[m].innerTrack_hitPattern_pixelLayersWithMeasurement > 5   	)) continue;
+	    if(!(       muon[m].innerTrack_normalizedChi2 < 1.8                        	)) continue;
+	    if(!(       fabs(muon[m].innerTrack_dxy) < 3.                              	)) continue;
+	    if(!(       fabs(muon[m].innerTrack_dz) < 30.                              	)) continue;
 	    mainObjectSelectionCollection.muon.push_back(&muon[m]);
 	    TauMediumIsoObjectSelectionCollection.muon.push_back(&muon[m]);
 	    TauLooseIsoObjectSelectionCollection.muon.push_back(&muon[m]);
@@ -185,68 +185,68 @@ int main(int argc, char** argv)
 
           // tau main selection
           for(unsigned int t =0;t<tau.size();++t){
-            if(!(          fabs(tau[t].eta) <= 2.1                                     )) continue;
-            if(!(          tau[t].pt >= 45.                                            )) continue;
-            if(!(          tau[t].leadPFChargedHadrCand_pt >= 5.0                      )) continue;
-            if(!(          tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits > 0.5     )) continue;
-            if(!(          tau[t].tauID_againstElectronTightMVA3 > 0.5                )) continue;
-            if(!(          tau[t].tauID_againstMuonTight2 > 0.5                        )) continue;
-            if(!(          (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)                         )) continue;
+            if(!(	      fabs(tau[t].eta) <= 2.1                              	)) continue;
+            if(!(       tau[t].pt >= 45.                                            	)) continue;
+            if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      	)) continue;
+            if(!(       tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits > 0.5   )) continue;
+            if(!(       tau[t].tauID_againstElectronTightMVA3 > 0.5                	)) continue;
+            if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        	)) continue;
+            if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)                         )) continue;
 	    mainObjectSelectionCollection.tau.push_back(&tau[t]);
           }
 
           // tau Medium Iso selection
           for(unsigned int t =0;t<tau.size();++t){
-            if(!(          fabs(tau[t].eta) <= 2.1                                     )) continue;
-            if(!(          tau[t].pt >= 45.                                            )) continue;
-            if(!(          tau[t].leadPFChargedHadrCand_pt >= 5.0                      )) continue;
-            if(!(          tau[t].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5     )) continue;
-            if(!(          tau[t].tauID_againstElectronTightMVA3 > 0.5                )) continue;
-            if(!(          tau[t].tauID_againstMuonTight2 > 0.5                        )) continue;
-            if(!(          (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)                         )) continue;
+            if(!(       fabs(tau[t].eta) <= 2.1                                     	)) continue;
+            if(!(       tau[t].pt >= 45.                                            	)) continue;
+            if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      	)) continue;
+            if(!(       tau[t].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5  )) continue;
+            if(!(       tau[t].tauID_againstElectronTightMVA3 > 0.5                	)) continue;
+            if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        	)) continue;
+            if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)                         )) continue;
 	    TauMediumIsoObjectSelectionCollection.tau.push_back(&tau[t]);
           }
 
           // tau Loose Iso selection
           for(unsigned int t =0;t<tau.size();++t){
-            if(!(          fabs(tau[t].eta) <= 2.1                                     )) continue;
-            if(!(          tau[t].pt >= 45.                                            )) continue;
-            if(!(          tau[t].leadPFChargedHadrCand_pt >= 5.0                      )) continue;
-            if(!(          tau[t].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits > 0.5     )) continue;
-            if(!(          tau[t].tauID_againstElectronTightMVA3 > 0.5                )) continue;
-            if(!(          tau[t].tauID_againstMuonTight2 > 0.5                        )) continue;
-            if(!(          (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)                         )) continue;
+            if(!(       fabs(tau[t].eta) <= 2.1                                     	)) continue;
+            if(!(       tau[t].pt >= 45.                                            	)) continue;
+            if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      	)) continue;
+            if(!(       tau[t].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits > 0.5   )) continue;
+            if(!(       tau[t].tauID_againstElectronTightMVA3 > 0.5                	)) continue;
+            if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        	)) continue;
+            if(!(      	(tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)                         )) continue;
 	    TauLooseIsoObjectSelectionCollection.tau.push_back(&tau[t]);
           }
 
           // tau baseline selection
           for(unsigned int t =0;t<tau.size();++t){
-            if(!(          fabs(tau[t].eta) <= 2.1                                     )) continue;
-            if(!(          tau[t].pt >= 45.                                            )) continue;
-            if(!(          tau[t].leadPFChargedHadrCand_pt >= 5.0                      )) continue;
+            if(!(       fabs(tau[t].eta) <= 2.1                                     	)) continue;
+            if(!(       tau[t].pt >= 45.                                            	)) continue;
+            if(!(      	tau[t].leadPFChargedHadrCand_pt >= 5.0                      	)) continue;
 	    baselineObjectSelectionCollection.tau.push_back(&tau[t]);
           }
 
           // jet selection
 	  // ? id ?
 	  for(unsigned int j = 0;j<jet.size();++j){
-	    if(!(      jet[j].pt >= 50.                                                                      )) continue;
-	    if(!(      fabs(jet[j].eta) <= 5.0                                                               )) continue;
-	    if(!(      (jet[j].neutralHadronEnergy + jet[j].HFHadronEnergy) / jet[j].energy < 0.99           )) continue;
-	    if(!(      jet[j].neutralEmEnergyFraction < 0.99                                                 )) continue;
-	    if(!(      jet[j].numberOfDaughters > 1                                                          )) continue;
+	    if(!(      jet[j].pt >= 50.                                               			)) continue;
+	    if(!(      fabs(jet[j].eta) <= 5.0                                                          )) continue;
+	    if(!(      (jet[j].neutralHadronEnergy + jet[j].HFHadronEnergy) / jet[j].energy < 0.99      )) continue;
+	    if(!(      jet[j].neutralEmEnergyFraction < 0.99                                            )) continue;
+	    if(!(      jet[j].numberOfDaughters > 1                                                     )) continue;
 	    if(fabs(jet[j].eta) < 2.4) {
-               if(!(      jet[j].chargedHadronEnergyFraction > 0                                             )) continue;
-               if(!(      jet[j].chargedEmEnergyFraction < 0.99                                              )) continue;
-               if(!(      jet[j].chargedHadronMultiplicity > 0                                               )) continue;
+            if(!(      jet[j].chargedHadronEnergyFraction > 0                        	)) continue;
+            if(!(      jet[j].chargedEmEnergyFraction < 0.99                            )) continue;
+            if(!(      jet[j].chargedHadronMultiplicity > 0                             )) continue;
             }
             double mindeltaRtaujet = 99999.;  
             for(unsigned int t =0;t<tau.size();++t){
-                   if (!(       tau[t].selected    )) continue;
-                   double temp_mindeltaRtaujet = deltaR(jet[j].eta, jet[j].phi, tau[t].eta, tau[t].phi); 
-                   if (temp_mindeltaRtaujet < mindeltaRtaujet) mindeltaRtaujet = temp_mindeltaRtaujet;
-            }
-            if(!(       mindeltaRtaujet >= 0.3                                                                  )) continue;
+              if (!(       tau[t].selected    						)) continue;
+              double temp_mindeltaRtaujet = deltaR(jet[j].eta, jet[j].phi, tau[t].eta, tau[t].phi); 
+              if (temp_mindeltaRtaujet < mindeltaRtaujet) mindeltaRtaujet = temp_mindeltaRtaujet;
+            } 
+            if(!(       mindeltaRtaujet >= 0.3                                          )) continue;
 	    mainObjectSelectionCollection.jet.push_back(&jet[j]);
 	    TauMediumIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	    TauLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
@@ -254,17 +254,17 @@ int main(int argc, char** argv)
 
 
           // btag selection
-          for(unsigned int j = 0;j<jet.size();++j){
-	    if(!(      jet[j].pt >= 30.                                                                      )) continue;  // Original value 20
-	    if(!(      fabs(jet[j].eta) <= 2.4                                                               )) continue;
-	    if(!(      jet[j].bDiscriminator_combinedSecondaryVertexBJetTags > 0.244                         )) continue;
+       	  for(unsigned int j = 0;j<jet.size();++j){
+	    if(!(      jet[j].pt >= 30.                                                	)) continue;  // Original value 20
+	    if(!(      fabs(jet[j].eta) <= 2.4                                          )) continue;
+	    if(!(      jet[j].bDiscriminator_combinedSecondaryVertexBJetTags > 0.244    )) continue;
             double mindeltaRtaujet = 99999.;  
             for(unsigned int t =0;t<tau.size();++t){
-                   if (!(       tau[t].selected    )) continue;
-                   double temp_mindeltaRtaujet = deltaR(jet[j].eta, jet[j].phi, tau[t].eta, tau[t].phi); 
-                   if (temp_mindeltaRtaujet < mindeltaRtaujet) mindeltaRtaujet = temp_mindeltaRtaujet;
+              if (!(       tau[t].selected    						)) continue;
+              double temp_mindeltaRtaujet = deltaR(jet[j].eta, jet[j].phi, tau[t].eta, tau[t].phi); 
+              if (temp_mindeltaRtaujet < mindeltaRtaujet) mindeltaRtaujet = temp_mindeltaRtaujet;
             }
-            if(!(       (mindeltaRtaujet >= 0.3) &&  (mindeltaRtaujet < 99999.)                              )) continue;
+            if(!(       (mindeltaRtaujet >= 0.3) &&  (mindeltaRtaujet < 99999.)         )) continue;
 	    mainObjectSelectionCollection.bjet.push_back(&jet[j]);
 	    TauMediumIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
 	    TauLooseIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
@@ -275,17 +275,17 @@ int main(int argc, char** argv)
 	  TauMediumIsoObjectSelectionCollection.met.push_back(&met[0]);
 	  TauLooseIsoObjectSelectionCollection.met.push_back(&met[0]);
 
-	//Event Count
-	ofile.count("NoCuts");
+	  //Event Count
+	  ofile.count("NoCuts");
 
-	// ------------------------
-	// -- Skimming Studies   --
-	// ------------------------
+	  // ------------------------
+	  // -- Skimming Studies   --
+	  // ------------------------
 
-	myHistoColl_Skim.h_count->Fill("NoCuts",0);
-	myHistoColl_Skim.h_count->Fill("AtLeast2Loosetau",0);
+	  myHistoColl_Skim.h_count->Fill("NoCuts",0);
+	  myHistoColl_Skim.h_count->Fill("AtLeast2Loosetau",0);
 
-	while (true){
+	  while (true){
 
 		//NoCuts
 		myHistoColl_Skim.h_count->Fill("NoCuts",1);
@@ -328,16 +328,16 @@ int main(int argc, char** argv)
 
 		//Trigger Requirement (ONLY FOR DATA)
 		if (eventhelper_isRealData) {
-			if(!(                     mainObjectSelectionCollection.passedTrigger                   )) break;
+		  if(!(		mainObjectSelectionCollection.passedTrigger		)) break;
 		}
 		myHistoColl_SignalRegion.h_count->Fill("TriggerRequirement",1);
 
 		//AtLeast1tau
-		if(!(             ( (int)mainObjectSelectionCollection.tau.size() >= 1 )                 )) break;
+		if(!(         	( (int)mainObjectSelectionCollection.tau.size() >= 1 ) 	)) break;
 		myHistoColl_SignalRegion.h_count->Fill("AtLeast1tau",1);
 
 		//AtLeast2tau
-		if(!(             ( (int)mainObjectSelectionCollection.tau.size() >= 2 )                 )) break;
+		if(!(          	( (int)mainObjectSelectionCollection.tau.size() >= 2 ) 	)) break;
 		myHistoColl_SignalRegion.h_count->Fill("AtLeast2tau",1);
 
 		unsigned int temp_tau1index = 99999;
@@ -348,32 +348,32 @@ int main(int argc, char** argv)
 		TLorentzVector tau2_4v;
 
 		for(unsigned int t =0;t<mainObjectSelectionCollection.tau.size();++t){
-		        if (temp_tau1_pt < mainObjectSelectionCollection.tau[t]->pt){
-			    	if(temp_tau2_pt < temp_tau1_pt){temp_tau2_pt=temp_tau1_pt; temp_tau2index=temp_tau1index;} //if second jet has less pt than the hitherto first jet, replace it
-                            	temp_tau1index = t;
-                            	temp_tau1_pt = mainObjectSelectionCollection.tau[t]->pt;
-		        }
-		        if ( (temp_tau2_pt < mainObjectSelectionCollection.tau[t]->pt) && ( temp_tau1_pt > mainObjectSelectionCollection.tau[t]->pt) ) {temp_tau2index = t; temp_tau2_pt = mainObjectSelectionCollection.tau[t]->pt;}
+		  if (temp_tau1_pt < mainObjectSelectionCollection.tau[t]->pt){
+		    if(temp_tau2_pt < temp_tau1_pt){temp_tau2_pt=temp_tau1_pt; temp_tau2index=temp_tau1index;} //if second jet has less pt than the hitherto first jet, replace it
+                    temp_tau1index = t;
+                    temp_tau1_pt = mainObjectSelectionCollection.tau[t]->pt;
+		  }
+		  if ( (temp_tau2_pt < mainObjectSelectionCollection.tau[t]->pt) && ( temp_tau1_pt > mainObjectSelectionCollection.tau[t]->pt) ) {temp_tau2index = t; temp_tau2_pt = mainObjectSelectionCollection.tau[t]->pt;}
 		}
 		
 		if (  (temp_tau1index < 99999)  && (temp_tau2index < 99999)  ) {
-			tau1_4v.SetPtEtaPhiE(mainObjectSelectionCollection.tau[temp_tau1index]->pt, mainObjectSelectionCollection.tau[temp_tau1index]->eta, mainObjectSelectionCollection.tau[temp_tau1index]->phi, mainObjectSelectionCollection.tau[temp_tau1index]->energy);
-			tau2_4v.SetPtEtaPhiE(mainObjectSelectionCollection.tau[temp_tau2index]->pt, mainObjectSelectionCollection.tau[temp_tau2index]->eta, mainObjectSelectionCollection.tau[temp_tau2index]->phi, mainObjectSelectionCollection.tau[temp_tau2index]->energy);
+		  tau1_4v.SetPtEtaPhiE(mainObjectSelectionCollection.tau[temp_tau1index]->pt, mainObjectSelectionCollection.tau[temp_tau1index]->eta, mainObjectSelectionCollection.tau[temp_tau1index]->phi, mainObjectSelectionCollection.tau[temp_tau1index]->energy);
+		  tau2_4v.SetPtEtaPhiE(mainObjectSelectionCollection.tau[temp_tau2index]->pt, mainObjectSelectionCollection.tau[temp_tau2index]->eta, mainObjectSelectionCollection.tau[temp_tau2index]->phi, mainObjectSelectionCollection.tau[temp_tau2index]->energy);
 		}
 
 		//DiTauDeltaRCut
 		double DiTauDeltaR = tau1_4v.DeltaR(tau2_4v);
 
-		if(!(           ( DiTauDeltaR > 0.3)                                                     )) break;
+		if(!(           ( DiTauDeltaR > 0.3)                        		)) break;
 		myHistoColl_SignalRegion.h_count->Fill("DiTauDeltaRCut", 1);
 
 	        //DiTauSignCut
 	        int chargeDiTau = mainObjectSelectionCollection.tau[temp_tau1index]->charge * mainObjectSelectionCollection.tau[temp_tau2index]->charge;
-	        if(!(                          chargeDiTau > 0.                                          )) break; //NOW REQUIRING SAME SIGN
+	        if(!(                          chargeDiTau > 0.                        	)) break; //NOW REQUIRING SAME SIGN
 	        myHistoColl_SignalRegion.h_count->Fill("DiTauSignCut",1);
 
 		//NoBTag
-		if(!(            (int)mainObjectSelectionCollection.bjet.size() == 0                     )) break;
+		if(!(            (int)mainObjectSelectionCollection.bjet.size() == 0   	)) break;
 		myHistoColl_SignalRegion.h_count->Fill("NoBTag",1);
 
 		//LeadJet
@@ -518,10 +518,10 @@ int main(int argc, char** argv)
 		if(!(           ( DiTauDeltaR > 0.3)                                                     )) break;
 		myHistoColl_CR2.h_count->Fill("DiTauDeltaRCut", 1);
 
-	         //DiTauSignCut
-	         int chargeDiTau = mainObjectSelectionCollection.tau[temp_tau1index]->charge * mainObjectSelectionCollection.tau[temp_tau2index]->charge;
-	         if(!(                          chargeDiTau > 0.                                          )) break; //NOW REQUIRING SAME SIGN
-	         myHistoColl_CR2.h_count->Fill("DiTauSignCut",1);
+	        //DiTauSignCut
+	        int chargeDiTau = mainObjectSelectionCollection.tau[temp_tau1index]->charge * mainObjectSelectionCollection.tau[temp_tau2index]->charge;
+	        if(!(                          chargeDiTau > 0.                                          )) break; //NOW REQUIRING SAME SIGN
+	        myHistoColl_CR2.h_count->Fill("DiTauSignCut",1);
 
 		//NoBTag
 		if(!(            (int)mainObjectSelectionCollection.bjet.size() == 0                     )) break;
@@ -570,21 +570,20 @@ int main(int argc, char** argv)
 
 		for(unsigned int j1 = 1;j1<mainObjectSelectionCollection.jet.size();++j1){
 
-			for (unsigned int j2 = 0;j2<j1;++j2){
+		  for (unsigned int j2 = 0;j2<j1;++j2){
 
-					TLorentzVector jet1_4v;
-					TLorentzVector jet2_4v;
+		    TLorentzVector jet1_4v;
+		    TLorentzVector jet2_4v;
 
-					jet1_4v.SetPtEtaPhiE(mainObjectSelectionCollection.jet[j1]->pt, mainObjectSelectionCollection.jet[j1]->eta, mainObjectSelectionCollection.jet[j1]->phi, mainObjectSelectionCollection.jet[j1]->energy);
-					jet2_4v.SetPtEtaPhiE(mainObjectSelectionCollection.jet[j2]->pt, mainObjectSelectionCollection.jet[j2]->eta, mainObjectSelectionCollection.jet[j2]->phi, mainObjectSelectionCollection.jet[j2]->energy);
+		    jet1_4v.SetPtEtaPhiE(mainObjectSelectionCollection.jet[j1]->pt, mainObjectSelectionCollection.jet[j1]->eta, mainObjectSelectionCollection.jet[j1]->phi, mainObjectSelectionCollection.jet[j1]->energy);
+		    jet2_4v.SetPtEtaPhiE(mainObjectSelectionCollection.jet[j2]->pt, mainObjectSelectionCollection.jet[j2]->eta, mainObjectSelectionCollection.jet[j2]->phi, mainObjectSelectionCollection.jet[j2]->energy);
 
-					TLorentzVector dijet_4v = jet1_4v + jet2_4v;
+		    TLorentzVector dijet_4v = jet1_4v + jet2_4v;
 
-					double temp_invmassDiJet = dijet_4v.M();
-					if (     invmassDiJet < temp_invmassDiJet   ) {invmassDiJet = temp_invmassDiJet; jet1index = j1; jet2index = j2; dealtaRDiJet = jet1_4v.DeltaR(jet2_4v);}
+		    double temp_invmassDiJet = dijet_4v.M();
+		    if (     invmassDiJet < temp_invmassDiJet   ) {invmassDiJet = temp_invmassDiJet; jet1index = j1; jet2index = j2; dealtaRDiJet = jet1_4v.DeltaR(jet2_4v);}
 
-			}
-
+		  }
 		}
 
 		//DiJetDeltaRCut
