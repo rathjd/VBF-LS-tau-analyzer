@@ -340,57 +340,32 @@ int main(int argc, char** argv)
 		if(!(          	( (int)mainObjectSelectionCollection.tau.size() >= 2 ) 	)) break;
 		myHistoColl_SignalRegion.h_count->Fill("AtLeast2tau",1);
 
-		unsigned int temp_tau1index = 99999;
-		unsigned int temp_tau2index = 99999;
-		double temp_tau1_pt = -99999.;
-		double temp_tau2_pt = -99999.;
-		TLorentzVector tau1_4v;
-		TLorentzVector tau2_4v;
-
-		for(unsigned int t =0;t<mainObjectSelectionCollection.tau.size();++t){
-		  if (temp_tau1_pt < mainObjectSelectionCollection.tau[t]->pt){
-		    if(temp_tau2_pt < temp_tau1_pt){temp_tau2_pt=temp_tau1_pt; temp_tau2index=temp_tau1index;} //if second jet has less pt than the hitherto first jet, replace it
-                    temp_tau1index = t;
-                    temp_tau1_pt = mainObjectSelectionCollection.tau[t]->pt;
-		  }
-		  if ( (temp_tau2_pt < mainObjectSelectionCollection.tau[t]->pt) && ( temp_tau1_pt > mainObjectSelectionCollection.tau[t]->pt) ) {temp_tau2index = t; temp_tau2_pt = mainObjectSelectionCollection.tau[t]->pt;}
-		}
+		//find ditau properties
+		TauProperties Inv2t = Inv2tMassIndex(mainObjectSelectionCollection);
 		
-		if (  (temp_tau1index < 99999)  && (temp_tau2index < 99999)  ) {
-		  tau1_4v.SetPtEtaPhiE(mainObjectSelectionCollection.tau[temp_tau1index]->pt, mainObjectSelectionCollection.tau[temp_tau1index]->eta, mainObjectSelectionCollection.tau[temp_tau1index]->phi, mainObjectSelectionCollection.tau[temp_tau1index]->energy);
-		  tau2_4v.SetPtEtaPhiE(mainObjectSelectionCollection.tau[temp_tau2index]->pt, mainObjectSelectionCollection.tau[temp_tau2index]->eta, mainObjectSelectionCollection.tau[temp_tau2index]->phi, mainObjectSelectionCollection.tau[temp_tau2index]->energy);
-		}
-
+		//cuts on properties of the ditau-system
 		//DiTauDeltaRCut
-		double DiTauDeltaR = tau1_4v.DeltaR(tau2_4v);
-
-		if(!(           ( DiTauDeltaR > 0.3)                        		)) break;
+		if(!(           ( Inv2t.dR > 0.3)                        		)) break;
 		myHistoColl_SignalRegion.h_count->Fill("DiTauDeltaRCut", 1);
 
 	        //DiTauSignCut
-	        int chargeDiTau = mainObjectSelectionCollection.tau[temp_tau1index]->charge * mainObjectSelectionCollection.tau[temp_tau2index]->charge;
-	        if(!(                          chargeDiTau > 0.                        	)) break; //NOW REQUIRING SAME SIGN
+	        if(!(           Inv2t.charge > 0.   		            		)) break; //NOW REQUIRING SAME SIGN
 	        myHistoColl_SignalRegion.h_count->Fill("DiTauSignCut",1);
 
 		//NoBTag
-		if(!(            (int)mainObjectSelectionCollection.bjet.size() == 0   	)) break;
+		if(!(           (int)mainObjectSelectionCollection.bjet.size() == 0   	)) break;
 		myHistoColl_SignalRegion.h_count->Fill("NoBTag",1);
 
-		//LeadJet
-		double leadjetpt = 0.;
-		double leadjeteta = 0.;
-		//SubLeadJet
-		double subleadjetpt = 0.;
-		double subleadjeteta = 0.;
+		//find index of leading jets
+		pair<unsigned int,unsigned int> jetIndex=LeadingJets(mainObjectSelectionCollection);  
 		
-		for(unsigned int j = 0;j<mainObjectSelectionCollection.jet.size();++j){
-		        if (leadjetpt < mainObjectSelectionCollection.jet[j]->pt){
-				if(subleadjetpt < leadjetpt){subleadjetpt=leadjetpt; subleadjeteta=leadjeteta;} //if second jet has less pt than the hitherto first jet, replace it
-                             	leadjeteta =  mainObjectSelectionCollection.jet[j]->eta;
-                             	leadjetpt  =  mainObjectSelectionCollection.jet[j]->pt;
-		        }
-		        if ((subleadjetpt < mainObjectSelectionCollection.jet[j]->pt) && (leadjetpt > mainObjectSelectionCollection.jet[j]->pt)) {subleadjetpt = mainObjectSelectionCollection.jet[j]->pt; subleadjeteta = mainObjectSelectionCollection.jet[j]->eta;}
-		}
+		//LeadJet
+		double leadjetpt = mainObjectSelectionCollection.jet[jetIndex.first]->pt;
+		double leadjeteta = mainObjectSelectionCollection.jet[jetIndex.first]->eta;
+		//SubLeadJet
+		double subleadjetpt = mainObjectSelectionCollection.jet[jetIndex.second]->pt;
+		double subleadjeteta = mainObjectSelectionCollection.jet[jetIndex.second]->eta;
+		
 		if(!(                      (leadjetpt >= 75.) && (fabs(leadjeteta) < 5.)              )) break;
 		myHistoColl_SignalRegion.h_count->Fill("LeadJetCut",1);
 
@@ -403,51 +378,27 @@ int main(int argc, char** argv)
 		bool passedDiJetEtaCut = false;
 		bool passedDiJetMassCut = false;
 		bool passedDiJetDeltaRCut = false;
-
-		unsigned int jet1index = 99999;
-		unsigned int jet2index = 99999;
-
-		double invmassDiJet = 0.;
-		double dealtaRDiJet = 0.;
-
-		for(unsigned int j1 = 1;j1<mainObjectSelectionCollection.jet.size();++j1){
-
-			for (unsigned int j2 = 0;j2<j1;++j2){
-
-					TLorentzVector jet1_4v;
-					TLorentzVector jet2_4v;
-
-					jet1_4v.SetPtEtaPhiE(mainObjectSelectionCollection.jet[j1]->pt, mainObjectSelectionCollection.jet[j1]->eta, mainObjectSelectionCollection.jet[j1]->phi, mainObjectSelectionCollection.jet[j1]->energy);
-					jet2_4v.SetPtEtaPhiE(mainObjectSelectionCollection.jet[j2]->pt, mainObjectSelectionCollection.jet[j2]->eta, mainObjectSelectionCollection.jet[j2]->phi, mainObjectSelectionCollection.jet[j2]->energy);
-
-					TLorentzVector dijet_4v = jet1_4v + jet2_4v;
-
-					double temp_invmassDiJet = dijet_4v.M();
-					if (     invmassDiJet < temp_invmassDiJet   ) {invmassDiJet = temp_invmassDiJet; jet1index = j1; jet2index = j2; dealtaRDiJet = jet1_4v.DeltaR(jet2_4v);}
-
-			}
-
-		}
+		
+		//find max value for 2-jet-mass
+        	MassAndIndex Inv2j = Inv2jMassIndex(mainObjectSelectionCollection);
 
 		//DiJetDeltaRCut
-		if (     dealtaRDiJet >= 0.3   ) passedDiJetDeltaRCut = true;
-		if(!(                      passedDiJetDeltaRCut                                       )) break;
+		if ( Inv2j.dR     >= 0.3      ) passedDiJetDeltaRCut = true;
+		if (!( passedDiJetDeltaRCut          	           )) break;
 		myHistoColl_SignalRegion.h_count->Fill("DiJetDeltaRCut",1);
 
 		//DiJetInvMassCut
-		if (     invmassDiJet > 700.   ) passedDiJetMassCut = true;
-		if(!(                      passedDiJetMassCut                                         )) break;
+		if ( Inv2j.Mass    > 700.    	) passedDiJetMassCut = true;
+		if (!( passedDiJetMassCut 		           )) break;
 		myHistoColl_SignalRegion.h_count->Fill("DiJetInvMassCut",1);
 
-		if (     (mainObjectSelectionCollection.jet[jet1index]->eta * mainObjectSelectionCollection.jet[jet2index]->eta ) < 0.         ) passedDiJetEtaSignCut = true;
-		if(!(                      passedDiJetEtaSignCut                                      )) break;
+		if ( Inv2j.signEta < 0.   )    passedDiJetEtaSignCut = true;
+		if (!( passedDiJetEtaSignCut   			   )) break;
 		myHistoColl_SignalRegion.h_count->Fill("DiJetEtaSignCut",1);
 
-		if (      fabs ( mainObjectSelectionCollection.jet[jet1index]->eta - mainObjectSelectionCollection.jet[jet2index]->eta ) > 4.2   ) passedDiJetEtaCut = true;
-
-		if(!(                      passedDiJetEtaCut                                          )) break;
+		if ( Inv2j.dEta    > 4.2      )    passedDiJetEtaCut = true;
+		if (!( passedDiJetEtaCut       	        	   )) break;
 		myHistoColl_SignalRegion.h_count->Fill("DiJetEtaCut",1);
-
 
 		fillHistoCollection (myHistoColl_SignalRegion, mainObjectSelectionCollection, weight);
 
@@ -479,69 +430,42 @@ int main(int argc, char** argv)
 
 		//Trigger Requirement
 		if (eventhelper_isRealData) {
-			if(!(                     mainObjectSelectionCollection.passedTrigger                   )) break;
+			if(!(   mainObjectSelectionCollection.passedTrigger              )) break;
 		}
 		myHistoColl_CR2.h_count->Fill("TriggerRequirement",1);
 
 		//AtLeast1tau
-		if(!(             ( (int)mainObjectSelectionCollection.tau.size() >= 1 )                 )) break;
+		if(!(           ( (int)mainObjectSelectionCollection.tau.size() >= 1 )   )) break;
 		myHistoColl_CR2.h_count->Fill("AtLeast1tau",1);
 
 		//AtLeast2tau
-		if(!(             ( (int)mainObjectSelectionCollection.tau.size() >= 2 )                 )) break;
+		if(!(           ( (int)mainObjectSelectionCollection.tau.size() >= 2 )   )) break;
 		myHistoColl_CR2.h_count->Fill("AtLeast2tau",1);
 
-		unsigned int temp_tau1index = 99999;
-		unsigned int temp_tau2index = 99999;
-		double temp_tau1_pt = -99999.;
-		double temp_tau2_pt = -99999.;
-		TLorentzVector tau1_4v;
-		TLorentzVector tau2_4v;
-
-		for(unsigned int t =0;t<mainObjectSelectionCollection.tau.size();++t){
-		        if (temp_tau1_pt < mainObjectSelectionCollection.tau[t]->pt){
-			    	if(temp_tau2_pt < temp_tau1_pt){temp_tau2_pt=temp_tau1_pt; temp_tau2index=temp_tau1index;} //if second jet has less pt than the hitherto first jet, replace it
-                            	temp_tau1index = t;
-                            	temp_tau1_pt = mainObjectSelectionCollection.tau[t]->pt;
-		        }
-		        if ( (temp_tau2_pt < mainObjectSelectionCollection.tau[t]->pt) && ( temp_tau1_pt > mainObjectSelectionCollection.tau[t]->pt) ) {temp_tau2index = t; temp_tau2_pt = mainObjectSelectionCollection.tau[t]->pt;}
-		}
+		//find tau properties
+		TauProperties Inv2t = Inv2tMassIndex(mainObjectSelectionCollection);
 		
-		if (  (temp_tau1index < 99999)  && (temp_tau2index < 99999)  ) {
-			tau1_4v.SetPtEtaPhiE(mainObjectSelectionCollection.tau[temp_tau1index]->pt, mainObjectSelectionCollection.tau[temp_tau1index]->eta, mainObjectSelectionCollection.tau[temp_tau1index]->phi, mainObjectSelectionCollection.tau[temp_tau1index]->energy);
-			tau2_4v.SetPtEtaPhiE(mainObjectSelectionCollection.tau[temp_tau2index]->pt, mainObjectSelectionCollection.tau[temp_tau2index]->eta, mainObjectSelectionCollection.tau[temp_tau2index]->phi, mainObjectSelectionCollection.tau[temp_tau2index]->energy);
-		}
-
 		//DiTauDeltaRCut
-		double DiTauDeltaR = tau1_4v.DeltaR(tau2_4v);
-
-		if(!(           ( DiTauDeltaR > 0.3)                                                     )) break;
+		if(!(           ( Inv2t.dR > 0.3)                                        )) break;
 		myHistoColl_CR2.h_count->Fill("DiTauDeltaRCut", 1);
 
 	        //DiTauSignCut
-	        int chargeDiTau = mainObjectSelectionCollection.tau[temp_tau1index]->charge * mainObjectSelectionCollection.tau[temp_tau2index]->charge;
-	        if(!(                          chargeDiTau > 0.                                          )) break; //NOW REQUIRING SAME SIGN
+	        if(!(           Inv2t.charge > 0.                                        )) break; //NOW REQUIRING SAME SIGN
 	        myHistoColl_CR2.h_count->Fill("DiTauSignCut",1);
 
 		//NoBTag
-		if(!(            (int)mainObjectSelectionCollection.bjet.size() == 0                     )) break;
+		if(!(           (int)mainObjectSelectionCollection.bjet.size() == 0      )) break;
 		myHistoColl_CR2.h_count->Fill("NoBTag",1);
 
+		//find index of leading jets
+		pair<unsigned int,unsigned int> jetIndex=LeadingJets(mainObjectSelectionCollection);  
+		
 		//LeadJet
-		double leadjetpt = 0.;
-		double leadjeteta = 0.;
+		double leadjetpt = mainObjectSelectionCollection.jet[jetIndex.first]->pt;
+		double leadjeteta = mainObjectSelectionCollection.jet[jetIndex.first]->eta;
 		//SubLeadJet
-		double subleadjetpt = 0.;
-		double subleadjeteta = 0.;
-
-		for(unsigned int j = 0;j<mainObjectSelectionCollection.jet.size();++j){
-		        if (leadjetpt < mainObjectSelectionCollection.jet[j]->pt){
-				if(subleadjetpt < leadjetpt){subleadjetpt=leadjetpt; subleadjeteta=leadjeteta;} //if second jet has less pt than the hitherto first jet, replace it
-                             	leadjeteta =  mainObjectSelectionCollection.jet[j]->eta;
-                             	leadjetpt  =  mainObjectSelectionCollection.jet[j]->pt;
-		        }
-		        if ((subleadjetpt < mainObjectSelectionCollection.jet[j]->pt) && (leadjetpt > mainObjectSelectionCollection.jet[j]->pt)) {subleadjetpt = mainObjectSelectionCollection.jet[j]->pt; subleadjeteta = mainObjectSelectionCollection.jet[j]->eta;}
-		}
+		double subleadjetpt = mainObjectSelectionCollection.jet[jetIndex.second]->pt;
+		double subleadjeteta = mainObjectSelectionCollection.jet[jetIndex.second]->eta;
 
 		if(!(                      (leadjetpt >= 75.) && (fabs(leadjeteta) < 5.)              )) {
 			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
@@ -562,32 +486,11 @@ int main(int argc, char** argv)
 		bool passedDiJetMassCut = false;
 		bool passedDiJetDeltaRCut = false;
 
-		unsigned int jet1index = 99999;
-		unsigned int jet2index = 99999;
-
-		double invmassDiJet = 0.;
-		double dealtaRDiJet = 0.;
-
-		for(unsigned int j1 = 1;j1<mainObjectSelectionCollection.jet.size();++j1){
-
-		  for (unsigned int j2 = 0;j2<j1;++j2){
-
-		    TLorentzVector jet1_4v;
-		    TLorentzVector jet2_4v;
-
-		    jet1_4v.SetPtEtaPhiE(mainObjectSelectionCollection.jet[j1]->pt, mainObjectSelectionCollection.jet[j1]->eta, mainObjectSelectionCollection.jet[j1]->phi, mainObjectSelectionCollection.jet[j1]->energy);
-		    jet2_4v.SetPtEtaPhiE(mainObjectSelectionCollection.jet[j2]->pt, mainObjectSelectionCollection.jet[j2]->eta, mainObjectSelectionCollection.jet[j2]->phi, mainObjectSelectionCollection.jet[j2]->energy);
-
-		    TLorentzVector dijet_4v = jet1_4v + jet2_4v;
-
-		    double temp_invmassDiJet = dijet_4v.M();
-		    if (     invmassDiJet < temp_invmassDiJet   ) {invmassDiJet = temp_invmassDiJet; jet1index = j1; jet2index = j2; dealtaRDiJet = jet1_4v.DeltaR(jet2_4v);}
-
-		  }
-		}
+		//find max value for 2-jet-mass
+        	MassAndIndex Inv2j = Inv2jMassIndex(mainObjectSelectionCollection);
 
 		//DiJetDeltaRCut
-		if (     dealtaRDiJet >= 0.3   ) passedDiJetDeltaRCut = true;
+		if (     Inv2j.dR >= 0.3   ) passedDiJetDeltaRCut = true;
 		if(!(                      passedDiJetDeltaRCut                                       )) {
 			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
 			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
@@ -595,21 +498,21 @@ int main(int argc, char** argv)
 		}
 
 		//DiJetInvMassCut
-		if (     invmassDiJet > 700.   ) passedDiJetMassCut = true;
+		if (     Inv2j.Mass > 700.   ) passedDiJetMassCut = true;
 		if(!(                      passedDiJetMassCut                                         )) {
 			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
 			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
 			break;
 		}
 
-		if (     (mainObjectSelectionCollection.jet[jet1index]->eta * mainObjectSelectionCollection.jet[jet2index]->eta ) < 0.         ) passedDiJetEtaSignCut = true;
+		if (     Inv2j.signEta < 0.         ) passedDiJetEtaSignCut = true;
 		if(!(                      passedDiJetEtaSignCut                                      )) {
 			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
 			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
 			break;
 		}
 
-		if (      fabs ( mainObjectSelectionCollection.jet[jet1index]->eta - mainObjectSelectionCollection.jet[jet2index]->eta ) > 4.2   ) passedDiJetEtaCut = true;
+		if (     Inv2j.dEta > 4.2   ) passedDiJetEtaCut = true;
 
 		if(!(                      passedDiJetEtaCut                                          )) {
 			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
