@@ -197,9 +197,45 @@ int main(int argc, char** argv)
 	    if(!(tau[t].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) TauLooseIsoObjectSelectionCollection.tau.push_back(&tau[t]);
           }
           
-          // jet selection
+          // jet && bjet selection
 	  // ? id ?
 	  for(unsigned int j = 0;j<jet.size();++j){
+	    if(!(      jet[j].pt >= 30.                                                	)) continue;  // Original value 20
+	    if(!(      fabs(jet[j].eta) <= 5.0                                          )) continue;
+	    double mindeltaRtaujet = 99999.;  
+            for(unsigned int t =0;t<tau.size();++t){
+              if (!(       tau[t].selected    						)) continue;
+              double temp_mindeltaRtaujet = deltaR(jet[j].eta, jet[j].phi, tau[t].eta, tau[t].phi); 
+              if (temp_mindeltaRtaujet < mindeltaRtaujet) mindeltaRtaujet = temp_mindeltaRtaujet;
+            } 
+            if(!(       mindeltaRtaujet >= 0.3                                          )) continue;
+            bool jetid=true;
+	    if(!(      (jet[j].neutralHadronEnergy + jet[j].HFHadronEnergy) / jet[j].energy < 0.99      )) jetid=false;
+	    if(!(      jet[j].neutralEmEnergyFraction < 0.99                                            )) jetid=false;
+	    if(!(      jet[j].numberOfDaughters > 1                                                     )) jetid=false;
+	    if(fabs(jet[j].eta) < 2.4) {
+            if(!(      jet[j].chargedHadronEnergyFraction > 0                        			)) jetid=false;
+            if(!(      jet[j].chargedEmEnergyFraction < 0.99                            		)) jetid=false;
+            if(!(      jet[j].chargedHadronMultiplicity > 0                             		)) jetid=false;
+            }
+            if(!(      jet[j].pt < 50. ) && jetid                                      	)){
+	      mainObjectSelectionCollection.jet.push_back(&jet[j]);
+	      TauMediumIsoObjectSelectionCollection.jet.push_back(&jet[j]);
+	      TauLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
+            }
+            if(!(fabs(jet[j].eta) > 2.4) && !(jet[j].bDiscriminator_combinedSecondaryVertexBJetTags > 0.244    )){
+              mainObjectSelectionCollection.bjet.push_back(&jet[j]);
+	      TauMediumIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
+	      TauLooseIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
+            }
+	  }
+	  
+	  
+	  
+	  
+	  
+	  /*for(unsigned int j = 0;j<jet.size();++j){
+	  
 	    if(!(      jet[j].pt >= 50.                                               			)) continue;
 	    if(!(      fabs(jet[j].eta) <= 5.0                                                          )) continue;
 	    if(!(      (jet[j].neutralHadronEnergy + jet[j].HFHadronEnergy) / jet[j].energy < 0.99      )) continue;
@@ -238,7 +274,7 @@ int main(int argc, char** argv)
 	    mainObjectSelectionCollection.bjet.push_back(&jet[j]);
 	    TauMediumIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
 	    TauLooseIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
-          }
+          }*/
 
 	  //MET selection
 	  mainObjectSelectionCollection.met.push_back(&met[0]);
