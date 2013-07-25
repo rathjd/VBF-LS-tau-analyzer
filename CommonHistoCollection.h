@@ -43,9 +43,8 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 
 	//fill 2-jet-event inv. mass and eta-difference
         if ( Inv2j.Mass >= 0 ) {
-           double deltaeta =  fabs (inputEventCollection.jet[Inv2j.first]->eta - inputEventCollection.jet[Inv2j.second]->eta);
            inputHistoCollection.h_dijetinvariantmass ->Fill(Inv2j.Mass,weight);
-           inputHistoCollection.h_dijetdeltaeta ->Fill(deltaeta,weight);
+           inputHistoCollection.h_dijetdeltaeta ->Fill(Inv2j.dEta,weight);
         }
 
 	//fill ht distribution
@@ -54,10 +53,9 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 //____________________________________________________________________________________________
 
         //TAUS
-
-	//find index of leading taus
-	pair<unsigned int,unsigned int> tauIndex=LeadingTaus(inputEventCollection);
 	
+	//find tau properties
+	TauProperties Inv2t = Inv2tMassIndex(inputEventCollection);
 	TLorentzVector tau1_4v;
 	TLorentzVector tau2_4v;
          
@@ -69,24 +67,23 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 	  ht_jetsPtau+=inputEventCollection.tau[t]->pt;
 	}
 
-	if ( (tauIndex.first < 99999) && (tauIndex.second < 99999) ) {
+	if ( (Inv2t.first < 99999) && (Inv2t.second < 99999) ) {
 	  //determine leading two tau invariant mass
-	  inputHistoCollection.h_ditauinvariantmass ->Fill(tauMass(inputEventCollection, tauIndex.first, tauIndex.second),weight);
+	  inputHistoCollection.h_ditauinvariantmass ->Fill(Inv2t.Mass,weight);
 	  
 	  //fill tau charge and  cosdeltaphi
-	  pair<double,double> diTauProperties = ChargeCosDeltaPhi(inputEventCollection, tauIndex.first, tauIndex.second);
-          inputHistoCollection.h_ditaucharge ->Fill(diTauProperties.first,weight);
-          inputHistoCollection.h_ditaucosdeltaphi ->Fill(diTauProperties.second,weight);	  
+          inputHistoCollection.h_ditaucharge ->Fill(Inv2t.charge,weight);
+          inputHistoCollection.h_ditaucosdeltaphi ->Fill(Inv2t.cosDphi,weight);	  
 	}
 
 	//fill tau pt and eta
-        if (tauIndex.first < 99999) {
-          inputHistoCollection.h_tau1pt->Fill(inputEventCollection.tau[tauIndex.first]->pt,weight);
-          inputHistoCollection.h_tau1eta->Fill(inputEventCollection.tau[tauIndex.first]->eta,weight);
+        if (Inv2t.first < 99999) {
+          inputHistoCollection.h_tau1pt->Fill(inputEventCollection.tau[Inv2t.first]->pt,weight);
+          inputHistoCollection.h_tau1eta->Fill(inputEventCollection.tau[Inv2t.first]->eta,weight);
         }
-        if (tauIndex.second < 99999) {
-          inputHistoCollection.h_tau2pt->Fill(inputEventCollection.tau[tauIndex.second]->pt,weight);
-          inputHistoCollection.h_tau2eta->Fill(inputEventCollection.tau[tauIndex.second]->eta,weight);
+        if (Inv2t.second < 99999) {
+          inputHistoCollection.h_tau2pt->Fill(inputEventCollection.tau[Inv2t.second]->pt,weight);
+          inputHistoCollection.h_tau2eta->Fill(inputEventCollection.tau[Inv2t.second]->eta,weight);
         }
 	
 	//fill ht with taus included
