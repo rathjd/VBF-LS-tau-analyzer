@@ -182,51 +182,21 @@ int main(int argc, char** argv)
 	    TauMediumIsoObjectSelectionCollection.muon.push_back(&muon[m]);
 	    TauLooseIsoObjectSelectionCollection.muon.push_back(&muon[m]);
 	  }
-
-          // tau main selection
-          for(unsigned int t =0;t<tau.size();++t){
-            if(!(	      fabs(tau[t].eta) <= 2.1                              	)) continue;
-            if(!(       tau[t].pt >= 45.                                            	)) continue;
-            if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      	)) continue;
-            if(!(       tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits > 0.5   )) continue;
-            if(!(       tau[t].tauID_againstElectronTightMVA3 > 0.5                	)) continue;
-            if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        	)) continue;
-            if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)                         )) continue;
-	    mainObjectSelectionCollection.tau.push_back(&tau[t]);
+          
+          //smart tau selection
+	  for(unsigned int t =0;t<tau.size();++t){
+            if(!(	      fabs(tau[t].eta) <= 2.1                              				)) continue;
+            if(!(       tau[t].pt >= 45.                                            				)) continue;
+            if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      				)) continue;
+            baselineObjectSelectionCollection.tau.push_back(&tau[t]);
+            if(!(       tau[t].tauID_againstElectronTightMVA3 > 0.5                				)) continue;
+            if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        				)) continue;
+            if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
+	    if(!(tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) mainObjectSelectionCollection.tau.push_back(&tau[t]);
+	    if(!(tau[t].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits <= 0.5)) TauMediumIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	    if(!(tau[t].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) TauLooseIsoObjectSelectionCollection.tau.push_back(&tau[t]);
           }
-
-          // tau Medium Iso selection
-          for(unsigned int t =0;t<tau.size();++t){
-            if(!(       fabs(tau[t].eta) <= 2.1                                     	)) continue;
-            if(!(       tau[t].pt >= 45.                                            	)) continue;
-            if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      	)) continue;
-            if(!(       tau[t].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5  )) continue;
-            if(!(       tau[t].tauID_againstElectronTightMVA3 > 0.5                	)) continue;
-            if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        	)) continue;
-            if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)                         )) continue;
-	    TauMediumIsoObjectSelectionCollection.tau.push_back(&tau[t]);
-          }
-
-          // tau Loose Iso selection
-          for(unsigned int t =0;t<tau.size();++t){
-            if(!(       fabs(tau[t].eta) <= 2.1                                     	)) continue;
-            if(!(       tau[t].pt >= 45.                                            	)) continue;
-            if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      	)) continue;
-            if(!(       tau[t].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits > 0.5   )) continue;
-            if(!(       tau[t].tauID_againstElectronTightMVA3 > 0.5                	)) continue;
-            if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        	)) continue;
-            if(!(      	(tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)                         )) continue;
-	    TauLooseIsoObjectSelectionCollection.tau.push_back(&tau[t]);
-          }
-
-          // tau baseline selection
-          for(unsigned int t =0;t<tau.size();++t){
-            if(!(       fabs(tau[t].eta) <= 2.1                                     	)) continue;
-            if(!(       tau[t].pt >= 45.                                            	)) continue;
-            if(!(      	tau[t].leadPFChargedHadrCand_pt >= 5.0                      	)) continue;
-	    baselineObjectSelectionCollection.tau.push_back(&tau[t]);
-          }
-
+          
           // jet selection
 	  // ? id ?
 	  for(unsigned int j = 0;j<jet.size();++j){
