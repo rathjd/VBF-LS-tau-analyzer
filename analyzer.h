@@ -2057,7 +2057,7 @@ struct outputFile
 	  tree_->AutoSave("SaveSelf");
   }
 
-  void count(std::string cond, int w=1)
+  void count(std::string cond, double w=1)
   {
     hist_->Fill(cond.c_str(), w);
   }
