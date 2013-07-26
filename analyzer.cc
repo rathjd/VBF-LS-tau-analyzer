@@ -218,7 +218,7 @@ int main(int argc, char** argv)
             if(!(      jet[j].chargedEmEnergyFraction < 0.99                            		)) jetid=false;
             if(!(      jet[j].chargedHadronMultiplicity > 0                             		)) jetid=false;
             }
-            if(!(      jet[j].pt < 50. ) && jetid                                      	)){
+            if(!(      jet[j].pt < 50. ) && jetid                                      	){
 	      mainObjectSelectionCollection.jet.push_back(&jet[j]);
 	      TauMediumIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	      TauLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
