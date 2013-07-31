@@ -9,6 +9,7 @@
 #include "PhysicsTools/TheNtupleMaker/interface/pdg.h"
 #else
 #include "pdg.h"
+#include "selection.h"
 #endif
 
 #include "CommonHistoCollection.h"
@@ -185,7 +186,7 @@ int main(int argc, char** argv)
           
           //smart tau selection
 	  for(unsigned int t =0;t<tau.size();++t){
-            if(!(	      fabs(tau[t].eta) <= 2.1                              				)) continue;
+            if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
             if(!(       tau[t].pt >= 45.                                            				)) continue;
             if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      				)) continue;
             baselineObjectSelectionCollection.tau.push_back(&tau[t]);
@@ -208,73 +209,27 @@ int main(int argc, char** argv)
               double temp_mindeltaRtaujet = deltaR(jet[j].eta, jet[j].phi, tau[t].eta, tau[t].phi); 
               if (temp_mindeltaRtaujet < mindeltaRtaujet) mindeltaRtaujet = temp_mindeltaRtaujet;
             } 
-            if(!(       mindeltaRtaujet >= 0.3                                          )) continue;
+            if(!(       (mindeltaRtaujet >= 0.3) 		                        )) continue;
             bool jetid=true;
 	    if(!(      (jet[j].neutralHadronEnergy + jet[j].HFHadronEnergy) / jet[j].energy < 0.99      )) jetid=false;
 	    if(!(      jet[j].neutralEmEnergyFraction < 0.99                                            )) jetid=false;
 	    if(!(      jet[j].numberOfDaughters > 1                                                     )) jetid=false;
 	    if(fabs(jet[j].eta) < 2.4) {
-            if(!(      jet[j].chargedHadronEnergyFraction > 0                        			)) jetid=false;
-            if(!(      jet[j].chargedEmEnergyFraction < 0.99                            		)) jetid=false;
-            if(!(      jet[j].chargedHadronMultiplicity > 0                             		)) jetid=false;
+              if(!(      jet[j].chargedHadronEnergyFraction > 0                        			)) jetid=false;
+              if(!(      jet[j].chargedEmEnergyFraction < 0.99                            		)) jetid=false;
+              if(!(      jet[j].chargedHadronMultiplicity > 0                             		)) jetid=false;
             }
             if(!(      jet[j].pt < 50. ) && jetid                                      	){
 	      mainObjectSelectionCollection.jet.push_back(&jet[j]);
 	      TauMediumIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	      TauLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
             }
-            if(!(fabs(jet[j].eta) > 2.4) && !(jet[j].bDiscriminator_combinedSecondaryVertexBJetTags > 0.244    )){
+            if(!(fabs(jet[j].eta) > 2.4) && !(mindeltaRtaujet >= 99999.) && !(jet[j].bDiscriminator_combinedSecondaryVertexBJetTags <= 0.244    )){
               mainObjectSelectionCollection.bjet.push_back(&jet[j]);
 	      TauMediumIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
 	      TauLooseIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
             }
 	  }
-	  
-	  
-	  
-	  
-	  
-	  /*for(unsigned int j = 0;j<jet.size();++j){
-	  
-	    if(!(      jet[j].pt >= 50.                                               			)) continue;
-	    if(!(      fabs(jet[j].eta) <= 5.0                                                          )) continue;
-	    if(!(      (jet[j].neutralHadronEnergy + jet[j].HFHadronEnergy) / jet[j].energy < 0.99      )) continue;
-	    if(!(      jet[j].neutralEmEnergyFraction < 0.99                                            )) continue;
-	    if(!(      jet[j].numberOfDaughters > 1                                                     )) continue;
-	    if(fabs(jet[j].eta) < 2.4) {
-            if(!(      jet[j].chargedHadronEnergyFraction > 0                        	)) continue;
-            if(!(      jet[j].chargedEmEnergyFraction < 0.99                            )) continue;
-            if(!(      jet[j].chargedHadronMultiplicity > 0                             )) continue;
-            }
-            double mindeltaRtaujet = 99999.;  
-            for(unsigned int t =0;t<tau.size();++t){
-              if (!(       tau[t].selected    						)) continue;
-              double temp_mindeltaRtaujet = deltaR(jet[j].eta, jet[j].phi, tau[t].eta, tau[t].phi); 
-              if (temp_mindeltaRtaujet < mindeltaRtaujet) mindeltaRtaujet = temp_mindeltaRtaujet;
-            } 
-            if(!(       mindeltaRtaujet >= 0.3                                          )) continue;
-	    mainObjectSelectionCollection.jet.push_back(&jet[j]);
-	    TauMediumIsoObjectSelectionCollection.jet.push_back(&jet[j]);
-	    TauLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
-	  }
-
-
-          // btag selection
-       	  for(unsigned int j = 0;j<jet.size();++j){
-	    if(!(      jet[j].pt >= 30.                                                	)) continue;  // Original value 20
-	    if(!(      fabs(jet[j].eta) <= 2.4                                          )) continue;
-	    if(!(      jet[j].bDiscriminator_combinedSecondaryVertexBJetTags > 0.244    )) continue;
-            double mindeltaRtaujet = 99999.;  
-            for(unsigned int t =0;t<tau.size();++t){
-              if (!(       tau[t].selected    						)) continue;
-              double temp_mindeltaRtaujet = deltaR(jet[j].eta, jet[j].phi, tau[t].eta, tau[t].phi); 
-              if (temp_mindeltaRtaujet < mindeltaRtaujet) mindeltaRtaujet = temp_mindeltaRtaujet;
-            }
-            if(!(       (mindeltaRtaujet >= 0.3) &&  (mindeltaRtaujet < 99999.)         )) continue;
-	    mainObjectSelectionCollection.bjet.push_back(&jet[j]);
-	    TauMediumIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
-	    TauLooseIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
-          }*/
 
 	  //MET selection
 	  mainObjectSelectionCollection.met.push_back(&met[0]);
@@ -310,662 +265,187 @@ int main(int argc, char** argv)
 	// -- Signal Region   --
 	// ---------------------
 
-	myHistoColl_SignalRegion.h_count->Fill("NoCuts",0);
-	myHistoColl_SignalRegion.h_count->Fill("TriggerRequirement",0);
-	myHistoColl_SignalRegion.h_count->Fill("AtLeast1tau",0);
-	myHistoColl_SignalRegion.h_count->Fill("AtLeast2tau",0);
-	myHistoColl_SignalRegion.h_count->Fill("DiTauDeltaRCut", 0);
-	myHistoColl_SignalRegion.h_count->Fill("DiTauSignCut",0);
-	myHistoColl_SignalRegion.h_count->Fill("NoBTag",0);
-	myHistoColl_SignalRegion.h_count->Fill("LeadJetCut",0);
-	myHistoColl_SignalRegion.h_count->Fill("SecondJetCut",0);
-	myHistoColl_SignalRegion.h_count->Fill("DiJetDeltaRCut",0);
-	myHistoColl_SignalRegion.h_count->Fill("DiJetInvMassCut",0);
-	myHistoColl_SignalRegion.h_count->Fill("DiJetEtaSignCut",0);
-	myHistoColl_SignalRegion.h_count->Fill("DiJetEtaCut",0);
-	
-	while (true){
-
-		//DATA MUST BE BLINDED!!!!!!!!! (FOR NOW)
-		if (eventhelper_isRealData) break;
-
-		//NoCuts
-		myHistoColl_SignalRegion.h_count->Fill("NoCuts",1);
-
-		//Trigger Requirement (ONLY FOR DATA)
-		if (eventhelper_isRealData) {
-		  if(!(		mainObjectSelectionCollection.passedTrigger		)) break;
-		}
-		myHistoColl_SignalRegion.h_count->Fill("TriggerRequirement",1);
-
-		//AtLeast1tau
-		if(!(         	( (int)mainObjectSelectionCollection.tau.size() >= 1 ) 	)) break;
-		myHistoColl_SignalRegion.h_count->Fill("AtLeast1tau",1);
-
-		//AtLeast2tau
-		if(!(          	( (int)mainObjectSelectionCollection.tau.size() >= 2 ) 	)) break;
-		myHistoColl_SignalRegion.h_count->Fill("AtLeast2tau",1);
-
-		//find ditau properties
-		TauProperties Inv2t = Inv2tMassIndex(mainObjectSelectionCollection);
+	Selection Signal("Signal"); 						//label and initialisation
+	Signal.InputCollection 		= &mainObjectSelectionCollection;	//input collection
+	Signal.OutputCollection 	= &myHistoColl_SignalRegion;		//output collection
+	Signal.RealData			= eventhelper_isRealData;		//pass information if event is real data
+	Signal.RunData			= false;				//real data allowed
+	Signal.NumberTauMin		= 2;					//require at least N tau
+	Signal.NumberTauMax		= -1;					//require at most N taus
+	Signal.DiTauDeltaRmin		= 0.3;					//minimum delta R for tau pair
+	Signal.DiTauInvMassMin		= -1;					//minimum Di-tau-mass requirement
+	Signal.DiTauInvMassMax		= -1;					//maximum Di-tau-mass requirement
+	Signal.DiTauSign		= +1;					//1 for LS and -1 for OS, 0 for no requirement
+	Signal.Btag			= 0;					//number of btags required (exact -> 0 = none)
+	Signal.JetEtaMax		= 5.;					//maximum eta for jets, set to -1 for no requirement
+	Signal.LeadJetPtMin		= 75.;					//minimum pt of lead jet, set to -1 for no requirement
+	Signal.LeadJetPtMax		= -1.;					//maximum pt of lead jet, set to -1 for no requirement
+	Signal.SubLeadJetPtMin		= 50.;					//minimum pt of sub lead jet, set to -1 for no requirement
+	Signal.SubLeadJetPtMax		= -1.;					//maximum pt of sub lead jet, set to -1 for no requirement
+	Signal.DiJetDrMin		= 0.3;					//Dijet minimum delta R, set to -1 for no requirement
+	Signal.DiJetDrMax		= -1;					//Dijet maximum delta R, set to -1 for no requirement
+	Signal.DiJetInvMassMin		= 700.;					//Dijet minimal invariant mass, set to -1 for no requirement
+	Signal.DiJetInvMassMax		= -1.;					//Dijet maximum invariant mass, set to -1 for no requirement
+	Signal.DiJetSignEta		= -1;					//Dijet sign eta_1*eta_2
+	Signal.DiJetDetaMin		= 4.2;					//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+	Signal.DiJetDetaMax		= -1;					//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
+	Signal.weight			= weight;				//event weight
+	Signal.invertTauRequirements	= false;				//invert number of taus requirement
+	Signal.invertTauProperties	= false;				//invert ditau properties (dR, sign)
+	Signal.invertBtagRequirement	= false;				//invert number of b-jets required
+	Signal.invertJetRequirements	= false;				//invert jet pt requirements
+	Signal.invertDijetProperties	= false;				//invert dijet system properties (dR, inv mass, sign eta, dEta)
 		
-		//cuts on properties of the ditau-system
-		//DiTauDeltaRCut
-		if(!(           ( Inv2t.dR > 0.3)                        		)) break;
-		myHistoColl_SignalRegion.h_count->Fill("DiTauDeltaRCut", 1);
-
-	        //DiTauSignCut
-	        if(!(           Inv2t.charge > 0.   		            		)) break; //NOW REQUIRING SAME SIGN
-	        myHistoColl_SignalRegion.h_count->Fill("DiTauSignCut",1);
-
-		//NoBTag
-		if(!(           (int)mainObjectSelectionCollection.bjet.size() == 0   	)) break;
-		myHistoColl_SignalRegion.h_count->Fill("NoBTag",1);
-
-		//find index of leading jets
-		pair<unsigned int,unsigned int> jetIndex=LeadingJets(mainObjectSelectionCollection);  
-		
-		//LeadJet
-		double leadjetpt = mainObjectSelectionCollection.jet[jetIndex.first]->pt;
-		double leadjeteta = mainObjectSelectionCollection.jet[jetIndex.first]->eta;
-		//SubLeadJet
-		double subleadjetpt = mainObjectSelectionCollection.jet[jetIndex.second]->pt;
-		double subleadjeteta = mainObjectSelectionCollection.jet[jetIndex.second]->eta;
-		
-		if(!(                      (leadjetpt >= 75.) && (fabs(leadjeteta) < 5.)              )) break;
-		myHistoColl_SignalRegion.h_count->Fill("LeadJetCut",1);
-
-		if(!(                      (subleadjetpt >= 50.) && (fabs(subleadjeteta) < 5.)          )) break;
-		myHistoColl_SignalRegion.h_count->Fill("SecondJetCut",1);
-
-		//DiJetCuts
-
-		bool passedDiJetEtaSignCut = false;
-		bool passedDiJetEtaCut = false;
-		bool passedDiJetMassCut = false;
-		bool passedDiJetDeltaRCut = false;
-		
-		//find max value for 2-jet-mass
-        	MassAndIndex Inv2j = Inv2jMassIndex(mainObjectSelectionCollection);
-
-		//DiJetDeltaRCut
-		if ( Inv2j.dR     >= 0.3      ) passedDiJetDeltaRCut = true;
-		if (!( passedDiJetDeltaRCut          	           )) break;
-		myHistoColl_SignalRegion.h_count->Fill("DiJetDeltaRCut",1);
-
-		//DiJetInvMassCut
-		if ( Inv2j.Mass    > 700.    	) passedDiJetMassCut = true;
-		if (!( passedDiJetMassCut 		           )) break;
-		myHistoColl_SignalRegion.h_count->Fill("DiJetInvMassCut",1);
-
-		if ( Inv2j.signEta < 0.   )    passedDiJetEtaSignCut = true;
-		if (!( passedDiJetEtaSignCut   			   )) break;
-		myHistoColl_SignalRegion.h_count->Fill("DiJetEtaSignCut",1);
-
-		if ( Inv2j.dEta    > 4.2      )    passedDiJetEtaCut = true;
-		if (!( passedDiJetEtaCut       	        	   )) break;
-		myHistoColl_SignalRegion.h_count->Fill("DiJetEtaCut",1);
-
-		fillHistoCollection (myHistoColl_SignalRegion, mainObjectSelectionCollection, weight);
-
-		//INVERTED VBF CUT
-		//if((    (leadjetpt >= 75.) && (fabs(leadjeteta)< 5.) && (subleadjetpt >= 50.) && (fabs(subleadjeteta) < 5.) && (passedDiJetDeltaRCut) && (passedDiJetEtaSignCut) && (passedDiJetEtaCut) && (passedDiJetMassCut)   )) continue;
-		//ofile.count("invertedvbfcut");
-
-
-		break;
-	}
+	Signal.select();							//do selection, fill histograms
 
 	// ---------------------------------
 	// -- CENTRAL + INVERTED VBF CR   --
-	// ---------------------------------
-
-	myHistoColl_CR2.h_count->Fill("NoCuts",0);
-	myHistoColl_CR2.h_count->Fill("TriggerRequirement",0);
-	myHistoColl_CR2.h_count->Fill("AtLeast1tau",0);
-	myHistoColl_CR2.h_count->Fill("AtLeast2tau",0);
-	myHistoColl_CR2.h_count->Fill("DiTauDeltaRCut", 0);
-	myHistoColl_CR2.h_count->Fill("DiTauSignCut",0);
-	myHistoColl_CR2.h_count->Fill("NoBTag",0);
-	myHistoColl_CR2.h_count->Fill("InvertedVBFCut",0);
+	// ---------------------------------	
 	
-	while (true){
-
-		//NoCuts
-		myHistoColl_CR2.h_count->Fill("NoCuts",1);
-
-		//Trigger Requirement
-		if (eventhelper_isRealData) {
-			if(!(   mainObjectSelectionCollection.passedTrigger              )) break;
-		}
-		myHistoColl_CR2.h_count->Fill("TriggerRequirement",1);
-
-		//AtLeast1tau
-		if(!(           ( (int)mainObjectSelectionCollection.tau.size() >= 1 )   )) break;
-		myHistoColl_CR2.h_count->Fill("AtLeast1tau",1);
-
-		//AtLeast2tau
-		if(!(           ( (int)mainObjectSelectionCollection.tau.size() >= 2 )   )) break;
-		myHistoColl_CR2.h_count->Fill("AtLeast2tau",1);
-
-		//find tau properties
-		TauProperties Inv2t = Inv2tMassIndex(mainObjectSelectionCollection);
+	Selection InvertedVBF_CR2("InvertedVBF_CR2"); 					//label and initialisation
+	InvertedVBF_CR2.InputCollection 	= &mainObjectSelectionCollection;	//input collection
+	InvertedVBF_CR2.OutputCollection 	= &myHistoColl_CR2;			//output collection
+	InvertedVBF_CR2.RealData		= eventhelper_isRealData;		//pass information if event is real data
+	InvertedVBF_CR2.RunData			= true;					//real data allowed
+	InvertedVBF_CR2.NumberTauMin		= 2;					//require at least N tau
+	InvertedVBF_CR2.NumberTauMax		= -1;					//require at most N taus
+	InvertedVBF_CR2.DiTauDeltaRmin		= 0.3;					//minimum delta R for tau pair
+	InvertedVBF_CR2.DiTauInvMassMin		= -1;					//minimum Di-tau-mass requirement
+	InvertedVBF_CR2.DiTauInvMassMax		= -1;					//maximum Di-tau-mass requirement
+	InvertedVBF_CR2.DiTauSign		= +1;					//1 for LS and -1 for OS, 0 for no requirement
+	InvertedVBF_CR2.Btag			= 0;					//number of btags required (exact -> 0 = none)
+	InvertedVBF_CR2.JetEtaMax		= 5.;					//maximum eta for jets, set to -1 for no requirement
+	InvertedVBF_CR2.LeadJetPtMin		= 75.;					//minimum pt of lead jet, set to -1 for no requirement
+	InvertedVBF_CR2.LeadJetPtMax		= -1.;					//maximum pt of lead jet, set to -1 for no requirement
+	InvertedVBF_CR2.SubLeadJetPtMin		= 50.;					//minimum pt of sub lead jet, set to -1 for no requirement
+	InvertedVBF_CR2.SubLeadJetPtMax		= -1.;					//maximum pt of sub lead jet, set to -1 for no requirement
+	InvertedVBF_CR2.DiJetDrMin		= 0.3;					//Dijet minimum delta R, set to -1 for no requirement
+	InvertedVBF_CR2.DiJetDrMax		= -1.;					//Dijet maximum delta R, set to -1 for no requirement
+	InvertedVBF_CR2.DiJetInvMassMin		= 700.;					//Dijet minimal invariant mass, set to -1 for no requirement
+	InvertedVBF_CR2.DiJetInvMassMax		= -1.;					//Dijet maximum invariant mass, set to -1 for no requirement
+	InvertedVBF_CR2.DiJetSignEta		= -1;					//Dijet sign eta_1*eta_2
+	InvertedVBF_CR2.DiJetDetaMin		= 4.2;					//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+	InvertedVBF_CR2.DiJetDetaMax		= -1.;					//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement	
+	InvertedVBF_CR2.weight			= weight;				//event weight
+	InvertedVBF_CR2.invertTauRequirements	= false;				//invert number of taus requirement
+	InvertedVBF_CR2.invertTauProperties	= false;				//invert ditau properties (dR, sign)
+	InvertedVBF_CR2.invertBtagRequirement	= false;				//invert number of b-jets required
+	InvertedVBF_CR2.invertJetRequirements	= true;					//invert jet pt requirements
+	InvertedVBF_CR2.invertDijetProperties	= true;					//invert dijet system properties (dR, inv mass, sign eta, dEta)
 		
-		//DiTauDeltaRCut
-		if(!(           ( Inv2t.dR > 0.3)                                        )) break;
-		myHistoColl_CR2.h_count->Fill("DiTauDeltaRCut", 1);
-
-	        //DiTauSignCut
-	        if(!(           Inv2t.charge > 0.                                        )) break; //NOW REQUIRING SAME SIGN
-	        myHistoColl_CR2.h_count->Fill("DiTauSignCut",1);
-
-		//NoBTag
-		if(!(           (int)mainObjectSelectionCollection.bjet.size() == 0      )) break;
-		myHistoColl_CR2.h_count->Fill("NoBTag",1);
-
-		//find index of leading jets
-		pair<unsigned int,unsigned int> jetIndex=LeadingJets(mainObjectSelectionCollection);  
-		
-		//LeadJet
-		double leadjetpt = mainObjectSelectionCollection.jet[jetIndex.first]->pt;
-		double leadjeteta = mainObjectSelectionCollection.jet[jetIndex.first]->eta;
-		//SubLeadJet
-		double subleadjetpt = mainObjectSelectionCollection.jet[jetIndex.second]->pt;
-		double subleadjeteta = mainObjectSelectionCollection.jet[jetIndex.second]->eta;
-
-		if(!(                      (leadjetpt >= 75.) && (fabs(leadjeteta) < 5.)              )) {
-			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
-			break;
-		}
-
-		if(!(                      (subleadjetpt >= 50.) && (fabs(subleadjeteta) < 5.)          )) {
-			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
-			break;
-		}
-
-		//DiJetCuts
-
-		bool passedDiJetEtaSignCut = false;
-		bool passedDiJetEtaCut = false;
-		bool passedDiJetMassCut = false;
-		bool passedDiJetDeltaRCut = false;
-
-		//find max value for 2-jet-mass
-        	MassAndIndex Inv2j = Inv2jMassIndex(mainObjectSelectionCollection);
-
-		//DiJetDeltaRCut
-		if (     Inv2j.dR >= 0.3   ) passedDiJetDeltaRCut = true;
-		if(!(                      passedDiJetDeltaRCut                                       )) {
-			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
-			break;
-		}
-
-		//DiJetInvMassCut
-		if (     Inv2j.Mass > 700.   ) passedDiJetMassCut = true;
-		if(!(                      passedDiJetMassCut                                         )) {
-			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
-			break;
-		}
-
-		if (     Inv2j.signEta < 0.         ) passedDiJetEtaSignCut = true;
-		if(!(                      passedDiJetEtaSignCut                                      )) {
-			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
-			break;
-		}
-
-		if (     Inv2j.dEta > 4.2   ) passedDiJetEtaCut = true;
-
-		if(!(                      passedDiJetEtaCut                                          )) {
-			myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
-			break;
-		}
-
-
-		//INVERTED VBF CUT
-		if((    (leadjetpt >= 75.) && (fabs(leadjeteta)< 5.) && (subleadjetpt >= 50.) && (fabs(subleadjeteta) < 5.) && (passedDiJetDeltaRCut) && (passedDiJetEtaSignCut) && (passedDiJetEtaCut) && (passedDiJetMassCut)   )) break;
-		myHistoColl_CR2.h_count->Fill("InvertedVBFCut",1);
-
-		fillHistoCollection (myHistoColl_CR2, mainObjectSelectionCollection, weight);
-
-
-		break;
-	}
+	InvertedVBF_CR2.select();							//do selection, fill histograms			
 
 	// ------------------------------------------------------
 	// -- CENTRAL + INVERTED VBF CR (with Tau Medium Iso)  --
 	// ------------------------------------------------------
 
-	myHistoColl_CR3.h_count->Fill("NoCuts",0);
-	myHistoColl_CR3.h_count->Fill("TriggerRequirement",0);
-	myHistoColl_CR3.h_count->Fill("AtLeast1tau",0);
-	myHistoColl_CR3.h_count->Fill("AtLeast2tau",0);
-	myHistoColl_CR3.h_count->Fill("DiTauDeltaRCut", 0);
-	myHistoColl_CR3.h_count->Fill("DiTauSignCut",0);
-	myHistoColl_CR3.h_count->Fill("NoBTag",0);
-	myHistoColl_CR3.h_count->Fill("InvertedVBFCut",0);
-	
-	while (true){
-
-		//NoCuts
-		myHistoColl_CR3.h_count->Fill("NoCuts",1);
-
-		//Trigger Requirement
-		if (eventhelper_isRealData) {
-			if(!(                     TauMediumIsoObjectSelectionCollection.passedTrigger                   )) break;
-		}
-		myHistoColl_CR3.h_count->Fill("TriggerRequirement",1);
-
-		//AtLeast1tau
-		if(!(             ( (int)TauMediumIsoObjectSelectionCollection.tau.size() >= 1 )                 )) break;
-		myHistoColl_CR3.h_count->Fill("AtLeast1tau",1);
-
-		//AtLeast2tau
-		if(!(             ( (int)TauMediumIsoObjectSelectionCollection.tau.size() >= 2 )                 )) break;
-		myHistoColl_CR3.h_count->Fill("AtLeast2tau",1);
-
-		unsigned int temp_tau1index = 99999;
-		unsigned int temp_tau2index = 99999;
-		double temp_tau1_pt = -99999.;
-		double temp_tau2_pt = -99999.;
-		TLorentzVector tau1_4v;
-		TLorentzVector tau2_4v;
-
-		for(unsigned int t =0;t<TauMediumIsoObjectSelectionCollection.tau.size();++t){
-		        if (temp_tau1_pt < TauMediumIsoObjectSelectionCollection.tau[t]->pt){
-			    	if(temp_tau2_pt < temp_tau1_pt){temp_tau2_pt=temp_tau1_pt; temp_tau2index=temp_tau1index;} //if second jet has less pt than the hitherto first jet, replace it
-                            	temp_tau1index = t;
-                            	temp_tau1_pt = TauMediumIsoObjectSelectionCollection.tau[t]->pt;
-		        }
-		        if ( (temp_tau2_pt < TauMediumIsoObjectSelectionCollection.tau[t]->pt) && ( temp_tau1_pt > TauMediumIsoObjectSelectionCollection.tau[t]->pt) ) {temp_tau2index = t; temp_tau2_pt = TauMediumIsoObjectSelectionCollection.tau[t]->pt;}
-		}
+	Selection InvertedVBF_CR3("InvertedVBF_CR3"); 						//label and initialisation
+	InvertedVBF_CR3.InputCollection 	= &TauMediumIsoObjectSelectionCollection;	//input collection
+	InvertedVBF_CR3.OutputCollection 	= &myHistoColl_CR3;				//output collection
+	InvertedVBF_CR3.RealData		= eventhelper_isRealData;			//pass information if event is real data
+	InvertedVBF_CR3.RunData			= true;						//real data allowed
+	InvertedVBF_CR3.NumberTauMin		= 2;						//require at least N tau
+	InvertedVBF_CR3.NumberTauMax		= -1;						//require at most N taus
+	InvertedVBF_CR3.DiTauDeltaRmin		= 0.3;						//minimum delta R for tau pair
+	InvertedVBF_CR3.DiTauInvMassMin		= -1;						//minimum Di-tau-mass requirement
+	InvertedVBF_CR3.DiTauInvMassMax		= -1;						//maximum Di-tau-mass requirement
+	InvertedVBF_CR3.DiTauSign		= +1;						//1 for LS and -1 for OS, 0 for no requirement
+	InvertedVBF_CR3.Btag			= 0;						//number of btags required (exact -> 0 = none)
+	InvertedVBF_CR3.JetEtaMax		= 5.;						//maximum eta for jets, set to -1 for no requirement
+	InvertedVBF_CR3.LeadJetPtMin		= 75.;						//minimum pt of lead jet, set to -1 for no requirement
+	InvertedVBF_CR3.LeadJetPtMax		= -1.;						//maximum pt of lead jet, set to -1 for no requirement
+	InvertedVBF_CR3.SubLeadJetPtMin		= 50.;						//minimum pt of sub lead jet, set to -1 for no requirement
+	InvertedVBF_CR3.SubLeadJetPtMax		= -1.;						//maximum pt of sub lead jet, set to -1 for no requirement
+	InvertedVBF_CR3.DiJetDrMin		= 0.3;						//Dijet minimum delta R, set to -1 for no requirement
+	InvertedVBF_CR3.DiJetDrMax		= -1.;						//Dijet maximum delta R, set to -1 for no requirement
+	InvertedVBF_CR3.DiJetInvMassMin		= 700.;						//Dijet minimal invariant mass, set to -1 for no requirement
+	InvertedVBF_CR3.DiJetInvMassMax		= -1.;						//Dijet maximum invariant mass, set to -1 for no requirement
+	InvertedVBF_CR3.DiJetSignEta		= -1;						//Dijet sign eta_1*eta_2
+	InvertedVBF_CR3.DiJetDetaMin		= 4.2;						//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+	InvertedVBF_CR3.DiJetDetaMax		= -1.;						//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement	
+	InvertedVBF_CR3.weight			= weight;					//event weight
+	InvertedVBF_CR3.invertTauRequirements	= false;					//invert number of taus requirement
+	InvertedVBF_CR3.invertTauProperties	= false;					//invert ditau properties (dR, sign)
+	InvertedVBF_CR3.invertBtagRequirement	= false;					//invert number of b-jets required
+	InvertedVBF_CR3.invertJetRequirements	= true;						//invert jet pt requirements
+	InvertedVBF_CR3.invertDijetProperties	= true;						//invert dijet system properties (dR, inv mass, sign eta, dEta)
 		
-		if (  (temp_tau1index < 99999)  && (temp_tau2index < 99999)  ) {
-			tau1_4v.SetPtEtaPhiE(TauMediumIsoObjectSelectionCollection.tau[temp_tau1index]->pt, TauMediumIsoObjectSelectionCollection.tau[temp_tau1index]->eta, TauMediumIsoObjectSelectionCollection.tau[temp_tau1index]->phi, TauMediumIsoObjectSelectionCollection.tau[temp_tau1index]->energy);
-			tau2_4v.SetPtEtaPhiE(TauMediumIsoObjectSelectionCollection.tau[temp_tau2index]->pt, TauMediumIsoObjectSelectionCollection.tau[temp_tau2index]->eta, TauMediumIsoObjectSelectionCollection.tau[temp_tau2index]->phi, TauMediumIsoObjectSelectionCollection.tau[temp_tau2index]->energy);
-		}
-
-		//DiTauDeltaRCut
-		double DiTauDeltaR = tau1_4v.DeltaR(tau2_4v);
-
-		if(!(           ( DiTauDeltaR > 0.3)                                                     )) break;
-		myHistoColl_CR3.h_count->Fill("DiTauDeltaRCut", 1);
-
-	        //DiTauSignCut
-	        int chargeDiTau = TauMediumIsoObjectSelectionCollection.tau[temp_tau1index]->charge * TauMediumIsoObjectSelectionCollection.tau[temp_tau2index]->charge;
-	        if(!(                          chargeDiTau > 0.                                          )) break; //NOW REQUIRING SAME SIGN
-	        myHistoColl_CR3.h_count->Fill("DiTauSignCut",1);
-
-		//NoBTag
-		if(!(            (int)TauMediumIsoObjectSelectionCollection.bjet.size() == 0                     )) break;
-		myHistoColl_CR3.h_count->Fill("NoBTag",1);
-
-		//LeadJet
-		double leadjetpt = 0.;
-		double leadjeteta = 0.;
-		//SubLeadJet
-		double subleadjetpt = 0.;
-		double subleadjeteta = 0.;
-		
-		for(unsigned int j = 0;j<TauMediumIsoObjectSelectionCollection.jet.size();++j){
-		        if (leadjetpt < TauMediumIsoObjectSelectionCollection.jet[j]->pt){
-				if(subleadjetpt < leadjetpt){subleadjetpt=leadjetpt; subleadjeteta=leadjeteta;} //if second jet has less pt than the hitherto first jet, replace it
-                             	leadjeteta =  TauMediumIsoObjectSelectionCollection.jet[j]->eta;
-                             	leadjetpt  =  TauMediumIsoObjectSelectionCollection.jet[j]->pt;
-		        }
-		        if ((subleadjetpt < TauMediumIsoObjectSelectionCollection.jet[j]->pt) && (leadjetpt > TauMediumIsoObjectSelectionCollection.jet[j]->pt)) {subleadjetpt = TauMediumIsoObjectSelectionCollection.jet[j]->pt; subleadjeteta = TauMediumIsoObjectSelectionCollection.jet[j]->eta;}
-		}		
-		
-		if(!(                      (leadjetpt >= 75.) && (fabs(leadjeteta) < 5.)              )) {
-			myHistoColl_CR3.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection, weight);
-			break;
-		}
-
-		if(!(                      (subleadjetpt >= 50.) && (fabs(subleadjeteta) < 5.)          )) {
-			myHistoColl_CR3.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection, weight);
-			break;
-		}
-
-		//DiJetCuts
-
-		bool passedDiJetEtaSignCut = false;
-		bool passedDiJetEtaCut = false;
-		bool passedDiJetMassCut = false;
-		bool passedDiJetDeltaRCut = false;
-
-		unsigned int jet1index = 99999;
-		unsigned int jet2index = 99999;
-
-		double invmassDiJet = 0.;
-		double dealtaRDiJet = 0.;
-
-		for(unsigned int j1 = 1;j1<TauMediumIsoObjectSelectionCollection.jet.size();++j1){
-
-			for (unsigned int j2 = 0;j2<j1;++j2){
-
-					TLorentzVector jet1_4v;
-					TLorentzVector jet2_4v;
-
-					jet1_4v.SetPtEtaPhiE(TauMediumIsoObjectSelectionCollection.jet[j1]->pt, TauMediumIsoObjectSelectionCollection.jet[j1]->eta, TauMediumIsoObjectSelectionCollection.jet[j1]->phi, TauMediumIsoObjectSelectionCollection.jet[j1]->energy);
-					jet2_4v.SetPtEtaPhiE(TauMediumIsoObjectSelectionCollection.jet[j2]->pt, TauMediumIsoObjectSelectionCollection.jet[j2]->eta, TauMediumIsoObjectSelectionCollection.jet[j2]->phi, TauMediumIsoObjectSelectionCollection.jet[j2]->energy);
-
-					TLorentzVector dijet_4v = jet1_4v + jet2_4v;
-
-					double temp_invmassDiJet = dijet_4v.M();
-					if (     invmassDiJet < temp_invmassDiJet   ) {invmassDiJet = temp_invmassDiJet; jet1index = j1; jet2index = j2; dealtaRDiJet = jet1_4v.DeltaR(jet2_4v);}
-
-			}
-
-		}
-
-		//DiJetDeltaRCut
-		if (     dealtaRDiJet >= 0.3   ) passedDiJetDeltaRCut = true;
-		if(!(                      passedDiJetDeltaRCut                                       )) {
-			myHistoColl_CR3.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection, weight);
-			break;
-		}
-
-		//DiJetInvMassCut
-		if (     invmassDiJet > 700.   ) passedDiJetMassCut = true;
-		if(!(                      passedDiJetMassCut                                         )) {
-			myHistoColl_CR3.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection, weight);
-			break;
-		}
-
-		if (     (TauMediumIsoObjectSelectionCollection.jet[jet1index]->eta * TauMediumIsoObjectSelectionCollection.jet[jet2index]->eta ) < 0.         ) passedDiJetEtaSignCut = true;
-		if(!(                      passedDiJetEtaSignCut                                      )) {
-			myHistoColl_CR3.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection, weight);
-			break;
-		}
-
-		if (      fabs ( TauMediumIsoObjectSelectionCollection.jet[jet1index]->eta - TauMediumIsoObjectSelectionCollection.jet[jet2index]->eta ) > 4.2   ) passedDiJetEtaCut = true;
-
-		if(!(                      passedDiJetEtaCut                                          )) {
-			myHistoColl_CR3.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection, weight);
-			break;
-		}
-
-
-		//INVERTED VBF CUT
-		if((    (leadjetpt >= 75.) && (fabs(leadjeteta)< 5.) && (subleadjetpt >= 50.) && (fabs(subleadjeteta) < 5.) && (passedDiJetDeltaRCut) && (passedDiJetEtaSignCut) && (passedDiJetEtaCut) && (passedDiJetMassCut)   )) break;
-		myHistoColl_CR3.h_count->Fill("InvertedVBFCut",1);
-
-		fillHistoCollection (myHistoColl_CR3, TauMediumIsoObjectSelectionCollection, weight);
-
-
-		break;
-	}
+	InvertedVBF_CR3.select();								//do selection, fill histograms			
 
 	// ------------------------------------------------------
 	// -- CENTRAL + INVERTED VBF CR (with Tau Loose Iso)  --
 	// ------------------------------------------------------
 
-	myHistoColl_CR4.h_count->Fill("NoCuts",0);
-	myHistoColl_CR4.h_count->Fill("TriggerRequirement",0);
-	myHistoColl_CR4.h_count->Fill("AtLeast1tau",0);
-	myHistoColl_CR4.h_count->Fill("AtLeast2tau",0);
-	myHistoColl_CR4.h_count->Fill("DiTauDeltaRCut", 0);
-	myHistoColl_CR4.h_count->Fill("DiTauSignCut",0);
-	myHistoColl_CR4.h_count->Fill("NoBTag",0);
-	myHistoColl_CR4.h_count->Fill("InvertedVBFCut",0);
+	Selection InvertedVBF_CR4("InvertedVBF_CR4"); 						//label and initialisation
+	InvertedVBF_CR4.InputCollection 	= &TauLooseIsoObjectSelectionCollection;	//input collection
+	InvertedVBF_CR4.OutputCollection 	= &myHistoColl_CR4;				//output collection
+	InvertedVBF_CR4.RealData		= eventhelper_isRealData;			//pass information if event is real data
+	InvertedVBF_CR4.RunData			= true;						//real data allowed
+	InvertedVBF_CR4.NumberTauMin		= 2;						//require at least N tau
+	InvertedVBF_CR4.NumberTauMax		= -1;						//require at most N taus
+	InvertedVBF_CR4.DiTauDeltaRmin		= 0.3;						//minimum delta R for tau pair
+	InvertedVBF_CR4.DiTauInvMassMin		= -1;						//minimum Di-tau-mass requirement
+	InvertedVBF_CR4.DiTauInvMassMax		= -1;						//maximum Di-tau-mass requirement	
+	InvertedVBF_CR4.DiTauSign		= +1;						//1 for LS and -1 for OS, 0 for no requirement
+	InvertedVBF_CR4.Btag			= 0;						//number of btags required (exact -> 0 = none)
+	InvertedVBF_CR4.JetEtaMax		= 5.;						//maximum eta for jets, set to -1 for no requirement
+	InvertedVBF_CR4.LeadJetPtMin		= 75.;						//minimum pt of lead jet, set to -1 for no requirement
+	InvertedVBF_CR4.LeadJetPtMax		= -1.;						//maximum pt of lead jet, set to -1 for no requirement
+	InvertedVBF_CR4.SubLeadJetPtMin		= 50.;						//minimum pt of sub lead jet, set to -1 for no requirement
+	InvertedVBF_CR4.SubLeadJetPtMax		= -1.;						//maximum pt of sub lead jet, set to -1 for no requirement
+	InvertedVBF_CR4.DiJetDrMin		= 0.3;						//Dijet minimum delta R, set to -1 for no requirement
+	InvertedVBF_CR4.DiJetDrMax		= -1.;						//Dijet maximum delta R, set to -1 for no requirement
+	InvertedVBF_CR4.DiJetInvMassMin		= 700.;						//Dijet minimal invariant mass, set to -1 for no requirement
+	InvertedVBF_CR4.DiJetInvMassMax		= -1.;						//Dijet maximum invariant mass, set to -1 for no requirement
+	InvertedVBF_CR4.DiJetSignEta		= -1;						//Dijet sign eta_1*eta_2
+	InvertedVBF_CR4.DiJetDetaMin		= 4.2;						//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+	InvertedVBF_CR4.DiJetDetaMax		= -1.;						//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement	
+	InvertedVBF_CR4.weight			= weight;					//event weight
+	InvertedVBF_CR4.invertTauRequirements	= false;					//invert number of taus requirement
+	InvertedVBF_CR4.invertTauProperties	= false;					//invert ditau properties (dR, sign)
+	InvertedVBF_CR4.invertBtagRequirement	= false;					//invert number of b-jets required
+	InvertedVBF_CR4.invertJetRequirements	= true;						//invert jet pt requirements
+	InvertedVBF_CR4.invertDijetProperties	= true;						//invert dijet system properties (dR, inv mass, sign eta, dEta)
+		
+	InvertedVBF_CR4.select();								//do selection, fill histograms			
+
+	// ---------------------
+	// -- Z -> TauTau CR  --
+	// ---------------------
+
+	Selection Ztautau_CR1("Ztautau_CR1"); 						//label and initialisation
+	Ztautau_CR1.InputCollection 		= &mainObjectSelectionCollection;	//input collection
+	Ztautau_CR1.OutputCollection 		= &myHistoColl_CR1;			//output collection
+	Ztautau_CR1.RealData			= eventhelper_isRealData;		//pass information if event is real data
+	Ztautau_CR1.RunData			= true;					//real data allowed
+	Ztautau_CR1.NumberTauMin		= 2;					//require at least N tau
+	Ztautau_CR1.NumberTauMax		= -1;					//require at most N taus
+	Ztautau_CR1.DiTauDeltaRmin		= 0.3;					//minimum delta R for tau pair
+	Ztautau_CR1.DiTauInvMassMin		= -1.;					//minimum Di-tau-mass requirement
+	Ztautau_CR1.DiTauInvMassMax		= 90.;					//maximum Di-tau-mass requirement	
+	Ztautau_CR1.DiTauSign			= -1;					//1 for LS and -1 for OS, 0 for no requirement
+	Ztautau_CR1.Btag			= 0;					//number of btags required (exact -> 0 = none)
+	Ztautau_CR1.JetEtaMax			= -1.;					//maximum eta for jets, set to -1 for no requirement
+	Ztautau_CR1.LeadJetPtMin		= -1.;					//minimum pt of lead jet, set to -1 for no requirement
+	Ztautau_CR1.LeadJetPtMax		= -1.;					//maximum pt of lead jet, set to -1 for no requirement
+	Ztautau_CR1.SubLeadJetPtMin		= -1.;					//minimum pt of sub lead jet, set to -1 for no requirement
+	Ztautau_CR1.SubLeadJetPtMax		= -1.;					//maximum pt of sub lead jet, set to -1 for no requirement
+	Ztautau_CR1.DiJetDrMin			= -1.;					//Dijet minimum delta R, set to -1 for no requirement
+	Ztautau_CR1.DiJetDrMax			= -1.;					//Dijet maximum delta R, set to -1 for no requirement
+	Ztautau_CR1.DiJetInvMassMin		= -1.;					//Dijet minimal invariant mass, set to -1 for no requirement
+	Ztautau_CR1.DiJetInvMassMax		= -1.;					//Dijet maximum invariant mass, set to -1 for no requirement
+	Ztautau_CR1.DiJetSignEta		= 0;					//Dijet sign eta_1*eta_2
+	Ztautau_CR1.DiJetDetaMin		= -1.;					//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+	Ztautau_CR1.DiJetDetaMax		= -1.;					//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement	
+	Ztautau_CR1.weight			= weight;				//event weight
+	Ztautau_CR1.invertTauRequirements	= false;				//invert number of taus requirement
+	Ztautau_CR1.invertTauProperties		= false;				//invert ditau properties (dR, sign)
+	Ztautau_CR1.invertBtagRequirement	= false;				//invert number of b-jets required
+	Ztautau_CR1.invertJetRequirements	= false;				//invert jet pt requirements
+	Ztautau_CR1.invertDijetProperties	= false;				//invert dijet system properties (dR, inv mass, sign eta, dEta)
+		
+	Ztautau_CR1.select();								//do selection, fill histograms			
 	
-	while (true){
-
-		//NoCuts
-		myHistoColl_CR4.h_count->Fill("NoCuts",1);
-
-		//Trigger Requirement
-		if (eventhelper_isRealData) {
-			if(!(                     TauLooseIsoObjectSelectionCollection.passedTrigger                   )) break;
-		}
-		myHistoColl_CR4.h_count->Fill("TriggerRequirement",1);
-
-		//AtLeast1tau
-		if(!(             ( (int)TauLooseIsoObjectSelectionCollection.tau.size() >= 1 )                 )) break;
-		myHistoColl_CR4.h_count->Fill("AtLeast1tau",1);
-
-		//AtLeast2tau
-		if(!(             ( (int)TauLooseIsoObjectSelectionCollection.tau.size() >= 2 )                 )) break;
-		myHistoColl_CR4.h_count->Fill("AtLeast2tau",1);
-
-		unsigned int temp_tau1index = 99999;
-		unsigned int temp_tau2index = 99999;
-		double temp_tau1_pt = -99999.;
-		double temp_tau2_pt = -99999.;
-		TLorentzVector tau1_4v;
-		TLorentzVector tau2_4v;
-		
-		for(unsigned int t =0;t<TauLooseIsoObjectSelectionCollection.tau.size();++t){
-		        if (temp_tau1_pt < TauLooseIsoObjectSelectionCollection.tau[t]->pt){
-			    	if(temp_tau2_pt < temp_tau1_pt){temp_tau2_pt=temp_tau1_pt; temp_tau2index=temp_tau1index;} //if second jet has less pt than the hitherto first jet, replace it
-                            	temp_tau1index = t;
-                            	temp_tau1_pt = TauLooseIsoObjectSelectionCollection.tau[t]->pt;
-		        }
-		        if ( (temp_tau2_pt < TauLooseIsoObjectSelectionCollection.tau[t]->pt) && ( temp_tau1_pt > TauLooseIsoObjectSelectionCollection.tau[t]->pt) ) {temp_tau2index = t; temp_tau2_pt = TauLooseIsoObjectSelectionCollection.tau[t]->pt;}
-		}
-
-		if (  (temp_tau1index < 99999)  && (temp_tau2index < 99999)  ) {
-			tau1_4v.SetPtEtaPhiE(TauLooseIsoObjectSelectionCollection.tau[temp_tau1index]->pt, TauLooseIsoObjectSelectionCollection.tau[temp_tau1index]->eta, TauLooseIsoObjectSelectionCollection.tau[temp_tau1index]->phi, TauLooseIsoObjectSelectionCollection.tau[temp_tau1index]->energy);
-			tau2_4v.SetPtEtaPhiE(TauLooseIsoObjectSelectionCollection.tau[temp_tau2index]->pt, TauLooseIsoObjectSelectionCollection.tau[temp_tau2index]->eta, TauLooseIsoObjectSelectionCollection.tau[temp_tau2index]->phi, TauLooseIsoObjectSelectionCollection.tau[temp_tau2index]->energy);
-		}
-
-		//DiTauDeltaRCut
-		double DiTauDeltaR = tau1_4v.DeltaR(tau2_4v);
-
-		if(!(           ( DiTauDeltaR > 0.3)                                                     )) break;
-		myHistoColl_CR4.h_count->Fill("DiTauDeltaRCut", 1);
-
-	        //DiTauSignCut
-	        int chargeDiTau = TauLooseIsoObjectSelectionCollection.tau[temp_tau1index]->charge * TauLooseIsoObjectSelectionCollection.tau[temp_tau2index]->charge;
-	        if(!(                          chargeDiTau > 0.                                          )) break; //NOW REQUIRING SAME SIGN
-	        myHistoColl_CR4.h_count->Fill("DiTauSignCut",1);
-
-		//NoBTag
-		if(!(            (int)TauLooseIsoObjectSelectionCollection.bjet.size() == 0                     )) break;
-		myHistoColl_CR4.h_count->Fill("NoBTag",1);
-
-		//LeadJet
-		double leadjetpt = 0.;
-		double leadjeteta = 0.;
-		//SubLeadJet
-		double subleadjetpt = 0.;
-		double subleadjeteta = 0.;
-		
-		for(unsigned int j = 0;j<TauLooseIsoObjectSelectionCollection.jet.size();++j){
-		        if (leadjetpt < TauLooseIsoObjectSelectionCollection.jet[j]->pt){
-				if(subleadjetpt < leadjetpt){subleadjetpt=leadjetpt; subleadjeteta=leadjeteta;} //if second jet has less pt than the hitherto first jet, replace it
-                             	leadjeteta =  TauLooseIsoObjectSelectionCollection.jet[j]->eta;
-                             	leadjetpt  =  TauLooseIsoObjectSelectionCollection.jet[j]->pt;
-		        }
-		        if ((subleadjetpt < TauLooseIsoObjectSelectionCollection.jet[j]->pt) && (leadjetpt > TauLooseIsoObjectSelectionCollection.jet[j]->pt)) {subleadjetpt = TauLooseIsoObjectSelectionCollection.jet[j]->pt; subleadjeteta = TauLooseIsoObjectSelectionCollection.jet[j]->eta;}
-		}
-
-		if(!(                      (leadjetpt >= 75.) && (fabs(leadjeteta) < 5.)              )) {
-			myHistoColl_CR4.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection, weight);
-			break;
-		}
-
-		if(!(                      (subleadjetpt >= 50.) && (fabs(subleadjeteta) < 5.)          )) {
-			myHistoColl_CR4.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection, weight);
-			break;
-		}
-
-		//DiJetCuts
-
-		bool passedDiJetEtaSignCut = false;
-		bool passedDiJetEtaCut = false;
-		bool passedDiJetMassCut = false;
-		bool passedDiJetDeltaRCut = false;
-
-		unsigned int jet1index = 99999;
-		unsigned int jet2index = 99999;
-
-		double invmassDiJet = 0.;
-		double dealtaRDiJet = 0.;
-
-		for(unsigned int j1 = 1;j1<TauLooseIsoObjectSelectionCollection.jet.size();++j1){
-
-			for (unsigned int j2 = 0;j2<j1;++j2){
-
-					TLorentzVector jet1_4v;
-					TLorentzVector jet2_4v;
-
-					jet1_4v.SetPtEtaPhiE(TauLooseIsoObjectSelectionCollection.jet[j1]->pt, TauLooseIsoObjectSelectionCollection.jet[j1]->eta, TauLooseIsoObjectSelectionCollection.jet[j1]->phi, TauLooseIsoObjectSelectionCollection.jet[j1]->energy);
-					jet2_4v.SetPtEtaPhiE(TauLooseIsoObjectSelectionCollection.jet[j2]->pt, TauLooseIsoObjectSelectionCollection.jet[j2]->eta, TauLooseIsoObjectSelectionCollection.jet[j2]->phi, TauLooseIsoObjectSelectionCollection.jet[j2]->energy);
-
-					TLorentzVector dijet_4v = jet1_4v + jet2_4v;
-
-					double temp_invmassDiJet = dijet_4v.M();
-					if (     invmassDiJet < temp_invmassDiJet   ) {invmassDiJet = temp_invmassDiJet; jet1index = j1; jet2index = j2; dealtaRDiJet = jet1_4v.DeltaR(jet2_4v);}
-
-			}
-
-		}
-
-		//DiJetDeltaRCut
-		if (     dealtaRDiJet >= 0.3   ) passedDiJetDeltaRCut = true;
-		if(!(                      passedDiJetDeltaRCut                                       )) {
-			myHistoColl_CR4.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection, weight);
-			break;
-		}
-
-		//DiJetInvMassCut
-		if (     invmassDiJet > 700.   ) passedDiJetMassCut = true;
-		if(!(                      passedDiJetMassCut                                         )) {
-			myHistoColl_CR4.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection, weight);
-			break;
-		}
-
-		if (     (TauLooseIsoObjectSelectionCollection.jet[jet1index]->eta * TauLooseIsoObjectSelectionCollection.jet[jet2index]->eta ) < 0.         ) passedDiJetEtaSignCut = true;
-		if(!(                      passedDiJetEtaSignCut                                      )) {
-			myHistoColl_CR4.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection, weight);
-			break;
-		}
-
-		if (      fabs ( TauLooseIsoObjectSelectionCollection.jet[jet1index]->eta - TauLooseIsoObjectSelectionCollection.jet[jet2index]->eta ) > 4.2   ) passedDiJetEtaCut = true;
-
-		if(!(                      passedDiJetEtaCut                                          )) {
-			myHistoColl_CR4.h_count->Fill("InvertedVBFCut",1);
-			fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection, weight);
-			break;
-		}
-
-
-		//INVERTED VBF CUT
-		if((    (leadjetpt >= 75.) && (fabs(leadjeteta)< 5.) && (subleadjetpt >= 50.) && (fabs(subleadjeteta) < 5.) && (passedDiJetDeltaRCut) && (passedDiJetEtaSignCut) && (passedDiJetEtaCut) && (passedDiJetMassCut)   )) break;
-		myHistoColl_CR4.h_count->Fill("InvertedVBFCut",1);
-
-		fillHistoCollection (myHistoColl_CR4, TauLooseIsoObjectSelectionCollection, weight);
-
-
-		break;
-	}
-
-	  // ---------------------
-	  // -- Z -> TauTau CR  --
-	  // ---------------------
-
-	myHistoColl_CR1.h_count->Fill("NoCuts",0.);
-	myHistoColl_CR1.h_count->Fill("TriggerRequirement",0.);
-	myHistoColl_CR1.h_count->Fill("AtLeast1tau",0.);
-	myHistoColl_CR1.h_count->Fill("AtLeast2tau",0.);
-	myHistoColl_CR1.h_count->Fill("DiTauDeltaRCut",0.);
-	myHistoColl_CR1.h_count->Fill("NoBTag",0.);
-	myHistoColl_CR1.h_count->Fill("DiTauInaviantMassCut",0.);
-	myHistoColl_CR1.h_count->Fill("DiTauSignCut",0.);
-
-        while (true){                     
-
-	        //NoCuts
-	        myHistoColl_CR1.h_count->Fill("NoCuts",1);
-          
-	          //Trigger Requirement (ONLY FOR DATA)
-		if (eventhelper_isRealData) {
-			if(!(                     mainObjectSelectionCollection.passedTrigger                   )) break;
-		}
-	        myHistoColl_CR1.h_count->Fill("TriggerRequirement",1);
-
-	        //AtLeast1tau
-	        if(!(             ( (int)mainObjectSelectionCollection.tau.size() >= 1 )                 )) break;
-	        myHistoColl_CR1.h_count->Fill("AtLeast1tau",1);
-
-	        //AtLeast2tau
-	        if(!(             ( (int)mainObjectSelectionCollection.tau.size() >= 2 )                 )) break;
-	        myHistoColl_CR1.h_count->Fill("AtLeast2tau",1);
-
-                unsigned int temp_tau1index = 99999;
-                unsigned int temp_tau2index = 99999;
-                double temp_tau1_pt = -99999.;
-                double temp_tau2_pt = -99999.;
-                TLorentzVector tau1_4v;
-                TLorentzVector tau2_4v;
-
-		for(unsigned int t =0;t<mainObjectSelectionCollection.tau.size();++t){
-		        if (temp_tau1_pt < mainObjectSelectionCollection.tau[t]->pt){
-			    	if(temp_tau2_pt < temp_tau1_pt){temp_tau2_pt=temp_tau1_pt; temp_tau2index=temp_tau1index;} //if second jet has less pt than the hitherto first jet, replace it
-                            	temp_tau1index = t;
-                            	temp_tau1_pt = mainObjectSelectionCollection.tau[t]->pt;
-		        }
-		        if ( (temp_tau2_pt < mainObjectSelectionCollection.tau[t]->pt) && ( temp_tau1_pt > mainObjectSelectionCollection.tau[t]->pt) ) {temp_tau2index = t; temp_tau2_pt = mainObjectSelectionCollection.tau[t]->pt;}
-		}
-
-                if (  (temp_tau1index < 99999)  && (temp_tau2index < 99999)  ) {
-	          	tau1_4v.SetPtEtaPhiE(mainObjectSelectionCollection.tau[temp_tau1index]->pt, mainObjectSelectionCollection.tau[temp_tau1index]->eta, mainObjectSelectionCollection.tau[temp_tau1index]->phi, mainObjectSelectionCollection.tau[temp_tau1index]->energy);
-	          	tau2_4v.SetPtEtaPhiE(mainObjectSelectionCollection.tau[temp_tau2index]->pt, mainObjectSelectionCollection.tau[temp_tau2index]->eta, mainObjectSelectionCollection.tau[temp_tau2index]->phi, mainObjectSelectionCollection.tau[temp_tau2index]->energy);
-		}
-
-	        //DiTauEtaCut
-	        //loop over good taus
-	        double DiTauDeltaR = tau1_4v.DeltaR(tau2_4v);
-
-	        if(!(           ( DiTauDeltaR > 0.3)                                                     )) break;
-	        myHistoColl_CR1.h_count->Fill("DiTauDeltaRCut", 1);
-
-	        //NoBTag
-	        if(!(            (int)mainObjectSelectionCollection.bjet.size() == 0                     )) break;
-	        myHistoColl_CR1.h_count->Fill("NoBTag",1);
-
-	        //MET Cut
-	        bool metcut = false;
-	        if (met[0].pt < 75.) metcut = true;
-	        //if(!(                      metcut                                                     )) continue;
-	        //ofile.count("METCut");
-
- 
-	        //DiTauInaviantMassCut
-	        TLorentzVector ditau_4v = tau1_4v + tau2_4v;
-
-	       	double invmassDiTau = ditau_4v.M();
-	         
-
-	       	if(!(                      invmassDiTau < 90.                                             )) break;
-	       	myHistoColl_CR1.h_count->Fill("DiTauInaviantMassCut",1);
- 
-	       	//DiTauSignCut
-	       	int chargeDiTau = mainObjectSelectionCollection.tau[temp_tau1index]->charge * mainObjectSelectionCollection.tau[temp_tau2index]->charge;
-	       	if(!(                          chargeDiTau < 0.                                          )) break; //NOW REQUIRING OPPOSITE SIGN
-	       	myHistoColl_CR1.h_count->Fill("DiTauSignCut",1);
-	       	fillHistoCollection (myHistoColl_CR1, mainObjectSelectionCollection, weight);
-
-               	break;
-        }        
-
 	//Clearing Object Collections 
 	mainObjectSelectionCollection.clear();
 	baselineObjectSelectionCollection.clear();
