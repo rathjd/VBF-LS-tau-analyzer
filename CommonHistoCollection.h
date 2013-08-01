@@ -49,7 +49,12 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 
 	//fill ht distribution
 	inputHistoCollection.h_ht -> Fill(ht_jets,weight);
-	 
+	
+	//fill jet tau distance distribution
+	if(jetIndex.first<99999 && jetIndex.second<99999){
+	inputHistoCollection.h_jetTauDistanceFirst->Fill(TauJetMinDistance(inputEventCollection,inputEventCollection.jet[jetIndex.first]->eta, inputEventCollection.jet[jetIndex.first]->phi));
+	inputHistoCollection.h_jetTauDistanceSecond->Fill(TauJetMinDistance(inputEventCollection,inputEventCollection.jet[jetIndex.second]->eta, inputEventCollection.jet[jetIndex.second]->phi));	 
+	}
 //____________________________________________________________________________________________
 
         //TAUS
