@@ -4,6 +4,20 @@
 #include "structures.h"
 
 //-----------------
+//minDeltaR finder jet to tau
+//_________________
+
+double TauJetMinDistance(MyEventCollection collection, double jetEta, double jetPhi)
+  {
+    double minDeltaRtauJet = 99999.;
+    for(unsigned int t =0;t<collection.tau.size();++t){
+      double temp_mindeltaRtaujet = deltaR(jetEta, jetPhi, collection.tau[t]->eta, collection.tau[t]->phi); 
+      if (temp_mindeltaRtaujet < minDeltaRtauJet) minDeltaRtauJet = temp_mindeltaRtaujet;
+    } 
+    return minDeltaRtauJet;
+  }
+
+//-----------------
 //leading jet finder
 //_________________
 
