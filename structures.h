@@ -100,6 +100,9 @@ struct MyHistoCollection {
 
 	TH1F* h_ht;
 	TH1F* h_ht_withtau;
+	
+	TH1F* h_jetTauDistanceFirst;
+	TH1F* h_jetTauDistanceSecond;
 
 	MyHistoCollection(TFile * f, const std::string & inputlabel) {
 
@@ -132,6 +135,9 @@ struct MyHistoCollection {
 
 		h_ht = new TH1F("h_ht", "h_ht", 50, 0., 1300.);
 		h_ht_withtau = new TH1F("h_ht_withtau", "h_ht_withtau", 50, 0., 1300.);
+		
+		h_jetTauDistanceFirst = new TH1F("h_jetTauDistanceFirst", "h_jetTauDistanceFirst", 25, 0., 0.5);
+		h_jetTauDistanceSecond = new TH1F("h_jetTauDistanceSecond", "h_jetTauDistanceSecond", 25, 0., 0.5);
 	}
 };
 
