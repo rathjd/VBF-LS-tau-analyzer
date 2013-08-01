@@ -70,7 +70,7 @@ struct Selection {
 	
 	void select() {
 	  (*OutputCollection).h_count->Fill("NoCuts",0);
-	  (*OutputCollection).h_count->Fill("TriggerRequirement",0);
+	  if(RealData)(*OutputCollection).h_count->Fill("TriggerRequirement",0);
 	  if(invertTauRequirements){
 	    if(NumberTauMin >= 0)(*OutputCollection).h_count->Fill("InverseAtLeastNtaus",0);
 	    if(NumberTauMax >= 0)(*OutputCollection).h_count->Fill("InverseAtMostNtaus",0);
@@ -114,11 +114,11 @@ struct Selection {
 	    if(DiJetDetaMin > 0 || DiJetDetaMax > 0)(*OutputCollection).h_count->Fill("DiJetEtaCut",0);	  
 	  }
 	  
-	  if(!(RealData == RunData))	 					return; //check if sample is real data and whether you want to run on real data
+	  if(!RunData && RealData)	 					return; //check if sample is real data and whether you want to run on real data
 	  else (*OutputCollection).h_count->Fill("NoCuts",weight);
 	  
 	  if(RealData		&& !(*InputCollection).passedTrigger) 		return; //check on trigger pass, if sample is real data
-	  else (*OutputCollection).h_count->Fill("TriggerRequirement",weight);
+	  else if(RealData) (*OutputCollection).h_count->Fill("TriggerRequirement",weight);
 	  
 	  //Tau requirements
 	  
