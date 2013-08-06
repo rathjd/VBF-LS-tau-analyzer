@@ -94,6 +94,7 @@ struct Selection {
 	  if(invertBtagRequirement && Btag >= 0) (*OutputCollection).h_count->Fill("InverseNoBTag",0);
 	  else if(Btag >= 0) (*OutputCollection).h_count->Fill("NoBTag",0);
 	  if(invertJetRequirements){
+	    (*OutputCollection).h_count->Fill("InverseNumberOfJetsCut",0);
 	    if(LeadJetPtMin > 0 || LeadJetPtMax > 0) (*OutputCollection).h_count->Fill("InverseLeadJetCut",0);
 	    if(SubLeadJetPtMin > 0 || SubLeadJetPtMax > 0) (*OutputCollection).h_count->Fill("InverseSecondJetCut",0);
 	  }
@@ -212,7 +213,14 @@ struct Selection {
 	  //find index of leading jets
 	  pair<unsigned int,unsigned int> jetIndex=LeadingJets((*InputCollection));
 	  
-	  if(jetIndex.first==99999 || jetIndex.second==99999) return;
+	  if(jetIndex.first==99999 || jetIndex.second==99999){
+	    if(invertJetRequirements){
+	      (*OutputCollection).h_count->Fill("InverseNumberOfJetsCut",0);
+	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	      return;
+	    }
+	    else return;
+	  }
 	  
 	  //LeadJet
 	  double leadJetPt = (*InputCollection).jet[jetIndex.first]->pt;
