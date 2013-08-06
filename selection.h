@@ -215,7 +215,7 @@ struct Selection {
 	  
 	  if(jetIndex.first==99999 || jetIndex.second==99999){
 	    if(invertJetRequirements){
-	      (*OutputCollection).h_count->Fill("InverseNumberOfJetsCut",0);
+	      (*OutputCollection).h_count->Fill("InverseNumberOfJetsCut",1);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
 	      return;
 	    }
