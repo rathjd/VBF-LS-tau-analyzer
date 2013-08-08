@@ -16,23 +16,23 @@ struct Fake {
 	}
 	
 	void generate(std::vector<double> jetTauFakerate){
-	  if(jetTauFakerate.jet.size() < 2) return; //sanity check whether there are enough jets
+	  if(jetTauFakerate.size() < 2) return; //sanity check whether there are enough jets
 		
 	  //loop over all jets
-	  double probabilityZero=0.;
+	  double probabilityZero=1.;
 	  double probabilityOne=0.;
 	  double maxProb=0.;
 	  for(unsigned int i=0; i<jetTauFakerate.size(); i++){
 	  
 		//find probability of >0 taus
-		probabilityZero *= 1. - jetTauFakerate[i];
+		probabilityZero *= (1. - jetTauFakerate[i]);
 		maxProb += jetTauFakerate[i];
 		
 		//find probability of >1 taus
 		double temp = jetTauFakerate[i];
 		for(unsigned int j=0; j<jetTauFakerate.size(); j++){
 		  if(i==j) continue;
-		  temp *= 1 - jetTauFakerate[j];
+		  temp *= (1 - jetTauFakerate[j]);
 		}
 		
 		probabilityOne += temp;	
@@ -61,7 +61,7 @@ struct Fake {
 	  double TossTwo=distributionOne(engine);
 	  temp = 0;
 	  for(unsigned int i=0; i<jetTauFakerate.size(); i++){ //choose second tau
-	  	if(i==index.first) continue;
+	  	if(i==fabs(index.first)) continue;
 	  	temp+=jetTauFakerate[i];
 		if(temp>=TossTwo){
 		  index.second = i;
@@ -70,6 +70,6 @@ struct Fake {
 	  }
 	  return;
 	}
-}
+};
 
 #endif
