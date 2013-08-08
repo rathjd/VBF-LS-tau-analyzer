@@ -9,10 +9,10 @@
 #include "PhysicsTools/TheNtupleMaker/interface/pdg.h"
 #else
 #include "pdg.h"
-#include "selection.h"
 #endif
 
 #include "CommonHistoCollection.h"
+#include "selection.h"
 
 // Structs useful for Analyzer
 
@@ -98,7 +98,7 @@ int main(int argc, char** argv)
 	MyHistoCollection myHistoColl_CR2 (ofile.file_, "Central_invertedVBF_CR2");
 	MyHistoCollection myHistoColl_CR3 (ofile.file_, "Central_invertedVBF_TauMediumIso_CR3");
 	MyHistoCollection myHistoColl_CR4 (ofile.file_, "Central_invertedVBF_TauLooseIso_CR4");
-        
+        MyHistoCollection myHistoColl_CR5 (ofile.file_, "Central_TauLooseIso_CR5");
 
 	MyEventCollection baselineObjectSelectionCollection ("baselineObjectSelection");
 	MyEventCollection mainObjectSelectionCollection ("mainObjectSelection");
@@ -441,6 +441,44 @@ int main(int argc, char** argv)
 	Ztautau_CR1.invertDijetProperties	= false;				//invert dijet system properties (dR, inv mass, sign eta, dEta)
 		
 	Ztautau_CR1.select();								//do selection, fill histograms			
+	
+	// ---------------------
+	// -- Central Loose Region   --
+	// ---------------------
+
+	Selection Central_TauLooseIso_CR5("Central_TauLooseIso_CR5"); 					//label and initialisation
+	Central_TauLooseIso_CR5.InputCollection 	= &TauLooseIsoObjectSelectionCollection;	//input collection
+	Central_TauLooseIso_CR5.OutputCollection 	= &myHistoColl_CR5;				//output collection
+	Central_TauLooseIso_CR5.RealData		= eventhelper_isRealData;			//pass information if event is real data
+	Central_TauLooseIso_CR5.RunData			= true;						//real data allowed
+	Central_TauLooseIso_CR5.NumberTauMin		= 2;						//require at least N tau
+	Central_TauLooseIso_CR5.NumberTauMax		= -1;						//require at most N taus
+	Central_TauLooseIso_CR5.DiTauDeltaRmin		= 0.3;						//minimum delta R for tau pair
+	Central_TauLooseIso_CR5.DiTauInvMassMin		= -1;						//minimum Di-tau-mass requirement
+	Central_TauLooseIso_CR5.DiTauInvMassMax		= -1;						//maximum Di-tau-mass requirement
+	Central_TauLooseIso_CR5.DiTauSign		= +1;						//1 for LS and -1 for OS, 0 for no requirement
+	Central_TauLooseIso_CR5.Btag			= 0;						//number of btags required (exact -> 0 = none)
+	Central_TauLooseIso_CR5.JetEtaMax		= 5.;						//maximum eta for jets, set to -1 for no requirement
+	Central_TauLooseIso_CR5.LeadJetPtMin		= 75.;						//minimum pt of lead jet, set to -1 for no requirement
+	Central_TauLooseIso_CR5.LeadJetPtMax		= -1.;						//maximum pt of lead jet, set to -1 for no requirement
+	Central_TauLooseIso_CR5.SubLeadJetPtMin		= 50.;						//minimum pt of sub lead jet, set to -1 for no requirement
+	Central_TauLooseIso_CR5.SubLeadJetPtMax		= -1.;						//maximum pt of sub lead jet, set to -1 for no requirement
+	Central_TauLooseIso_CR5.DiJetDrMin		= 0.3;						//Dijet minimum delta R, set to -1 for no requirement
+	Central_TauLooseIso_CR5.DiJetDrMax		= -1;						//Dijet maximum delta R, set to -1 for no requirement
+	Central_TauLooseIso_CR5.DiJetInvMassMin		= 700.;						//Dijet minimal invariant mass, set to -1 for no requirement
+	Central_TauLooseIso_CR5.DiJetInvMassMax		= -1.;						//Dijet maximum invariant mass, set to -1 for no requirement
+	Central_TauLooseIso_CR5.DiJetSignEta		= -1;						//Dijet sign eta_1*eta_2
+	Central_TauLooseIso_CR5.DiJetDetaMin		= 4.2;						//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+	Central_TauLooseIso_CR5.DiJetDetaMax		= -1;						//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
+	Central_TauLooseIso_CR5.weight			= weight;					//event weight
+	Central_TauLooseIso_CR5.invertTauRequirements	= false;					//invert number of taus requirement
+	Central_TauLooseIso_CR5.invertTauProperties	= false;					//invert ditau properties (dR, sign)
+	Central_TauLooseIso_CR5.invertBtagRequirement	= false;					//invert number of b-jets required
+	Central_TauLooseIso_CR5.invertJetRequirements	= false;					//invert jet pt requirements
+	Central_TauLooseIso_CR5.invertDijetProperties	= false;					//invert dijet system properties (dR, inv mass, sign eta, dEta)
+		
+	Central_TauLooseIso_CR5.select();		
+	
 	
 	//Clearing Object Collections 
 	mainObjectSelectionCollection.clear();
