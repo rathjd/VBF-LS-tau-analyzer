@@ -81,7 +81,7 @@ endif
 # Switches/includes
 # debug flag is on by default
 #------------------------------------------------------------------------------
-debugflag:=-ggdb
+debugflag:=-ggdb -std=c++0x
 
 ifndef optflag
 	optflag:=-O2
