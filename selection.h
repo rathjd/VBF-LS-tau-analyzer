@@ -124,7 +124,7 @@ struct Selection {
 	  //Tau requirements
 	  
 	  if(NumberTauMin >= 0){
-	    if(!((int)(*InputCollection).tau.size() >= NumberTauMin)){			//check if there is at least 1 tau in the event
+	    if(!((int)(*InputCollection).tau.size() >= NumberTauMin)){			//check if there is at least min taus in the event
 	      if(invertTauRequirements) {
 	        (*OutputCollection).h_count->Fill("InverseAtLeastNtaus",1);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
@@ -136,7 +136,7 @@ struct Selection {
 	  }
 	  
 	  if(NumberTauMax >= 0){
-	    if(!((int)(*InputCollection).tau.size()  < NumberTauMax)){	 		//check if there are at least 2 taus in the event
+	    if(!((int)(*InputCollection).tau.size()  < NumberTauMax)){	 		//check if there are less than max taus in the event
 	      if(invertTauRequirements) {
 	        (*OutputCollection).h_count->Fill("InverseAtMostNtaus",1);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
@@ -201,13 +201,13 @@ struct Selection {
 	  if(Btag >= 0){
 	    if(!(Btag 		==	(int)(*InputCollection).bjet.size())){		//check number of btagged jets
 	      if(invertBtagRequirement){
-	        (*OutputCollection).h_count->Fill("InverseNoBTag",weight);
+	        (*OutputCollection).h_count->Fill("InverseNoBTag",1);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
 		return;
 	      }
 	      else return;
 	    }
-	    else if(!invertBtagRequirement) (*OutputCollection).h_count->Fill("NoBTag",weight);
+	    else if(!invertBtagRequirement) (*OutputCollection).h_count->Fill("NoBTag",1);
 	  }
 	  
 	  //find index of leading jets
@@ -266,13 +266,13 @@ struct Selection {
 
 	  if(!subLeadJet){
 	    if(invertJetRequirements){
-	      (*OutputCollection).h_count->Fill("InverseSecondJetCut",weight);
+	      (*OutputCollection).h_count->Fill("InverseSecondJetCut",1);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
 	      return;
 	    }
 	    else return;
 	  }
-	  else if(!invertJetRequirements) (*OutputCollection).h_count->Fill("SecondJetCut",weight);
+	  else if(!invertJetRequirements) (*OutputCollection).h_count->Fill("SecondJetCut",1);
 	  
 	  //find properties of dijet-system
           MassAndIndex Inv2j = Inv2jMassIndex((*InputCollection));
@@ -288,13 +288,13 @@ struct Selection {
 	  
 	  if(!DiJetDr){
 	    if(invertDijetProperties){
-	      (*OutputCollection).h_count->Fill("InverseDiJetDeltaRCut",weight);
+	      (*OutputCollection).h_count->Fill("InverseDiJetDeltaRCut",1);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
 	      return;
 	    }
 	    else return;
 	  }
-	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetDeltaRCut",weight);
+	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetDeltaRCut",1);
 	  
 	  bool DiJetMass = true;
 	  if(DiJetInvMassMin > 0){
@@ -307,23 +307,23 @@ struct Selection {
 	  
 	  if(!DiJetMass){
 	    if(invertDijetProperties){
-	      (*OutputCollection).h_count->Fill("InverseDiJetInvMassCut",weight);
+	      (*OutputCollection).h_count->Fill("InverseDiJetInvMassCut",1);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
 	      return;
 	    }
 	    else return;
 	  }
-	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetInvMassCut",weight);
+	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetInvMassCut",1);
 	  
 	  if(DiJetSignEta != Inv2j.signEta){					//check whether jets go in opposite directions in the detector
 	    if(invertDijetProperties) {
-	      (*OutputCollection).h_count->Fill("InverseDiJetEtaSignCut",weight);
+	      (*OutputCollection).h_count->Fill("InverseDiJetEtaSignCut",1);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
 	      return;
 	    }
 	    else return; 
 	  }
-	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetEtaSignCut",weight);
+	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetEtaSignCut",1);
 	  
 	  bool DiJetDeta = true;
 	  if(DiJetDetaMin > 0){
@@ -336,13 +336,13 @@ struct Selection {
 	  
 	  if(!DiJetDeta){
 	    if(invertDijetProperties) {
-	      (*OutputCollection).h_count->Fill("InverseDiJetDetaCut",weight);
+	      (*OutputCollection).h_count->Fill("InverseDiJetDetaCut",1);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
 	      return;
 	    }
 	    else return;
 	  }  
-	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetDetaCut",weight);
+	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetDetaCut",1);
 	  
 	  fillHistoCollection((*OutputCollection), (*InputCollection), weight);
 	}
