@@ -312,7 +312,7 @@ int main(int argc, char** argv)
 	Signal.DiJetSignEta		= -1;					//Dijet sign eta_1*eta_2
 	Signal.DiJetDetaMin		= 4.2;					//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 	Signal.DiJetDetaMax		= -1;					//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-	Signal.weight			= weight;				//event weight
+	Signal.weight			= FakeTaus.weight;			//event weight
 	Signal.invertTauRequirements	= false;				//invert number of taus requirement
 	Signal.invertTauProperties	= false;				//invert ditau properties (dR, sign)
 	Signal.invertBtagRequirement	= false;				//invert number of b-jets required
@@ -349,7 +349,7 @@ int main(int argc, char** argv)
 	InvertedVBF_CR2.DiJetSignEta		= -1;					//Dijet sign eta_1*eta_2
 	InvertedVBF_CR2.DiJetDetaMin		= 4.2;					//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 	InvertedVBF_CR2.DiJetDetaMax		= -1.;					//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement	
-	InvertedVBF_CR2.weight			= weight;				//event weight
+	InvertedVBF_CR2.weight			= FakeTaus.weight;			//event weight
 	InvertedVBF_CR2.invertTauRequirements	= false;				//invert number of taus requirement
 	InvertedVBF_CR2.invertTauProperties	= false;				//invert ditau properties (dR, sign)
 	InvertedVBF_CR2.invertBtagRequirement	= false;				//invert number of b-jets required
@@ -386,7 +386,7 @@ int main(int argc, char** argv)
 	InvertedVBF_CR4.DiJetSignEta		= -1;						//Dijet sign eta_1*eta_2
 	InvertedVBF_CR4.DiJetDetaMin		= 4.2;						//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 	InvertedVBF_CR4.DiJetDetaMax		= -1.;						//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement	
-	InvertedVBF_CR4.weight			= weight;					//event weight
+	InvertedVBF_CR4.weight			= FakeTaus.weight;				//event weight
 	InvertedVBF_CR4.invertTauRequirements	= false;					//invert number of taus requirement
 	InvertedVBF_CR4.invertTauProperties	= false;					//invert ditau properties (dR, sign)
 	InvertedVBF_CR4.invertBtagRequirement	= false;					//invert number of b-jets required
@@ -423,7 +423,7 @@ int main(int argc, char** argv)
 	Ztautau_CR1.DiJetSignEta		= 0;					//Dijet sign eta_1*eta_2
 	Ztautau_CR1.DiJetDetaMin		= -1.;					//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 	Ztautau_CR1.DiJetDetaMax		= -1.;					//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement	
-	Ztautau_CR1.weight			= weight;				//event weight
+	Ztautau_CR1.weight			= FakeTaus.weight;			//event weight
 	Ztautau_CR1.invertTauRequirements	= false;				//invert number of taus requirement
 	Ztautau_CR1.invertTauProperties		= false;				//invert ditau properties (dR, sign)
 	Ztautau_CR1.invertBtagRequirement	= false;				//invert number of b-jets required
@@ -460,7 +460,7 @@ int main(int argc, char** argv)
 	Central_TauLooseIso_CR5.DiJetSignEta		= -1;						//Dijet sign eta_1*eta_2
 	Central_TauLooseIso_CR5.DiJetDetaMin		= 4.2;						//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 	Central_TauLooseIso_CR5.DiJetDetaMax		= -1;						//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-	Central_TauLooseIso_CR5.weight			= weight;					//event weight
+	Central_TauLooseIso_CR5.weight			= FakeTaus.weight;				//event weight
 	Central_TauLooseIso_CR5.invertTauRequirements	= false;					//invert number of taus requirement
 	Central_TauLooseIso_CR5.invertTauProperties	= false;					//invert ditau properties (dR, sign)
 	Central_TauLooseIso_CR5.invertBtagRequirement	= false;					//invert number of b-jets required
