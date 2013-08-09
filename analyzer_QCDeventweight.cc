@@ -177,7 +177,7 @@ int main(int argc, char** argv)
 	  }
 
           // tau main selection
-          for(unsigned int t =0;t<tau.size();++t){
+          /*for(unsigned int t =0;t<tau.size();++t){
             if(!(	fabs(tau[t].eta) <= 2.1                                     	)) continue;
             if(!(       tau[t].pt >= 45.                                            	)) continue;
             if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      	)) continue;
@@ -185,7 +185,7 @@ int main(int argc, char** argv)
             if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        	)) continue;
             if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)  )) continue;
 	    if(       	tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits > 0.5   ) TauTightObjectSelectionCollection.tau.push_back(&tau[t]);
-          }
+          }*/ //disregard all "true" fake taus, as they can be randomly faked, again.
 
           // jet baseline selection
 	  for(unsigned int j = 0;j<jet.size();++j){
@@ -212,7 +212,6 @@ int main(int argc, char** argv)
 
 	tau_s faketau1;
 	tau_s faketau2;
-
 	if ( FakeTaus.index.first >= 0 && FakeTaus.index.second >= 0 ) {
 
 		if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->charge > 0 )
