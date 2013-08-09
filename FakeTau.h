@@ -58,8 +58,8 @@ struct Fake {
 	  }
 	  
 	  std::uniform_real_distribution<double> distributionTwo(0.0, maxProb);
-	  double TossTwo=distributionOne(engine);
-	  temp = 0;
+	  double TossTwo=distributionTwo(engine);
+	  temp = 0.;
 	  for(unsigned int i=0; i<jetTauFakerate.size(); i++){ //choose second tau
 	  	if(i==fabs(index.first)) continue;
 	  	temp+=jetTauFakerate[i];
