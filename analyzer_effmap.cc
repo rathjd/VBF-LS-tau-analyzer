@@ -173,7 +173,7 @@ int main(int argc, char** argv)
 	// ------------------------
 
 	for(unsigned int j = 0;j<JetLooseIsoObjectSelectionCollection.jet.size();++j){	
-		double deltaR = TauJetMinDistance(mainObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[i]->eta, JetLooseIsoObjectSelectionCollection.jet[i]->phi);
+		double deltaR = TauJetMinDistance(mainObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
 		if( deltaR < 0.3 ) h2_taufakerate_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetLooseIsoObjectSelectionCollection.jet[j]->eta);
 		h2_taufakerate_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetLooseIsoObjectSelectionCollection.jet[j]->eta);	
 	}
