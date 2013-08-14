@@ -83,11 +83,23 @@ int main(int argc, char** argv)
   // Declare histograms
   //---------------------------------------------------------------------------
 
-  TH1F* h_mindeltaR = new TH1F("h_mindeltaR", "h_mindeltaR", 50,0. , 3.);
+  //TH1F* h_mindeltaR = new TH1F("h_mindeltaR", "h_mindeltaR", 50,0. , 3.);
 
-  TH2F* h2_taufakerate_num = new TH2F("h2_taufakerate_num", "h2_taufakerate_num", 50, 0., 500., 4, 0., 2.8);
-  TH2F* h2_taufakerate_den = new TH2F("h2_taufakerate_den", "h2_taufakerate_den", 50, 0., 500., 4, 0., 2.8);
-
+  TH2F* h2_taufakerate_num = new TH2F("h2_taufakerate_num", "h2_taufakerate_num", 100, 0., 1000., 8, 0., 2.4);
+  TH2F* h2_taufakerate_den = new TH2F("h2_taufakerate_den", "h2_taufakerate_den", 100, 0., 1000., 8, 0., 2.4);
+  
+  TH2F* h2_taufakerate_loose_num = new TH2F("h2_taufakerate_loose_num", "h2_taufakerate_loose_num", 100, 0., 1000., 8,0., 2.4);
+  
+  TH1F* h1_taufakescale_num = new TH1F("h1_taufakescale_num", "h1_taufakescale_num", 15, 0., 2.25);
+  TH1F* h1_taufakescale_den = new TH1F("h1_taufakescale_den", "h1_taufakescale_den", 15, 0., 2.25);  
+  h1_taufakescale_num->Sumw2();
+  h1_taufakescale_den->Sumw2();
+  
+  TH1F* h1_taufakescale_loose_num = new TH1F("h1_taufakescale_loose_num", "h1_taufakescale_loose_num", 15, 0., 2.25);
+  TH1F* h1_taufakescale_loose_den = new TH1F("h1_taufakescale_loose_den", "h1_taufakescale_loose_den", 15, 0., 2.25);
+  h1_taufakescale_loose_num->Sumw2();
+  h1_taufakescale_loose_den->Sumw2();   
+  
   //---------------------------------------------------------------------------
   // Histogram Collection Init
   //---------------------------------------------------------------------------
@@ -95,6 +107,7 @@ int main(int argc, char** argv)
         
 
 	MyEventCollection mainObjectSelectionCollection ("mainObjectSelection");
+	MyEventCollection TauLooseIsoObjectSelectionCollection ("TauLooseIsoObjectSelection");
 	MyEventCollection JetLooseIsoObjectSelectionCollection ("JetLooseIsoObjectSelection");
 
   //---------------------------------------------------------------------------
@@ -143,16 +156,16 @@ int main(int argc, char** argv)
              ) { mainObjectSelectionCollection.passedTrigger = true;
                }
 
-          // tau main selection
-          for(unsigned int t =0;t<tau.size();++t){
-            if(!(          fabs(tau[t].eta) <= 2.1                                     )) continue;
-            if(!(          tau[t].pt >= 45.                                            )) continue;
-            if(!(          tau[t].leadPFChargedHadrCand_pt >= 5.0                      )) continue;
-            if(!(          tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits > 0.5     )) continue;
-            if(!(          tau[t].tauID_againstElectronTightMVA3 > 0.5                )) continue;
-            if(!(          tau[t].tauID_againstMuonTight2 > 0.5                        )) continue;
-            if(!(          (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)                         )) continue;
-	    mainObjectSelectionCollection.tau.push_back(&tau[t]);
+          //smart tau selection
+	  for(unsigned int t =0;t<tau.size();++t){
+            if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
+            if(!(       tau[t].pt >= 45.                                            				)) continue;
+            if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      				)) continue;
+            if(!(       tau[t].tauID_againstElectronTightMVA3 > 0.5                				)) continue;
+            if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        				)) continue;
+            if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
+	    if(!(tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) mainObjectSelectionCollection.tau.push_back(&tau[t]);
+	    if(!(tau[t].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) TauLooseIsoObjectSelectionCollection.tau.push_back(&tau[t]);
           }
 
           // jet baseline selection
@@ -173,14 +186,24 @@ int main(int argc, char** argv)
 	// ------------------------
 
 	for(unsigned int j = 0;j<JetLooseIsoObjectSelectionCollection.jet.size();++j){	
-		double deltaR = TauJetMinDistance(mainObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
-		if( deltaR < 0.3 ) h2_taufakerate_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetLooseIsoObjectSelectionCollection.jet[j]->eta);
+		pair <double, unsigned int>deltaR = TauJetMinDistanceExtended(mainObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
+		if( deltaR.first < 0.3 ){
+			h2_taufakerate_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetLooseIsoObjectSelectionCollection.jet[j]->eta);
+			h1_taufakescale_num->Fill(mainObjectSelectionCollection.tau[deltaR.second]->eta, mainObjectSelectionCollection.tau[deltaR.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+			h1_taufakescale_den->Fill(mainObjectSelectionCollection.tau[deltaR.second]->eta);
+		}
+		pair <double, unsigned int>deltaRloose = TauJetMinDistanceExtended(TauLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
+		if( deltaRloose.first < 0.3 ){
+			h2_taufakerate_loose_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetLooseIsoObjectSelectionCollection.jet[j]->eta);
+			h1_taufakescale_loose_num->Fill(TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->eta,TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+			h1_taufakescale_loose_den->Fill(TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->eta);
+		}
 		h2_taufakerate_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetLooseIsoObjectSelectionCollection.jet[j]->eta);	
 	}
-
-
+	
 	//Clearing Object Collections 
 	mainObjectSelectionCollection.clear();
+	TauLooseIsoObjectSelectionCollection.clear();
 	JetLooseIsoObjectSelectionCollection.clear();
 	}
 
