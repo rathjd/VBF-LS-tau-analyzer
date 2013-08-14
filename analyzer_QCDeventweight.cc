@@ -206,10 +206,17 @@ int main(int argc, char** argv)
 	vector<double> jet_taufakerate_loose;
 	
 	for(unsigned int i = 0;i<JetLooseIsoObjectSelectionCollection.jet.size();++i){
+		double jetMindR=JetJetMinDistance(JetLooseIsoObjectSelectionCollection,JetLooseIsoObjectSelectionCollection.jet[i]->eta,JetLooseIsoObjectSelectionCollection.jet[i]->phi);
 		int nbin = h2_taufakerate_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt,JetLooseIsoObjectSelectionCollection.jet[i]->eta);
-		jet_taufakerate.push_back(h2_taufakerate_eff->GetBinContent(nbin));
 		int nbinLoose = h2_taufakerate_loose_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt,JetLooseIsoObjectSelectionCollection.jet[i]->eta);
+		if(jetMindR > 0.5){
+		jet_taufakerate.push_back(h2_taufakerate_eff->GetBinContent(nbin));
 		jet_taufakerate_loose.push_back(h2_taufakerate_loose_eff->GetBinContent(nbinLoose));
+		}
+		else{
+		jet_taufakerate.push_back(0);
+		jet_taufakerate_loose.push_back(0);
+		}
 	}
 	
 	Fake FakeTaus("FakeTaus");
