@@ -23,6 +23,19 @@ TFile _file0 ("effmap.root","UPDATE");
 
 ((TH2F*)(_file0->Get("h2_taufakerate_loose_eff")))->Write();
 
+((TH2F*)(_file0->Get("h2_taufakerate_dR_num")))->Clone("h2_taufakerate_dR_eff");
+
+((TH2F*)(_file0->Get("h2_taufakerate_dR_eff")))->Divide((TH2F*)(_file0->Get("h2_taufakerate_dR_den")));
+
+((TH2F*)(_file0->Get("h2_taufakerate_dR_eff")))->Write();
+
+((TH2F*)(_file0->Get("h2_taufakerate_dRjet_num")))->Clone("h2_taufakerate_dRjet_eff");
+
+((TH2F*)(_file0->Get("h2_taufakerate_dRjet_eff")))->Divide((TH2F*)(_file0->Get("h2_taufakerate_dRjet_den")));
+
+((TH2F*)(_file0->Get("h2_taufakerate_dRjet_eff")))->Write();
+
+
 ((TH1F*)(_file0->Get("h1_taufakescale_num")))->Clone("h1_taufakescale_fac");
 
 ((TH1F*)(_file0->Get("h1_taufakescale_fac")))->Divide((TH1F*)(_file0->Get("h1_taufakescale_den")));
