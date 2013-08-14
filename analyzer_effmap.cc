@@ -88,6 +88,10 @@ int main(int argc, char** argv)
   TH2F* h2_taufakerate_num = new TH2F("h2_taufakerate_num", "h2_taufakerate_num", 100, 0., 1000., 8, 0., 2.4);
   TH2F* h2_taufakerate_den = new TH2F("h2_taufakerate_den", "h2_taufakerate_den", 100, 0., 1000., 8, 0., 2.4);
   
+  TH2F* h2_taufakerate_dR_num = new TH2F("h2_taufakerate_dR_num", "h2_taufakerate_dR_num", 100, 0., 1000., 25, 0., 0.5);
+  TH2F* h2_taufakerate_dRl_num = new TH2F("h2_taufakerate_dRl_num", "h2_taufakerate_dRl_num", 100, 0., 1000., 25, 0., 0.5);  
+  TH2F* h2_taufakerate_dR_den = new TH2F("h2_taufakerate_dR_den", "h2_taufakerate_dR_den", 100, 0., 1000., 25, 0., 0.5);  
+  
   TH2F* h2_taufakerate_loose_num = new TH2F("h2_taufakerate_loose_num", "h2_taufakerate_loose_num", 100, 0., 1000., 8,0., 2.4);
   
   TH1F* h1_taufakescale_num = new TH1F("h1_taufakescale_num", "h1_taufakescale_num", 15, 0., 2.25);
@@ -98,7 +102,11 @@ int main(int argc, char** argv)
   TH1F* h1_taufakescale_loose_num = new TH1F("h1_taufakescale_loose_num", "h1_taufakescale_loose_num", 15, 0., 2.25);
   TH1F* h1_taufakescale_loose_den = new TH1F("h1_taufakescale_loose_den", "h1_taufakescale_loose_den", 15, 0., 2.25);
   h1_taufakescale_loose_num->Sumw2();
-  h1_taufakescale_loose_den->Sumw2();   
+  h1_taufakescale_loose_den->Sumw2();  
+  
+  TH2F* h2_taufakerate_dRjet_num = new TH2F("h2_taufakerate_dRjet_num", "h2_taufakerate_dRjet_num", 100, 0., 1000.,50, 0., 1.);
+  TH2F* h2_taufakerate_dRjetl_num = new TH2F("h2_taufakerate_dRjetl_num", "h2_taufakerate_dRjetl_num", 100, 0., 1000.,50, 0., 1.);  
+  TH2F* h2_taufakerate_dRjet_den = new TH2F("h2_taufakerate_dRjet_den", "h2_taufakerate_dRjet_den", 100, 0., 1000., 50, 0., 1.);    
   
   //---------------------------------------------------------------------------
   // Histogram Collection Init
@@ -187,18 +195,24 @@ int main(int argc, char** argv)
 
 	for(unsigned int j = 0;j<JetLooseIsoObjectSelectionCollection.jet.size();++j){	
 		pair <double, unsigned int>deltaR = TauJetMinDistanceExtended(mainObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
-		if( deltaR.first < 0.3 ){
+		if( deltaR.first < 0.1 ){
 			h2_taufakerate_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetLooseIsoObjectSelectionCollection.jet[j]->eta);
+			h2_taufakerate_dR_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, deltaR.first);
 			h1_taufakescale_num->Fill(mainObjectSelectionCollection.tau[deltaR.second]->eta, mainObjectSelectionCollection.tau[deltaR.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 			h1_taufakescale_den->Fill(mainObjectSelectionCollection.tau[deltaR.second]->eta);
+			h2_taufakerate_dRjet_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetJetMinDistance(JetLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi));
 		}
 		pair <double, unsigned int>deltaRloose = TauJetMinDistanceExtended(TauLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
 		if( deltaRloose.first < 0.3 ){
 			h2_taufakerate_loose_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetLooseIsoObjectSelectionCollection.jet[j]->eta);
+			h2_taufakerate_dRl_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, deltaRloose.first);
 			h1_taufakescale_loose_num->Fill(TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->eta,TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 			h1_taufakescale_loose_den->Fill(TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->eta);
+			h2_taufakerate_dRjetl_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetJetMinDistance(JetLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi));			
 		}
 		h2_taufakerate_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetLooseIsoObjectSelectionCollection.jet[j]->eta);	
+		h2_taufakerate_dR_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, deltaR.first);	
+		h2_taufakerate_dRjet_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetJetMinDistance(JetLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi));
 	}
 	
 	//Clearing Object Collections 
