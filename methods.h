@@ -16,7 +16,20 @@ double TauJetMinDistance(MyEventCollection collection, double jetEta, double jet
     } 
     return minDeltaRtauJet;
   }
-
+  
+pair<double, unsigned int> TauJetMinDistanceExtended(MyEventCollection collection, double jetEta, double jetPhi)
+  {
+    double minDeltaRtauJet = 99999.;
+    unsigned int tauNr = 99999.;
+    for(unsigned int t =0;t<collection.tau.size();++t){
+      double temp_mindeltaRtaujet = deltaR(jetEta, jetPhi, collection.tau[t]->eta, collection.tau[t]->phi); 
+      if (temp_mindeltaRtaujet < minDeltaRtauJet){
+      	minDeltaRtauJet = temp_mindeltaRtaujet;
+	tauNr=t;
+      }
+    } 
+    return std::make_pair(minDeltaRtauJet,tauNr);
+  }
 //-----------------
 //leading jet finder
 //_________________
