@@ -89,7 +89,7 @@ int main(int argc, char** argv)
   //---------------------------------------------------------------------------
 
 	TH1::SetDefaultSumw2();
-	TFile file_eff("/afs/naf.desy.de/user/m/marconi/public/VBFAnalyzer/effmap.root", "read");
+	TFile file_eff("/afs/naf.desy.de/user/r/rathjd/public/VBFAnalyzer/effmap.root", "read");
 	
 	MyHistoCollection myHistoColl_SignalRegion(ofile.file_, "SignalRegion");	
 	MyHistoCollection myHistoColl_CR1 (ofile.file_, "Ztautau_CR1"); 
@@ -190,7 +190,7 @@ int main(int argc, char** argv)
           // jet baseline selection
 	  for(unsigned int j = 0;j<jet.size();++j){
 	    if(!(      jet[j].pt >= 15.                                                 )) continue;
-	    if(!(      fabs(jet[j].eta) <= 2.5                                          )) continue;
+	    if(!(      fabs(jet[j].eta) <= 2.4                                          )) continue;
 	    JetLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	  }
 
@@ -201,10 +201,15 @@ int main(int argc, char** argv)
 	
 	TH2F* h2_taufakerate_eff = (TH2F*)(file_eff.Get("h2_taufakerate_eff"));
 	vector<double> jet_taufakerate;
-
+	
+	TH2F* h2_taufakerate_loose_eff = (TH2F*)(file_eff.Get("h2_taufakerate_loose_eff"));
+	vector<double> jet_taufakerate_loose;
+	
 	for(unsigned int i = 0;i<JetLooseIsoObjectSelectionCollection.jet.size();++i){
 		int nbin = h2_taufakerate_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt,JetLooseIsoObjectSelectionCollection.jet[i]->eta);
 		jet_taufakerate.push_back(h2_taufakerate_eff->GetBinContent(nbin));
+		int nbinLoose = h2_taufakerate_loose_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt,JetLooseIsoObjectSelectionCollection.jet[i]->eta);
+		jet_taufakerate_loose.push_back(h2_taufakerate_loose_eff->GetBinContent(nbinLoose));
 	}
 	
 	Fake FakeTaus("FakeTaus");
@@ -212,9 +217,11 @@ int main(int argc, char** argv)
 
 	tau_s faketau1;
 	tau_s faketau2;
+	
+	TH1F* h1_taufakescale_fac = (TH1F*)(file_eff.Get("h1_taufakescale_fac"));
+	
 	if ( FakeTaus.index.first >= 0 && FakeTaus.index.second >= 0 ) {
-
-		if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->charge > 0 )
+		if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->charge >= 0 )
 		faketau1.charge = +1;
 		else if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->charge < 0 )
 		faketau1.charge = -1;
@@ -224,11 +231,13 @@ int main(int argc, char** argv)
 		faketau1.px = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->px;
 		faketau1.py = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->py;
 		faketau1.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pz;
-		faketau1.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pt;
+		double scale = h1_taufakescale_fac->GetBinContent(h1_taufakescale_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->eta));
+		if(scale==0) scale=1; //exception for jet eta > tau eta max
+		faketau1.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pt * scale;
 		faketau1.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->phi;
 		faketau1.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->eta;
 		
-		if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->charge > 0 )
+		if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->charge >= 0 )
 		faketau2.charge = +1;
 		else if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->charge < 0 ) 
 		faketau2.charge = -1;		
@@ -238,17 +247,62 @@ int main(int argc, char** argv)
 		faketau2.px = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->px;
 		faketau2.py = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->py;
 		faketau2.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->pz;
-		faketau2.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->pt;
+		scale = h1_taufakescale_fac->GetBinContent(h1_taufakescale_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->eta));
+		if(scale==0) scale=1; //exception for jet eta > tau eta max
+		faketau2.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->pt * scale;
 		faketau2.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->phi;
 		faketau2.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->eta;
 
 		mainObjectSelectionCollection.tau.push_back(&faketau1);
 		mainObjectSelectionCollection.tau.push_back(&faketau2);
 
-		TauLooseIsoObjectSelectionCollection.tau.push_back(&faketau1);
-		TauLooseIsoObjectSelectionCollection.tau.push_back(&faketau2);
 	}
 	
+	Fake FakeTausLoose("FakeTaus");
+	FakeTausLoose.generate(jet_taufakerate_loose);
+		
+	tau_s faketau_loose1;
+	tau_s faketau_loose2;
+	
+	TH1F* h1_taufakescale_loose_fac = (TH1F*)(file_eff.Get("h1_taufakescale_loose_fac"));
+	
+	if ( FakeTausLoose.index.first >= 0 && FakeTausLoose.index.second >= 0 ) {
+
+		if(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->charge >= 0 )
+		faketau_loose1.charge = +1;
+		else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->charge < 0 )
+		faketau_loose1.charge = -1;
+		faketau_loose1.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->p;
+		faketau_loose1.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->energy;
+		faketau_loose1.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->et;
+		faketau_loose1.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->px;
+		faketau_loose1.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->py;
+		faketau_loose1.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->pz;
+		double scale = h1_taufakescale_loose_fac->GetBinContent(h1_taufakescale_loose_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->eta));
+		if(scale==0) scale=1; //exception for jet eta > tau eta max
+		faketau_loose1.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->pt * scale;
+		faketau_loose1.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->phi;
+		faketau_loose1.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->eta;
+		
+		if(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->charge >= 0 )
+		faketau_loose2.charge = +1;
+		else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->charge < 0 ) 
+		faketau_loose2.charge = -1;		
+		faketau_loose2.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->p;
+		faketau_loose2.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->energy;
+		faketau_loose2.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->et;
+		faketau_loose2.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->px;
+		faketau_loose2.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->py;
+		faketau_loose2.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->pz;
+		scale = h1_taufakescale_loose_fac->GetBinContent(h1_taufakescale_loose_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->eta));		
+		if(scale==0) scale=1; //exception for jet eta > tau eta max
+		faketau_loose2.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->pt * scale;
+		faketau_loose2.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->phi;
+		faketau_loose2.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->eta;
+
+		TauLooseIsoObjectSelectionCollection.tau.push_back(&faketau_loose1);
+		TauLooseIsoObjectSelectionCollection.tau.push_back(&faketau_loose2);
+	}
 	
 	  // jet && bjet selection
 	  // ? id ?
@@ -385,7 +439,7 @@ int main(int argc, char** argv)
 	InvertedVBF_CR4.DiJetSignEta		= -1;						//Dijet sign eta_1*eta_2
 	InvertedVBF_CR4.DiJetDetaMin		= 4.2;						//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 	InvertedVBF_CR4.DiJetDetaMax		= -1.;						//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement	
-	InvertedVBF_CR4.weight			= FakeTaus.weight;				//event weight
+	InvertedVBF_CR4.weight			= FakeTausLoose.weight;				//event weight
 	InvertedVBF_CR4.invertTauRequirements	= false;					//invert number of taus requirement
 	InvertedVBF_CR4.invertTauProperties	= false;					//invert ditau properties (dR, sign)
 	InvertedVBF_CR4.invertBtagRequirement	= false;					//invert number of b-jets required
@@ -459,7 +513,7 @@ int main(int argc, char** argv)
 	Central_TauLooseIso_CR5.DiJetSignEta		= -1;						//Dijet sign eta_1*eta_2
 	Central_TauLooseIso_CR5.DiJetDetaMin		= 4.2;						//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 	Central_TauLooseIso_CR5.DiJetDetaMax		= -1;						//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-	Central_TauLooseIso_CR5.weight			= FakeTaus.weight;				//event weight
+	Central_TauLooseIso_CR5.weight			= FakeTausLoose.weight;				//event weight
 	Central_TauLooseIso_CR5.invertTauRequirements	= false;					//invert number of taus requirement
 	Central_TauLooseIso_CR5.invertTauProperties	= false;					//invert ditau properties (dR, sign)
 	Central_TauLooseIso_CR5.invertBtagRequirement	= false;					//invert number of b-jets required
