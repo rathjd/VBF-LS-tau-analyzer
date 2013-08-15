@@ -85,22 +85,22 @@ int main(int argc, char** argv)
 
   //TH1F* h_mindeltaR = new TH1F("h_mindeltaR", "h_mindeltaR", 50,0. , 3.);
 
-  TH2F* h2_taufakerate_num = new TH2F("h2_taufakerate_num", "h2_taufakerate_num", 100, 0., 1000., 8, 0., 2.4);
-  TH2F* h2_taufakerate_den = new TH2F("h2_taufakerate_den", "h2_taufakerate_den", 100, 0., 1000., 8, 0., 2.4);
+  TH2F* h2_taufakerate_num = new TH2F("h2_taufakerate_num", "h2_taufakerate_num", 100, 0., 1000., 16, -2.4, 2.4);
+  TH2F* h2_taufakerate_den = new TH2F("h2_taufakerate_den", "h2_taufakerate_den", 100, 0., 1000., 16, -2.4, 2.4);
   
   TH2F* h2_taufakerate_dR_num = new TH2F("h2_taufakerate_dR_num", "h2_taufakerate_dR_num", 100, 0., 1000., 25, 0., 0.5);
   TH2F* h2_taufakerate_dRl_num = new TH2F("h2_taufakerate_dRl_num", "h2_taufakerate_dRl_num", 100, 0., 1000., 25, 0., 0.5);  
   TH2F* h2_taufakerate_dR_den = new TH2F("h2_taufakerate_dR_den", "h2_taufakerate_dR_den", 100, 0., 1000., 25, 0., 0.5);  
   
-  TH2F* h2_taufakerate_loose_num = new TH2F("h2_taufakerate_loose_num", "h2_taufakerate_loose_num", 100, 0., 1000., 8,0., 2.4);
+  TH2F* h2_taufakerate_loose_num = new TH2F("h2_taufakerate_loose_num", "h2_taufakerate_loose_num", 100, 0., 1000., 16,-2.4, 2.4);
   
-  TH1F* h1_taufakescale_num = new TH1F("h1_taufakescale_num", "h1_taufakescale_num", 15, 0., 2.25);
-  TH1F* h1_taufakescale_den = new TH1F("h1_taufakescale_den", "h1_taufakescale_den", 15, 0., 2.25);  
+  TH1F* h1_taufakescale_num = new TH1F("h1_taufakescale_num", "h1_taufakescale_num", 30, -2.25, 2.25);
+  TH1F* h1_taufakescale_den = new TH1F("h1_taufakescale_den", "h1_taufakescale_den", 30, -2.25, 2.25);  
   h1_taufakescale_num->Sumw2();
   h1_taufakescale_den->Sumw2();
   
-  TH1F* h1_taufakescale_loose_num = new TH1F("h1_taufakescale_loose_num", "h1_taufakescale_loose_num", 15, 0., 2.25);
-  TH1F* h1_taufakescale_loose_den = new TH1F("h1_taufakescale_loose_den", "h1_taufakescale_loose_den", 15, 0., 2.25);
+  TH1F* h1_taufakescale_loose_num = new TH1F("h1_taufakescale_loose_num", "h1_taufakescale_loose_num", 30, -2.25, 2.25);
+  TH1F* h1_taufakescale_loose_den = new TH1F("h1_taufakescale_loose_den", "h1_taufakescale_loose_den", 30, -2.25, 2.25);
   h1_taufakescale_loose_num->Sumw2();
   h1_taufakescale_loose_den->Sumw2();  
   
