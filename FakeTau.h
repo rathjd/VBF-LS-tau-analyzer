@@ -41,7 +41,7 @@ struct Fake {
 	  
 	  //set eventweight to >= 2 tau
 	  weight = 1 - probabilityZero - probabilityOne;
-	  if(wrongs.size()>jetTauFakerate.size()-2) weight = 0; //catch rounding errors
+	  if(wrongs.size()>jetTauFakerate.size()-2) {weight = 0; return;}//catch rounding errors
 	  //randomize tau indizes
 	  if(weight>=1) return; //sanity check
 	  std::uniform_real_distribution<double> distributionOne(0.0, maxProb);
@@ -63,7 +63,7 @@ struct Fake {
 	  double TossTwo=distributionTwo(engine);
 	  temp = 0.;
 	  for(unsigned int i=0; i<jetTauFakerate.size(); i++){ //choose second tau
-	  	if(i==fabs(index.first)) continue;
+	  	if(i==abs(index.first)) continue;
 		if(jetTauFakerate[i]==0) continue;
 	  	temp+=jetTauFakerate[i];
 		if(temp>=TossTwo){
