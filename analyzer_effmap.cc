@@ -13,6 +13,7 @@
 #endif
 
 #include "CommonHistoCollection.h"
+#include "TH3F.h"
 
 using namespace std;
 
@@ -87,6 +88,7 @@ int main(int argc, char** argv)
 
   double etaedges[5]={0.,1.4,1.6,2.,2.2};
   double ptedges[11]={0.,45.,55.,75.,100.,250.,400.,600.,900.,1500.,2500.};
+  double respEdges[29]={0.10,0.15,0.20,0.25,0.30,0.35,0.40,0.45,0.50,0.55,0.60,0.65,0.70,0.75,0.80,0.85,0.90,0.95,1.00,1.05,1.10,1.15,1.20,1.25,1.30,1.35,1.40,1.45,1.50};
 
   TH2F* h2_taufakerate_num = new TH2F("h2_taufakerate_num", "h2_taufakerate_num", 10, ptedges, 4, etaedges);
   TH2F* h2_taufakerate_den = new TH2F("h2_taufakerate_den", "h2_taufakerate_den", 10, ptedges, 4, etaedges);
@@ -105,8 +107,8 @@ int main(int argc, char** argv)
   h1_taufakescale_num->Sumw2();
   h1_taufakescale_den->Sumw2();
   
-  TH1F* h1_taufakescale_pt_num = new TH1F("h1_taufakescale_pt_num", "h1_taufakescale_pt_num", 9, ptedges);
-  TH1F* h1_taufakescale_pt_den = new TH1F("h1_taufakescale_pt_den", "h1_taufakescale_pt_den", 9, ptedges);  
+  TH1F* h1_taufakescale_pt_num = new TH1F("h1_taufakescale_pt_num", "h1_taufakescale_pt_num", 10, ptedges);
+  TH1F* h1_taufakescale_pt_den = new TH1F("h1_taufakescale_pt_den", "h1_taufakescale_pt_den", 10, ptedges);  
   h1_taufakescale_pt_num->Sumw2();
   h1_taufakescale_pt_den->Sumw2();  
   
@@ -115,14 +117,31 @@ int main(int argc, char** argv)
   h1_taufakescale_loose_num->Sumw2();
   h1_taufakescale_loose_den->Sumw2();
   
-  TH1F* h1_taufakescale_loose_pt_num = new TH1F("h1_taufakescale_loose_pt_num", "h1_taufakescale_loose_pt_num", 9, ptedges);
-  TH1F* h1_taufakescale_loose_pt_den = new TH1F("h1_taufakescale_loose_pt_den", "h1_taufakescale_loose_pt_den", 9, ptedges);  
+  TH1F* h1_taufakescale_loose_pt_num = new TH1F("h1_taufakescale_loose_pt_num", "h1_taufakescale_loose_pt_num", 10, ptedges);
+  TH1F* h1_taufakescale_loose_pt_den = new TH1F("h1_taufakescale_loose_pt_den", "h1_taufakescale_loose_pt_den", 10, ptedges);  
   h1_taufakescale_loose_pt_num->Sumw2();
   h1_taufakescale_loose_pt_den->Sumw2();     
   
   TH2F* h2_taufakerate_dRjet_num = new TH2F("h2_taufakerate_dRjet_num", "h2_taufakerate_dRjet_num", 10, ptedges,50, 0., 1.);
   TH2F* h2_taufakerate_dRjetl_num = new TH2F("h2_taufakerate_dRjetl_num", "h2_taufakerate_dRjetl_num", 10, ptedges,50, 0., 1.);  
   TH2F* h2_taufakerate_dRjet_den = new TH2F("h2_taufakerate_dRjet_den", "h2_taufakerate_dRjet_den", 10, ptedges, 50, 0., 1.);    
+  
+  TH2F* h2_tauResponse_loose = new TH2F("h2_tauResponse_loose", "h2_tauResponse_loose", 10, ptedges, 60, 0, 3);
+  TH2F* h2_tauResponse = new TH2F("h2_tauResponse", "h2_tauResponse", 10, ptedges, 60, 0, 3);  
+  h2_tauResponse_loose->Sumw2();
+  h2_tauResponse->Sumw2();    
+  
+  TH3F* h3_tauComplete = new TH3F("h3_tauComplete","h3_tauComplete", 10, ptedges, 28, respEdges, 4, etaedges); 
+  h3_tauComplete->GetXaxis()->SetTitle("p_{T}^{jet}");
+  h3_tauComplete->GetYaxis()->SetTitle("p_{T}^{#tau}/p_{T}^{jet}");
+  h3_tauComplete->GetZaxis()->SetTitle("|#eta|");
+  h3_tauComplete->Sumw2();
+  
+  TH3F* h3_tauComplete_loose = new TH3F("h3_tauComplete_loose","h3_tauComplete_loose", 10, ptedges, 28, respEdges, 4, etaedges); 
+  h3_tauComplete_loose->GetXaxis()->SetTitle("p_{T}^{jet}");
+  h3_tauComplete_loose->GetYaxis()->SetTitle("p_{T}^{#tau}/p_{T}^{jet}");
+  h3_tauComplete_loose->GetZaxis()->SetTitle("|#eta|");
+  h3_tauComplete_loose->Sumw2();  
   
   //---------------------------------------------------------------------------
   // Histogram Collection Init
@@ -139,7 +158,7 @@ int main(int argc, char** argv)
   //---------------------------------------------------------------------------
 
   for(int entry=0; entry < nevents; ++entry)
-	{
+	{ 
 	  // Read event into memory
 	  stream.read(entry);
 
@@ -217,8 +236,11 @@ int main(int argc, char** argv)
 			h1_taufakescale_num->Fill(fabs(mainObjectSelectionCollection.tau[deltaR.second]->eta), mainObjectSelectionCollection.tau[deltaR.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 			h1_taufakescale_den->Fill(fabs(mainObjectSelectionCollection.tau[deltaR.second]->eta));
 			h1_taufakescale_pt_num->Fill(mainObjectSelectionCollection.tau[deltaR.second]->pt, mainObjectSelectionCollection.tau[deltaR.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+			h2_tauResponse->Fill(mainObjectSelectionCollection.tau[deltaR.second]->pt, mainObjectSelectionCollection.tau[deltaR.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 			h1_taufakescale_pt_den->Fill(mainObjectSelectionCollection.tau[deltaR.second]->pt);
 			h2_taufakerate_dRjet_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetJetMinDistance(JetLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi));
+			
+			h3_tauComplete->Fill(mainObjectSelectionCollection.tau[deltaR.second]->pt, mainObjectSelectionCollection.tau[deltaR.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));
 		}
 		pair <double, unsigned int>deltaRloose = TauJetMinDistanceExtended(TauLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
 		if( deltaRloose.first < 0.1 ){
@@ -228,7 +250,10 @@ int main(int argc, char** argv)
 			h1_taufakescale_loose_den->Fill(TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->eta);
 			h1_taufakescale_loose_pt_num->Fill(TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->pt, mainObjectSelectionCollection.tau[deltaRloose.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 			h1_taufakescale_loose_pt_den->Fill(TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->pt);
+			h2_tauResponse_loose->Fill(TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->pt, mainObjectSelectionCollection.tau[deltaRloose.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 			h2_taufakerate_dRjetl_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetJetMinDistance(JetLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi));			
+			
+			h3_tauComplete_loose->Fill(TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));
 		}
 		h2_taufakerate_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));	
 		h2_taufakerate_dR_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, deltaR.first);	
