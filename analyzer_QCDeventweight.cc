@@ -82,7 +82,7 @@ ofile.count("MET", 0)
   //---------------------------------------------------------------------------
 
 TH1::SetDefaultSumw2();
-TFile file_eff("/afs/naf.desy.de/user/r/rathjd/public/VBFAnalyzer/effmap_coarse.root", "read");
+TFile file_eff("/afs/naf.desy.de/user/r/rathjd/public/VBFAnalyzer/NOD_effmap.root", "read");
 
 MyHistoCollection myHistoColl_SignalRegion(ofile.file_, "SignalRegion");	
 MyHistoCollection myHistoColl_CR1 (ofile.file_, "Ztautau_CR1");
@@ -183,7 +183,7 @@ if( tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits > 0.5 ) TauTightObje
           // jet baseline selection
 for(unsigned int j = 0;j<jet.size();++j){
 if(!( jet[j].pt >= 15. )) continue;
-if(!( fabs(jet[j].eta) <= 2.9 )) continue;
+if(!( fabs(jet[j].eta) <= 2.7 )) continue;
 JetLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 }
 
@@ -225,8 +225,7 @@ TH1F* h1_taufakescale_fac = (TH1F*)(file_eff.Get("h1_taufakescale_pt_fac"));
 if ( FakeTaus.index.first >= 0 && FakeTaus.index.second >= 0 ) {
 
 //double scale = 0.851;
-double scale = h1_taufakescale_fac->GetBinContent(h1_taufakescale_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pt));
-if(scale==0) scale=1; //exception for jet eta > tau eta max 
+double scale = h1_taufakescale_fac->GetBinContent(h1_taufakescale_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pt)); 
 
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->charge >= 0 )
 faketau1.charge = +1;
@@ -239,12 +238,13 @@ faketau1.px = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->px
 faketau1.py = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->py;
 faketau1.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pz;
 faketau1.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pt * scale;
+if(faketau1.pt < 45) FakeTaus.weight=0;
 faketau1.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->phi;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->eta<=2.1) faketau1.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->eta;
 else faketau1.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->eta)*2.1;;
 
 scale = h1_taufakescale_fac->GetBinContent(h1_taufakescale_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->pt));
-if(scale==0) scale=1; //exception for jet eta > tau eta max 
+
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->charge >= 0 )
 faketau2.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->charge < 0 )
@@ -256,6 +256,7 @@ faketau2.px = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->p
 faketau2.py = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->py;
 faketau2.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->pz;
 faketau2.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->pt * scale;
+if(faketau2.pt < 45) FakeTaus.weight=0;
 faketau2.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->phi;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->eta<=2.1) faketau2.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->eta;
 else faketau2.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->eta)*2.1;;
@@ -276,8 +277,7 @@ TH1F* h1_taufakescale_loose_fac = (TH1F*)(file_eff.Get("h1_taufakescale_loose_pt
 if ( FakeTausLoose.index.first >= 0 && FakeTausLoose.index.second >= 0 ) {
 
 //double scale = 0.774;
-double scale = h1_taufakescale_loose_fac->GetBinContent(h1_taufakescale_loose_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->pt));
-if(scale==0) scale=1; //exception for jet eta > tau eta max 
+double scale = h1_taufakescale_loose_fac->GetBinContent(h1_taufakescale_loose_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->pt)); 
 
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->charge >= 0 )
 faketau_loose1.charge = +1;
@@ -290,12 +290,12 @@ faketau_loose1.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index
 faketau_loose1.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->py;
 faketau_loose1.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->pz;
 faketau_loose1.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->pt * scale;
+if(faketau_loose1.pt < 45) FakeTausLoose.weight=0;
 faketau_loose1.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->phi;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->eta<=2.1) faketau_loose1.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->eta;
 else faketau_loose1.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->eta)*2.1;
 
 scale = h1_taufakescale_loose_fac->GetBinContent(h1_taufakescale_loose_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->pt));  
-if(scale==0) scale=1; //exception for jet eta > tau eta max 
 
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->charge >= 0 )
 faketau_loose2.charge = +1;
@@ -308,6 +308,7 @@ faketau_loose2.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index
 faketau_loose2.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->py;
 faketau_loose2.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->pz;
 faketau_loose2.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->pt * scale;
+if(faketau_loose1.pt < 45) FakeTausLoose.weight=0;
 faketau_loose2.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->phi;
 if(fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->eta)<=2.1) faketau_loose2.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->eta;
 else faketau_loose2.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->eta)*2.1;
