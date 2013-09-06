@@ -91,9 +91,9 @@ int main(int argc, char** argv)
   double respEdges[29]={0.10,0.15,0.20,0.25,0.30,0.35,0.40,0.45,0.50,0.55,0.60,0.65,0.70,0.75,0.80,0.85,0.90,0.95,1.00,1.05,1.10,1.15,1.20,1.25,1.30,1.35,1.40,1.45,1.50};
 
 
-  TH1F* h1_jetpt = new TH1F("h_jetpt", "h_jetpt", 50, 0., 500.);
-  TH1F* h1_jet1pt = new TH1F("h_jet1pt", "h_jet1pt", 50, 0., 500.);
-  TH1F* h1_jet2pt = new TH1F("h_jet2pt", "h_jet2pt", 50, 0., 500.);
+  TH1F* h1_jetpt = new TH1F("h1_jetpt", "h1_jetpt", 50, 0., 500.);
+  TH1F* h1_jet1pt = new TH1F("h1_jet1pt", "h1_jet1pt", 50, 0., 500.);
+  TH1F* h1_jet2pt = new TH1F("h1_jet2pt", "h1_jet2pt", 50, 0., 500.);
 
   TH2F* h2_taufakerate_num = new TH2F("h2_taufakerate_num", "h2_taufakerate_num", 10, ptedges, 4, etaedges);
   TH2F* h2_taufakerate_den = new TH2F("h2_taufakerate_den", "h2_taufakerate_den", 10, ptedges, 4, etaedges);
