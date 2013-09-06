@@ -243,9 +243,10 @@ int main(int argc, char** argv)
 	// --   Tau Efficency    --
 	// ------------------------
 
-
+	if (1<JetLooseIsoObjectSelectionCollection.jet.size()) {
 		h1_jet1pt->Fill(JetLooseIsoObjectSelectionCollection.jet[0]->pt);
 		h1_jet2pt->Fill(JetLooseIsoObjectSelectionCollection.jet[1]->pt);
+	}
 
 	for(unsigned int j = 0;j<JetLooseIsoObjectSelectionCollection.jet.size();++j){	
 		h1_jetpt->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt); 
