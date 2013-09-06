@@ -1,3 +1,6 @@
+dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/QCD_Pt-120to170/ntuple_75_2_0Qi.root
+dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/QCD_Pt-120to170/ntuple_20_2_KEw.root
+dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/QCD_Pt-120to170/ntuple_40_2_Epj.root
 dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/Tau_Run2012B_13Jul2012/ntuple_174_1_onV.root
 dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/Tau_Run2012B_13Jul2012/ntuple_239_1_XH1.root
 dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/Tau_Run2012B_13Jul2012/ntuple_211_1_5cB.root
