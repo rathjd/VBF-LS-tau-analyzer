@@ -9,7 +9,8 @@
 
 cout<<"begin"<<endl;
 
-TFile _file0 ("effmap.root","UPDATE");
+//TFile _file0 ("effmap.root","UPDATE");
+TFile _file0 ("analyzer_effmap_histograms.root","UPDATE");
 
 ((TH2F*)(_file0->Get("h2_taufakerate_num")))->Clone("h2_taufakerate_eff");
 
@@ -22,6 +23,12 @@ TFile _file0 ("effmap.root","UPDATE");
 ((TH1F*)(_file0->Get("h1_taufakerate_pt_eff")))->Divide((TH2F*)(_file0->Get("h1_taufakerate_pt_den")));
 
 ((TH1F*)(_file0->Get("h1_taufakerate_pt_eff")))->Write();
+
+((TH1F*)(_file0->Get("h1_taufakerate_jetrank_num")))->Clone("h1_taufakerate_jetrank_eff");
+
+((TH1F*)(_file0->Get("h1_taufakerate_jetrank_eff")))->Divide((TH2F*)(_file0->Get("h1_taufakerate_jetrank_den")));
+
+((TH1F*)(_file0->Get("h1_taufakerate_jetrank_eff")))->Write();
 
 ((TH2F*)(_file0->Get("h2_taufakerate_loose_num")))->Clone("h2_taufakerate_loose_eff");
 
