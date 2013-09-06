@@ -104,6 +104,11 @@ int main(int argc, char** argv)
   TH1F* h1_taufakerate_pt_den = new TH1F("h1_taufakerate_pt_den", "h1_taufakerate_pt_den", 10, ptedges);
   h1_taufakerate_pt_num->Sumw2();
   h1_taufakerate_pt_den->Sumw2();
+
+  TH1F* h1_taufakerate_jetrank_num = new TH1F("h1_taufakerate_jetrank_num", "h1_taufakerate_jetrank_num", 6, 0.5, 6.5);
+  TH1F* h1_taufakerate_jetrank_den = new TH1F("h1_taufakerate_jetrank_den", "h1_taufakerate_jetrank_den", 6, 0.5, 6.5);
+  h1_taufakerate_jetrank_num->Sumw2();
+  h1_taufakerate_jetrank_den->Sumw2();
  
   TH2F* h2_taufakerate_dR_num = new TH2F("h2_taufakerate_dR_num", "h2_taufakerate_dR_num", 10, ptedges, 25, 0., 0.5);
   TH2F* h2_taufakerate_dRl_num = new TH2F("h2_taufakerate_dRl_num", "h2_taufakerate_dRl_num", 10, ptedges, 25, 0., 0.5);  
@@ -238,10 +243,8 @@ int main(int argc, char** argv)
 	// --   Tau Efficency    --
 	// ------------------------
 
-	pair <unsigned int, unsigned int> leadingjetpair = LeadingJets(JetLooseIsoObjectSelectionCollection);
-	
-	h1_jet1pt->Fill(JetLooseIsoObjectSelectionCollection.jet[leadingjetpair.first]->pt);
-	h1_jet2pt->Fill(JetLooseIsoObjectSelectionCollection.jet[leadingjetpair.second]->pt);
+	h1_jet1pt->Fill(JetLooseIsoObjectSelectionCollection.jet[0]->pt);
+	h1_jet2pt->Fill(JetLooseIsoObjectSelectionCollection.jet[1]->pt);
 
 	for(unsigned int j = 0;j<JetLooseIsoObjectSelectionCollection.jet.size();++j){	
 		h1_jetpt->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt); 
@@ -249,6 +252,7 @@ int main(int argc, char** argv)
 		if( deltaR.first < 0.1 ){
 			h2_taufakerate_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));
 			h1_taufakerate_pt_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+			h1_taufakerate_jetrank_num->Fill(j);
 			h2_taufakerate_dR_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, deltaR.first);
 			h1_taufakescale_num->Fill(fabs(mainObjectSelectionCollection.tau[deltaR.second]->eta), mainObjectSelectionCollection.tau[deltaR.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 			h1_taufakescale_den->Fill(fabs(mainObjectSelectionCollection.tau[deltaR.second]->eta));
@@ -273,7 +277,8 @@ int main(int argc, char** argv)
 			h3_tauComplete_loose->Fill(TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));
 		}
 		h2_taufakerate_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));	
-		h1_taufakerate_pt_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);	
+		h1_taufakerate_pt_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		h1_taufakerate_jetrank_den->Fill(j);
 		h2_taufakerate_dR_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, deltaR.first);	
 		h2_taufakerate_dRjet_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetJetMinDistance(JetLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi));
 	}
