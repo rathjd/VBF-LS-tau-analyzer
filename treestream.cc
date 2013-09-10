@@ -1030,18 +1030,18 @@ itreestream::_open(vector<string>& fname, vector<string>& tname)
       // file1 file2 ..
       // ----------------------------------------
       filepath.clear();
-#ifdef PROJECT_NAME
+//#ifdef PROJECT_NAME
       for(int i=0; i < (int)fname.size(); ++i)
         {
-          glob_t g;
-          glob(fname[i].c_str(), GLOB_ERR | GLOB_NOCHECK, NULL, &g);
-          for (int j=0; j < (int)g.gl_pathc; ++j)
-            filepath.push_back(g.gl_pathv[j]);
-          globfree(&g);
+          //glob_t g;
+          //glob(fname[i].c_str(), GLOB_ERR | GLOB_NOCHECK, NULL, &g);
+          //for (int j=0; j < (int)g.gl_pathc; ++j)
+            filepath.push_back(fname[i].c_str());//g.gl_pathv[j]);
+          //globfree(&g);
         }
-#else
-      filepath.push_back(fname[0]);
-#endif
+//#else
+//      filepath.push_back(fname[0]);
+//#endif
       DBUG("itreestream::ctor - new TFile ", 2);
   
       // ----------------------------------------
