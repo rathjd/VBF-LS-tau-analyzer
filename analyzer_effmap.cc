@@ -432,7 +432,6 @@ int main(int argc, char** argv)
 		    }
 		  count++;
 		}
-		h2_taufakerate_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));	
 		h1_taufakerate_pt_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		if (j == 0) h1_taufakerate_ptjet1_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		if (j == 1) h1_taufakerate_ptjet2_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
