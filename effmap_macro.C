@@ -84,6 +84,25 @@ TFile _file0 ("analyzer_effmap_histograms.root","UPDATE");
 
 ((TH1F*)(_file0->Get("h1_taufakescale_loose_fac")))->Write();
 
+((TH1F*)(_file0->Get("Nod_num")))->Clone("Nod_eff");
+
+((TH1F*)(_file0->Get("Nod_eff")))->Divide((TH1F*)(_file0->Get("Nod_den")));
+
+((TH1F*)(_file0->Get("Nod_eff")))->Write();
+
+((TH2F*)(_file0->Get("ChargeMap_num")))->Clone("ChargeMap_eff");
+
+((TH2F*)(_file0->Get("ChargeMap_eff")))->Divide((TH2F*)(_file0->Get("ChargeMap_den")));
+
+((TH2F*)(_file0->Get("ChargeMap_eff")))->Write();
+
+((TH2F*)(_file0->Get("ChargeMap_loose_num")))->Clone("ChargeMap_loose_eff");
+
+((TH2F*)(_file0->Get("ChargeMap_loose_eff")))->Divide((TH2F*)(_file0->Get("ChargeMap_den")));
+
+((TH2F*)(_file0->Get("ChargeMap_loose_eff")))->Write();
+
+
 cout<<"end"<<endl;
 
 }
