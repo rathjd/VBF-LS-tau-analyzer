@@ -13,7 +13,7 @@
 #endif
 
 #include "CommonHistoCollection.h"
-#include "TH3F.h"
+#include "TH3.h"
 
 using namespace std;
 
@@ -87,8 +87,10 @@ int main(int argc, char** argv)
   //TH1F* h_mindeltaR = new TH1F("h_mindeltaR", "h_mindeltaR", 50,0. , 3.);
 
   double etaedges[5]={0.,1.4,1.6,2.,2.2};
+  double etaExtended[23]={0.,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0,2.1,2.2};
   double ptedges[11]={0.,45.,55.,75.,100.,250.,400.,600.,900.,1500.,2500.};
   double respEdges[29]={0.10,0.15,0.20,0.25,0.30,0.35,0.40,0.45,0.50,0.55,0.60,0.65,0.70,0.75,0.80,0.85,0.90,0.95,1.00,1.05,1.10,1.15,1.20,1.25,1.30,1.35,1.40,1.45,1.50};
+  double Nedges[31]={0,1,2,3,4,5,6,7,8,10,12,14,16,20,24,28,32,36,40,45,50,55,60,70,80,90,100,120,140,170,200};
 
   TH2F* h2_taufakerate_num = new TH2F("h2_taufakerate_num", "h2_taufakerate_num", 10, ptedges, 4, etaedges);
   TH2F* h2_taufakerate_den = new TH2F("h2_taufakerate_den", "h2_taufakerate_den", 10, ptedges, 4, etaedges);
@@ -101,6 +103,8 @@ int main(int argc, char** argv)
   
   TH2F* h2_taufakerate_loose_num = new TH2F("h2_taufakerate_loose_num", "h2_taufakerate_loose_num", 10, ptedges, 4, etaedges);
   h2_taufakerate_loose_num->Sumw2();
+  TH2F* h2_taufakerate_loose_den = new TH2F("h2_taufakerate_loose_den", "h2_taufakerate_loose_den", 10, ptedges, 4, etaedges);
+  h2_taufakerate_loose_den->Sumw2();  
   
   TH1F* h1_taufakescale_num = new TH1F("h1_taufakescale_num", "h1_taufakescale_num", 4, etaedges);
   TH1F* h1_taufakescale_den = new TH1F("h1_taufakescale_den", "h1_taufakescale_den", 4, etaedges);  
@@ -123,13 +127,21 @@ int main(int argc, char** argv)
   h1_taufakescale_loose_pt_den->Sumw2();     
   
   TH2F* h2_taufakerate_dRjet_num = new TH2F("h2_taufakerate_dRjet_num", "h2_taufakerate_dRjet_num", 10, ptedges,50, 0., 1.);
+  h2_taufakerate_dRjet_num->GetXaxis()->SetTitle("p_{T}^{jet}");
+  h2_taufakerate_dRjet_num->GetYaxis()->SetTitle("dR(jet,jet)");
   TH2F* h2_taufakerate_dRjetl_num = new TH2F("h2_taufakerate_dRjetl_num", "h2_taufakerate_dRjetl_num", 10, ptedges,50, 0., 1.);  
+  h2_taufakerate_dRjetl_num->GetXaxis()->SetTitle("p_{T}^{jet}");
+  h2_taufakerate_dRjetl_num->GetYaxis()->SetTitle("dR(jet,jet)");
   TH2F* h2_taufakerate_dRjet_den = new TH2F("h2_taufakerate_dRjet_den", "h2_taufakerate_dRjet_den", 10, ptedges, 50, 0., 1.);    
+  h2_taufakerate_dRjet_den->GetXaxis()->SetTitle("p_{T}^{jet}");
+  h2_taufakerate_dRjet_den->GetYaxis()->SetTitle("dR(jet,jet)");
   
   TH2F* h2_tauResponse_loose = new TH2F("h2_tauResponse_loose", "h2_tauResponse_loose", 10, ptedges, 60, 0, 3);
   TH2F* h2_tauResponse = new TH2F("h2_tauResponse", "h2_tauResponse", 10, ptedges, 60, 0, 3);  
   h2_tauResponse_loose->Sumw2();
   h2_tauResponse->Sumw2();    
+  h2_tauResponse->GetXaxis()->SetTitle("p_{T}^{#tau}/p_{T}^{jet}");
+  h2_tauResponse_loose->GetXaxis()->SetTitle("p_{T}^{#tau}/p_{T}^{jet}");
   
   TH3F* h3_tauComplete = new TH3F("h3_tauComplete","h3_tauComplete", 10, ptedges, 28, respEdges, 4, etaedges); 
   h3_tauComplete->GetXaxis()->SetTitle("p_{T}^{jet}");
@@ -142,6 +154,90 @@ int main(int argc, char** argv)
   h3_tauComplete_loose->GetYaxis()->SetTitle("p_{T}^{#tau}/p_{T}^{jet}");
   h3_tauComplete_loose->GetZaxis()->SetTitle("|#eta|");
   h3_tauComplete_loose->Sumw2();  
+  
+  TH2F* NjetNtau = new TH2F("NjetNtau","number of jets vs number of fake taus", 20, 0, 20, 4, 0, 3);
+  NjetNtau->GetXaxis()->SetTitle("N_{jet}");
+  NjetNtau->GetYaxis()->SetTitle("N_{#tau}");
+  NjetNtau->Sumw2();
+  TH2F* NjetNtauLoose = new TH2F("NjetNtauLoose","number of jets vs number of loose fake taus", 20, 0, 20, 4, 0, 3);
+  NjetNtauLoose->GetXaxis()->SetTitle("N_{jet}");
+  NjetNtauLoose->GetYaxis()->SetTitle("N_{#tau}");
+  NjetNtauLoose->Sumw2();  
+  
+  TH1F* Nod_num = new TH1F("Nod_num","jet number of daughters", 200, 0, 200);
+  Nod_num->GetXaxis()->SetTitle("number of daughters");
+  Nod_num->Sumw2();
+  TH1F* Nod_loose_num = new TH1F("Nod_loose_num","jet number of daughters", 200, 0, 200);
+  Nod_loose_num->GetXaxis()->SetTitle("number of daughters");
+  Nod_loose_num->Sumw2();  
+  TH1F* Nod_den = new TH1F("Nod_den","jet number of daughters", 200, 0, 200);
+  Nod_den->GetXaxis()->SetTitle("number of daughters");
+  Nod_den->Sumw2();  
+  
+  TH3F* NOD_charge_num = new TH3F("NOD_charge_num","jet number of daughters by charges", 200, 0, 200, 200, 0, 200, 200, 0, 200);
+  NOD_charge_num->GetXaxis()->SetTitle("charged hadron multiplicity");
+  NOD_charge_num->GetYaxis()->SetTitle("neutral hadron multiplicity");
+  NOD_charge_num->GetZaxis()->SetTitle("EM charged energy fraction x NOD");
+  NOD_charge_num->Sumw2();
+  TH3F* NOD_charge_loose_num = new TH3F("NOD_charge_loose_num","jet number of daughters by charges", 200, 0, 200, 200, 0, 200, 200, 0, 200);
+  NOD_charge_loose_num->GetXaxis()->SetTitle("charged hadron multiplicity");
+  NOD_charge_loose_num->GetYaxis()->SetTitle("neutral hadron multiplicity");
+  NOD_charge_loose_num->GetZaxis()->SetTitle("EM charged energy fraction x NOD");
+  NOD_charge_loose_num->Sumw2();  
+  TH3F* NOD_charge_den = new TH3F("NOD_charge_den","jet number of daughters by charges", 200, 0, 200, 200, 0, 200, 200, 0, 200);
+  NOD_charge_den->GetXaxis()->SetTitle("charged hadron multiplicity");
+  NOD_charge_den->GetYaxis()->SetTitle("neutral hadron multiplicity");
+  NOD_charge_den->GetZaxis()->SetTitle("charged EM multiplicity");
+  NOD_charge_den->Sumw2(); 
+  
+  TH2F* Efrac_num = new TH2F("Efrac_num","charged energy vs neutral energy fraction", 100, 0, 1, 100, 0, 1);
+  Efrac_num->GetXaxis()->SetTitle("charged EM and hadronic energy fraction");
+  Efrac_num->GetYaxis()->SetTitle("neutral EM and hadronic energy fraction");
+  Efrac_num->Sumw2();
+  TH2F* Efrac_den = new TH2F("Efrac_den","charged energy vs neutral energy fraction", 100, 0, 1, 100, 0, 1);
+  Efrac_den->GetXaxis()->SetTitle("charged EM and hadronic energy fraction");
+  Efrac_den->GetYaxis()->SetTitle("neutral EM and hadronic energy fraction");
+  Efrac_den->Sumw2();  
+  
+  TH2F* Etype_num = new TH2F("Etype_num","charged energy vs neutral energy fraction", 100, 0, 1, 100, 0, 1);
+  Etype_num->GetXaxis()->SetTitle("EM energy fraction");
+  Etype_num->GetYaxis()->SetTitle("hadronic energy fraction");
+  Etype_num->Sumw2();
+  TH2F* Etype_den = new TH2F("Etype_den","EM energy vs hadronic energy fraction", 100, 0, 1, 100, 0, 1);
+  Etype_den->GetXaxis()->SetTitle("EM energy fraction");
+  Etype_den->GetYaxis()->SetTitle("hadronic energy fraction");
+  Etype_den->Sumw2();    
+  
+  TH2F* ChargeMap_num = new TH2F("ChargeMap_num","number of charged daughters versus charged energy fraction", 30, Nedges, 20, 0, 1);
+  ChargeMap_num->GetXaxis()->SetTitle("number of charged particles");
+  ChargeMap_num->GetYaxis()->SetTitle("charged EM and hadronic energy fraction");
+  ChargeMap_num->Sumw2();
+  TH2F* ChargeMap_loose_num = new TH2F("ChargeMap_loose_num","number of charged daughters versus charged energy fraction", 30, Nedges, 20, 0, 1);
+  ChargeMap_loose_num->GetXaxis()->SetTitle("number of charged particles");
+  ChargeMap_loose_num->GetYaxis()->SetTitle("charged EM and hadronic energy fraction");
+  ChargeMap_loose_num->Sumw2();  
+  TH2F* ChargeMap_den = new TH2F("ChargeMap_den","number of charged daughters versus charged energy fraction", 30, Nedges, 20, 0, 1);  
+  ChargeMap_den->GetXaxis()->SetTitle("number of charged particles");
+  ChargeMap_den->GetYaxis()->SetTitle("charged EM and hadronic energy fraction");
+  ChargeMap_den->Sumw2();
+  
+  TH2F*ChargedPt_num = new TH2F("ChargedPt_num","number of charged daughters versus p_{T}", 30, Nedges, 10, ptedges);
+  ChargedPt_num->GetXaxis()->SetTitle("number of charged hadrons");
+  ChargedPt_num->GetYaxis()->SetTitle("p_{T}");  
+  ChargedPt_num->Sumw2();
+  TH2F*ChargedPt_den = new TH2F("ChargedPt_den","number of charged daughters versus p_{T}", 30, Nedges, 10, ptedges);
+  ChargedPt_den->GetXaxis()->SetTitle("number of charged hadrons");
+  ChargedPt_den->GetYaxis()->SetTitle("p_{T}");  
+  ChargedPt_den->Sumw2();  
+  TH2F*ChargedEta_num = new TH2F("ChargedEta_num","number of charged daughters versus #eta", 30, Nedges, 22, etaExtended);
+  ChargedEta_num->GetXaxis()->SetTitle("number of charged hadrons");
+  ChargedEta_num->GetYaxis()->SetTitle("#eta");  
+  ChargedEta_num->Sumw2();
+  TH2F*ChargedEta_den = new TH2F("ChargedEta_den","number of charged daughters versus #eta", 30, Nedges, 22, etaExtended);
+  ChargedEta_den->GetXaxis()->SetTitle("number of charged hadrons");
+  ChargedEta_den->GetYaxis()->SetTitle("#eta");  
+  ChargedEta_den->Sumw2();    
+   
   
   //---------------------------------------------------------------------------
   // Histogram Collection Init
@@ -214,7 +310,7 @@ int main(int argc, char** argv)
           // jet baseline selection
 	for(unsigned int j = 0;j<jet.size();++j){
 	    if(!(      jet[j].pt >= 15.                                                                      )) continue;
-	    if(!(      fabs(jet[j].eta) <= 2.5                                                               )) continue;
+	    if(!(      fabs(jet[j].eta) <= 2.7                                                               )) continue;
 	    JetLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	}
 
@@ -228,9 +324,12 @@ int main(int argc, char** argv)
 	// --   Tau Efficency    --
 	// ------------------------
 
+	int count=0;
 	for(unsigned int j = 0;j<JetLooseIsoObjectSelectionCollection.jet.size();++j){	
-		pair <double, unsigned int>deltaR = TauJetMinDistanceExtended(mainObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
-		if( deltaR.first < 0.1 ){
+		double jetMindR=JetJetMinDistance(JetLooseIsoObjectSelectionCollection,JetLooseIsoObjectSelectionCollection.jet[j]->eta,JetLooseIsoObjectSelectionCollection.jet[j]->phi);
+		if(jetMindR > 0.5){ //only count isolated jets
+		  pair <double, unsigned int>deltaR = TauJetMinDistanceExtended(mainObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
+		  if( deltaR.first < 0.1 ){
 			h2_taufakerate_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));
 			h2_taufakerate_dR_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, deltaR.first);
 			h1_taufakescale_num->Fill(fabs(mainObjectSelectionCollection.tau[deltaR.second]->eta), mainObjectSelectionCollection.tau[deltaR.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
@@ -239,11 +338,19 @@ int main(int argc, char** argv)
 			h2_tauResponse->Fill(mainObjectSelectionCollection.tau[deltaR.second]->pt, mainObjectSelectionCollection.tau[deltaR.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 			h1_taufakescale_pt_den->Fill(mainObjectSelectionCollection.tau[deltaR.second]->pt);
 			h2_taufakerate_dRjet_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetJetMinDistance(JetLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi));
-			
 			h3_tauComplete->Fill(mainObjectSelectionCollection.tau[deltaR.second]->pt, mainObjectSelectionCollection.tau[deltaR.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));
-		}
-		pair <double, unsigned int>deltaRloose = TauJetMinDistanceExtended(TauLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
-		if( deltaRloose.first < 0.1 ){
+			Nod_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->numberOfDaughters);
+			NOD_charge_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[j]->neutralHadronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[j]->electronMultiplicity);
+			Efrac_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction,JetLooseIsoObjectSelectionCollection.jet[j]->neutralEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->neutralHadronEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->HFEMEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->HFHadronEnergyFraction);
+			Etype_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->neutralEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->HFEMEnergyFraction,JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->neutralHadronEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->HFHadronEnergyFraction);
+		
+			ChargeMap_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[j]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction);
+			ChargedPt_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+			ChargedEta_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronMultiplicity,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));
+
+		  }
+		  pair <double, unsigned int>deltaRloose = TauJetMinDistanceExtended(TauLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
+		  if( deltaRloose.first < 0.1 ){
 			h2_taufakerate_loose_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));
 			h2_taufakerate_dRl_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, deltaRloose.first);
 			h1_taufakescale_loose_num->Fill(TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->eta,TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
@@ -252,13 +359,42 @@ int main(int argc, char** argv)
 			h1_taufakescale_loose_pt_den->Fill(TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->pt);
 			h2_tauResponse_loose->Fill(TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->pt, mainObjectSelectionCollection.tau[deltaRloose.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 			h2_taufakerate_dRjetl_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetJetMinDistance(JetLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi));			
-			
 			h3_tauComplete_loose->Fill(TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRloose.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));
+			Nod_loose_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->numberOfDaughters);
+			NOD_charge_loose_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[j]->neutralHadronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[j]->electronMultiplicity);
+			ChargeMap_loose_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[j]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction);
+		  }
+		  h2_taufakerate_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));	
+		  h2_taufakerate_dR_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, deltaR.first);	
+		  h2_taufakerate_dRjet_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetJetMinDistance(JetLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi));
+		  ChargedPt_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		  if(JetLooseIsoObjectSelectionCollection.jet[j]->pt>45 && fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta)<2.1)
+		    {
+		      NOD_charge_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[j]->neutralHadronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[j]->electronMultiplicity);
+		      Nod_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->numberOfDaughters);
+		      Efrac_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction,JetLooseIsoObjectSelectionCollection.jet[j]->neutralEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->neutralHadronEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->HFEMEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->HFHadronEnergyFraction);
+		      Etype_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->neutralEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->HFEMEnergyFraction,JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->neutralHadronEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->HFHadronEnergyFraction);
+		      ChargeMap_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[j]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction);
+		      ChargedEta_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronMultiplicity,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));
+		      if(fabs(JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->neutralEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->HFEMEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->neutralHadronEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->HFHadronEnergyFraction-1)>0.01){
+		      std::cout<<"jet "<<j<<std::endl;
+		      std::cout<<"charged EM fraction: "<<JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction<<std::endl;
+		      std::cout<<"neutral EM fraction: "<<JetLooseIsoObjectSelectionCollection.jet[j]->neutralEmEnergyFraction<<std::endl;
+		      std::cout<<"photon EM fraction: "<<JetLooseIsoObjectSelectionCollection.jet[j]->photonEnergyFraction<<std::endl;
+		      std::cout<<"muon EM fraction: "<<JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction<<std::endl;
+		      std::cout<<"electron EM fraction: "<<JetLooseIsoObjectSelectionCollection.jet[j]->electronEnergyFraction<<std::endl;
+		      std::cout<<"HF EM fraction: "<<JetLooseIsoObjectSelectionCollection.jet[j]->HFEMEnergyFraction<<std::endl;
+		      std::cout<<"charged Had fraction: "<<JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction<<std::endl;
+		      std::cout<<"neutral Had fraction: "<<JetLooseIsoObjectSelectionCollection.jet[j]->neutralHadronEnergyFraction<<std::endl;
+		      std::cout<<"HF Had fraction: "<<JetLooseIsoObjectSelectionCollection.jet[j]->HFHadronEnergyFraction<<std::endl;
+		      }
+		    }
+		  count++;
 		}
-		h2_taufakerate_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));	
-		h2_taufakerate_dR_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, deltaR.first);	
-		h2_taufakerate_dRjet_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, JetJetMinDistance(JetLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi));
 	}
+	
+	NjetNtau->Fill(count,mainObjectSelectionCollection.tau.size());
+	NjetNtauLoose->Fill(count,TauLooseIsoObjectSelectionCollection.tau.size());
 	
 	//Clearing Object Collections 
 	mainObjectSelectionCollection.clear();
