@@ -33,7 +33,7 @@ int main(int argc, char** argv)
 
   // Get number of events to be read
 
-  //int nevents = 100;
+  //int nevents = 1000;
   int nevents = stream.size();
   cout << "Number of events: " << nevents << endl;
 
@@ -359,8 +359,14 @@ int main(int argc, char** argv)
 	// --   Tau Efficency    --
 	// ------------------------
 
+	if (JetLooseIsoObjectSelectionCollection.jet.size() >= 2) {
+		h1_jet1pt->Fill(JetLooseIsoObjectSelectionCollection.jet[0]->pt);
+		h1_jet2pt->Fill(JetLooseIsoObjectSelectionCollection.jet[1]->pt);
+	}
+
 	int count=0;
-	for(unsigned int j = 0;j<JetLooseIsoObjectSelectionCollection.jet.size();++j){	
+	for(unsigned int j = 0;j<JetLooseIsoObjectSelectionCollection.jet.size();++j){
+		h1_jetpt->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);	
 		double jetMindR=JetJetMinDistance(JetLooseIsoObjectSelectionCollection,JetLooseIsoObjectSelectionCollection.jet[j]->eta,JetLooseIsoObjectSelectionCollection.jet[j]->phi);
 		pair <double, unsigned int>deltaR = TauJetMinDistanceExtended(mainObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
 		if(jetMindR > 0.5){ //only count isolated jets
