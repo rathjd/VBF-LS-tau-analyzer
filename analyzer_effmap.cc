@@ -33,7 +33,7 @@ int main(int argc, char** argv)
 
   // Get number of events to be read
 
-  //int nevents = 100;
+  //int nevents = 1000;
   int nevents = stream.size();
   cout << "Number of events: " << nevents << endl;
 
@@ -107,6 +107,26 @@ int main(int argc, char** argv)
   TH1F* h1_taufakerate_pt_den = new TH1F("h1_taufakerate_pt_den", "h1_taufakerate_pt_den", 11, ptedges);
   h1_taufakerate_pt_num->Sumw2();
   h1_taufakerate_pt_den->Sumw2();
+
+  TH1F* h1_taufakerate_ptjet1_num = new TH1F("h1_taufakerate_ptjet1_num", "h1_taufakerate_ptjet1_num", 10, ptedges);
+  TH1F* h1_taufakerate_ptjet1_den = new TH1F("h1_taufakerate_ptjet1_den", "h1_taufakerate_ptjet1_den", 10, ptedges);
+  h1_taufakerate_ptjet1_num->Sumw2();
+  h1_taufakerate_ptjet1_den->Sumw2();
+
+  TH1F* h1_taufakerate_ptjet2_num = new TH1F("h1_taufakerate_ptjet2_num", "h1_taufakerate_ptjet2_num", 10, ptedges);
+  TH1F* h1_taufakerate_ptjet2_den = new TH1F("h1_taufakerate_ptjet2_den", "h1_taufakerate_ptjet2_den", 10, ptedges);
+  h1_taufakerate_ptjet2_num->Sumw2();
+  h1_taufakerate_ptjet2_den->Sumw2();
+
+  TH1F* h1_taufakerate_ptjet3_num = new TH1F("h1_taufakerate_ptjet3_num", "h1_taufakerate_ptjet3_num", 10, ptedges);
+  TH1F* h1_taufakerate_ptjet3_den = new TH1F("h1_taufakerate_ptjet3_den", "h1_taufakerate_ptjet3_den", 10, ptedges);
+  h1_taufakerate_ptjet3_num->Sumw2();
+  h1_taufakerate_ptjet3_den->Sumw2();
+
+  TH1F* h1_taufakerate_ptjet4_num = new TH1F("h1_taufakerate_ptjet4_num", "h1_taufakerate_ptjet4_num", 10, ptedges);
+  TH1F* h1_taufakerate_ptjet4_den = new TH1F("h1_taufakerate_ptjet4_den", "h1_taufakerate_ptjet4_den", 10, ptedges);
+  h1_taufakerate_ptjet4_num->Sumw2();
+  h1_taufakerate_ptjet4_den->Sumw2();
 
   TH1F* h1_taufakerate_jetrank_num = new TH1F("h1_taufakerate_jetrank_num", "h1_taufakerate_jetrank_num", 6, 0.5, 6.5);
   TH1F* h1_taufakerate_jetrank_den = new TH1F("h1_taufakerate_jetrank_den", "h1_taufakerate_jetrank_den", 6, 0.5, 6.5);
@@ -356,8 +376,15 @@ int main(int argc, char** argv)
 	// ------------------------
 	TH1F* ReweightFactor = (TH1F*)(file_Pt.Get("RescaleWeight"));
 	
+
+	if (JetLooseIsoObjectSelectionCollection.jet.size() >= 2) {
+		h1_jet1pt->Fill(JetLooseIsoObjectSelectionCollection.jet[0]->pt);
+		h1_jet2pt->Fill(JetLooseIsoObjectSelectionCollection.jet[1]->pt);
+	}
+
 	int count=0;
-	for(unsigned int j = 0;j<JetLooseIsoObjectSelectionCollection.jet.size();++j){	
+	for(unsigned int j = 0;j<JetLooseIsoObjectSelectionCollection.jet.size();++j){
+		h1_jetpt->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);	
 		double jetMindR=JetJetMinDistance(JetLooseIsoObjectSelectionCollection,JetLooseIsoObjectSelectionCollection.jet[j]->eta,JetLooseIsoObjectSelectionCollection.jet[j]->phi);
 		pair <double, unsigned int>deltaR = TauJetMinDistanceExtended(mainObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
 		int nRescaleBin= ReweightFactor->FindBin(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
@@ -368,6 +395,10 @@ int main(int argc, char** argv)
 			h1_taufakerate_pt_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 			h1_taufakerate_jetrank_num->Fill(j,weight);
 			h2_taufakerate_dR_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, deltaR.first,weight);
+			if (j == 0) h1_taufakerate_ptjet1_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+			if (j == 1) h1_taufakerate_ptjet2_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+			if (j == 2) h1_taufakerate_ptjet3_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+			if (j == 3) h1_taufakerate_ptjet4_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 			h1_taufakescale_num->Fill(fabs(mainObjectSelectionCollection.tau[deltaR.second]->eta), mainObjectSelectionCollection.tau[deltaR.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 			h1_taufakescale_den->Fill(fabs(mainObjectSelectionCollection.tau[deltaR.second]->eta));
 			h1_taufakescale_pt_num->Fill(mainObjectSelectionCollection.tau[deltaR.second]->pt, mainObjectSelectionCollection.tau[deltaR.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
@@ -439,6 +470,10 @@ int main(int argc, char** argv)
 		h2_taufakerate_dR_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, deltaR.first,weight);	
 		h2_taufakerate_dRjet_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,
 		JetJetMinDistance(JetLooseIsoObjectSelectionCollection,JetLooseIsoObjectSelectionCollection.jet[j]->eta,JetLooseIsoObjectSelectionCollection.jet[j]->phi),weight);
+		if (j == 0) h1_taufakerate_ptjet1_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		if (j == 1) h1_taufakerate_ptjet2_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		if (j == 2) h1_taufakerate_ptjet3_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		if (j == 3) h1_taufakerate_ptjet4_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 	}
 	
 	NjetNtau->Fill(count,mainObjectSelectionCollection.tau.size());

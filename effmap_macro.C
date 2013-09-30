@@ -24,6 +24,30 @@ TFile _file0 ("analyzer_effmap_histograms.root","UPDATE");
 
 ((TH1F*)(_file0->Get("h1_taufakerate_pt_eff")))->Write();
 
+((TH1F*)(_file0->Get("h1_taufakerate_ptjet1_num")))->Clone("h1_taufakerate_ptjet1_eff");
+
+((TH1F*)(_file0->Get("h1_taufakerate_ptjet1_eff")))->Divide((TH2F*)(_file0->Get("h1_taufakerate_ptjet1_den")));
+
+((TH1F*)(_file0->Get("h1_taufakerate_ptjet1_eff")))->Write();
+
+((TH1F*)(_file0->Get("h1_taufakerate_ptjet2_num")))->Clone("h1_taufakerate_ptjet2_eff");
+
+((TH1F*)(_file0->Get("h1_taufakerate_ptjet2_eff")))->Divide((TH2F*)(_file0->Get("h1_taufakerate_ptjet2_den")));
+
+((TH1F*)(_file0->Get("h1_taufakerate_ptjet2_eff")))->Write();
+
+((TH1F*)(_file0->Get("h1_taufakerate_ptjet3_num")))->Clone("h1_taufakerate_ptjet3_eff");
+
+((TH1F*)(_file0->Get("h1_taufakerate_ptjet3_eff")))->Divide((TH2F*)(_file0->Get("h1_taufakerate_ptjet3_den")));
+
+((TH1F*)(_file0->Get("h1_taufakerate_ptjet3_eff")))->Write();
+
+((TH1F*)(_file0->Get("h1_taufakerate_ptjet4_num")))->Clone("h1_taufakerate_ptjet4_eff");
+
+((TH1F*)(_file0->Get("h1_taufakerate_ptjet4_eff")))->Divide((TH2F*)(_file0->Get("h1_taufakerate_ptjet4_den")));
+
+((TH1F*)(_file0->Get("h1_taufakerate_ptjet4_eff")))->Write();
+
 ((TH1F*)(_file0->Get("h1_taufakerate_jetrank_num")))->Clone("h1_taufakerate_jetrank_eff");
 
 ((TH1F*)(_file0->Get("h1_taufakerate_jetrank_eff")))->Divide((TH2F*)(_file0->Get("h1_taufakerate_jetrank_den")));
