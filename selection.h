@@ -222,12 +222,25 @@ struct Selection {
 	    else return;
 	  }
 	  
+	  //old leading jet cuts version
+	  /*
 	  //LeadJet
 	  double leadJetPt = (*InputCollection).jet[jetIndex.first]->pt;
 	  double leadJetEta = (*InputCollection).jet[jetIndex.first]->eta;
 	  //SubLeadJet
 	  double subLeadJetPt = (*InputCollection).jet[jetIndex.second]->pt;
-	  double subLeadJetEta = (*InputCollection).jet[jetIndex.second]->eta;
+	  double subLeadJetEta = (*InputCollection).jet[jetIndex.second]->eta;*/
+	  
+	  //new highest invariant mass jets version
+	  //find properties of dijet-system
+          MassAndIndex Inv2j = Inv2jMassIndex((*InputCollection));
+	  
+	  //LeadJet
+	  double leadJetPt = (*InputCollection).jet[Inv2j.first]->pt;
+	  double leadJetEta = (*InputCollection).jet[Inv2j.first]->eta;
+	  //SubLeadJet
+	  double subLeadJetPt = (*InputCollection).jet[Inv2j.second]->pt;
+	  double subLeadJetEta = (*InputCollection).jet[Inv2j.second]->eta;	  	  
 	  
 	  bool leadJet = true;
 	  bool subLeadJet = true;
@@ -274,9 +287,9 @@ struct Selection {
 	  }
 	  else if(!invertJetRequirements) (*OutputCollection).h_count->Fill("SecondJetCut",weight);
 	  
-	  //find properties of dijet-system
-          MassAndIndex Inv2j = Inv2jMassIndex((*InputCollection));
-	  
+
+	  //check for different first and 2nd high pt jet and inv mass max jet
+	  //if(jetIndex.first+jetIndex.second!=Inv2j.first+Inv2j.second) std::cout<<"pT1="<<jetIndex.first<<", pT2="<<jetIndex.second<<", M1="<<Inv2j.first<<", M2="<<Inv2j.second<<std::endl;
 	  bool DiJetDr = true;
 	  if(DiJetDrMin > 0){
 	    if(!(Inv2j.dR		>=	DiJetDrMin)) 			DiJetDr = false; //check dijet separation
