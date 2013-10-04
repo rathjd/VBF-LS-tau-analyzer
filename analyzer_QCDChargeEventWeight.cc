@@ -82,24 +82,70 @@ ofile.count("MET", 0)
   //---------------------------------------------------------------------------
 
 TH1::SetDefaultSumw2();
-TFile file_eff("/afs/naf.desy.de/user/r/rathjd/public/VBFAnalyzer/ChargeMap_Responsejet30tau45.root", "read");
-TFile file_Pt("/afs/naf.desy.de/user/r/rathjd/public/VBFAnalyzer/ResponseFactors_jet30tau45_15up.root", "read");
+TFile file_eff("/afs/naf.desy.de/user/r/rathjd/public/VBFAnalyzer/ChargeMapAllIsos_Jet30Tau45.root", "read");
+TFile file_Resp("/afs/naf.desy.de/user/r/rathjd/public/VBFAnalyzer/ResponseFactorsAllIsos_Jet30Tau45_15up.root", "read");
+
+/*vector<TH1F*> ResponseN;
+vector<double> ResponseEdgeN;
+TH2F *projectN=(TH2F*)file_Resp.Get("h2_tauResponseN")->Clone("projectN");
+for(unsigned int x=0; x<projectN->GetNbinsX(); x++)
+  {
+    ResponseEdgeN.push_back(projectN->GetXaxis()->GetBinLowEdge(x+1));
+    ResponseN.push_back((TH1F*)projectN->ProjectionY(TString::Format("histN_%d",x+1),x+1,x+1));
+  }
+ResponseEdgeN.push_back(2500);
+
+vector<TH1F*> ResponseL;
+vector<double> ResponseEdgeL;
+TH2F *projectL=(TH2F*)file_Resp.Get("h2_tauResponseL")->Clone("projectL");
+for(unsigned int x=0; x<projectL->GetNbinsX(); x++)
+  {
+    ResponseEdgeL.push_back(projectL->GetXaxis()->GetBinLowEdge(x+1));
+    ResponseL.push_back((TH1F*)projectL->ProjectionY(TString::Format("histL_%d",x+1),x+1,x+1));
+  }
+ResponseEdgeL.push_back(2500);
+
+vector<TH1F*> ResponseM;
+vector<double> ResponseEdgeM;
+TH2F *projectM=(TH2F*)file_Resp.Get("h2_tauResponseM")->Clone("projectM");
+for(unsigned int x=0; x<projectM->GetNbinsX(); x++)
+  {
+    ResponseEdgeM.push_back(projectM->GetXaxis()->GetBinLowEdge(x+1));
+    ResponseM.push_back((TH1F*)projectM->ProjectionY(TString::Format("histM_%d",x+1),x+1,x+1));
+  }
+ResponseEdgeM.push_back(2500);
+
+vector<TH1F*> ResponseT;
+vector<double> ResponseEdgeT;
+TH2F *projectT=(TH2F*)file_Resp.Get("h2_tauResponseT")->Clone("projectT");
+for(unsigned int x=0; x<projectT->GetNbinsX(); x++)
+  {
+    ResponseEdgeT.push_back(projectT->GetXaxis()->GetBinLowEdge(x+1));
+    ResponseT.push_back((TH1F*)projectT->ProjectionY(TString::Format("histT_%d",x+1),x+1,x+1));
+  }
+ResponseEdgeT.push_back(2500);*/
+
 
 MyHistoCollection myHistoColl_SignalRegion(ofile.file_, "SignalRegion");	
 MyHistoCollection myHistoColl_CR1 (ofile.file_, "Ztautau_CR1");
-MyHistoCollection myHistoColl_CR2 (ofile.file_, "Central_invertedVBF_CR2");	
+MyHistoCollection myHistoColl_CR2 (ofile.file_, "Central_invertedVBF_CR2");
+MyHistoCollection myHistoColl_CR3 (ofile.file_, "Central_invertedVBF_TauMediumIso_CR3");	
 MyHistoCollection myHistoColl_CR4 (ofile.file_, "Central_invertedVBF_TauLooseIso_CR4");
-        MyHistoCollection myHistoColl_CR5 (ofile.file_, "Central_TauLooseIso_CR5");
+MyHistoCollection myHistoColl_CR5 (ofile.file_, "Central_invertedVBF_NoIso_CR5");
 
-MyEventCollection mainObjectSelectionCollection ("mainObjectSelection");
-MyEventCollection JetLooseIsoObjectSelectionCollection ("JetLooseIsoObjectSelection");
+
+MyEventCollection TauTightIsoObjectSelectionCollection ("TauTightIsoObjectSelection");
+MyEventCollection TauMediumIsoObjectSelectionCollection ("TauMediumIsoObjectSelection");
 MyEventCollection TauLooseIsoObjectSelectionCollection ("TauLooseIsoObjectSelection");
-MyEventCollection TauTightObjectSelectionCollection ("TauTightIsoObjectSelection");
+MyEventCollection TauNoIsoObjectSelectionCollection ("TauNoIsoObjectSelection");
+MyEventCollection JetLooseIsoObjectSelectionCollection ("JetLooseIsoObjectSelection");
+
+
   //---------------------------------------------------------------------------
   // Loop over events
   //---------------------------------------------------------------------------
 
-  for(int entry=0; entry < nevents; ++entry)
+for(int entry=0; entry < nevents; ++entry)
 {
 // Read event into memory
 stream.read(entry);
@@ -124,8 +170,10 @@ bool goodVertex = true;
           if(!( vertex.size() > 0 )) goodVertex = false;
 if(goodVertex){
 if( goodVertex ) {
-mainObjectSelectionCollection.goodVertex = true;
+TauTightIsoObjectSelectionCollection.goodVertex = true;
+TauMediumIsoObjectSelectionCollection.goodVertex = true;
 TauLooseIsoObjectSelectionCollection.goodVertex = true;
+TauNoIsoObjectSelectionCollection.goodVertex = true;
 }
 }
 
@@ -139,14 +187,18 @@ TauLooseIsoObjectSelectionCollection.goodVertex = true;
                 (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v4 == 1) ||
                 (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v6 == 1)
 
-             ) { mainObjectSelectionCollection.passedTrigger = true;
-TauLooseIsoObjectSelectionCollection.passedTrigger = true;
+             ) { TauTightIsoObjectSelectionCollection.passedTrigger = true;
+	         TauMediumIsoObjectSelectionCollection.passedTrigger = true;
+		 TauLooseIsoObjectSelectionCollection.passedTrigger = true;
+		 TauNoIsoObjectSelectionCollection.passedTrigger = true;
                }
 
 // electron selection
 for(unsigned int e = 0;e<electron.size();++e){
-mainObjectSelectionCollection.electron.push_back(&electron[e]);
+TauTightIsoObjectSelectionCollection.electron.push_back(&electron[e]);
+TauMediumIsoObjectSelectionCollection.electron.push_back(&electron[e]);
 TauLooseIsoObjectSelectionCollection.electron.push_back(&electron[e]);
+TauNoIsoObjectSelectionCollection.electron.push_back(&electron[e]);
 }
 
 // muon selection
@@ -166,8 +218,10 @@ if(!( muon[m].innerTrack_hitPattern_pixelLayersWithMeasurement > 5 )) continue;
 if(!( muon[m].innerTrack_normalizedChi2 < 1.8 )) continue;
 if(!( fabs(muon[m].innerTrack_dxy) < 3. )) continue;
 if(!( fabs(muon[m].innerTrack_dz) < 30. )) continue;
-mainObjectSelectionCollection.muon.push_back(&muon[m]);
+TauTightIsoObjectSelectionCollection.muon.push_back(&muon[m]);
+TauMediumIsoObjectSelectionCollection.muon.push_back(&muon[m]);
 TauLooseIsoObjectSelectionCollection.muon.push_back(&muon[m]);
+TauNoIsoObjectSelectionCollection.muon.push_back(&muon[m]);
 }
 
           // tau main selection
@@ -193,142 +247,414 @@ JetLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 // -- QCD Event Weighting --
 // --------------------------
 
-TH2F* ChargeMap_eff = (TH2F*)(file_eff.Get("ChargeMap_eff"));
-TH1F* ReweightFactor = (TH1F*)(file_Pt.Get("RescaleWeight"));
-vector<double> jet_taufakerate;
+TH2F* ChargeMapN_eff = (TH2F*)(file_eff.Get("ChargeMapN_eff"));
+TH1F* ReweightFactorN = (TH1F*)(file_Resp.Get("RescaleWeightN"));
+vector<double> jet_taufakerateN;
 
-TH2F* ChargeMap_loose_eff = (TH2F*)(file_eff.Get("ChargeMap_loose_eff"));
-vector<double> jet_taufakerate_loose;
+TH2F* ChargeMapL_eff = (TH2F*)(file_eff.Get("ChargeMapL_eff"));
+TH1F* ReweightFactorL = (TH1F*)(file_Resp.Get("RescaleWeightL"));
+vector<double> jet_taufakerateL;
+
+TH2F* ChargeMapM_eff = (TH2F*)(file_eff.Get("ChargeMapM_eff"));
+TH1F* ReweightFactorM = (TH1F*)(file_Resp.Get("RescaleWeightM"));
+vector<double> jet_taufakerateM;
+
+TH2F* ChargeMapT_eff = (TH2F*)(file_eff.Get("ChargeMapT_eff"));
+TH1F* ReweightFactorT = (TH1F*)(file_Resp.Get("RescaleWeightT"));
+vector<double> jet_taufakerateT;
+
 
 for(unsigned int i = 0;i<JetLooseIsoObjectSelectionCollection.jet.size();++i){
 double jetMindR=JetJetMinDistance(JetLooseIsoObjectSelectionCollection,JetLooseIsoObjectSelectionCollection.jet[i]->eta,JetLooseIsoObjectSelectionCollection.jet[i]->phi);
-//int nbin = ChargeMap_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[i]->pt);//JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction);
-int nbin = ChargeMap_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction);
-int nbinLoose = ChargeMap_loose_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction);
-int nRescaleBin= ReweightFactor->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+int nbinN = ChargeMapN_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction);
+int nRescaleBinN= ReweightFactorN->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+int nbinL = ChargeMapL_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction);
+int nRescaleBinL= ReweightFactorL->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+int nbinM = ChargeMapM_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction);
+int nRescaleBinM= ReweightFactorM->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+int nbinT = ChargeMapT_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction);
+int nRescaleBinT= ReweightFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
 if(jetMindR > 0.5 && fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta) <=2.1)
   {
-    jet_taufakerate.push_back(ChargeMap_eff->GetBinContent(nbin)*ReweightFactor->GetBinContent(nRescaleBin));
-    jet_taufakerate_loose.push_back(ChargeMap_loose_eff->GetBinContent(nbinLoose));
+    jet_taufakerateN.push_back(ChargeMapN_eff->GetBinContent(nbinN)*ReweightFactorN->GetBinContent(nRescaleBinN));
+    jet_taufakerateL.push_back(ChargeMapL_eff->GetBinContent(nbinL)*ReweightFactorL->GetBinContent(nRescaleBinL));
+    jet_taufakerateM.push_back(ChargeMapM_eff->GetBinContent(nbinM)*ReweightFactorM->GetBinContent(nRescaleBinM));
+    jet_taufakerateT.push_back(ChargeMapT_eff->GetBinContent(nbinT)*ReweightFactorT->GetBinContent(nRescaleBinT));
   }
 else
   {
     double jetMindR2=JetJetMinDistance(JetLooseIsoObjectSelectionCollection,JetLooseIsoObjectSelectionCollection.jet[i]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta)*2.1,JetLooseIsoObjectSelectionCollection.jet[i]->phi);
     if(jetMindR > 0.5 && jetMindR2 > 0.5 && fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta) <=2.2)
       {
-        jet_taufakerate.push_back(ChargeMap_eff->GetBinContent(nbin)*ReweightFactor->GetBinContent(nRescaleBin));
-    	jet_taufakerate_loose.push_back(ChargeMap_loose_eff->GetBinContent(nbinLoose));
+        jet_taufakerateN.push_back(ChargeMapN_eff->GetBinContent(nbinN)*ReweightFactorN->GetBinContent(nRescaleBinN));
+        jet_taufakerateL.push_back(ChargeMapL_eff->GetBinContent(nbinL)*ReweightFactorL->GetBinContent(nRescaleBinL));
+        jet_taufakerateM.push_back(ChargeMapM_eff->GetBinContent(nbinM)*ReweightFactorM->GetBinContent(nRescaleBinM));
+        jet_taufakerateT.push_back(ChargeMapT_eff->GetBinContent(nbinT)*ReweightFactorT->GetBinContent(nRescaleBinT));
       }
     else
       {
-        jet_taufakerate.push_back(0);
-    	jet_taufakerate_loose.push_back(0);
+        jet_taufakerateN.push_back(0);
+    	jet_taufakerateL.push_back(0);
+	jet_taufakerateM.push_back(0);
+	jet_taufakerateT.push_back(0);
       }
   }
 }
 
-Fake FakeTaus("FakeTaus");
-FakeTaus.generate(jet_taufakerate);
+Fake FakeTausN("FakeTaus");
+FakeTausN.generate(jet_taufakerateN);
 
-tau_s faketau1;
-tau_s faketau2;
+tau_s faketau1N;
+tau_s faketau2N;
 
-//TH1F* h1_taufakescale_fac = (TH1F*)(file_Pt.Get("h1_taufakescale_pt_fac"));
-TH1F* h1_taufakescale_fac = (TH1F*)(file_Pt.Get("scale"));
+TH1F* h1_taufakescaleN_fac = (TH1F*)(file_Resp.Get("scaleN"));
 
-if ( FakeTaus.index.first >= 0 && FakeTaus.index.second >= 0 ) {
+if ( FakeTausN.index.first >= 0 && FakeTausN.index.second >= 0 ) {
 
-//double scale = 0.851;
-double scale = h1_taufakescale_fac->GetBinContent(h1_taufakescale_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pt)); 
-if(scale == 0) {scale = 0.851; FakeTaus.weight=0;}
-if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->charge >= 0 )
-faketau1.charge = +1;
-else if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->charge < 0 )
-faketau1.charge = -1;
-faketau1.p = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->p;
-faketau1.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->energy;
-faketau1.et = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->et;
-faketau1.px = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->px;
-faketau1.py = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->py;
-faketau1.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pz;
-faketau1.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pt * scale;
-if(faketau1.pt < 45) FakeTaus.weight=0;
-faketau1.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->phi;
-if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->eta<=2.1) faketau1.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->eta;
-else faketau1.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->eta)*2.1;
+double scale = h1_taufakescaleN_fac->GetBinContent(h1_taufakescaleN_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->pt)); 
+if(scale == 0) {scale = 0.851; FakeTausN.weight=0;}
 
-scale = h1_taufakescale_fac->GetBinContent(h1_taufakescale_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->pt));
-if(scale == 0) {scale = 0.851; FakeTaus.weight=0;}
-if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->charge >= 0 )
-faketau2.charge = +1;
-else if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->charge < 0 )
-faketau2.charge = -1;	
-faketau2.p = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->p;
-faketau2.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->energy;
-faketau2.et = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->et;
-faketau2.px = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->px;
-faketau2.py = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->py;
-faketau2.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->pz;
-faketau2.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->pt * scale;
-if(faketau2.pt < 45) FakeTaus.weight=0;
-faketau2.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->phi;
-if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->eta<=2.1) faketau2.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->eta;
-else faketau2.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.second]->eta)*2.1;
+/*double scale=1.;
+for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
+  {
+    if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pt < ResponseEdge[i+1])
+      {
+        int count=0;
+	scale=Response[i]->GetRandom();
+        while(scale * JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pt < 45)
+	  {
+	    scale=Response[i]->GetRandom();
+	    count++;
+	    if(count==1000)
+	      {
+	        FakeTaus.weight=0;
+		break;
+	      }
+	  }
+	break;
+      }
+  }*/
 
-mainObjectSelectionCollection.tau.push_back(&faketau1);
-mainObjectSelectionCollection.tau.push_back(&faketau2);
-
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->charge >= 0 )
+faketau1N.charge = +1;
+else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->charge < 0 )
+faketau1N.charge = -1;
+faketau1N.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->p;
+faketau1N.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->energy;
+faketau1N.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->et;
+faketau1N.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->px;
+faketau1N.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->py;
+faketau1N.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->pz;
+faketau1N.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->pt * scale;
+if(faketau1N.pt < 45) FakeTausN.weight=0;
+faketau1N.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->phi;
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->eta<=2.1) faketau1N.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->eta;
+else faketau1N.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->eta)*2.1;
+/*for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
+  {
+    if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pt < ResponseEdge[i+1])
+      {
+        int count=0;
+	scale=Response[i]->GetRandom();
+        while(scale * JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pt < 45)
+	  {
+	    scale=Response[i]->GetRandom();
+	    count++;
+	    if(count==1000)
+	      {
+	        FakeTausN.weight=0;
+		break;
+	      }
+	  }
+	break;
+      }
+  }*/
+scale = h1_taufakescaleN_fac->GetBinContent(h1_taufakescaleN_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pt));
+if(scale == 0) {scale = 0.851; FakeTausN.weight=0;}
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->charge >= 0 )
+faketau2N.charge = +1;
+else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->charge < 0 )
+faketau2N.charge = -1;	
+faketau2N.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->p;
+faketau2N.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->energy;
+faketau2N.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->et;
+faketau2N.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->px;
+faketau2N.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->py;
+faketau2N.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pz;
+faketau2N.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pt * scale;
+if(faketau2N.pt < 45) FakeTausN.weight=0;
+faketau2N.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->phi;
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->eta<=2.1) faketau2N.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->eta;
+else faketau2N.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->eta)*2.1;
+TauNoIsoObjectSelectionCollection.tau.push_back(&faketau1N);
+TauNoIsoObjectSelectionCollection.tau.push_back(&faketau2N);
 }
 
-Fake FakeTausLoose("FakeTaus");
-FakeTausLoose.generate(jet_taufakerate_loose);
+Fake FakeTausL("FakeTaus");
+FakeTausL.generate(jet_taufakerateL);
 
-tau_s faketau_loose1;
-tau_s faketau_loose2;
+tau_s faketau1L;
+tau_s faketau2L;
 
-TH1F* h1_taufakescale_loose_fac = (TH1F*)(file_eff.Get("h1_taufakescale_loose_pt_fac"));
+TH1F* h1_taufakescaleL_fac = (TH1F*)(file_Resp.Get("scaleL"));
 
-if ( FakeTausLoose.index.first >= 0 && FakeTausLoose.index.second >= 0 ) {
+if ( FakeTausL.index.first >= 0 && FakeTausL.index.second >= 0 ) {
 
-//double scale = 0.774;
-double scale = h1_taufakescale_loose_fac->GetBinContent(h1_taufakescale_loose_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->pt)); 
-if(scale == 0) {scale = 0.774; FakeTausLoose.weight=0;}
-if(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->charge >= 0 )
-faketau_loose1.charge = +1;
-else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->charge < 0 )
-faketau_loose1.charge = -1;
-faketau_loose1.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->p;
-faketau_loose1.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->energy;
-faketau_loose1.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->et;
-faketau_loose1.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->px;
-faketau_loose1.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->py;
-faketau_loose1.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->pz;
-faketau_loose1.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->pt * scale;
-if(faketau_loose1.pt < 45) FakeTausLoose.weight=0;
-faketau_loose1.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->phi;
-if(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->eta<=2.1) faketau_loose1.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->eta;
-else faketau_loose1.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.first]->eta)*2.1;
+double scale = h1_taufakescaleL_fac->GetBinContent(h1_taufakescaleL_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->pt)); 
+if(scale == 0) {scale = 0.851; FakeTausL.weight=0;}
 
-scale = h1_taufakescale_loose_fac->GetBinContent(h1_taufakescale_loose_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->pt));  
-if(scale == 0) {scale = 0.774; FakeTausLoose.weight=0;}
-if(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->charge >= 0 )
-faketau_loose2.charge = +1;
-else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->charge < 0 )
-faketau_loose2.charge = -1;	
-faketau_loose2.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->p;
-faketau_loose2.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->energy;
-faketau_loose2.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->et;
-faketau_loose2.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->px;
-faketau_loose2.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->py;
-faketau_loose2.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->pz;
-faketau_loose2.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->pt * scale;
-if(faketau_loose1.pt < 45) FakeTausLoose.weight=0;
-faketau_loose2.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->phi;
-if(fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->eta)<=2.1) faketau_loose2.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->eta;
-else faketau_loose2.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausLoose.index.second]->eta)*2.1;
+/*double scale=1.;
+for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
+  {
+    if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pt < ResponseEdge[i+1])
+      {
+        int count=0;
+	scale=Response[i]->GetRandom();
+        while(scale * JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pt < 45)
+	  {
+	    scale=Response[i]->GetRandom();
+	    count++;
+	    if(count==1000)
+	      {
+	        FakeTaus.weight=0;
+		break;
+	      }
+	  }
+	break;
+      }
+  }*/
 
-TauLooseIsoObjectSelectionCollection.tau.push_back(&faketau_loose1);
-TauLooseIsoObjectSelectionCollection.tau.push_back(&faketau_loose2);
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->charge >= 0 )
+faketau1L.charge = +1;
+else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->charge < 0 )
+faketau1L.charge = -1;
+faketau1L.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->p;
+faketau1L.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->energy;
+faketau1L.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->et;
+faketau1L.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->px;
+faketau1L.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->py;
+faketau1L.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->pz;
+faketau1L.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->pt * scale;
+if(faketau1L.pt < 45) FakeTausL.weight=0;
+faketau1L.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->phi;
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta<=2.1) faketau1L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta;
+else faketau1L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta)*2.1;
+/*for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
+  {
+    if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pt < ResponseEdge[i+1])
+      {
+        int count=0;
+	scale=Response[i]->GetRandom();
+        while(scale * JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pt < 45)
+	  {
+	    scale=Response[i]->GetRandom();
+	    count++;
+	    if(count==1000)
+	      {
+	        FakeTausL.weight=0;
+		break;
+	      }
+	  }
+	break;
+      }
+  }*/
+scale = h1_taufakescaleL_fac->GetBinContent(h1_taufakescaleL_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pt));
+if(scale == 0) {scale = 0.851; FakeTausL.weight=0;}
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->charge >= 0 )
+faketau2L.charge = +1;
+else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->charge < 0 )
+faketau2L.charge = -1;	
+faketau2L.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->p;
+faketau2L.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->energy;
+faketau2L.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->et;
+faketau2L.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->px;
+faketau2L.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->py;
+faketau2L.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pz;
+faketau2L.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pt * scale;
+if(faketau2L.pt < 45) FakeTausL.weight=0;
+faketau2L.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->phi;
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->eta<=2.1) faketau2L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->eta;
+else faketau2L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->eta)*2.1;
+TauLooseIsoObjectSelectionCollection.tau.push_back(&faketau1L);
+TauLooseIsoObjectSelectionCollection.tau.push_back(&faketau2L);
+}
+
+Fake FakeTausM("FakeTaus");
+FakeTausM.generate(jet_taufakerateM);
+
+tau_s faketau1M;
+tau_s faketau2M;
+
+TH1F* h1_taufakescaleM_fac = (TH1F*)(file_Resp.Get("scaleM"));
+
+if ( FakeTausM.index.first >= 0 && FakeTausM.index.second >= 0 ) {
+
+double scale = h1_taufakescaleM_fac->GetBinContent(h1_taufakescaleM_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->pt)); 
+if(scale == 0) {scale = 0.851; FakeTausM.weight=0;}
+
+/*double scale=1.;
+for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
+  {
+    if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pt < ResponseEdge[i+1])
+      {
+        int count=0;
+	scale=Response[i]->GetRandom();
+        while(scale * JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pt < 45)
+	  {
+	    scale=Response[i]->GetRandom();
+	    count++;
+	    if(count==1000)
+	      {
+	        FakeTaus.weight=0;
+		break;
+	      }
+	  }
+	break;
+      }
+  }*/
+
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->charge >= 0 )
+faketau1M.charge = +1;
+else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->charge < 0 )
+faketau1M.charge = -1;
+faketau1M.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->p;
+faketau1M.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->energy;
+faketau1M.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->et;
+faketau1M.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->px;
+faketau1M.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->py;
+faketau1M.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->pz;
+faketau1M.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->pt * scale;
+if(faketau1M.pt < 45) FakeTausM.weight=0;
+faketau1M.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->phi;
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta<=2.1) faketau1M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta;
+else faketau1M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta)*2.1;
+/*for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
+  {
+    if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pt < ResponseEdge[i+1])
+      {
+        int count=0;
+	scale=Response[i]->GetRandom();
+        while(scale * JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pt < 45)
+	  {
+	    scale=Response[i]->GetRandom();
+	    count++;
+	    if(count==1000)
+	      {
+	        FakeTausM.weight=0;
+		break;
+	      }
+	  }
+	break;
+      }
+  }*/
+scale = h1_taufakescaleM_fac->GetBinContent(h1_taufakescaleM_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pt));
+if(scale == 0) {scale = 0.851; FakeTausM.weight=0;}
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->charge >= 0 )
+faketau2M.charge = +1;
+else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->charge < 0 )
+faketau2M.charge = -1;	
+faketau2M.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->p;
+faketau2M.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->energy;
+faketau2M.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->et;
+faketau2M.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->px;
+faketau2M.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->py;
+faketau2M.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pz;
+faketau2M.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pt * scale;
+if(faketau2M.pt < 45) FakeTausM.weight=0;
+faketau2M.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->phi;
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->eta<=2.1) faketau2M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->eta;
+else faketau2M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->eta)*2.1;
+TauMediumIsoObjectSelectionCollection.tau.push_back(&faketau1M);
+TauMediumIsoObjectSelectionCollection.tau.push_back(&faketau2M);
+}
+
+Fake FakeTausT("FakeTaus");
+FakeTausT.generate(jet_taufakerateT);
+
+tau_s faketau1T;
+tau_s faketau2T;
+
+TH1F* h1_taufakescaleT_fac = (TH1F*)(file_Resp.Get("scaleT"));
+
+if ( FakeTausT.index.first >= 0 && FakeTausT.index.second >= 0 ) {
+
+double scale = h1_taufakescaleT_fac->GetBinContent(h1_taufakescaleT_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->pt)); 
+if(scale == 0) {scale = 0.851; FakeTausT.weight=0;}
+
+/*double scale=1.;
+for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
+  {
+    if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pt < ResponseEdge[i+1])
+      {
+        int count=0;
+	scale=Response[i]->GetRandom();
+        while(scale * JetLooseIsoObjectSelectionCollection.jet[FakeTaus.index.first]->pt < 45)
+	  {
+	    scale=Response[i]->GetRandom();
+	    count++;
+	    if(count==1000)
+	      {
+	        FakeTaus.weight=0;
+		break;
+	      }
+	  }
+	break;
+      }
+  }*/
+
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->charge >= 0 )
+faketau1T.charge = +1;
+else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->charge < 0 )
+faketau1T.charge = -1;
+faketau1T.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->p;
+faketau1T.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->energy;
+faketau1T.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->et;
+faketau1T.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->px;
+faketau1T.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->py;
+faketau1T.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->pz;
+faketau1T.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->pt * scale;
+if(faketau1T.pt < 45) FakeTausT.weight=0;
+faketau1T.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->phi;
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta<=2.1) faketau1T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta;
+else faketau1T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta)*2.1;
+/*for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
+  {
+    if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pt < ResponseEdge[i+1])
+      {
+        int count=0;
+	scale=Response[i]->GetRandom();
+        while(scale * JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pt < 45)
+	  {
+	    scale=Response[i]->GetRandom();
+	    count++;
+	    if(count==1000)
+	      {
+	        FakeTausT.weight=0;
+		break;
+	      }
+	  }
+	break;
+      }
+  }*/
+scale = h1_taufakescaleT_fac->GetBinContent(h1_taufakescaleT_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pt));
+if(scale == 0) {scale = 0.851; FakeTausT.weight=0;}
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->charge >= 0 )
+faketau2T.charge = +1;
+else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->charge < 0 )
+faketau2T.charge = -1;	
+faketau2T.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->p;
+faketau2T.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->energy;
+faketau2T.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->et;
+faketau2T.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->px;
+faketau2T.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->py;
+faketau2T.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pz;
+faketau2T.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pt * scale;
+if(faketau2T.pt < 45) FakeTausT.weight=0;
+faketau2T.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->phi;
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->eta<=2.1) faketau2T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->eta;
+else faketau2T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->eta)*2.1;
+TauTightIsoObjectSelectionCollection.tau.push_back(&faketau1T);
+TauTightIsoObjectSelectionCollection.tau.push_back(&faketau2T);
 }
 
 // jet && bjet selection
@@ -336,30 +662,38 @@ TauLooseIsoObjectSelectionCollection.tau.push_back(&faketau_loose2);
 for(unsigned int j = 0;j<jet.size();++j){
 if(!( jet[j].pt >= 30. )) continue; // Original value 20
 if(!( fabs(jet[j].eta) <= 5.0 )) continue;
-double mainDistance = TauJetMinDistance(mainObjectSelectionCollection, jet[j].eta, jet[j].phi);
-double looseDistance = TauJetMinDistance(TauLooseIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
-            bool jetid=true;
+double DistanceN = TauJetMinDistance(TauNoIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
+double DistanceL = TauJetMinDistance(TauLooseIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
+double DistanceM = TauJetMinDistance(TauMediumIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
+double DistanceT = TauJetMinDistance(TauTightIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
+bool jetid=true;
 if(!( (jet[j].neutralHadronEnergy + jet[j].HFHadronEnergy) / jet[j].energy < 0.99 )) jetid=false;
 if(!( jet[j].neutralEmEnergyFraction < 0.99 )) jetid=false;
 if(!( jet[j].numberOfDaughters > 1 )) jetid=false;
 if(fabs(jet[j].eta) < 2.4) {
-              if(!( jet[j].chargedHadronEnergyFraction > 0 )) jetid=false;
-              if(!( jet[j].chargedEmEnergyFraction < 0.99 )) jetid=false;
-              if(!( jet[j].chargedHadronMultiplicity > 0 )) jetid=false;
+   if(!( jet[j].chargedHadronEnergyFraction > 0 )) jetid=false;
+   if(!( jet[j].chargedEmEnergyFraction < 0.99 ))  jetid=false;
+   if(!( jet[j].chargedHadronMultiplicity > 0 ))   jetid=false;
+ }
+if( jet[j].pt >= 50. && jetid	){
+  if(	DistanceN >= 0.3	) TauNoIsoObjectSelectionCollection.jet.push_back(&jet[j]);
+  if(	DistanceL >= 0.3	) TauLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
+  if(	DistanceM >= 0.3	) TauMediumIsoObjectSelectionCollection.jet.push_back(&jet[j]);
+  if(	DistanceT >= 0.3	) TauTightIsoObjectSelectionCollection.jet.push_back(&jet[j]);
             }
-            if( jet[j].pt >= 50. && jetid	){
-if(	mainDistance >= 0.3	) mainObjectSelectionCollection.jet.push_back(&jet[j]);
-if(	looseDistance >= 0.3	) TauLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
-            }
-            if(fabs(jet[j].eta) <= 2.4 && jet[j].bDiscriminator_combinedSecondaryVertexBJetTags > 0.244 ){
-              if(	mainDistance >= 0.3	) mainObjectSelectionCollection.bjet.push_back(&jet[j]);
-if(	looseDistance >= 0.3	) TauLooseIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
+if(fabs(jet[j].eta) <= 2.4 && jet[j].bDiscriminator_combinedSecondaryVertexBJetTags > 0.244 ){
+  if(	DistanceN >= 0.3	) TauNoIsoObjectSelectionCollection.jet.push_back(&jet[j]);
+  if(	DistanceL >= 0.3	) TauLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
+  if(	DistanceM >= 0.3	) TauMediumIsoObjectSelectionCollection.jet.push_back(&jet[j]);
+  if(	DistanceT >= 0.3	) TauTightIsoObjectSelectionCollection.jet.push_back(&jet[j]);
             }
 }
 
 //MET selection
-mainObjectSelectionCollection.met.push_back(&met[0]);
+TauNoIsoObjectSelectionCollection.met.push_back(&met[0]);
 TauLooseIsoObjectSelectionCollection.met.push_back(&met[0]);
+TauMediumIsoObjectSelectionCollection.met.push_back(&met[0]);
+TauTightIsoObjectSelectionCollection.met.push_back(&met[0]);
 
 //Event Count
 ofile.count("NoCuts");
@@ -369,7 +703,7 @@ ofile.count("NoCuts");
 // ---------------------
 
 Selection Signal("Signal"); //label and initialisation
-Signal.InputCollection = &mainObjectSelectionCollection;	//input collection
+Signal.InputCollection = &TauTightIsoObjectSelectionCollection;	//input collection
 Signal.OutputCollection = &myHistoColl_SignalRegion;	//output collection
 Signal.RealData	= eventhelper_isRealData;	//pass information if event is real data
 Signal.RunData	= false;	//real data allowed
@@ -392,7 +726,7 @@ Signal.DiJetInvMassMax	= -1.;	//Dijet maximum invariant mass, set to -1 for no r
 Signal.DiJetSignEta	= -1;	//Dijet sign eta_1*eta_2
 Signal.DiJetDetaMin	= 4.2;	//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 Signal.DiJetDetaMax	= -1;	//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-Signal.weight	= FakeTaus.weight;	//event weight
+Signal.weight	= FakeTausT.weight;	//event weight
 Signal.invertTauRequirements	= false;	//invert number of taus requirement
 Signal.invertTauProperties	= false;	//invert ditau properties (dR, sign)
 Signal.invertBtagRequirement	= false;	//invert number of b-jets required
@@ -406,7 +740,7 @@ Signal.select();	//do selection, fill histograms
 // ---------------------------------
 
 Selection InvertedVBF_CR2("InvertedVBF_CR2"); //label and initialisation
-InvertedVBF_CR2.InputCollection = &mainObjectSelectionCollection;	//input collection
+InvertedVBF_CR2.InputCollection = &TauTightIsoObjectSelectionCollection;	//input collection
 InvertedVBF_CR2.OutputCollection = &myHistoColl_CR2;	//output collection
 InvertedVBF_CR2.RealData	= eventhelper_isRealData;	//pass information if event is real data
 InvertedVBF_CR2.RunData	= true;	//real data allowed
@@ -429,7 +763,7 @@ InvertedVBF_CR2.DiJetInvMassMax	= -1.;	//Dijet maximum invariant mass, set to -1
 InvertedVBF_CR2.DiJetSignEta	= -1;	//Dijet sign eta_1*eta_2
 InvertedVBF_CR2.DiJetDetaMin	= 4.2;	//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 InvertedVBF_CR2.DiJetDetaMax	= -1.;	//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-InvertedVBF_CR2.weight	= FakeTaus.weight;	//event weight
+InvertedVBF_CR2.weight	= FakeTausT.weight;	//event weight
 InvertedVBF_CR2.invertTauRequirements	= false;	//invert number of taus requirement
 InvertedVBF_CR2.invertTauProperties	= false;	//invert ditau properties (dR, sign)
 InvertedVBF_CR2.invertBtagRequirement	= false;	//invert number of b-jets required
@@ -439,10 +773,47 @@ InvertedVBF_CR2.invertDijetProperties	= true;	//invert dijet system properties (
 InvertedVBF_CR2.select();	//do selection, fill histograms
 
 // ------------------------------------------------------
+// -- CENTRAL + INVERTED VBF CR (with Tau Medium Iso) --
+// ------------------------------------------------------
+
+Selection InvertedVBF_CR3("InvertedVBF_TauMediumIso_CR3"); //label and initialisation
+InvertedVBF_CR3.InputCollection = &TauMediumIsoObjectSelectionCollection;	//input collection
+InvertedVBF_CR3.OutputCollection = &myHistoColl_CR3;	//output collection
+InvertedVBF_CR3.RealData	= eventhelper_isRealData;	//pass information if event is real data
+InvertedVBF_CR3.RunData	= true;	//real data allowed
+InvertedVBF_CR3.NumberTauMin	= 2;	//require at least N tau
+InvertedVBF_CR3.NumberTauMax	= -1;	//require at most N taus
+InvertedVBF_CR3.DiTauDeltaRmin	= 0.3;	//minimum delta R for tau pair
+InvertedVBF_CR3.DiTauInvMassMin	= -1;	//minimum Di-tau-mass requirement
+InvertedVBF_CR3.DiTauInvMassMax	= -1;	//maximum Di-tau-mass requirement
+InvertedVBF_CR3.DiTauSign	= +1;	//1 for LS and -1 for OS, 0 for no requirement
+InvertedVBF_CR3.Btag	= 0;	//number of btags required (exact -> 0 = none)
+InvertedVBF_CR3.JetEtaMax	= 5.;	//maximum eta for jets, set to -1 for no requirement
+InvertedVBF_CR3.LeadJetPtMin	= 75.;	//minimum pt of lead jet, set to -1 for no requirement
+InvertedVBF_CR3.LeadJetPtMax	= -1.;	//maximum pt of lead jet, set to -1 for no requirement
+InvertedVBF_CR3.SubLeadJetPtMin	= 50.;	//minimum pt of sub lead jet, set to -1 for no requirement
+InvertedVBF_CR3.SubLeadJetPtMax	= -1.;	//maximum pt of sub lead jet, set to -1 for no requirement
+InvertedVBF_CR3.DiJetDrMin	= 0.3;	//Dijet minimum delta R, set to -1 for no requirement
+InvertedVBF_CR3.DiJetDrMax	= -1.;	//Dijet maximum delta R, set to -1 for no requirement
+InvertedVBF_CR3.DiJetInvMassMin	= 700.;	//Dijet minimal invariant mass, set to -1 for no requirement
+InvertedVBF_CR3.DiJetInvMassMax	= -1.;	//Dijet maximum invariant mass, set to -1 for no requirement
+InvertedVBF_CR3.DiJetSignEta	= -1;	//Dijet sign eta_1*eta_2
+InvertedVBF_CR3.DiJetDetaMin	= 4.2;	//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+InvertedVBF_CR3.DiJetDetaMax	= -1.;	//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
+InvertedVBF_CR3.weight	= FakeTausM.weight;	//event weight
+InvertedVBF_CR3.invertTauRequirements	= false;	//invert number of taus requirement
+InvertedVBF_CR3.invertTauProperties	= false;	//invert ditau properties (dR, sign)
+InvertedVBF_CR3.invertBtagRequirement	= false;	//invert number of b-jets required
+InvertedVBF_CR3.invertJetRequirements	= true;	//invert jet pt requirements
+InvertedVBF_CR3.invertDijetProperties	= true;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
+
+InvertedVBF_CR3.select();	//do selection, fill histograms
+
+// ------------------------------------------------------
 // -- CENTRAL + INVERTED VBF CR (with Tau Loose Iso) --
 // ------------------------------------------------------
 
-Selection InvertedVBF_CR4("InvertedVBF_CR4"); //label and initialisation
+Selection InvertedVBF_CR4("InvertedVBF_TauLooseIso_CR4"); //label and initialisation
 InvertedVBF_CR4.InputCollection = &TauLooseIsoObjectSelectionCollection;	//input collection
 InvertedVBF_CR4.OutputCollection = &myHistoColl_CR4;	//output collection
 InvertedVBF_CR4.RealData	= eventhelper_isRealData;	//pass information if event is real data
@@ -466,7 +837,7 @@ InvertedVBF_CR4.DiJetInvMassMax	= -1.;	//Dijet maximum invariant mass, set to -1
 InvertedVBF_CR4.DiJetSignEta	= -1;	//Dijet sign eta_1*eta_2
 InvertedVBF_CR4.DiJetDetaMin	= 4.2;	//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 InvertedVBF_CR4.DiJetDetaMax	= -1.;	//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-InvertedVBF_CR4.weight	= FakeTausLoose.weight;	//event weight
+InvertedVBF_CR4.weight	= FakeTausL.weight;	//event weight
 InvertedVBF_CR4.invertTauRequirements	= false;	//invert number of taus requirement
 InvertedVBF_CR4.invertTauProperties	= false;	//invert ditau properties (dR, sign)
 InvertedVBF_CR4.invertBtagRequirement	= false;	//invert number of b-jets required
@@ -475,12 +846,49 @@ InvertedVBF_CR4.invertDijetProperties	= true;	//invert dijet system properties (
 
 InvertedVBF_CR4.select();	//do selection, fill histograms
 
+// ------------------------------------------------------
+// -- CENTRAL + INVERTED VBF CR (without Tau Iso) --
+// ------------------------------------------------------
+
+Selection InvertedVBF_CR5("InvertedVBF_TauNoIso_CR5"); //label and initialisation
+InvertedVBF_CR5.InputCollection = &TauNoIsoObjectSelectionCollection;	//input collection
+InvertedVBF_CR5.OutputCollection = &myHistoColl_CR5;	//output collection
+InvertedVBF_CR5.RealData	= eventhelper_isRealData;	//pass information if event is real data
+InvertedVBF_CR5.RunData	= true;	//real data allowed
+InvertedVBF_CR5.NumberTauMin	= 2;	//require at least N tau
+InvertedVBF_CR5.NumberTauMax	= -1;	//require at most N taus
+InvertedVBF_CR5.DiTauDeltaRmin	= 0.3;	//minimum delta R for tau pair
+InvertedVBF_CR5.DiTauInvMassMin	= -1;	//minimum Di-tau-mass requirement
+InvertedVBF_CR5.DiTauInvMassMax	= -1;	//maximum Di-tau-mass requirement
+InvertedVBF_CR5.DiTauSign	= +1;	//1 for LS and -1 for OS, 0 for no requirement
+InvertedVBF_CR5.Btag	= 0;	//number of btags required (exact -> 0 = none)
+InvertedVBF_CR5.JetEtaMax	= 5.;	//maximum eta for jets, set to -1 for no requirement
+InvertedVBF_CR5.LeadJetPtMin	= 75.;	//minimum pt of lead jet, set to -1 for no requirement
+InvertedVBF_CR5.LeadJetPtMax	= -1.;	//maximum pt of lead jet, set to -1 for no requirement
+InvertedVBF_CR5.SubLeadJetPtMin	= 50.;	//minimum pt of sub lead jet, set to -1 for no requirement
+InvertedVBF_CR5.SubLeadJetPtMax	= -1.;	//maximum pt of sub lead jet, set to -1 for no requirement
+InvertedVBF_CR5.DiJetDrMin	= 0.3;	//Dijet minimum delta R, set to -1 for no requirement
+InvertedVBF_CR5.DiJetDrMax	= -1.;	//Dijet maximum delta R, set to -1 for no requirement
+InvertedVBF_CR5.DiJetInvMassMin	= 700.;	//Dijet minimal invariant mass, set to -1 for no requirement
+InvertedVBF_CR5.DiJetInvMassMax	= -1.;	//Dijet maximum invariant mass, set to -1 for no requirement
+InvertedVBF_CR5.DiJetSignEta	= -1;	//Dijet sign eta_1*eta_2
+InvertedVBF_CR5.DiJetDetaMin	= 4.2;	//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+InvertedVBF_CR5.DiJetDetaMax	= -1.;	//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
+InvertedVBF_CR5.weight	= FakeTausN.weight;	//event weight
+InvertedVBF_CR5.invertTauRequirements	= false;	//invert number of taus requirement
+InvertedVBF_CR5.invertTauProperties	= false;	//invert ditau properties (dR, sign)
+InvertedVBF_CR5.invertBtagRequirement	= false;	//invert number of b-jets required
+InvertedVBF_CR5.invertJetRequirements	= true;	//invert jet pt requirements
+InvertedVBF_CR5.invertDijetProperties	= true;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
+
+InvertedVBF_CR5.select();	//do selection, fill histograms
+
 // ---------------------
 // -- Z -> TauTau CR --
 // ---------------------
 
 Selection Ztautau_CR1("Ztautau_CR1"); //label and initialisation
-Ztautau_CR1.InputCollection = &mainObjectSelectionCollection;	//input collection
+Ztautau_CR1.InputCollection = &TauTightIsoObjectSelectionCollection;	//input collection
 Ztautau_CR1.OutputCollection = &myHistoColl_CR1;	//output collection
 Ztautau_CR1.RealData	= eventhelper_isRealData;	//pass information if event is real data
 Ztautau_CR1.RunData	= true;	//real data allowed
@@ -503,7 +911,7 @@ Ztautau_CR1.DiJetInvMassMax	= -1.;	//Dijet maximum invariant mass, set to -1 for
 Ztautau_CR1.DiJetSignEta	= 0;	//Dijet sign eta_1*eta_2
 Ztautau_CR1.DiJetDetaMin	= -1.;	//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 Ztautau_CR1.DiJetDetaMax	= -1.;	//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-Ztautau_CR1.weight	= FakeTaus.weight;	//event weight
+Ztautau_CR1.weight	= FakeTausT.weight;	//event weight
 Ztautau_CR1.invertTauRequirements	= false;	//invert number of taus requirement
 Ztautau_CR1.invertTauProperties	= false;	//invert ditau properties (dR, sign)
 Ztautau_CR1.invertBtagRequirement	= false;	//invert number of b-jets required
@@ -512,7 +920,7 @@ Ztautau_CR1.invertDijetProperties	= false;	//invert dijet system properties (dR,
 
 Ztautau_CR1.select();	//do selection, fill histograms
 
-// ---------------------
+/*// ---------------------
 // -- Central Loose Region --
 // ---------------------
 
@@ -540,20 +948,21 @@ Central_TauLooseIso_CR5.DiJetInvMassMax	= -1.;	//Dijet maximum invariant mass, s
 Central_TauLooseIso_CR5.DiJetSignEta	= -1;	//Dijet sign eta_1*eta_2
 Central_TauLooseIso_CR5.DiJetDetaMin	= 4.2;	//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 Central_TauLooseIso_CR5.DiJetDetaMax	= -1;	//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-Central_TauLooseIso_CR5.weight	= FakeTausLoose.weight;	//event weight
+Central_TauLooseIso_CR5.weight	= FakeTausL.weight;	//event weight
 Central_TauLooseIso_CR5.invertTauRequirements	= false;	//invert number of taus requirement
 Central_TauLooseIso_CR5.invertTauProperties	= false;	//invert ditau properties (dR, sign)
 Central_TauLooseIso_CR5.invertBtagRequirement	= false;	//invert number of b-jets required
 Central_TauLooseIso_CR5.invertJetRequirements	= false;	//invert jet pt requirements
 Central_TauLooseIso_CR5.invertDijetProperties	= false;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
 
-Central_TauLooseIso_CR5.select();	
+Central_TauLooseIso_CR5.select();*/	
 
 
 //Clearing Object Collections
-mainObjectSelectionCollection.clear();
+TauTightIsoObjectSelectionCollection.clear();
+TauMediumIsoObjectSelectionCollection.clear();
 TauLooseIsoObjectSelectionCollection.clear();
-TauTightObjectSelectionCollection.tau.clear();
+TauNoIsoObjectSelectionCollection.clear();
 JetLooseIsoObjectSelectionCollection.clear();
 }
 
