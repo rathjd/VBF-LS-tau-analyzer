@@ -120,7 +120,7 @@ struct MyHistoCollection {
 		h_jet1eta = new TH1F("h_jet1eta", "h_jet1eta", 50 , -5., 5.);
 		h_jet2pt = new TH1F("h_jet2pt", "h_jet2pt", 50, 0., 500.);
 		h_jet2eta = new TH1F("h_jet2eta", "h_jet2eta", 50 , -5., 5.);
-		h_dijetinvariantmass = new TH1F("h_dijetinvariantmass","h_dijetinvariantmass", 9, 250., 2500.);
+		h_dijetinvariantmass = new TH1F("h_dijetinvariantmass","h_dijetinvariantmass", 10, 0., 2500.);
 		h_dijetdeltaeta = new TH1F ("h_dijetdeltaeta", "h_dijetdeltaeta", 20, 0., 10.);
 
 		h_tau1pt = new TH1F("h_tau1pt", "h_tau1pt", 50, 0., 500.);
