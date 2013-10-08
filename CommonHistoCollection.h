@@ -97,6 +97,9 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
         // MET
         inputHistoCollection.h_met -> Fill(inputEventCollection.met[0]->pt,weight);
 
+        //fill DiJetInvMass_vs_DiJetDEta
+        inputHistoCollection.h2_DiJetInvMass_vs_DiJetDEta -> Fill(Inv2j.dEta, Inv2j.Mass,weight);
+
 } 
 
 #endif
