@@ -301,7 +301,7 @@ struct Selection {
 	  
 	  if(!DiJetDr){
 	    if(invertDijetProperties){
-	      (*OutputCollection).h_count->Fill("InverseDiJetDeltaRCut",1);
+	      (*OutputCollection).h_count->Fill("InverseDiJetDeltaRCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
 	      return;
 	    }
