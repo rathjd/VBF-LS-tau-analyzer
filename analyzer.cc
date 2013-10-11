@@ -225,13 +225,13 @@ TauNoIsoObjectSelectionCollection.muon.push_back(&muon[m]);
 	      if(	mainDistance >= 0.3	) TauTightIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	      if(	mediumDistance >= 0.3	) TauMediumIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	      if(	looseDistance >= 0.3	) TauLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
-	      if(	NoDistance		) TauNoIsoObjectSelectionCollection.jet.push_back(&jet[j]);
+	      if(	NoDistance  >= 0.3	) TauNoIsoObjectSelectionCollection.jet.push_back(&jet[j]);
             }
             if(fabs(jet[j].eta) <= 2.4 && jet[j].bDiscriminator_combinedSecondaryVertexBJetTags > 0.244    ){
               if(	mainDistance >= 0.3	) TauTightIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
 	      if(	mediumDistance >= 0.3	) TauMediumIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
 	      if(	looseDistance >= 0.3	) TauLooseIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
-	      if(	NoDistance		) TauNoIsoObjectSelectionCollection.jet.push_back(&jet[j]);
+	      if(	NoDistance  >= 0.3	) TauNoIsoObjectSelectionCollection.jet.push_back(&jet[j]);
             }
 	  }
 
@@ -269,7 +269,7 @@ TauNoIsoObjectSelectionCollection.muon.push_back(&muon[m]);
 // ---------------------
 // -- Signal Region --
 // ---------------------
-
+//if(TauTightIsoObjectSelectionCollection.tau.size()==1 && TauNoIsoObjectSelectionCollection.tau.size()>1) std::cout<<"1 tau found"<<std::endl;
 Selection Signal("Signal"); //label and initialisation
 Signal.InputCollection = &TauTightIsoObjectSelectionCollection;	//input collection
 Signal.OutputCollection = &myHistoColl_SignalRegion;	//output collection
