@@ -682,10 +682,10 @@ if( jet[j].pt >= 50. && jetid	){
   if(	DistanceT >= 0.3	) TauTightIsoObjectSelectionCollection.jet.push_back(&jet[j]);
             }
 if(fabs(jet[j].eta) <= 2.4 && jet[j].bDiscriminator_combinedSecondaryVertexBJetTags > 0.244 ){
-  if(	DistanceN >= 0.3	) TauNoIsoObjectSelectionCollection.jet.push_back(&jet[j]);
-  if(	DistanceL >= 0.3	) TauLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
-  if(	DistanceM >= 0.3	) TauMediumIsoObjectSelectionCollection.jet.push_back(&jet[j]);
-  if(	DistanceT >= 0.3	) TauTightIsoObjectSelectionCollection.jet.push_back(&jet[j]);
+  if(	DistanceN >= 0.3	) TauNoIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
+  if(	DistanceL >= 0.3	) TauLooseIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
+  if(	DistanceM >= 0.3	) TauMediumIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
+  if(	DistanceT >= 0.3	) TauTightIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
             }
 }
 
