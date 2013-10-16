@@ -75,7 +75,10 @@ ofile.count("MET", 0)
   //---------------------------------------------------------------------------
   // Declare histograms
   //---------------------------------------------------------------------------
-
+  TH1F* h1_WeightDiff = new TH1F("h1_WeightDiff", "p_event-p(exactly these 2 fake tau)", 11,-0.5,10.5);
+  h1_WeightDiff->GetXaxis()->SetTitle("N_{jets}");
+  h1_WeightDiff->GetYaxis()->SetTitle("#Sigma(p_event-p(exactly these 2 fake tau))");
+  h1_WeightDiff->Sumw2();
 
   //---------------------------------------------------------------------------
   // Histogram Collection Init
@@ -247,6 +250,8 @@ JetLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 // -- QCD Event Weighting --
 // --------------------------
 
+bool verbose=false;
+
 TH2F* ChargeMapN_eff = (TH2F*)(file_eff.Get("ChargeMapN_eff"));
 TH1F* ReweightFactorN = (TH1F*)(file_Resp.Get("RescaleWeightN"));
 vector<double> jet_taufakerateN;
@@ -274,12 +279,14 @@ int nbinM = ChargeMapM_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]-
 int nRescaleBinM= ReweightFactorM->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
 int nbinT = ChargeMapT_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction);
 int nRescaleBinT= ReweightFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+if(verbose)std::cout<<"Jet "<<i<<" out of "<<JetLooseIsoObjectSelectionCollection.jet.size()<<": pT="<<JetLooseIsoObjectSelectionCollection.jet[i]->pt<<", eta="<<JetLooseIsoObjectSelectionCollection.jet[i]->eta<<", phi="<<JetLooseIsoObjectSelectionCollection.jet[i]->phi<<std::endl;
 if(jetMindR > 0.5 && fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta) <=2.1)
   {
     jet_taufakerateN.push_back(ChargeMapN_eff->GetBinContent(nbinN)*ReweightFactorN->GetBinContent(nRescaleBinN));
     jet_taufakerateL.push_back(ChargeMapL_eff->GetBinContent(nbinL)*ReweightFactorL->GetBinContent(nRescaleBinL));
     jet_taufakerateM.push_back(ChargeMapM_eff->GetBinContent(nbinM)*ReweightFactorM->GetBinContent(nRescaleBinM));
     jet_taufakerateT.push_back(ChargeMapT_eff->GetBinContent(nbinT)*ReweightFactorT->GetBinContent(nRescaleBinT));
+    if(verbose)std::cout<<"MindR and eta<=2.1 pass: N_q="<<JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity<<", F_q="<<JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction<<", P(N_q,F_q)="<<ChargeMapT_eff->GetBinContent(nbinT)<<", P(pT)="<<ReweightFactorT->GetBinContent(nRescaleBinT)<<std::endl;
   }
 else
   {
@@ -290,6 +297,7 @@ else
         jet_taufakerateL.push_back(ChargeMapL_eff->GetBinContent(nbinL)*ReweightFactorL->GetBinContent(nRescaleBinL));
         jet_taufakerateM.push_back(ChargeMapM_eff->GetBinContent(nbinM)*ReweightFactorM->GetBinContent(nRescaleBinM));
         jet_taufakerateT.push_back(ChargeMapT_eff->GetBinContent(nbinT)*ReweightFactorT->GetBinContent(nRescaleBinT));
+	if(verbose)std::cout<<"MindR2 and 2.1<eta<=2.2 pass: N_q="<<JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity<<", F_q="<<JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction<<", P(N_q,F_q)="<<ChargeMapT_eff->GetBinContent(nbinT)<<", P(pT)="<<ReweightFactorT->GetBinContent(nRescaleBinT)<<std::endl;
       }
     else
       {
@@ -297,11 +305,15 @@ else
     	jet_taufakerateL.push_back(0);
 	jet_taufakerateM.push_back(0);
 	jet_taufakerateT.push_back(0);
+	if(verbose)std::cout<<"Failed: P=0!"<<std::endl;
       }
   }
 }
 
+
+
 Fake FakeTausN("FakeTaus");
+if(verbose)std::cout<<"Dice NoIso"<<std::endl;
 FakeTausN.generate(jet_taufakerateN);
 
 tau_s faketau1N;
@@ -334,7 +346,7 @@ for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
 	break;
       }
   }*/
-
+if(verbose)std::cout<<"Jet "<<FakeTausN.index.first<<" to FTau1: pTScale="<<scale<<std::endl;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->charge >= 0 )
 faketau1N.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->charge < 0 )
@@ -371,6 +383,7 @@ else faketau1N.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.fi
   }*/
 scale = h1_taufakescaleN_fac->GetBinContent(h1_taufakescaleN_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pt));
 if(scale == 0) {scale = 0.851; FakeTausN.weight=0;}
+if(verbose)std::cout<<"Jet "<<FakeTausN.index.second<<" to FTau2: pTScale="<<scale<<std::endl;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->charge >= 0 )
 faketau2N.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->charge < 0 )
@@ -391,6 +404,7 @@ TauNoIsoObjectSelectionCollection.tau.push_back(&faketau2N);
 }
 
 Fake FakeTausL("FakeTaus");
+if(verbose)std::cout<<"Dice LooseIso"<<std::endl;
 FakeTausL.generate(jet_taufakerateL);
 
 tau_s faketau1L;
@@ -423,7 +437,7 @@ for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
 	break;
       }
   }*/
-
+if(verbose)std::cout<<"Jet "<<FakeTausL.index.first<<" to FTau1: pTScale="<<scale<<std::endl;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->charge >= 0 )
 faketau1L.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->charge < 0 )
@@ -460,6 +474,7 @@ else faketau1L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.fi
   }*/
 scale = h1_taufakescaleL_fac->GetBinContent(h1_taufakescaleL_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pt));
 if(scale == 0) {scale = 0.851; FakeTausL.weight=0;}
+if(verbose)std::cout<<"Jet "<<FakeTausL.index.second<<" to FTau2: pTScale="<<scale<<std::endl;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->charge >= 0 )
 faketau2L.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->charge < 0 )
@@ -480,6 +495,7 @@ TauLooseIsoObjectSelectionCollection.tau.push_back(&faketau2L);
 }
 
 Fake FakeTausM("FakeTaus");
+if(verbose)std::cout<<"Dice MediumIso"<<std::endl;
 FakeTausM.generate(jet_taufakerateM);
 
 tau_s faketau1M;
@@ -512,7 +528,7 @@ for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
 	break;
       }
   }*/
-
+if(verbose)std::cout<<"Jet "<<FakeTausM.index.first<<" to FTau1: pTScale="<<scale<<std::endl;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->charge >= 0 )
 faketau1M.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->charge < 0 )
@@ -549,6 +565,7 @@ else faketau1M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.fi
   }*/
 scale = h1_taufakescaleM_fac->GetBinContent(h1_taufakescaleM_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pt));
 if(scale == 0) {scale = 0.851; FakeTausM.weight=0;}
+if(verbose)std::cout<<"Jet "<<FakeTausM.index.second<<" to FTau2: pTScale="<<scale<<std::endl;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->charge >= 0 )
 faketau2M.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->charge < 0 )
@@ -569,7 +586,26 @@ TauMediumIsoObjectSelectionCollection.tau.push_back(&faketau2M);
 }
 
 Fake FakeTausT("FakeTaus");
+if(verbose)std::cout<<"Dice TightIso"<<std::endl;
 FakeTausT.generate(jet_taufakerateT);
+
+/*if(FakeTausT.weight>0){
+	  double p2=1;
+	  int count=0;
+	  for(unsigned int i=0; i<jet_taufakerateT.size(); i++){ //try p2 vs pg2
+	  	if(jet_taufakerateT[i]>0){
+		  count++;
+	  	  if(i==abs(FakeTausT.index.first) || i==abs(FakeTausT.index.second)) p2*=jet_taufakerateT[i];
+		  else p2*=(1-jet_taufakerateT[i]);
+		}
+	  }
+	  h1_WeightDiff->Fill(count,FakeTausT.weight-p2);
+	  int coefficient=1;
+	  if(count==3) coefficient=3;
+	  else if(count==4) coefficient=6; 
+	  else if(count==5) coefficient=10;
+	  else if(count==6) coefficient=15;
+	  FakeTausT.weight*=1/coefficient;}*/
 
 tau_s faketau1T;
 tau_s faketau2T;
@@ -601,7 +637,7 @@ for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
 	break;
       }
   }*/
-
+if(verbose)std::cout<<"Jet "<<FakeTausT.index.first<<" to FTau1: pTScale="<<scale<<std::endl;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->charge >= 0 )
 faketau1T.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->charge < 0 )
@@ -638,6 +674,7 @@ else faketau1T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.fi
   }*/
 scale = h1_taufakescaleT_fac->GetBinContent(h1_taufakescaleT_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pt));
 if(scale == 0) {scale = 0.851; FakeTausT.weight=0;}
+if(verbose)std::cout<<"Jet "<<FakeTausT.index.second<<" to FTau2: pTScale="<<scale<<std::endl;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->charge >= 0 )
 faketau2T.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->charge < 0 )
@@ -682,12 +719,13 @@ if( jet[j].pt >= 50. && jetid	){
   if(	DistanceT >= 0.3	) TauTightIsoObjectSelectionCollection.jet.push_back(&jet[j]);
             }
 if(fabs(jet[j].eta) <= 2.4 && jet[j].bDiscriminator_combinedSecondaryVertexBJetTags > 0.244 ){
-  if(	DistanceN >= 0.3	) TauNoIsoObjectSelectionCollection.jet.push_back(&jet[j]);
-  if(	DistanceL >= 0.3	) TauLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
-  if(	DistanceM >= 0.3	) TauMediumIsoObjectSelectionCollection.jet.push_back(&jet[j]);
-  if(	DistanceT >= 0.3	) TauTightIsoObjectSelectionCollection.jet.push_back(&jet[j]);
+  if(	DistanceN >= 0.3	) TauNoIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
+  if(	DistanceL >= 0.3	) TauLooseIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
+  if(	DistanceM >= 0.3	) TauMediumIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
+  if(	DistanceT >= 0.3	) TauTightIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
             }
 }
+if(verbose)std::cout<<TauTightIsoObjectSelectionCollection.jet.size()<<" jets in tightIso jet collection and "<<TauTightIsoObjectSelectionCollection.bjet.size()<<" in bjet collection"<<std::endl;
 
 //MET selection
 TauNoIsoObjectSelectionCollection.met.push_back(&met[0]);
@@ -732,7 +770,7 @@ Signal.invertTauProperties	= false;	//invert ditau properties (dR, sign)
 Signal.invertBtagRequirement	= false;	//invert number of b-jets required
 Signal.invertJetRequirements	= false;	//invert jet pt requirements
 Signal.invertDijetProperties	= false;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
-
+if(verbose)std::cout<<"Signal selection"<<std::endl;
 Signal.select();	//do selection, fill histograms
 
 // ---------------------------------
@@ -769,7 +807,7 @@ InvertedVBF_CR2.invertTauProperties	= false;	//invert ditau properties (dR, sign
 InvertedVBF_CR2.invertBtagRequirement	= false;	//invert number of b-jets required
 InvertedVBF_CR2.invertJetRequirements	= true;	//invert jet pt requirements
 InvertedVBF_CR2.invertDijetProperties	= true;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
-
+if(verbose)std::cout<<"CR2 selection"<<std::endl;
 InvertedVBF_CR2.select();	//do selection, fill histograms
 
 // ------------------------------------------------------
@@ -806,7 +844,7 @@ InvertedVBF_CR3.invertTauProperties	= false;	//invert ditau properties (dR, sign
 InvertedVBF_CR3.invertBtagRequirement	= false;	//invert number of b-jets required
 InvertedVBF_CR3.invertJetRequirements	= true;	//invert jet pt requirements
 InvertedVBF_CR3.invertDijetProperties	= true;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
-
+if(verbose)std::cout<<"CR3 selection"<<std::endl;
 InvertedVBF_CR3.select();	//do selection, fill histograms
 
 // ------------------------------------------------------
@@ -843,7 +881,7 @@ InvertedVBF_CR4.invertTauProperties	= false;	//invert ditau properties (dR, sign
 InvertedVBF_CR4.invertBtagRequirement	= false;	//invert number of b-jets required
 InvertedVBF_CR4.invertJetRequirements	= true;	//invert jet pt requirements
 InvertedVBF_CR4.invertDijetProperties	= true;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
-
+if(verbose)std::cout<<"CR4 selection"<<std::endl;
 InvertedVBF_CR4.select();	//do selection, fill histograms
 
 // ------------------------------------------------------
@@ -880,7 +918,7 @@ InvertedVBF_CR5.invertTauProperties	= false;	//invert ditau properties (dR, sign
 InvertedVBF_CR5.invertBtagRequirement	= false;	//invert number of b-jets required
 InvertedVBF_CR5.invertJetRequirements	= true;	//invert jet pt requirements
 InvertedVBF_CR5.invertDijetProperties	= true;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
-
+if(verbose)std::cout<<"CR5 selection"<<std::endl;
 InvertedVBF_CR5.select();	//do selection, fill histograms
 
 // ---------------------
@@ -917,7 +955,7 @@ Ztautau_CR1.invertTauProperties	= false;	//invert ditau properties (dR, sign)
 Ztautau_CR1.invertBtagRequirement	= false;	//invert number of b-jets required
 Ztautau_CR1.invertJetRequirements	= false;	//invert jet pt requirements
 Ztautau_CR1.invertDijetProperties	= false;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
-
+if(verbose)std::cout<<"CR1 selection"<<std::endl;
 Ztautau_CR1.select();	//do selection, fill histograms
 
 /*// ---------------------
@@ -964,6 +1002,8 @@ TauMediumIsoObjectSelectionCollection.clear();
 TauLooseIsoObjectSelectionCollection.clear();
 TauNoIsoObjectSelectionCollection.clear();
 JetLooseIsoObjectSelectionCollection.clear();
+
+if(verbose)std::cout<<"_______________________________________________"<<std::endl;
 }
 
   stream.close();
