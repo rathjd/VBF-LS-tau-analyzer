@@ -9,7 +9,7 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 	// -- fill histograms --
 	// ---------------------	  
 	  
-	  
+	bool verbose=false;  
         //JETS	  
 	  
 	//find index of leading jets
@@ -29,7 +29,8 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 	}
 	 
 	//fill jet count
-         inputHistoCollection.h_njet->Fill( (int)inputEventCollection.jet.size(),weight );
+        inputHistoCollection.h_njet->Fill( (int)inputEventCollection.jet.size(),weight );
+	if(verbose)std::cout<<"Pass selection -> Fill njet"<<std::endl;
 
 	//fill jet pt indizes
         if (jetIndex.first < 99999)  {

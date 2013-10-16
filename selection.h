@@ -106,13 +106,13 @@ struct Selection {
 	    if(DiJetDrMin > 0 || DiJetDrMax > 0)(*OutputCollection).h_count->Fill("InverseDiJetDeltaRCut",0);
 	    if(DiJetInvMassMin > 0 || DiJetInvMassMax > 0)(*OutputCollection).h_count->Fill("InverseDiJetInvMassCut",0);
 	    if(DiJetSignEta != 0)(*OutputCollection).h_count->Fill("InverseDiJetEtaSignCut",0);
-	    if(DiJetDetaMin > 0 || DiJetDetaMax > 0)(*OutputCollection).h_count->Fill("InverseDiJetEtaCut",0);
+	    if(DiJetDetaMin > 0 || DiJetDetaMax > 0)(*OutputCollection).h_count->Fill("InverseDiJetDetaCut",0);
 	  }
 	  else{
 	    if(DiJetDrMin > 0 || DiJetDrMax > 0)(*OutputCollection).h_count->Fill("DiJetDeltaRCut",0);
 	    if(DiJetInvMassMin > 0 || DiJetInvMassMax > 0)(*OutputCollection).h_count->Fill("DiJetInvMassCut",0);
 	    if(DiJetSignEta != 0)(*OutputCollection).h_count->Fill("DiJetEtaSignCut",0);
-	    if(DiJetDetaMin > 0 || DiJetDetaMax > 0)(*OutputCollection).h_count->Fill("DiJetEtaCut",0);	  
+	    if(DiJetDetaMin > 0 || DiJetDetaMax > 0)(*OutputCollection).h_count->Fill("DiJetDetaCut",0);	  
 	  }
 	  
 	  if(!RunData && RealData)	 					return; //check if sample is real data and whether you want to run on real data

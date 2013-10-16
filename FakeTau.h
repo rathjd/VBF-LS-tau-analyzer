@@ -16,6 +16,7 @@ struct Fake {
 	}
 	
 	void generate(std::vector<double> jetTauFakerate){
+	  bool verbose=false;
 	  if(jetTauFakerate.size() < 2) return; //sanity check whether there are enough jets
 		
 	  vector<int> wrongs;
@@ -41,7 +42,8 @@ struct Fake {
 	  
 	  //set eventweight to >= 2 tau
 	  weight = 1 - probabilityZero - probabilityOne;
-	  if(wrongs.size()>jetTauFakerate.size()-2) {weight = 0; return;}//catch rounding errors
+	  if(verbose)std::cout<<"EventWeight="<<weight<<", p0="<<probabilityZero<<", p1="<<probabilityOne<<std::endl;
+	  if(wrongs.size()>jetTauFakerate.size()-2) {weight = 0; std::cout<<"!!!Not enough Jets!!! weight=0"<<std::endl; return;}//catch rounding errors
 	  //randomize tau indizes
 	  if(weight>=1) return; //sanity check
 	  std::uniform_real_distribution<double> distributionOne(0.0, maxProb);
@@ -71,7 +73,14 @@ struct Fake {
 		  break;
 		}
 	  }
-
+	  /*if(weight>0){
+	  double p2=1;
+	  for(unsigned int i=0; i<jetTauFakerate.size(); i++){ //try p2 vs pg2
+	  	if(i==abs(index.first) || i==abs(index.second)) p2*=jetTauFakerate[i];
+		else if(jetTauFakerate[i]>0) p2*=(1-jetTauFakerate[i]);
+	  }
+	  if(weight-p2>p2)std::cout<<"N="<<jetTauFakerate.size()-wrongs.size()<<" and p_Diff="<<weight-p2<<std::endl;}
+	  */
 	  return;
 	}
 };
