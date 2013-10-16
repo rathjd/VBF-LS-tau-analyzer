@@ -43,7 +43,7 @@ struct Fake {
 	  //set eventweight to >= 2 tau
 	  weight = 1 - probabilityZero - probabilityOne;
 	  if(verbose)std::cout<<"EventWeight="<<weight<<", p0="<<probabilityZero<<", p1="<<probabilityOne<<std::endl;
-	  if(wrongs.size()>jetTauFakerate.size()-2) {weight = 0; std::cout<<"!!!Not enough Jets!!! weight=0"<<std::endl; return;}//catch rounding errors
+	  if(wrongs.size()>jetTauFakerate.size()-2) {weight = 0; if(verbose)std::cout<<"!!!Not enough Jets!!! weight=0"<<std::endl; return;}//catch rounding errors
 	  //randomize tau indizes
 	  if(weight>=1) return; //sanity check
 	  std::uniform_real_distribution<double> distributionOne(0.0, maxProb);
