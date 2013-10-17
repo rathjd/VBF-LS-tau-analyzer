@@ -129,11 +129,11 @@ struct MyHistoCollection {
 		h_tau1eta = new TH1F("h_tau1eta", "h_tau1eta", 30 , -3., 3.);
 		h_tau2pt = new TH1F("h_tau2pt", "h_tau2pt", 50, 0., 500.);
 		h_tau2eta = new TH1F("h_tau2eta", "h_tau2eta", 30 , -3., 3.);
-		h_ditauinvariantmass = new TH1F("h_ditauinvariantmass", "h_ditauinvariantmass", 20, 0., 140.);
+		h_ditauinvariantmass = new TH1F("h_ditauinvariantmass", "h_ditauinvariantmass", 30, 0., 300.);
 		h_ditaucharge = new TH1F("h_ditaucharge", "h_ditaucharge", 5, -4., 6.);
 		h_ditaucosdeltaphi = new TH1F("h_ditaucosdeltaphi", "h_ditaucosdeltaphi", 50, -1.1, 1.1);
 
-		h_met = new TH1F("h_met", "h_met", 6, 0., 120.);
+		h_met = new TH1F("h_met", "h_met", 12, 0., 120.);
 
 		h_ht = new TH1F("h_ht", "h_ht", 50, 0., 1300.);
 		h_ht_withtau = new TH1F("h_ht_withtau", "h_ht_withtau", 50, 0., 1300.);
