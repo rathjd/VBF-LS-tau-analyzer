@@ -130,6 +130,32 @@ int main(int argc, char** argv)
   h3_tauCompleteT->GetYaxis()->SetTitle("p_{T}^{#tau}/p_{T}^{jet}");
   h3_tauCompleteT->GetZaxis()->SetTitle("|#eta|");
   h3_tauCompleteT->Sumw2();  
+  
+  TH2F* h2_tauNumberByIDtight = new TH2F("h2_tauNumberByIDtight", "2 tight #tau ID + N occurence", 5, -0.5, 4.5, 21, -0.5, 20.5);
+  h2_tauNumberByIDtight->GetXaxis()->SetTitle("exclusive ID_{#tau}");
+  h2_tauNumberByIDtight->GetYaxis()->SetTitle("N_{#tau} per ID in collection");
+  h2_tauNumberByIDtight->Sumw2();
+  
+  TH2F* h2_tauNumberByID1tight = new TH2F("h2_tauNumberByID1tight", "1 tight #tau ID + N occurence", 5, -0.5, 4.5, 21, -0.5, 20.5);
+  h2_tauNumberByID1tight->GetXaxis()->SetTitle("exclusive ID_{#tau}");
+  h2_tauNumberByID1tight->GetYaxis()->SetTitle("N_{#tau} per ID in collection");
+  h2_tauNumberByID1tight->Sumw2();  
+  
+  TH2F* h2_tauNumberByIDmedium = new TH2F("h2_tauNumberByIDmedium", "1 medium #tau ID + N occurence", 5, -0.5, 4.5, 21, -0.5, 20.5);
+  h2_tauNumberByIDmedium->GetXaxis()->SetTitle("exclusive ID_{#tau}");
+  h2_tauNumberByIDmedium->GetYaxis()->SetTitle("N_{#tau} per ID in collection");
+  h2_tauNumberByIDmedium->Sumw2();
+  
+  TH2F* h2_tauNumberByIDloose = new TH2F("h2_tauNumberByIDloose", "1 loose #tau ID + N occurence", 5, -0.5, 4.5, 21, -0.5, 20.5);
+  h2_tauNumberByIDloose->GetXaxis()->SetTitle("exclusive ID_{#tau}");
+  h2_tauNumberByIDloose->GetYaxis()->SetTitle("N_{#tau} per ID in collection");
+  h2_tauNumberByIDloose->Sumw2(); 
+  
+  TH2F* h2_tauNumberByIDN = new TH2F("h2_tauNumberByIDN", "1 NoIso #tau ID + N occurence", 5, -0.5, 4.5, 21, -0.5, 20.5);
+  h2_tauNumberByIDN->GetXaxis()->SetTitle("exclusive ID_{#tau}");
+  h2_tauNumberByIDN->GetYaxis()->SetTitle("N_{#tau} per ID in collection");
+  h2_tauNumberByIDN->Sumw2();     
+ 
     
   //---------------------------------------------------------------------------
   // Histogram Collection Init
@@ -195,6 +221,11 @@ int main(int argc, char** argv)
 	         TauNoIsoObjectSelectionCollection.passedTrigger = true;
                }
 
+	  double tight =0;
+	  double medium=0;
+	  double loose =0;
+	  double NoIso =0;
+
           //smart tau selection
 	  for(unsigned int t =0;t<tau.size();++t){
             if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
@@ -203,11 +234,57 @@ int main(int argc, char** argv)
             if(!(       tau[t].tauID_againstElectronTightMVA3 > 0.5                				)) continue;
             if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        				)) continue;
             if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
-	    TauNoIsoObjectSelectionCollection.tau.push_back(&tau[t]);
 	    if(!(tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits  <= 0.5))  TauTightIsoObjectSelectionCollection.tau.push_back(&tau[t]);
-	    if(!(tau[t].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) TauMediumIsoObjectSelectionCollection.tau.push_back(&tau[t]);
-	    if(!(tau[t].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits  <= 0.5))  TauLooseIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	    else if(!(tau[t].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) TauMediumIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	    else if(!(tau[t].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits  <= 0.5))  TauLooseIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	    else TauNoIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	    //section for exclusive tau ID plot
+	    if(!(tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) tight++;
+	    else if(!(tau[t].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) medium++;
+	    else if(!(tau[t].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) loose++;
+	    else NoIso++;
           }
+	  
+	  if(tight>=2)
+	    {
+	      h2_tauNumberByIDtight->Fill(3.,tight-2);
+	      h2_tauNumberByIDtight->Fill(2.,medium);
+	      h2_tauNumberByIDtight->Fill(1.,loose);
+	      h2_tauNumberByIDtight->Fill(0.,NoIso); 
+	      h2_tauNumberByIDtight->Fill(4.,NoIso+loose+medium+tight-2);
+	    }
+	  if(tight>=1)
+	    {
+	      h2_tauNumberByID1tight->Fill(3.,tight-1);
+	      h2_tauNumberByID1tight->Fill(2.,medium);
+	      h2_tauNumberByID1tight->Fill(1.,loose);
+	      h2_tauNumberByID1tight->Fill(0.,NoIso); 
+	      h2_tauNumberByID1tight->Fill(4.,NoIso+loose+medium+tight-2);
+	    }	  
+	  if(medium>=1)
+	    {
+	      h2_tauNumberByIDmedium->Fill(3.,tight);
+	      h2_tauNumberByIDmedium->Fill(2.,medium-1);
+	      h2_tauNumberByIDmedium->Fill(1.,loose);
+	      h2_tauNumberByIDmedium->Fill(0.,NoIso); 
+	      h2_tauNumberByIDmedium->Fill(4.,NoIso+loose+medium+tight-2);
+	    }
+	  if(loose>=1)
+	    {
+	      h2_tauNumberByIDloose->Fill(3.,tight);
+	      h2_tauNumberByIDloose->Fill(2.,medium);
+	      h2_tauNumberByIDloose->Fill(1.,loose-1);
+	      h2_tauNumberByIDloose->Fill(0.,NoIso);
+	      h2_tauNumberByIDloose->Fill(4.,NoIso+loose+medium+tight-2); 
+	    } 
+	  if(NoIso>=1)
+	    {
+	      h2_tauNumberByIDN->Fill(3.,tight);
+	      h2_tauNumberByIDN->Fill(2.,medium);
+	      h2_tauNumberByIDN->Fill(1.,loose);
+	      h2_tauNumberByIDN->Fill(0.,NoIso-1); 
+	      h2_tauNumberByIDN->Fill(4.,NoIso+loose+medium+tight-2);
+	    } 
 
           // jet baseline selection
 	for(unsigned int j = 0;j<jet.size();++j){
