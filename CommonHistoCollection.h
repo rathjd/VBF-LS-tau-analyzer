@@ -30,7 +30,7 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 	 
 	//fill jet count
         inputHistoCollection.h_njet->Fill( (int)inputEventCollection.jet.size(),weight );
-	if(verbose)std::cout<<"Pass selection -> Fill njet"<<std::endl;
+	if(verbose)std::cout<<"Pass selection -> Fill njet="<<inputEventCollection.jet.size()<<", weight="<<weight<<std::endl;
 
 	//fill jet pt indizes
         if (jetIndex.first < 99999)  {
