@@ -251,6 +251,7 @@ JetLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 // --------------------------
 
 bool verbose=false;
+if(verbose)std::cout<<"Event: "<<eventhelper_event<<std::endl;
 
 TH2F* ChargeMapN_eff = (TH2F*)(file_eff.Get("ChargeMapN_eff"));
 TH1F* ReweightFactorN = (TH1F*)(file_Resp.Get("RescaleWeightN"));
@@ -346,11 +347,8 @@ for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
 	break;
       }
   }*/
-if(verbose)std::cout<<"Jet "<<FakeTausN.index.first<<" to FTau1: pTScale="<<scale<<std::endl;
-if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->charge >= 0 )
-faketau1N.charge = +1;
-else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->charge < 0 )
-faketau1N.charge = -1;
+if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->charge >= 0 ) faketau1N.charge = +1;
+else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->charge < 0 ) faketau1N.charge = -1;
 faketau1N.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->p;
 faketau1N.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->energy;
 faketau1N.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->et;
@@ -362,6 +360,7 @@ if(faketau1N.pt < 45) FakeTausN.weight=0;
 faketau1N.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->phi;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->eta<=2.1) faketau1N.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->eta;
 else faketau1N.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->eta)*2.1;
+
 /*for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
   {
     if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pt < ResponseEdge[i+1])
@@ -381,9 +380,8 @@ else faketau1N.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.fi
 	break;
       }
   }*/
-scale = h1_taufakescaleN_fac->GetBinContent(h1_taufakescaleN_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pt));
-if(scale == 0) {scale = 0.851; FakeTausN.weight=0;}
-if(verbose)std::cout<<"Jet "<<FakeTausN.index.second<<" to FTau2: pTScale="<<scale<<std::endl;
+double scale2 = h1_taufakescaleN_fac->GetBinContent(h1_taufakescaleN_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pt));
+if(scale2 == 0) {scale2 = 0.851; FakeTausN.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->charge >= 0 )
 faketau2N.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->charge < 0 )
@@ -394,13 +392,16 @@ faketau2N.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]-
 faketau2N.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->px;
 faketau2N.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->py;
 faketau2N.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pz;
-faketau2N.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pt * scale;
+faketau2N.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pt * scale2;
 if(faketau2N.pt < 45) FakeTausN.weight=0;
 faketau2N.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->phi;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->eta<=2.1) faketau2N.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->eta;
 else faketau2N.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->eta)*2.1;
 TauNoIsoObjectSelectionCollection.tau.push_back(&faketau1N);
 TauNoIsoObjectSelectionCollection.tau.push_back(&faketau2N);
+
+if(verbose)std::cout<<"Jet "<<FakeTausN.index.first<<" to FTau1: pTScale="<<scale<<", pT="<<faketau1N.pt<<", eta="<<faketau1N.eta<<", phi="<<faketau1N.phi<<", charge"<<faketau1N.charge<<std::endl;
+if(verbose)std::cout<<"Jet "<<FakeTausN.index.second<<" to FTau2: pTScale="<<scale2<<", pT="<<faketau2N.pt<<", eta="<<faketau2N.eta<<", phi="<<faketau2N.phi<<", charge"<<faketau2N.charge<<std::endl;
 }
 
 Fake FakeTausL("FakeTaus");
@@ -437,7 +438,6 @@ for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
 	break;
       }
   }*/
-if(verbose)std::cout<<"Jet "<<FakeTausL.index.first<<" to FTau1: pTScale="<<scale<<std::endl;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->charge >= 0 )
 faketau1L.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->charge < 0 )
@@ -472,9 +472,8 @@ else faketau1L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.fi
 	break;
       }
   }*/
-scale = h1_taufakescaleL_fac->GetBinContent(h1_taufakescaleL_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pt));
-if(scale == 0) {scale = 0.851; FakeTausL.weight=0;}
-if(verbose)std::cout<<"Jet "<<FakeTausL.index.second<<" to FTau2: pTScale="<<scale<<std::endl;
+double scale2 = h1_taufakescaleL_fac->GetBinContent(h1_taufakescaleL_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pt));
+if(scale2 == 0) {scale2 = 0.851; FakeTausL.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->charge >= 0 )
 faketau2L.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->charge < 0 )
@@ -485,13 +484,16 @@ faketau2L.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]-
 faketau2L.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->px;
 faketau2L.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->py;
 faketau2L.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pz;
-faketau2L.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pt * scale;
+faketau2L.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pt * scale2;
 if(faketau2L.pt < 45) FakeTausL.weight=0;
 faketau2L.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->phi;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->eta<=2.1) faketau2L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->eta;
 else faketau2L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->eta)*2.1;
 TauLooseIsoObjectSelectionCollection.tau.push_back(&faketau1L);
 TauLooseIsoObjectSelectionCollection.tau.push_back(&faketau2L);
+
+if(verbose)std::cout<<"Jet "<<FakeTausL.index.first<<" to FTau1: pTScale="<<scale<<", pT="<<faketau1L.pt<<", eta="<<faketau1L.eta<<", phi="<<faketau1L.phi<<", charge"<<faketau1L.charge<<std::endl;
+if(verbose)std::cout<<"Jet "<<FakeTausL.index.second<<" to FTau2: pTScale="<<scale2<<", pT="<<faketau2L.pt<<", eta="<<faketau2L.eta<<", phi="<<faketau2L.phi<<", charge"<<faketau2L.charge<<std::endl;
 }
 
 Fake FakeTausM("FakeTaus");
@@ -528,7 +530,6 @@ for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
 	break;
       }
   }*/
-if(verbose)std::cout<<"Jet "<<FakeTausM.index.first<<" to FTau1: pTScale="<<scale<<std::endl;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->charge >= 0 )
 faketau1M.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->charge < 0 )
@@ -563,9 +564,8 @@ else faketau1M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.fi
 	break;
       }
   }*/
-scale = h1_taufakescaleM_fac->GetBinContent(h1_taufakescaleM_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pt));
-if(scale == 0) {scale = 0.851; FakeTausM.weight=0;}
-if(verbose)std::cout<<"Jet "<<FakeTausM.index.second<<" to FTau2: pTScale="<<scale<<std::endl;
+double scale2 = h1_taufakescaleM_fac->GetBinContent(h1_taufakescaleM_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pt));
+if(scale2 == 0) {scale2 = 0.851; FakeTausM.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->charge >= 0 )
 faketau2M.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->charge < 0 )
@@ -576,13 +576,16 @@ faketau2M.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]-
 faketau2M.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->px;
 faketau2M.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->py;
 faketau2M.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pz;
-faketau2M.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pt * scale;
+faketau2M.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pt * scale2;
 if(faketau2M.pt < 45) FakeTausM.weight=0;
 faketau2M.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->phi;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->eta<=2.1) faketau2M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->eta;
 else faketau2M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->eta)*2.1;
 TauMediumIsoObjectSelectionCollection.tau.push_back(&faketau1M);
 TauMediumIsoObjectSelectionCollection.tau.push_back(&faketau2M);
+
+if(verbose)std::cout<<"Jet "<<FakeTausM.index.first<<" to FTau1: pTScale="<<scale<<", pT="<<faketau1M.pt<<", eta="<<faketau1M.eta<<", phi="<<faketau1M.phi<<", charge"<<faketau1M.charge<<std::endl;
+if(verbose)std::cout<<"Jet "<<FakeTausM.index.second<<" to FTau2: pTScale="<<scale2<<", pT="<<faketau2M.pt<<", eta="<<faketau2M.eta<<", phi="<<faketau2M.phi<<", charge"<<faketau2M.charge<<std::endl;
 }
 
 Fake FakeTausT("FakeTaus");
@@ -637,7 +640,6 @@ for(unsigned int i=0; i<ResponseEdge.size()-1; i++)
 	break;
       }
   }*/
-if(verbose)std::cout<<"Jet "<<FakeTausT.index.first<<" to FTau1: pTScale="<<scale<<std::endl;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->charge >= 0 )
 faketau1T.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->charge < 0 )
@@ -672,9 +674,8 @@ else faketau1T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.fi
 	break;
       }
   }*/
-scale = h1_taufakescaleT_fac->GetBinContent(h1_taufakescaleT_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pt));
-if(scale == 0) {scale = 0.851; FakeTausT.weight=0;}
-if(verbose)std::cout<<"Jet "<<FakeTausT.index.second<<" to FTau2: pTScale="<<scale<<std::endl;
+double scale2 = h1_taufakescaleT_fac->GetBinContent(h1_taufakescaleT_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pt));
+if(scale2 == 0) {scale2 = 0.851; FakeTausT.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->charge >= 0 )
 faketau2T.charge = +1;
 else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->charge < 0 )
@@ -685,13 +686,16 @@ faketau2T.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]-
 faketau2T.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->px;
 faketau2T.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->py;
 faketau2T.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pz;
-faketau2T.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pt * scale;
+faketau2T.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pt * scale2;
 if(faketau2T.pt < 45) FakeTausT.weight=0;
 faketau2T.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->phi;
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->eta<=2.1) faketau2T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->eta;
 else faketau2T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->eta)*2.1;
 TauTightIsoObjectSelectionCollection.tau.push_back(&faketau1T);
 TauTightIsoObjectSelectionCollection.tau.push_back(&faketau2T);
+
+if(verbose)std::cout<<"Jet "<<FakeTausT.index.first<<" to FTau1: pTScale="<<scale<<", pT="<<faketau1T.pt<<", eta="<<faketau1T.eta<<", phi="<<faketau1T.phi<<", charge"<<faketau1T.charge<<std::endl;
+if(verbose)std::cout<<"Jet "<<FakeTausT.index.second<<" to FTau2: pTScale="<<scale2<<", pT="<<faketau2T.pt<<", eta="<<faketau2T.eta<<", phi="<<faketau2T.phi<<", charge"<<faketau2T.charge<<std::endl;
 }
 
 // jet && bjet selection
@@ -716,13 +720,13 @@ if( jet[j].pt >= 50. && jetid	){
   if(	DistanceN >= 0.3	) TauNoIsoObjectSelectionCollection.jet.push_back(&jet[j]);
   if(	DistanceL >= 0.3	) TauLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
   if(	DistanceM >= 0.3	) TauMediumIsoObjectSelectionCollection.jet.push_back(&jet[j]);
-  if(	DistanceT >= 0.3	) TauTightIsoObjectSelectionCollection.jet.push_back(&jet[j]);
+  if(	DistanceT >= 0.3	) {TauTightIsoObjectSelectionCollection.jet.push_back(&jet[j]); if(verbose)std::cout<<"Jet "<<j<<" in tight jet coll: pt="<<jet[j].pt<<", eta="<<jet[j].eta<<", phi"<<jet[j].phi<<std::endl;}
             }
 if(fabs(jet[j].eta) <= 2.4 && jet[j].bDiscriminator_combinedSecondaryVertexBJetTags > 0.244 ){
   if(	DistanceN >= 0.3	) TauNoIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
   if(	DistanceL >= 0.3	) TauLooseIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
   if(	DistanceM >= 0.3	) TauMediumIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
-  if(	DistanceT >= 0.3	) TauTightIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
+  if(	DistanceT >= 0.3	) {TauTightIsoObjectSelectionCollection.bjet.push_back(&jet[j]);if(verbose)std::cout<<"Jet "<<j<<" in tight b-jet coll: pt="<<jet[j].pt<<", eta="<<jet[j].eta<<", phi"<<jet[j].phi<<std::endl;}
             }
 }
 if(verbose)std::cout<<TauTightIsoObjectSelectionCollection.jet.size()<<" jets in tightIso jet collection and "<<TauTightIsoObjectSelectionCollection.bjet.size()<<" in bjet collection"<<std::endl;
