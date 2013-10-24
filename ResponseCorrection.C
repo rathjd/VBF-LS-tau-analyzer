@@ -54,6 +54,18 @@ RescalesLi.push_back(0);
 RescalesM.push_back(0);
 RescalesMi.push_back(0);
 RescalesT.push_back(0);
+std::vector<double> RescaleErrorsN;
+std::vector<double> RescaleErrorsL;
+std::vector<double> RescaleErrorsLi;
+std::vector<double> RescaleErrorsM;
+std::vector<double> RescaleErrorsMi;
+std::vector<double> RescaleErrorsT;
+RescaleErrorsN.push_back(0);
+RescaleErrorsL.push_back(0);
+RescaleErrorsLi.push_back(0);
+RescaleErrorsM.push_back(0);
+RescaleErrorsMi.push_back(0);
+RescaleErrorsT.push_back(0);
 std::vector<double> scalesN;
 std::vector<double> scalesL;
 std::vector<double> scalesLi;
@@ -73,21 +85,25 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
   TH1F *histL=(TH1F*)projectL->ProjectionY(TString::Format("histL_%d",p+1),p+1,p+1);
   TH1F *histLi=(TH1F*)histL->Clone("histLi");
   histLi->Add(histN);
+  histLi->SetTitle("LooseInclIso #tau response");
   TH1F *histM=(TH1F*)projectM->ProjectionY(TString::Format("histM_%d",p+1),p+1,p+1);
   TH1F *histMi=(TH1F*)histL->Clone("histMi");
-  histMi->Add(histLi);  
+  histMi->Add(histLi); 
+  histMi->SetTitle("MediumInclIso #tau response");
   TH1F *histT=(TH1F*)projectT->ProjectionY(TString::Format("histT_%d",p+1),p+1,p+1);
   bool finish=false;
   if(ptEdges[p+1]>ptMin/histN->GetBinLowEdge(2))
     {
       histN=(TH1F*)projectN->ProjectionY(TString::Format("histN_%d",p+1),p+1,-1);
-      histL=(TH1F*)projectL->ProjectionY(TString::Format("histN_%d",p+1),p+1,-1);
-      histLi=histL;
+      histL=(TH1F*)projectL->ProjectionY(TString::Format("histL_%d",p+1),p+1,-1);
+      histLi=(TH1F*)projectL->ProjectionY(TString::Format("histLi_%d",p+1),p+1,-1);
+      histLi->SetTitle("LooseInclIso #tau response");
       histLi->Add(histN);
-      histM=(TH1F*)projectM->ProjectionY(TString::Format("histN_%d",p+1),p+1,-1);
-      histMi=histM;
+      histM=(TH1F*)projectM->ProjectionY(TString::Format("histM_%d",p+1),p+1,-1);
+      histMi=(TH1F*)projectM->ProjectionY(TString::Format("histMi_%d",p+1),p+1,-1);
+      histMi->SetTitle("MediumInclIso #tau response");
       histMi->Add(histLi);
-      histT=(TH1F*)projectT->ProjectionY(TString::Format("histN_%d",p+1),p+1,-1);
+      histT=(TH1F*)projectT->ProjectionY(TString::Format("histT_%d",p+1),p+1,-1);
       finish=true;
     }
   if(histN->GetEntries()!=0) for(unsigned int x=histN->GetNbinsX(); x>0; x--)
@@ -96,7 +112,10 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       if(pT<ptEdges[p]) continue;
       if(pT>=ptEdges[p+1]) break;
       EdgesN.push_back(pT);
-      RescalesN.push_back(histN->Integral(x+1,-1)/histN->Integral(0,-1));
+      double E1=0;
+      double E2=0;
+      RescalesN.push_back(histN->IntegralAndError(x+1,-1,E1)/histN->IntegralAndError(0,-1,E2));
+      RescaleErrorsN.push_back(TMath::Sqrt(TMath::Power(E1/histN->Integral(0,-1),2)+TMath::Power(E2*histN->Integral(x+1,-1)/TMath::Power(histN->Integral(0,-1),2),2)));
       TCanvas *c=new TCanvas("c",TString::Format("NoIso p_{T}=%.0f",pT));
       c->cd();
       histN->GetXaxis()->SetRange(0,histN->GetNbinsX()+1);
@@ -115,7 +134,10 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       if(pT<ptEdges[p]) continue;
       if(pT>=ptEdges[p+1]) break;
       EdgesL.push_back(pT);
-      RescalesL.push_back(histL->Integral(x+1,-1)/histL->Integral(0,-1));
+      double E1=0;
+      double E2=0;
+      RescalesL.push_back(histL->IntegralAndError(x+1,-1,E1)/histL->IntegralAndError(0,-1,E2));
+      RescaleErrorsL.push_back(TMath::Sqrt(TMath::Power(E1/histL->Integral(0,-1),2)+TMath::Power(E2*histL->Integral(x+1,-1)/TMath::Power(histL->Integral(0,-1),2),2)));
       TCanvas *c=new TCanvas("c",TString::Format("LooseIso p_{T}=%.0f",pT));
       c->cd();
       histL->GetXaxis()->SetRange(0,histL->GetNbinsX()+1);
@@ -134,7 +156,10 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       if(pT<ptEdges[p]) continue;
       if(pT>=ptEdges[p+1]) break;
       EdgesLi.push_back(pT);
-      RescalesLi.push_back(histLi->Integral(x+1,-1)/histLi->Integral(0,-1));
+      double E1=0;
+      double E2=0;
+      RescalesLi.push_back(histLi->IntegralAndError(x+1,-1,E1)/histLi->IntegralAndError(0,-1,E2));
+      RescaleErrorsLi.push_back(TMath::Sqrt(TMath::Power(E1/histLi->Integral(0,-1),2)+TMath::Power(E2*histLi->Integral(x+1,-1)/TMath::Power(histLi->Integral(0,-1),2),2)));
       TCanvas *c=new TCanvas("c",TString::Format("LooseInclIso p_{T}=%.0f",pT));
       c->cd();
       histLi->GetXaxis()->SetRange(0,histLi->GetNbinsX()+1);
@@ -153,7 +178,10 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       if(pT<ptEdges[p]) continue;
       if(pT>=ptEdges[p+1]) break;
       EdgesM.push_back(pT);
-      RescalesM.push_back(histM->Integral(x+1,-1)/histM->Integral(0,-1));
+      double E1=0;
+      double E2=0;
+      RescalesM.push_back(histM->IntegralAndError(x+1,-1,E1)/histM->IntegralAndError(0,-1,E2));
+      RescaleErrorsM.push_back(TMath::Sqrt(TMath::Power(E1/histM->Integral(0,-1),2)+TMath::Power(E2*histM->Integral(x+1,-1)/TMath::Power(histM->Integral(0,-1),2),2)));
       TCanvas *c=new TCanvas("c",TString::Format("MediumIso p_{T}=%.0f",pT));
       c->cd();
       histM->GetXaxis()->SetRange(0,histM->GetNbinsX()+1);
@@ -172,7 +200,10 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       if(pT<ptEdges[p]) continue;
       if(pT>=ptEdges[p+1]) break;
       EdgesMi.push_back(pT);
-      RescalesMi.push_back(histMi->Integral(x+1,-1)/histMi->Integral(0,-1));
+      double E1=0;
+      double E2=0;
+      RescalesMi.push_back(histMi->IntegralAndError(x+1,-1,E1)/histMi->IntegralAndError(0,-1,E2));
+      RescaleErrorsMi.push_back(TMath::Sqrt(TMath::Power(E1/histMi->Integral(0,-1),2)+TMath::Power(E2*histMi->Integral(x+1,-1)/TMath::Power(histMi->Integral(0,-1),2),2)));
       TCanvas *c=new TCanvas("c",TString::Format("MediumInclIso p_{T}=%.0f",pT));
       c->cd();
       histMi->GetXaxis()->SetRange(0,histMi->GetNbinsX()+1);
@@ -191,7 +222,10 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       if(pT<ptEdges[p]) continue;
       if(pT>=ptEdges[p+1]) break;
       EdgesT.push_back(pT);
-      RescalesT.push_back(histT->Integral(x+1,-1)/histT->Integral(0,-1));
+      double E1=0;
+      double E2=0;
+      RescalesT.push_back(histT->IntegralAndError(x+1,-1,E1)/histT->IntegralAndError(0,-1,E2));
+      RescaleErrorsT.push_back(TMath::Sqrt(TMath::Power(E1/histT->Integral(0,-1),2)+TMath::Power(E2*histT->Integral(x+1,-1)/TMath::Power(histT->Integral(0,-1),2),2)));
       TCanvas *c=new TCanvas("c",TString::Format("TightIso p_{T}=%.0f",pT));
       c->cd();
       histT->GetXaxis()->SetRange(0,histT->GetNbinsX()+1);
@@ -311,31 +345,37 @@ RescaleWeightT->Sumw2();
 for(unsigned int x=0; x<RescalesN.size(); x++)
   {
     RescaleWeightN->SetBinContent(x+1,RescalesN[x]);
+    RescaleWeightN->SetBinError(x+1,RescaleErrorsN[x]);
     scaleN->SetBinContent(x+1,scalesN[x]);
   }
 for(unsigned int x=0; x<RescalesL.size(); x++)
   {
     RescaleWeightL->SetBinContent(x+1,RescalesL[x]);
+    RescaleWeightL->SetBinError(x+1,RescaleErrorsL[x]);
     scaleL->SetBinContent(x+1,scalesL[x]);
   }
 for(unsigned int x=0; x<RescalesLi.size(); x++)
   {
     RescaleWeightLi->SetBinContent(x+1,RescalesLi[x]);
+    RescaleWeightLi->SetBinError(x+1,RescaleErrorsLi[x]);
     scaleLi->SetBinContent(x+1,scalesLi[x]);
   } 
 for(unsigned int x=0; x<RescalesM.size(); x++)
   {
     RescaleWeightM->SetBinContent(x+1,RescalesM[x]);
+    RescaleWeightM->SetBinError(x+1,RescaleErrorsM[x]);
     scaleM->SetBinContent(x+1,scalesM[x]);
   }
 for(unsigned int x=0; x<RescalesMi.size(); x++)
   {
     RescaleWeightMi->SetBinContent(x+1,RescalesMi[x]);
+    RescaleWeightMi->SetBinError(x+1,RescaleErrorsMi[x]);
     scaleMi->SetBinContent(x+1,scalesMi[x]);
   }  
 for(unsigned int x=0; x<RescalesT.size(); x++)
   {
     RescaleWeightT->SetBinContent(x+1,RescalesT[x]);
+    RescaleWeightT->SetBinError(x+1,RescaleErrorsT[x]);
     scaleT->SetBinContent(x+1,scalesT[x]);
   }
 
