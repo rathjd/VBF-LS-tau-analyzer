@@ -14,7 +14,7 @@ void ResponseCorrection(double ptMin)
 {
 
 
-TFile _file0("ResponseAllIsos_Jet30Tau45.root","UPDATE");
+TFile _file0("Response_Jet30Tau45_ExclusiveIso.root","UPDATE");
 
 TH2F *projectN=(TH2F*)_file0.Get("h2_tauResponseN")->Clone("project");
 TH2F *projectL=(TH2F*)_file0.Get("h2_tauResponseL")->Clone("project");
@@ -32,41 +32,61 @@ ptEdges[projectN->GetNbinsX()]=2500.;
 
 std::vector<double> EdgesN;
 std::vector<double> EdgesL;
+std::vector<double> EdgesLi;
 std::vector<double> EdgesM;
+std::vector<double> EdgesMi;
 std::vector<double> EdgesT;
 EdgesN.push_back(0);
 EdgesL.push_back(0);
+EdgesLi.push_back(0);
 EdgesM.push_back(0);
+EdgesMi.push_back(0);
 EdgesT.push_back(0);
 std::vector<double> RescalesN;
 std::vector<double> RescalesL;
+std::vector<double> RescalesLi;
 std::vector<double> RescalesM;
+std::vector<double> RescalesMi;
 std::vector<double> RescalesT;
 RescalesN.push_back(0);
 RescalesL.push_back(0);
+RescalesLi.push_back(0);
 RescalesM.push_back(0);
+RescalesMi.push_back(0);
 RescalesT.push_back(0);
 std::vector<double> scalesN;
 std::vector<double> scalesL;
+std::vector<double> scalesLi;
 std::vector<double> scalesM;
+std::vector<double> scalesMi;
 std::vector<double> scalesT;
 scalesN.push_back(0);
 scalesL.push_back(0);
+scalesLi.push_back(0);
 scalesM.push_back(0);
+scalesMi.push_back(0);
 scalesT.push_back(0);
 
 for(int p=0; p<projectN->GetNbinsX(); p++)
   {
   TH1F *histN=(TH1F*)projectN->ProjectionY(TString::Format("histN_%d",p+1),p+1,p+1);
   TH1F *histL=(TH1F*)projectL->ProjectionY(TString::Format("histL_%d",p+1),p+1,p+1);
+  TH1F *histLi=(TH1F*)histL->Clone("histLi");
+  histLi->Add(histN);
   TH1F *histM=(TH1F*)projectM->ProjectionY(TString::Format("histM_%d",p+1),p+1,p+1);
+  TH1F *histMi=(TH1F*)histL->Clone("histMi");
+  histMi->Add(histLi);  
   TH1F *histT=(TH1F*)projectT->ProjectionY(TString::Format("histT_%d",p+1),p+1,p+1);
   bool finish=false;
   if(ptEdges[p+1]>ptMin/histN->GetBinLowEdge(2))
     {
       histN=(TH1F*)projectN->ProjectionY(TString::Format("histN_%d",p+1),p+1,-1);
       histL=(TH1F*)projectL->ProjectionY(TString::Format("histN_%d",p+1),p+1,-1);
+      histLi=histL;
+      histLi->Add(histN);
       histM=(TH1F*)projectM->ProjectionY(TString::Format("histN_%d",p+1),p+1,-1);
+      histMi=histM;
+      histMi->Add(histLi);
       histT=(TH1F*)projectT->ProjectionY(TString::Format("histN_%d",p+1),p+1,-1);
       finish=true;
     }
@@ -108,6 +128,25 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       histL->GetXaxis()->SetRange(x,histL->GetNbinsX()+1);
       scalesL.push_back(histL->GetMean());
     }
+  if(histLi->GetEntries()!=0) for(unsigned int x=histLi->GetNbinsX(); x>0; x--)
+    {
+      double pT=ptMin/histLi->GetBinLowEdge(x+1);
+      if(pT<ptEdges[p]) continue;
+      if(pT>=ptEdges[p+1]) break;
+      EdgesLi.push_back(pT);
+      RescalesLi.push_back(histLi->Integral(x+1,-1)/histLi->Integral(0,-1));
+      TCanvas *c=new TCanvas("c",TString::Format("LooseInclIso p_{T}=%.0f",pT));
+      c->cd();
+      histLi->GetXaxis()->SetRange(0,histLi->GetNbinsX()+1);
+      histLi->Draw();
+      TLine *l=new TLine(histLi->GetBinLowEdge(x+1),0,histLi->GetBinLowEdge(x+1),histLi->GetMaximum());
+      l->SetLineStyle(2);
+      l->SetLineColor(2);
+      l->Draw();
+      c->SaveAs(TString::Format("Li_pT%.0f.png",pT));
+      histLi->GetXaxis()->SetRange(x,histLi->GetNbinsX()+1);
+      scalesLi.push_back(histLi->GetMean());
+    }    
   if(histM->GetEntries()!=0) for(unsigned int x=histM->GetNbinsX(); x>0; x--)
     {
       double pT=ptMin/histM->GetBinLowEdge(x+1);
@@ -127,6 +166,25 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       histM->GetXaxis()->SetRange(x,histM->GetNbinsX()+1);
       scalesM.push_back(histM->GetMean());
     }
+  if(histMi->GetEntries()!=0) for(unsigned int x=histMi->GetNbinsX(); x>0; x--)
+    {
+      double pT=ptMin/histMi->GetBinLowEdge(x+1);
+      if(pT<ptEdges[p]) continue;
+      if(pT>=ptEdges[p+1]) break;
+      EdgesMi.push_back(pT);
+      RescalesMi.push_back(histMi->Integral(x+1,-1)/histMi->Integral(0,-1));
+      TCanvas *c=new TCanvas("c",TString::Format("MediumInclIso p_{T}=%.0f",pT));
+      c->cd();
+      histMi->GetXaxis()->SetRange(0,histMi->GetNbinsX()+1);
+      histMi->Draw();
+      TLine *l=new TLine(histMi->GetBinLowEdge(x+1),0,histMi->GetBinLowEdge(x+1),histMi->GetMaximum());
+      l->SetLineStyle(2);
+      l->SetLineColor(2);
+      l->Draw();
+      c->SaveAs(TString::Format("Mi_pT%.0f.png",pT));
+      histMi->GetXaxis()->SetRange(x,histMi->GetNbinsX()+1);
+      scalesMi.push_back(histMi->GetMean());
+    }    
   if(histT->GetEntries()!=0) for(unsigned int x=histT->GetNbinsX(); x>0; x--)
     {
       double pT=ptMin/histT->GetBinLowEdge(x+1);
@@ -150,7 +208,9 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
   }
 EdgesN.push_back(2500.);
 EdgesL.push_back(2500.);
+EdgesLi.push_back(2500.);
 EdgesM.push_back(2500.);
+EdgesMi.push_back(2500.);
 EdgesT.push_back(2500.);
 /*for(int i=0; i<hist->GetNbinsX()+1; i++)
 {std::cout<<Edges[i]<<std::endl;}*/ 
@@ -169,6 +229,13 @@ for(unsigned int i=0; i<EdgesL.size(); i++)
     //std::cout<<EdgesL[i]<<std::endl;
     //std::cout<<RescalesL[i]<<" and "<<scalesL[i]<<std::endl;
   }   
+double EdgeLi[EdgesLi.size()];  
+for(unsigned int i=0; i<EdgesLi.size(); i++)
+  {
+    EdgeLi[i]=EdgesLi[i];
+    //std::cout<<EdgesL[i]<<std::endl;
+    //std::cout<<RescalesL[i]<<" and "<<scalesL[i]<<std::endl;
+  }     
 double EdgeM[EdgesM.size()];  
 for(unsigned int i=0; i<EdgesM.size(); i++)
   {
@@ -176,6 +243,13 @@ for(unsigned int i=0; i<EdgesM.size(); i++)
     //std::cout<<EdgesM[i]<<std::endl;
     //std::cout<<RescalesM[i]<<" and "<<scalesM[i]<<std::endl;
   }   
+double EdgeMi[EdgesMi.size()];  
+for(unsigned int i=0; i<EdgesMi.size(); i++)
+  {
+    EdgeMi[i]=EdgesMi[i];
+    //std::cout<<EdgesM[i]<<std::endl;
+    //std::cout<<RescalesM[i]<<" and "<<scalesM[i]<<std::endl;
+  }     
 double EdgeT[EdgesT.size()];  
 for(unsigned int i=0; i<EdgesT.size(); i++)
   {
@@ -187,28 +261,52 @@ for(unsigned int i=0; i<EdgesT.size(); i++)
 TH1F *scaleN=new TH1F("scaleN","NoIso scale correction", EdgesN.size()-1, EdgeN);
 scaleN->GetXaxis()->SetTitle("p_{T}^{jet}");
 scaleN->SetEntries(1);
+scaleN->Sumw2();
 TH1F *scaleL=new TH1F("scaleL","LooseIso scale correction", EdgesL.size()-1, EdgeL);
 scaleL->GetXaxis()->SetTitle("p_{T}^{jet}");
 scaleL->SetEntries(1);
+scaleL->Sumw2();
+TH1F *scaleLi=new TH1F("scaleLi","LooseInclIso scale correction", EdgesLi.size()-1, EdgeLi);
+scaleLi->GetXaxis()->SetTitle("p_{T}^{jet}");
+scaleLi->SetEntries(1);
+scaleLi->Sumw2();
 TH1F *scaleM=new TH1F("scaleM","MediumIso scale correction", EdgesM.size()-1, EdgeM);
 scaleM->GetXaxis()->SetTitle("p_{T}^{jet}");
 scaleM->SetEntries(1);
+scaleM->Sumw2();
+TH1F *scaleMi=new TH1F("scaleMi","MediumInclIso scale correction", EdgesMi.size()-1, EdgeMi);
+scaleMi->GetXaxis()->SetTitle("p_{T}^{jet}");
+scaleMi->SetEntries(1);
+scaleMi->Sumw2();
 TH1F *scaleT=new TH1F("scaleT","TightIso scale correction", EdgesT.size()-1, EdgeT);
 scaleT->GetXaxis()->SetTitle("p_{T}^{jet}");
 scaleT->SetEntries(1);
+scaleT->Sumw2();
 
 TH1F *RescaleWeightN=new TH1F("RescaleWeightN","NoIso weight correction", EdgesN.size()-1, EdgeN);
 RescaleWeightN->GetXaxis()->SetTitle("p_{T}^{jet}");
 RescaleWeightN->SetEntries(1);
+RescaleWeightN->Sumw2();
 TH1F *RescaleWeightL=new TH1F("RescaleWeightL","LooseIso weight correction", EdgesL.size()-1, EdgeL);
 RescaleWeightL->GetXaxis()->SetTitle("p_{T}^{jet}");
 RescaleWeightL->SetEntries(1);
+RescaleWeightL->Sumw2();
+TH1F *RescaleWeightLi=new TH1F("RescaleWeightLi","LooseInclIso weight correction", EdgesLi.size()-1, EdgeLi);
+RescaleWeightLi->GetXaxis()->SetTitle("p_{T}^{jet}");
+RescaleWeightLi->SetEntries(1);
+RescaleWeightLi->Sumw2();
 TH1F *RescaleWeightM=new TH1F("RescaleWeightM","MediumIso weight correction", EdgesM.size()-1, EdgeM);
 RescaleWeightM->GetXaxis()->SetTitle("p_{T}^{jet}");
 RescaleWeightM->SetEntries(1);
+RescaleWeightM->Sumw2();
+TH1F *RescaleWeightMi=new TH1F("RescaleWeightMi","MediumInclIso weight correction", EdgesMi.size()-1, EdgeMi);
+RescaleWeightMi->GetXaxis()->SetTitle("p_{T}^{jet}");
+RescaleWeightMi->SetEntries(1);
+RescaleWeightMi->Sumw2();
 TH1F *RescaleWeightT=new TH1F("RescaleWeightT","TightIso weight correction", EdgesT.size()-1, EdgeT);
 RescaleWeightT->GetXaxis()->SetTitle("p_{T}^{jet}");
 RescaleWeightT->SetEntries(1);
+RescaleWeightT->Sumw2();
 
 for(unsigned int x=0; x<RescalesN.size(); x++)
   {
@@ -220,25 +318,39 @@ for(unsigned int x=0; x<RescalesL.size(); x++)
     RescaleWeightL->SetBinContent(x+1,RescalesL[x]);
     scaleL->SetBinContent(x+1,scalesL[x]);
   }
+for(unsigned int x=0; x<RescalesLi.size(); x++)
+  {
+    RescaleWeightLi->SetBinContent(x+1,RescalesLi[x]);
+    scaleLi->SetBinContent(x+1,scalesLi[x]);
+  } 
 for(unsigned int x=0; x<RescalesM.size(); x++)
   {
     RescaleWeightM->SetBinContent(x+1,RescalesM[x]);
     scaleM->SetBinContent(x+1,scalesM[x]);
   }
+for(unsigned int x=0; x<RescalesMi.size(); x++)
+  {
+    RescaleWeightMi->SetBinContent(x+1,RescalesMi[x]);
+    scaleMi->SetBinContent(x+1,scalesMi[x]);
+  }  
 for(unsigned int x=0; x<RescalesT.size(); x++)
   {
     RescaleWeightT->SetBinContent(x+1,RescalesT[x]);
     scaleT->SetBinContent(x+1,scalesT[x]);
   }
 
-TFile *f=new TFile("ResponseFactorsAllIsos_Jet30Tau45_15up.root","RECREATE");
+TFile *f=new TFile("ResponseFactors_InclAndExclIsos_Jet30Tau45_15up.root","RECREATE");
 RescaleWeightN->Write();
 RescaleWeightL->Write();
+RescaleWeightLi->Write();
 RescaleWeightM->Write();
+RescaleWeightMi->Write();
 RescaleWeightT->Write();
 scaleN->Write();
 scaleL->Write();
+scaleLi->Write();
 scaleM->Write();
+scaleMi->Write();
 scaleT->Write();
 
 f->Close();
