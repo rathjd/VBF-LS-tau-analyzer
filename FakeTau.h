@@ -27,8 +27,9 @@ struct Fake {
 	  double maxProb1=0.;
 	  double maxProb2=0.;
 	  if(single){
-	    for(unsigned int i=0; i<jetTauFakerate.size(); i++){
-	        if(jetTauFakerate[i]==0 && jet2TauFakerate[i]==0) wrongs.push_back(i);
+	    //deprecated >=2 tau version
+	    /*for(unsigned int i=0; i<jetTauFakerate.size(); i++){
+	        if(jetTauFakerate[i]==0) wrongs.push_back(i);
 		//find probability of >0 taus
 		probabilityZero *= (1. - jetTauFakerate[i]);
 		maxProb1 += jetTauFakerate[i];
@@ -40,13 +41,30 @@ struct Fake {
 		  if(i==j) continue;
 		  temp *= (1 - jet2TauFakerate[j]);
 		}
-		
 		probabilityOne += temp;	
-	    }
+	    }*/
+	   //exactly 2 tau version
+	   for(unsigned int i=0; i<jetTauFakerate.size(); i++){
+	      if(jetTauFakerate[i]==0) wrongs.push_back(i);
+	      maxProb1 += jetTauFakerate[i];
+	      maxProb2 += jet2TauFakerate[i];
+	      for(unsigned int j=i+1; j<jetTauFakerate.size(); j++){
+	        if(i==j) continue;
+	        double temp=jetTauFakerate[i]*jetTauFakerate[j];
+	        for(unsigned int k=0; k<jetTauFakerate.size(); k++){
+		  if(i==k || j==k) continue;
+		  //find probability of exactly 2 taus
+		  temp *= (1-jetTauFakerate[k]);
+		}
+		probabilityTwo += temp;
+	      }
+	    } 
 	  }
 	  else{
 	    for(unsigned int i=0; i<jetTauFakerate.size(); i++){
 	      if(jetTauFakerate[i]==0 && jet2TauFakerate[i]==0) wrongs.push_back(i);
+	      maxProb1 += jetTauFakerate[i];
+	      maxProb2 += jet2TauFakerate[i];
 	      for(unsigned int j=0; j<jetTauFakerate.size(); j++){
 	        if(i==j) continue;
 	        double temp=0;
@@ -58,7 +76,6 @@ struct Fake {
 		else temp=1;
 	        for(unsigned int k=0; k<jetTauFakerate.size(); k++){
 		  if(i==k || j==k) continue;
-		  
 		  //find probability of exactly 2 taus
 		  if(jetTauFakerate[k]+jet2TauFakerate[k]<=1) temp *= (1-jetTauFakerate[k]-jet2TauFakerate[k]);
 		  else temp=0;
@@ -67,9 +84,8 @@ struct Fake {
 	      }
 	    }
 	  }
-	  //set eventweight to >= 2 tau
-	  if(single)weight = 1 - probabilityZero - probabilityOne;
-	  else weight=probabilityTwo;
+	  //set eventweight to == 2 tau
+	  weight=probabilityTwo;
 	  if(weight>1)std::cout<<"!!!Nonsense warning!!!"<<std::endl;
 	  if(verbose)std::cout<<"EventWeight="<<weight<<", p0="<<probabilityZero<<", p1="<<probabilityOne<<std::endl;
 	  if(wrongs.size()>jetTauFakerate.size()-2) {weight = 0; if(verbose)std::cout<<"!!!Not enough Jets!!! weight=0"<<std::endl; return;}//catch rounding errors
