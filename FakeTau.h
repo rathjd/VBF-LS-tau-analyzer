@@ -15,7 +15,7 @@ struct Fake {
 	  weight = 0.;
 	}
 	
-	void generate(std::vector<double> jetTauFakerate){
+	void generate(std::vector<double> jetTauFakerate, std::vector<double> jet2TauFakerate, bool single){
 	  bool verbose=false;
 	  if(jetTauFakerate.size() < 2) return; //sanity check whether there are enough jets
 		
@@ -23,30 +23,75 @@ struct Fake {
 	  //loop over all jets
 	  double probabilityZero=1.;
 	  double probabilityOne=0.;
-	  double maxProb=0.;
-	  for(unsigned int i=0; i<jetTauFakerate.size(); i++){
+	  double probabilityTwo=0.;
+	  double maxProb1=0.;
+	  double maxProb2=0.;
+	  if(single){
+	    //deprecated >=2 tau version
+	    /*for(unsigned int i=0; i<jetTauFakerate.size(); i++){
 	        if(jetTauFakerate[i]==0) wrongs.push_back(i);
 		//find probability of >0 taus
 		probabilityZero *= (1. - jetTauFakerate[i]);
-		maxProb += jetTauFakerate[i];
+		maxProb1 += jetTauFakerate[i];
+		maxProb2 += jet2TauFakerate[i];
 		
 		//find probability of >1 taus
 		double temp = jetTauFakerate[i];
 		for(unsigned int j=0; j<jetTauFakerate.size(); j++){
 		  if(i==j) continue;
-		  temp *= (1 - jetTauFakerate[j]);
+		  temp *= (1 - jet2TauFakerate[j]);
 		}
-		
 		probabilityOne += temp;	
+	    }*/
+	   //exactly 2 tau version
+	   for(unsigned int i=0; i<jetTauFakerate.size(); i++){
+	      if(jetTauFakerate[i]==0) wrongs.push_back(i);
+	      maxProb1 += jetTauFakerate[i];
+	      maxProb2 += jet2TauFakerate[i];
+	      for(unsigned int j=i+1; j<jetTauFakerate.size(); j++){
+	        if(i==j) continue;
+	        double temp=jetTauFakerate[i]*jetTauFakerate[j];
+	        for(unsigned int k=0; k<jetTauFakerate.size(); k++){
+		  if(i==k || j==k) continue;
+		  //find probability of exactly 2 taus
+		  temp *= (1-jetTauFakerate[k]);
+		}
+		probabilityTwo += temp;
+	      }
+	    } 
 	  }
-	  
-	  //set eventweight to >= 2 tau
-	  weight = 1 - probabilityZero - probabilityOne;
+	  else{
+	    for(unsigned int i=0; i<jetTauFakerate.size(); i++){
+	      if(jetTauFakerate[i]==0 && jet2TauFakerate[i]==0) wrongs.push_back(i);
+	      maxProb1 += jetTauFakerate[i];
+	      maxProb2 += jet2TauFakerate[i];
+	      for(unsigned int j=0; j<jetTauFakerate.size(); j++){
+	        if(i==j) continue;
+	        double temp=0;
+		if(jetTauFakerate[i]<=1){
+		  if(jetTauFakerate[j]<=1) temp=jetTauFakerate[i]*jet2TauFakerate[j];
+		  else temp=jetTauFakerate[i];
+		}
+		else if(jetTauFakerate[j]<=1) temp=jet2TauFakerate[j];
+		else temp=1;
+	        for(unsigned int k=0; k<jetTauFakerate.size(); k++){
+		  if(i==k || j==k) continue;
+		  //find probability of exactly 2 taus
+		  if(jetTauFakerate[k]+jet2TauFakerate[k]<=1) temp *= (1-jetTauFakerate[k]-jet2TauFakerate[k]);
+		  else temp=0;
+		}
+		probabilityTwo += temp;
+	      }
+	    }
+	  }
+	  //set eventweight to == 2 tau
+	  weight=probabilityTwo;
+	  if(weight>1)std::cout<<"!!!Nonsense warning!!!"<<std::endl;
 	  if(verbose)std::cout<<"EventWeight="<<weight<<", p0="<<probabilityZero<<", p1="<<probabilityOne<<std::endl;
 	  if(wrongs.size()>jetTauFakerate.size()-2) {weight = 0; if(verbose)std::cout<<"!!!Not enough Jets!!! weight=0"<<std::endl; return;}//catch rounding errors
 	  //randomize tau indizes
 	  if(weight>=1) return; //sanity check
-	  std::uniform_real_distribution<double> distributionOne(0.0, maxProb);
+	  std::uniform_real_distribution<double> distributionOne(0.0, maxProb1);
 	  std::mt19937 engine; // Mersenne twister MT19937
 	  
 	  double TossOne=distributionOne(engine);
@@ -56,18 +101,18 @@ struct Fake {
 		if(jetTauFakerate[i]==0) continue;
 		if(temp>=TossOne){
 		  index.first=i;
-		  maxProb -= jetTauFakerate[i];
+		  maxProb2 -= jet2TauFakerate[i];
 		  break;
 		}
 	  }
 	  
-	  std::uniform_real_distribution<double> distributionTwo(0.0, maxProb);
+	  std::uniform_real_distribution<double> distributionTwo(0.0, maxProb2);
 	  double TossTwo=distributionTwo(engine);
 	  temp = 0.;
-	  for(unsigned int i=0; i<jetTauFakerate.size(); i++){ //choose second tau
+	  for(unsigned int i=0; i<jet2TauFakerate.size(); i++){ //choose second tau
 	  	if(i==abs(index.first)) continue;
-		if(jetTauFakerate[i]==0) continue;
-	  	temp+=jetTauFakerate[i];
+		if(jet2TauFakerate[i]==0) continue;
+	  	temp+=jet2TauFakerate[i];
 		if(temp>=TossTwo){
 		  index.second = i;
 		  break;
