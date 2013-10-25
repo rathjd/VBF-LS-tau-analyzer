@@ -116,6 +116,9 @@ MassAndIndex Inv2jMassIndex(MyEventCollection collection)
     unsigned int first=99999;
     unsigned int second=99999;
     
+    bool signpass=false;
+    double dEtaCheck=0.;
+    
     for(unsigned int j1=1; j1<collection.jet.size(); j1++)
       {
         for(unsigned int j2=0; j2<j1; j2++)
@@ -123,8 +126,14 @@ MassAndIndex Inv2jMassIndex(MyEventCollection collection)
 	    jet1_4v.SetPtEtaPhiE(collection.jet[j1]->pt, collection.jet[j1]->eta, collection.jet[j1]->phi, collection.jet[j1]->energy);
 	    jet2_4v.SetPtEtaPhiE(collection.jet[j2]->pt, collection.jet[j2]->eta, collection.jet[j2]->phi, collection.jet[j2]->energy);
 	    
+	    int sign=collection.jet[j1]->eta*collection.jet[j2]->eta;
+	    double dEta=fabs(collection.jet[j1]->eta - collection.jet[j2]->eta);
+	    
 	    TLorentzVector dijet_4v = jet1_4v + jet2_4v;
-	    if(Mass < dijet_4v.M()) { Mass = dijet_4v.M(); first = j1; second = j2; }
+	    
+	    if(!signpass && sign<0) { Mass = dijet_4v.M(); first = j1; second = j2; signpass=true; dEtaCheck=dEta;}
+	    else if(!signpass && Mass < dijet_4v.M()) { Mass = dijet_4v.M(); first = j1; second = j2; }
+	    else if(signpass && Mass*0.8 < dijet_4v.M() && dEtaCheck < dEta) { Mass = dijet_4v.M(); first = j1; second = j2; dEtaCheck=dEta;}
 	  }
       }
     if(first < 99999 && second < 99999)

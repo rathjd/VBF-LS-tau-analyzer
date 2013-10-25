@@ -70,7 +70,7 @@ struct Selection {
 	
 	void select() {
 	  (*OutputCollection).h_count->Fill("NoCuts",0);
-	  if(RealData)(*OutputCollection).h_count->Fill("TriggerRequirement",0);
+	  (*OutputCollection).h_count->Fill("TriggerRequirement",0);
 	  if(invertTauRequirements){
 	    if(NumberTauMin >= 0)(*OutputCollection).h_count->Fill("InverseAtLeastNtaus",0);
 	    if(NumberTauMax >= 0)(*OutputCollection).h_count->Fill("InverseAtMostNtaus",0);
