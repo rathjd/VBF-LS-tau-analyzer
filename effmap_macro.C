@@ -10,7 +10,7 @@
 cout<<"begin"<<endl;
 
 //TFile _file0 ("effmap.root","UPDATE");
-TFile _file0 ("analyzer_effmap_histograms.root","UPDATE");
+TFile _file0 ("ChargeMap_InclAndExclIsos_wNom_Jet30Tau45_15up.root","UPDATE");
 
 ((TH2F*)(_file0->Get("h2_taufakerate_num")))->Clone("h2_taufakerate_eff");
 
@@ -114,17 +114,41 @@ TFile _file0 ("analyzer_effmap_histograms.root","UPDATE");
 
 ((TH1F*)(_file0->Get("Nod_eff")))->Write();
 
-((TH2F*)(_file0->Get("ChargeMap_num")))->Clone("ChargeMap_eff");
+((TH2F*)(_file0->Get("ChargeMapN_num")))->Clone("ChargeMapN_eff");
 
-((TH2F*)(_file0->Get("ChargeMap_eff")))->Divide((TH2F*)(_file0->Get("ChargeMap_den")));
+((TH2F*)(_file0->Get("ChargeMapN_eff")))->Divide((TH2F*)(_file0->Get("ChargeMapN_den")));
 
-((TH2F*)(_file0->Get("ChargeMap_eff")))->Write();
+((TH2F*)(_file0->Get("ChargeMapN_eff")))->Write();
 
-((TH2F*)(_file0->Get("ChargeMap_loose_num")))->Clone("ChargeMap_loose_eff");
+((TH2F*)(_file0->Get("ChargeMapL_num")))->Clone("ChargeMapL_eff");
 
-((TH2F*)(_file0->Get("ChargeMap_loose_eff")))->Divide((TH2F*)(_file0->Get("ChargeMap_den")));
+((TH2F*)(_file0->Get("ChargeMapL_eff")))->Divide((TH2F*)(_file0->Get("ChargeMapL_den")));
 
-((TH2F*)(_file0->Get("ChargeMap_loose_eff")))->Write();
+((TH2F*)(_file0->Get("ChargeMapL_eff")))->Write();
+
+((TH2F*)(_file0->Get("ChargeMapLi_num")))->Clone("ChargeMapLi_eff");
+
+((TH2F*)(_file0->Get("ChargeMapLi_eff")))->Divide((TH2F*)(_file0->Get("ChargeMapLi_den")));
+
+((TH2F*)(_file0->Get("ChargeMapLi_eff")))->Write();
+
+((TH2F*)(_file0->Get("ChargeMapM_num")))->Clone("ChargeMapM_eff");
+
+((TH2F*)(_file0->Get("ChargeMapM_eff")))->Divide((TH2F*)(_file0->Get("ChargeMapM_den")));
+
+((TH2F*)(_file0->Get("ChargeMapM_eff")))->Write();
+
+((TH2F*)(_file0->Get("ChargeMapMi_num")))->Clone("ChargeMapMi_eff");
+
+((TH2F*)(_file0->Get("ChargeMapMi_eff")))->Divide((TH2F*)(_file0->Get("ChargeMapMi_den")));
+
+((TH2F*)(_file0->Get("ChargeMapMi_eff")))->Write();
+
+((TH2F*)(_file0->Get("ChargeMapT_num")))->Clone("ChargeMapT_eff");
+
+((TH2F*)(_file0->Get("ChargeMapT_eff")))->Divide((TH2F*)(_file0->Get("ChargeMapT_den")));
+
+((TH2F*)(_file0->Get("ChargeMapT_eff")))->Write();
 
 
 cout<<"end"<<endl;
