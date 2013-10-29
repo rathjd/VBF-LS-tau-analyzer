@@ -293,7 +293,7 @@ for(unsigned int m =0;m<muon.size();++m){
 	  // ------------------------
 
 	  myHistoColl_Skim.h_count->Fill("NoCuts",0);
-	  myHistoColl_Skim.h_count->Fill("AtLeast2Loosetau",0);
+	  //myHistoColl_Skim.h_count->Fill("AtLeast2Loosetau",0);
 
 	  while (true){
 
@@ -301,8 +301,8 @@ for(unsigned int m =0;m<muon.size();++m){
 		myHistoColl_Skim.h_count->Fill("NoCuts",1);
 
 		//AtLeast2Loostau
-		if(!(             ( (int)baselineObjectSelectionCollection.tau.size() >= 2 )                 )) break;
-		myHistoColl_Skim.h_count->Fill("AtLeast2Loosetau",1);
+		//if(!(             ( (int)baselineObjectSelectionCollection.tau.size() >= 2 )                 )) break;
+		//myHistoColl_Skim.h_count->Fill("AtLeast2Loosetau",1);
 
 		fillHistoCollection (myHistoColl_Skim, TauTightIsoObjectSelectionCollection,weight);
 
