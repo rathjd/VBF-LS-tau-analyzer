@@ -96,6 +96,9 @@ int main(int argc, char** argv)
 
   h_gentaupt = new TH1F("h_gentaupt", "h_gentaupt", 50, 0., 500.);
   h_matchgentaupt = new TH1F("h_matchgentaupt", "h_matchgentaupt", 50, 0., 500.);
+  h_tauIsoTight = new TH1F("h_tauIsoTight", "tight tau ID discriminant", 100, 0., 1.);
+  h_tauIsoMedium = new TH1F("h_tauIsoMedium", "medium tau ID discriminant", 100, 0., 1.);
+  h_tauIsoLoose = new TH1F("h_tauIsoLoose", "loose tau ID discriminant", 100, 0., 1.);
 
   //---------------------------------------------------------------------------
   // Loop over events
@@ -140,10 +143,8 @@ int main(int argc, char** argv)
 		  if (fabs(genparticlehelper[g].pdgId) == 15) genTau.push_back(&genparticlehelper[g]);
 		}
 
-		for (unsigned int i = 0; i < genTau.size(); i++) h_gentaupt->Fill(genTau[i]->pt,weight);
-
 		for (unsigned int i = 0; i < genTau.size(); i++) {
-
+		  h_gentaupt->Fill(genTau[i]->pt,weight);
 		  for (unsigned int j = 0; j < tau.size(); j++) {
 			
 			TLorentzVector gentau_4v;
@@ -154,7 +155,12 @@ int main(int argc, char** argv)
 		    
 			double deltaR = gentau_4v.DeltaR(recotau_4v);
 		
-			if (deltaR < 0.3) h_matchgentaupt->Fill(genTau[i]->pt,weight);
+			if (deltaR < 0.3){
+				h_matchgentaupt->Fill(genTau[i]->pt,weight);
+				h_tauIsoTight->Fill(tau[j].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits);
+				h_tauIsoMedium->Fill(tau[j].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits);
+				h_tauIsoLoose->Fill(tau[j].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits);
+			}
 
 		  }
 
