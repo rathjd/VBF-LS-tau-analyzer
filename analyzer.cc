@@ -304,7 +304,7 @@ for(unsigned int m =0;m<muon.size();++m){
 		//if(!(             ( (int)baselineObjectSelectionCollection.tau.size() >= 2 )                 )) break;
 		//myHistoColl_Skim.h_count->Fill("AtLeast2Loosetau",1);
 
-		fillHistoCollection (myHistoColl_Skim, TauTightIsoObjectSelectionCollection,weight);
+		fillHistoCollection (myHistoColl_Skim, TauNoIsoObjectSelectionCollection,weight);
 
 		break;		
 
