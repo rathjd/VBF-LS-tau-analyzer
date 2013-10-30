@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 
   // Get number of events to be read
 
-  //int nevents = 1000;
+  //int nevents = 10000;
   int nevents = stream.size();
   cout << "Number of events: " << nevents << endl;
 
@@ -164,11 +164,27 @@ int main(int argc, char** argv)
 	  while (true){
 
 		for (unsigned int g = 0; g < genparticlehelper.size(); g++){
-		if (  !(fabs(genparticlehelper[g].status)==3)  ) continue;
-		if (fabs(genparticlehelper[g].pdgId) == 15) genTau.push_back(&genparticlehelper[g]);
-		if (fabs(genparticlehelper[g].pdgId) < 7) genParton.push_back(&genparticlehelper[g]);
-		if (fabs(genparticlehelper[g].pdgId) == 1000022 || fabs(genparticlehelper[g].pdgId) == 12 || fabs(genparticlehelper[g].pdgId) == 14 || fabs(genparticlehelper[g].pdgId) == 16 ) genInvis.push_back(&genparticlehelper[g]);
+		  if (  !(fabs(genparticlehelper[g].status)==3)  ) continue;
+		  if (fabs(genparticlehelper[g].pdgId) == 15) genTau.push_back(&genparticlehelper[g]);
+		  if (fabs(genparticlehelper[g].pdgId) == 1000022 || fabs(genparticlehelper[g].pdgId) == 12 || fabs(genparticlehelper[g].pdgId) == 14 || fabs(genparticlehelper[g].pdgId) == 16 ) genInvis.push_back(&genparticlehelper[g]);
+		  
+		}
 
+		unsigned int firstMother = 0;
+
+		for (unsigned int g = 0; g < genparticlehelper.size(); g++){
+
+		  if (  !(fabs(genparticlehelper[g].status) == 3)  ) continue;
+		  if (fabs(genparticlehelper[g].pdgId) == 1000024){ firstMother = genparticlehelper[g].firstMother;break;}
+
+		}
+
+		unsigned int firstDaughter = genparticlehelper[firstMother].firstDaughter;
+		unsigned int lastDaughter= genparticlehelper[firstMother].lastDaughter;
+
+		for ( unsigned int g = firstDaughter; g < lastDaughter + 1; g++) {
+		  if (  !(fabs(genparticlehelper[g].status) == 3)  ) continue;
+		  if (fabs(genparticlehelper[g].pdgId) < 7) {genParton.push_back(&genparticlehelper[g]);}
 		}
 
 		//Selection of Gen Tau 1,2
