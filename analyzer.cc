@@ -85,6 +85,11 @@ int main(int argc, char** argv)
   // Declare histograms
   //---------------------------------------------------------------------------
 
+  TH2F* h2_Trigger = new TH2F("h2_Trigger", "Triggered in CRs", 2, -0.5, 1.5, 10, 0.5, 10.5);
+  h2_Trigger->GetXaxis()->SetTitle("triggered");
+  h2_Trigger->GetYaxis()->SetTitle("CR");
+  h2_Trigger->Sumw2();
+
   //---------------------------------------------------------------------------
   // Histogram Collection Init
   //---------------------------------------------------------------------------
@@ -347,6 +352,8 @@ Signal.invertDijetProperties    = false;        //invert dijet system properties
 
 Signal.select();        //do selection, fill histograms
 
+if(Signal.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollection.passedTrigger, 1);
+
 // -------------------------------------------
 // -- CENTRAL + INVERTED VBF + 2 Iso Tau CR --
 // -------------------------------------------
@@ -383,6 +390,8 @@ InvertedVBF_CR2.invertJetRequirements   = true;        //invert jet pt requireme
 InvertedVBF_CR2.invertDijetProperties   = true;        //invert dijet system properties (dR, inv mass, sign eta, dEta)
 
 InvertedVBF_CR2.select();        //do selection, fill histograms
+
+if(InvertedVBF_CR2.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollection.passedTrigger, 2);
 
 // -------------------------------
 // -- CENTRAL + 1 Tight Tau CR3 --
@@ -421,6 +430,8 @@ oneTightTau_CR3.invertDijetProperties   = false;        //invert dijet system pr
 
 oneTightTau_CR3.select();        //do selection, fill histograms
 
+if(oneTightTau_CR3.passed) h2_Trigger->Fill(Tau1TightIsoObjectSelectionCollection.passedTrigger, 3);
+
 // ---------------------------------------------
 // -- CENTRAL + InvertedVBF + 1 Tight Tau CR4 --
 // ---------------------------------------------
@@ -457,6 +468,8 @@ InvertedVBF_oneTightTau_CR4.invertJetRequirements       = true;        //invert 
 InvertedVBF_oneTightTau_CR4.invertDijetProperties       = true;        //invert dijet system properties (dR, inv mass, sign eta, dEta)
 
 InvertedVBF_oneTightTau_CR4.select();        //do selection, fill histograms
+
+if(InvertedVBF_oneTightTau_CR4.passed) h2_Trigger->Fill(Tau1TightIsoObjectSelectionCollection.passedTrigger, 4);
 
 // ----------------------------------
 // -- CENTRAL + Anti Tight Tau CR5 --
@@ -495,6 +508,8 @@ AntiTightTau_CR5.invertDijetProperties        	= false;        //invert dijet sy
 
 AntiTightTau_CR5.select();        //do selection, fill histograms
 
+if(AntiTightTau_CR5.passed) h2_Trigger->Fill(TauMediumIsoObjectSelectionCollection.passedTrigger, 5);
+
 // ------------------------------------------------
 // -- CENTRAL + InvertedVBF + Anti Tight Tau CR6 --
 // ------------------------------------------------
@@ -531,6 +546,8 @@ InvertedVBF_AntiTightTau_CR6.invertJetRequirements      = true;        //invert 
 InvertedVBF_AntiTightTau_CR6.invertDijetProperties      = true;        //invert dijet system properties (dR, inv mass, sign eta, dEta)
 
 InvertedVBF_AntiTightTau_CR6.select();        //do selection, fill histograms
+
+if(InvertedVBF_AntiTightTau_CR6.passed) h2_Trigger->Fill(TauMediumIsoObjectSelectionCollection.passedTrigger, 6);
 
 // -----------------------------------
 // -- CENTRAL + Anti Medium Tau CR7 --
@@ -569,6 +586,8 @@ AntiMediumTau_CR7.invertDijetProperties = false;        //invert dijet system pr
 
 AntiMediumTau_CR7.select();        //do selection, fill histograms
 
+if(AntiMediumTau_CR7.passed) h2_Trigger->Fill(TauLooseIsoObjectSelectionCollection.passedTrigger, 7);
+
 // -------------------------------------------------
 // -- CENTRAL + InvertedVBF + Anti Medium Tau CR8 --
 // -------------------------------------------------
@@ -605,6 +624,8 @@ InvertedVBF_AntiMediumTau_CR8.invertJetRequirements     = true;        //invert 
 InvertedVBF_AntiMediumTau_CR8.invertDijetProperties     = true;        //invert dijet system properties (dR, inv mass, sign eta, dEta)
 
 InvertedVBF_AntiMediumTau_CR8.select();        //do selection, fill histograms
+
+if(InvertedVBF_AntiMediumTau_CR8.passed) h2_Trigger->Fill(TauLooseIsoObjectSelectionCollection.passedTrigger, 8);
 
 // -----------------------------------
 // -- CENTRAL + Anti Loose Tau CR9 ---
@@ -643,6 +664,8 @@ AntiLooseTau_CR9.invertDijetProperties  = false;        //invert dijet system pr
 
 AntiLooseTau_CR9.select();        //do selection, fill histograms
 
+if(AntiLooseTau_CR9.passed) h2_Trigger->Fill(TauNoIsoObjectSelectionCollection.passedTrigger, 9);
+
 // -------------------------------------------------
 // -- CENTRAL + InvertedVBF + Anti Loose Tau CR10 --
 // -------------------------------------------------
@@ -680,6 +703,7 @@ InvertedVBF_AntiLooseTau_CR10.invertDijetProperties     = true;        //invert 
 
 InvertedVBF_AntiLooseTau_CR10.select();        //do selection, fill histograms
 
+if(InvertedVBF_AntiLooseTau_CR10.passed) h2_Trigger->Fill(TauNoIsoObjectSelectionCollection.passedTrigger, 10);
 
 // ---------------------
 // -- Z -> TauTau CR --
