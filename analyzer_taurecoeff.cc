@@ -89,6 +89,9 @@ int main(int argc, char** argv)
 
   TH1F* h_gentaupt;
   TH1F* h_matchgentaupt;
+  TH1F* h_matchTightIsoGenPt;
+  TH1F* h_matchMediumIsoGenPt;
+  TH1F* h_matchLooseIsoGenPt;
 
   //---------------------------------------------------------------------------
   // Histogram Collection Init
@@ -96,9 +99,9 @@ int main(int argc, char** argv)
 
   h_gentaupt = new TH1F("h_gentaupt", "h_gentaupt", 50, 0., 500.);
   h_matchgentaupt = new TH1F("h_matchgentaupt", "h_matchgentaupt", 50, 0., 500.);
-  h_tauIsoTight = new TH1F("h_tauIsoTight", "tight tau ID discriminant", 100, 0., 1.);
-  h_tauIsoMedium = new TH1F("h_tauIsoMedium", "medium tau ID discriminant", 100, 0., 1.);
-  h_tauIsoLoose = new TH1F("h_tauIsoLoose", "loose tau ID discriminant", 100, 0., 1.);
+  h_matchTightIsoGenPt = new TH1F("h_matchTightIsoGenPt", "h_matchTightIsoGenPt", 50, 0., 500.);
+  h_matchMediumIsoGenPt = new TH1F("h_matchMediumIsoGenPt", "h_matchMediumIsoGenPt", 50, 0., 500.);
+  h_matchLooseIsoGenPt = new TH1F("h_matchLooseIsoGenPt", "h_matchLooseIsoGenPt", 50, 0., 500.);
 
   //---------------------------------------------------------------------------
   // Loop over events
@@ -157,9 +160,9 @@ int main(int argc, char** argv)
 		
 			if (deltaR < 0.3){
 				h_matchgentaupt->Fill(genTau[i]->pt,weight);
-				h_tauIsoTight->Fill(tau[j].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits);
-				h_tauIsoMedium->Fill(tau[j].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits);
-				h_tauIsoLoose->Fill(tau[j].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits);
+				if (tau[j].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits > 0.5) h_matchTightIsoGenPt->Fill(genTau[i]->pt,weight);
+				if (tau[j].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits > 0.5) h_matchMediumIsoGenPt->Fill(genTau[i]->pt,weight);
+				if (tau[j].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits > 0.5) h_matchLooseIsoGenPt->Fill(genTau[i]->pt,weight) ;
 			}
 
 		  }
