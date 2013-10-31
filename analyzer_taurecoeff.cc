@@ -149,6 +149,8 @@ int main(int argc, char** argv)
 		for (unsigned int i = 0; i < genTau.size(); i++) {
 		  h_gentaupt->Fill(genTau[i]->pt,weight);
 		  for (unsigned int j = 0; j < tau.size(); j++) {
+
+			if (tau[j].pt < 45.) continue;
 			
 			TLorentzVector gentau_4v;
 			TLorentzVector recotau_4v;
