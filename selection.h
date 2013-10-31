@@ -36,6 +36,7 @@ struct Selection {
 	bool invertTauProperties;
 	bool invertDijetProperties;
 	bool invertBtagRequirement;
+	bool passed;
 	
 	Selection (const std::string & inputlabel){
 	  label = inputlabel;
@@ -66,6 +67,7 @@ struct Selection {
 	  invertTauProperties = false;
 	  invertDijetProperties = false;
 	  invertBtagRequirement = false;
+	  passed = false;
 	}
 	
 	void select() {
@@ -128,11 +130,12 @@ struct Selection {
 	      if(invertTauRequirements) {
 	        (*OutputCollection).h_count->Fill("InverseAtLeastNtaus",weight);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		passed=true;
 		return;
 	      }
 	      else return;
 	    }
-	    else if(!invertTauRequirements) (*OutputCollection).h_count->Fill("AtLeastNtaus",weight);
+	    else if(!invertTauRequirements)(*OutputCollection).h_count->Fill("AtLeastNtaus",weight);
 	  }
 	  
 	  if(NumberTauMax >= 0){
@@ -140,6 +143,7 @@ struct Selection {
 	      if(invertTauRequirements) {
 	        (*OutputCollection).h_count->Fill("InverseAtMostNtaus",weight);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		passed=true;
 		return;
 	      }
 	      else return;
@@ -155,6 +159,7 @@ struct Selection {
 	      if(invertTauProperties) {
 	        (*OutputCollection).h_count->Fill("InverseDiTauDeltaRCut", weight);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		passed=true;
 		return;
 	      }
 	      else return;
@@ -167,6 +172,7 @@ struct Selection {
 	      if(invertTauProperties){
 	        (*OutputCollection).h_count->Fill("InverseDiTauInvMassMinCut", weight);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		passed=true;
 		return;
 	      }
 	      else return;
@@ -191,6 +197,7 @@ struct Selection {
 	      if(invertTauProperties) {
 	        (*OutputCollection).h_count->Fill("InverseDiTauSignCut",weight);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		passed=true;
 		return;
 	      }
 	      else return;
@@ -203,6 +210,7 @@ struct Selection {
 	      if(invertBtagRequirement){
 	        (*OutputCollection).h_count->Fill("InverseNoBTag",weight);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		passed=true;
 		return;
 	      }
 	      else return;
@@ -217,6 +225,7 @@ struct Selection {
 	    if(invertJetRequirements){
 	      (*OutputCollection).h_count->Fill("InverseNumberOfJetsCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	      passed=true;
 	      return;
 	    }
 	    else return;
@@ -263,6 +272,7 @@ struct Selection {
 	    if(invertJetRequirements){
 	      (*OutputCollection).h_count->Fill("InverseLeadJetCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	      passed=true;
 	      return;
 	    }
 	    else return;
@@ -281,6 +291,7 @@ struct Selection {
 	    if(invertJetRequirements){
 	      (*OutputCollection).h_count->Fill("InverseSecondJetCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	      passed=true;
 	      return;
 	    }
 	    else return;
@@ -303,6 +314,7 @@ struct Selection {
 	    if(invertDijetProperties){
 	      (*OutputCollection).h_count->Fill("InverseDiJetDeltaRCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	      passed=true;
 	      return;
 	    }
 	    else return;
@@ -322,6 +334,7 @@ struct Selection {
 	    if(invertDijetProperties){
 	      (*OutputCollection).h_count->Fill("InverseDiJetInvMassCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	      passed=true;
 	      return;
 	    }
 	    else return;
@@ -332,6 +345,7 @@ struct Selection {
 	    if(invertDijetProperties) {
 	      (*OutputCollection).h_count->Fill("InverseDiJetEtaSignCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	      passed=true;
 	      return;
 	    }
 	    else return; 
@@ -351,13 +365,18 @@ struct Selection {
 	    if(invertDijetProperties) {
 	      (*OutputCollection).h_count->Fill("InverseDiJetDetaCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	      passed=true;
 	      return;
 	    }
 	    else return;
 	  }  
 	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetDetaCut",weight);
 	  
-	  fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	  if(!invertJetRequirements && !invertTauRequirements && !invertTauProperties && !invertDijetProperties && !invertBtagRequirement){
+	    fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	    passed=true;
+	  }
+	  else return;
 	}
 };
 
