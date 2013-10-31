@@ -165,6 +165,7 @@ bool goodVertex = true;
 
 if(!( vertex.size() > 0 )) goodVertex = false;
 if( goodVertex ) {
+	baselineObjectSelection.goodVertex = true;
 	TauTightIsoObjectSelectionCollection.goodVertex = true;
 	Tau1TightIsoObjectSelectionCollection.goodVertex = true;
 	TauMediumIsoObjectSelectionCollection.goodVertex = true;
@@ -182,7 +183,8 @@ if( goodVertex ) {
              (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v4 == 1) ||
              (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v6 == 1)
 
-            ) { 	TauTightIsoObjectSelectionCollection.passedTrigger = true;
+            ) { 	baselineObjectSelection.passedTrigger = true;	
+            		TauTightIsoObjectSelectionCollection.passedTrigger = true;
 	        	Tau1TightIsoObjectSelectionCollection.passedTrigger = true;
 	        	TauMediumIsoObjectSelectionCollection.passedTrigger = true;
 			TauLooseIsoObjectSelectionCollection.passedTrigger = true;
@@ -191,6 +193,7 @@ if( goodVertex ) {
 
 // electron selection
 for(unsigned int e = 0;e<electron.size();++e){
+	baselineObjectSelection.electron.push_back(&electron[e]);
 	TauTightIsoObjectSelectionCollection.electron.push_back(&electron[e]);
 	Tau1TightIsoObjectSelectionCollection.electron.push_back(&electron[e]);
 	TauMediumIsoObjectSelectionCollection.electron.push_back(&electron[e]);
@@ -215,6 +218,7 @@ for(unsigned int m =0;m<muon.size();++m){
 	if(!( muon[m].innerTrack_normalizedChi2 < 1.8 )) 			continue;
 	if(!( fabs(muon[m].innerTrack_dxy) < 3. )) 				continue;
 	if(!( fabs(muon[m].innerTrack_dz) < 30. )) 				continue;
+	baselineObjectSelection.muon.push_back(&muon[m]);
 	TauTightIsoObjectSelectionCollection.muon.push_back(&muon[m]);
 	Tau1TightIsoObjectSelectionCollection.muon.push_back(&muon[m]);
 	TauMediumIsoObjectSelectionCollection.muon.push_back(&muon[m]);
@@ -236,6 +240,7 @@ for(unsigned int m =0;m<muon.size();++m){
             if(!(       tau[t].tauID_againstElectronTightMVA3 > 0.5                				)) continue;
             if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        				)) continue;
             if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
+            baselineObjectSelection.tau.push_back(&tau[t]);
 	    if(!(tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) tights.push_back(t);
 	    else if(!(tau[t].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) mediums.push_back(t);
 	    else if(!(tau[t].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) looses.push_back(t);
@@ -253,6 +258,7 @@ for(unsigned int m =0;m<muon.size();++m){
 	  for(unsigned int j = 0;j<jet.size();++j){
 	    if(!(      jet[j].pt >= 30.                                                	)) continue;  // Original value 20
 	    if(!(      fabs(jet[j].eta) <= 5.0                                          )) continue;
+	    double baseDistance = TauJetMinDistance(baselineObjectSelection, jet[j].eta, jet[j].phi);
 	    double mainDistance = TauJetMinDistance(TauTightIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
 	    double T1Distance = TauJetMinDistance(Tau1TightIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
 	    double mediumDistance = TauJetMinDistance(TauMediumIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
@@ -268,6 +274,7 @@ for(unsigned int m =0;m<muon.size();++m){
               if(!(      jet[j].chargedHadronMultiplicity > 0                             		)) jetid=false;
             }
             if(      /*jet[j].pt >= 50.  &&*/ jetid		){
+              if(	baseDistance >= 0.3	) baselineObjectSelection.jet.push_back(&jet[j]);	
 	      if(	mainDistance >= 0.3	) TauTightIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	      if(	T1Distance >= 0.3	) Tau1TightIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	      if(	mediumDistance >= 0.3	) TauMediumIsoObjectSelectionCollection.jet.push_back(&jet[j]);
@@ -275,6 +282,7 @@ for(unsigned int m =0;m<muon.size();++m){
 	      if(	NoDistance  >= 0.3	) TauNoIsoObjectSelectionCollection.jet.push_back(&jet[j]);
             }
             if(fabs(jet[j].eta) <= 2.4 && jet[j].bDiscriminator_combinedSecondaryVertexBJetTags > 0.244    ){
+              if(	baseDistance >= 0.3	) baselineObjectSelection.bjet.push_back(&jet[j]);	
               if(	mainDistance >= 0.3	) TauTightIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
 	      if(	T1Distance >= 0.3	) Tau1TightIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
 	      if(	mediumDistance >= 0.3	) TauMediumIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
@@ -284,6 +292,7 @@ for(unsigned int m =0;m<muon.size();++m){
 	  }
 
 	  //MET selection
+	  baselineObjectSelection.met.push_back(&met[0]);
 	  TauTightIsoObjectSelectionCollection.met.push_back(&met[0]);
 	  Tau1TightIsoObjectSelectionCollection.met.push_back(&met[0]);
 	  TauMediumIsoObjectSelectionCollection.met.push_back(&met[0]);
@@ -309,7 +318,7 @@ for(unsigned int m =0;m<muon.size();++m){
 		//if(!(             ( (int)baselineObjectSelectionCollection.tau.size() >= 2 )                 )) break;
 		//myHistoColl_Skim.h_count->Fill("AtLeast2Loosetau",1);
 
-		fillHistoCollection (myHistoColl_Skim, TauNoIsoObjectSelectionCollection,weight);
+		fillHistoCollection (myHistoColl_Skim, baselineObjectSelection,weight);
 
 		break;		
 
