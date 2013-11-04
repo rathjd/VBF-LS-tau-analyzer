@@ -1,16 +1,17 @@
-<<<<<<< HEAD
+dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/VBFSUSY_C1pmC1pm_8TeV/ntuple_1_1_oc6.root
+dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/VBFSUSY_C1pmC1pm_8TeV/ntuple_2_1_HqO.root
+dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/VBFSUSY_C1pmC1pm_8TeV/ntuple_3_1_Ril.root
+dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/VBFSUSY_C1pmC1mp_8TeV/ntuple_1_1_0QE.root
+dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/Tau_Run2012B_13Jul2012/ntuple_174_1_onV.root
 dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/QCD_Pt-1000to1400/ntuple_10_2_WpI.root
 dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/QCD_Pt-1000to1400/ntuple_11_2_tnJ.root
 dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/QCD_Pt-1000to1400/ntuple_12_2_VpV.root
 dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/QCD_Pt-1000to1400/ntuple_13_2_xYL.root
 dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/QCD_Pt-1000to1400/ntuple_14_2_1Rg.root
-=======
 dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/QCD_Pt-120to170/ntuple_75_2_0Qi.root
 dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/QCD_Pt-120to170/ntuple_20_2_KEw.root
 dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/QCD_Pt-120to170/ntuple_40_2_Epj.root
-dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/Tau_Run2012B_13Jul2012/ntuple_174_1_onV.root
 dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/Tau_Run2012B_13Jul2012/ntuple_239_1_XH1.root
 dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/Tau_Run2012B_13Jul2012/ntuple_211_1_5cB.root
 dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_13June2013/Tau_Run2012B_13Jul2012/ntuple_262_1_78m.root
 
->>>>>>> b9990a0e11d216f81779e3d66e8d5893addc9e6f
