@@ -121,7 +121,7 @@ int main(int argc, char** argv)
   h_tau2eta = new TH1F("h_tau2eta", "h_tau2eta", 30 , -3., 3.);
   h_ditauinvariantmass = new TH1F("h_ditauinvariantmass", "h_ditauinvariantmass", 30, 0., 300.); 
 
-  h_met = new TH1F("h_met", "h_met", 12, 0., 120.);
+  h_met = new TH1F("h_met", "h_met", 12, 0., 240.);
 
   //---------------------------------------------------------------------------
   // Loop over events
