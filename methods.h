@@ -139,7 +139,7 @@ MassAndIndex Inv2jMassIndex(MyEventCollection collection)
     if(first < 99999 && second < 99999)
       {
         double dR=jet1_4v.DeltaR(jet2_4v);
-        int sign=collection.jet[first]->eta*collection.jet[second]->eta;
+        int sign=(collection.jet[first]->eta*collection.jet[second]->eta)/fabs(collection.jet[first]->eta*collection.jet[second]->eta);
         double dEta=fabs(collection.jet[first]->eta - collection.jet[second]->eta);
         Inv2jMass.Mass=Mass;
         Inv2jMass.first=first;
