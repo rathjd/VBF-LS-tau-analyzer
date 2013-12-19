@@ -46,7 +46,7 @@
 //          22-Nov-2010 Allow reading of multiple trees using friend
 //                      mechanism
 //          22-Nov-2011 Handle storing of strings
-//$Revision: 1.3 $
+//$Revision: 1.5 $
 //----------------------------------------------------------------------------
 #include <vector>
 #include <string>
@@ -56,6 +56,7 @@
 #include <iostream>
 #include <typeinfo>
 #include <cctype>
+
 
 #include "TFile.h"
 #include "TTree.h"
@@ -215,6 +216,9 @@ class itreestream
   void   select(std::string namen, short& datum);
 
   ///
+  void   select(std::string namen, bool& datum);
+
+  ///
   void   select(std::string namen, unsigned long& datum);
 
   ///
@@ -251,6 +255,9 @@ class itreestream
 
   ///
   void   select(std::string namen, std::vector<short>& data);
+
+  ///
+  void   select(std::string namen, std::vector<bool>& data);
 
   ///
   void   select(std::string namen, std::vector<char>& data);
@@ -353,13 +360,6 @@ class itreestream
   void _update();
 
   bool _delete;
-
- public:
-
-#ifdef __WITH_CINT__
-  ClassDef(itreestream, 1)
-#endif
-
 };
 
 /// Model an output stream of trees of the same species.
@@ -409,6 +409,12 @@ class otreestream
   void   add(std::string namen, short& datum);
 
   ///
+  void   add(std::string namen, char& datum);
+
+  ///
+  void   add(std::string namen, bool& datum);
+
+  ///
   void   add(std::string namen, unsigned long& datum);
 
   ///
@@ -444,6 +450,9 @@ class otreestream
 
   ///
   void   add(std::string namen, std::vector<char>& data);
+
+  ///
+  void   add(std::string namen, std::vector<bool>& data);
 
   ///
   void   add(std::string namen, std::vector<unsigned long>& data);
@@ -520,11 +529,6 @@ class otreestream
 
   void _add(std::string name, void* address, int maxsize,
 	    char srctype, char iotype, bool isvector=false);
-
-#ifdef __WITH_CINT__
-  ClassDef(otreestream, 1)
-#endif
-
 };
 
 std::ostream& operator<<(std::ostream& os, const itreestream& tuple);
