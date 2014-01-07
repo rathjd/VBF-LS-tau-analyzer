@@ -85,8 +85,8 @@ ofile.count("MET", 0)
   //---------------------------------------------------------------------------
 
 TH1::SetDefaultSumw2();
-TFile file_eff("/afs/naf.desy.de/user/r/rathjd/public/VBFAnalyzer/ChargeMap_InclAndExclIsos_wNom_Jet30Tau45_15up.root", "read");
-TFile file_Resp("/afs/naf.desy.de/user/r/rathjd/public/VBFAnalyzer/ResponseFactors_InclAndExclIsos_Jet30Tau45_15up.root", "read");
+TFile file_eff("/afs/naf.desy.de/user/r/rathjd/public/VBFAnalyzer/ChargeMap_Jet30Tau45_DijetV2.root", "read");
+TFile file_Resp("/afs/naf.desy.de/user/r/rathjd/public/VBFAnalyzer/ResponseFactors_InclAndExclIsos_Jet30Tau45_Dijet.root", "read");
 
 MyHistoCollection myHistoColl_SignalRegion(ofile.file_, "SignalRegion");        
 MyHistoCollection myHistoColl_CR1 (ofile.file_, "Ztautau_CR1");
@@ -296,6 +296,9 @@ Fake FakeTausN("FakeTaus");
 if(verbose)std::cout<<"Dice NoIso"<<std::endl;
 FakeTausN.generate(jet_taufakerateN,jet_taufakerateN, true);
 
+//apply NN trigger scaling factor out of dijet data:
+FakeTausN.weight*=1.65/10000;
+
 tau_s faketau1N;
 tau_s faketau2N;
 
@@ -354,6 +357,9 @@ Fake FakeTausL("FakeTaus");
 if(verbose)std::cout<<"Dice LooseIso"<<std::endl;
 
 FakeTausL.generate(jet_taufakerateL,jet_taufakerateLi, false);
+
+//apply LL,LN trigger scaling factor out of dijet data:
+FakeTausL.weight*=2.6/1000;
 
 tau_s faketau1L;
 tau_s faketau2L;
@@ -418,6 +424,9 @@ if(verbose)std::cout<<"Dice MediumIso"<<std::endl;
 
 FakeTausM.generate(jet_taufakerateM,jet_taufakerateMi, false);
 
+//apply MM,ML,MN trigger scaling factor out of dijet data:
+FakeTausM.weight*=6.3/1000;
+
 tau_s faketau1M;
 tau_s faketau2M;
 
@@ -480,6 +489,9 @@ Fake FakeTausT("FakeTausT");
 if(verbose)std::cout<<"Dice 1TightIso"<<std::endl;
 FakeTausT.generate(jet_taufakerateT,jet_taufakerateMi, false);
 
+//apply TM,TL,TN trigger scaling factor out of dijet data:
+FakeTausT.weight*=5.7/1000;
+
 tau_s faketau1T;
 tau_s faketau2T;
 
@@ -540,6 +552,9 @@ if(verbose)std::cout<<"Jet "<<FakeTausT.index.second<<" to FTau2: pTScale="<<sca
 Fake FakeTausTT("FakeTausTT");
 if(verbose)std::cout<<"Dice 2TightIso"<<std::endl;
 FakeTausTT.generate(jet_taufakerateT,jet_taufakerateT, true);
+
+//apply TT trigger scaling factor out of dijet data:
+FakeTausTT.weight*=1;
 
 tau_s faketauT1T;
 tau_s faketauT2T;
