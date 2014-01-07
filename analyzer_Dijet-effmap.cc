@@ -851,12 +851,12 @@ int main(int argc, char** argv)
 		int nRescaleBinM= ReweightFactorM->FindBin(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		int nRescaleBinMi= ReweightFactorMi->FindBin(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		int nRescaleBinT= ReweightFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		double weightN=ReweightFactorN->GetBinContent(nRescaleBinN);
-		double weightL=ReweightFactorL->GetBinContent(nRescaleBinL);
-		double weightLi=ReweightFactorLi->GetBinContent(nRescaleBinLi);
-		double weightM=ReweightFactorM->GetBinContent(nRescaleBinM);
-		double weightMi=ReweightFactorMi->GetBinContent(nRescaleBinMi);
-		double weightT=ReweightFactorT->GetBinContent(nRescaleBinT);
+		double weightN=ReweightFactorN->GetBinContent(nRescaleBinN)*weight;
+		double weightL=ReweightFactorL->GetBinContent(nRescaleBinL)*weight;
+		double weightLi=ReweightFactorLi->GetBinContent(nRescaleBinLi)*weight;
+		double weightM=ReweightFactorM->GetBinContent(nRescaleBinM)*weight;
+		double weightMi=ReweightFactorMi->GetBinContent(nRescaleBinMi)*weight;
+		double weightT=ReweightFactorT->GetBinContent(nRescaleBinT)*weight;
 		if(jetMindR > 0.5){ //only count isolated jets
 		  if( deltaRt.first < 0.1 ){
 		 	h2_taufakerate_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta),weightT);
