@@ -4,6 +4,7 @@
 #include "analyzer.h"
 
 using namespace std;
+using namespace evt;
 
 struct MassAndIndex {
 	std::string label;

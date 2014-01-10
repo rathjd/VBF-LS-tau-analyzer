@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 
   // Get number of events to be read
 
-  //int nevents = 10000;
+  //int nevents = 1000;
   int nevents = stream.size();
   cout << "Number of events: " << nevents << endl;
 
@@ -157,6 +157,7 @@ int main(int argc, char** argv)
 	  // ------------------------
 
 	  std::vector<genparticlehelper_s*> genTau;
+	  //std::vector<genparticlehelper_s*> genTau;
 	  std::vector<genparticlehelper_s*> genParton;
 	  std::vector<genparticlehelper_s*> genInvis;
 

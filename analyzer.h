@@ -33,6 +33,7 @@
 #include "TKey.h"
 #include "TH1F.h"
 #include "TH2F.h"
+#include "TLorentzVector.h"
 
 namespace evt {
 //-----------------------------------------------------------------------------
@@ -723,7 +724,7 @@ std::ostream& operator<<(std::ostream& os, const ak5GenJets_s& o)
   return os;
 }
 //-----------------------------------------------------------------------------
-struct patElectron_s
+struct electron_s
 {
   double	p;
   double	energy;
@@ -748,9 +749,9 @@ struct patElectron_s
   double	gsfTrack_d0;
   double	gsfTrack_dz;
 };
-std::vector<patElectron_s> patElectron(200);
+std::vector<electron_s> patElectron(200);
 
-std::ostream& operator<<(std::ostream& os, const patElectron_s& o)
+std::ostream& operator<<(std::ostream& os, const electron_s& o)
 {
   char r[1024];
   os << "patElectron" << std::endl;
@@ -779,7 +780,7 @@ std::ostream& operator<<(std::ostream& os, const patElectron_s& o)
   return os;
 }
 //-----------------------------------------------------------------------------
-struct patJet_s
+struct jet_s
 {
   int	charge;
   double	p;
@@ -837,9 +838,9 @@ struct patJet_s
   float	bDiscriminator_combinedInclusiveSecondaryVertexBJetTags;
   float	bDiscriminator_combinedMVABJetTags;
 };
-std::vector<patJet_s> patJet(200);
+std::vector<jet_s> patJet(200);
 
-std::ostream& operator<<(std::ostream& os, const patJet_s& o)
+std::ostream& operator<<(std::ostream& os, const jet_s& o)
 {
   char r[1024];
   os << "patJet" << std::endl;
@@ -901,7 +902,7 @@ std::ostream& operator<<(std::ostream& os, const patJet_s& o)
   return os;
 }
 //-----------------------------------------------------------------------------
-struct patMET_s
+struct met_s
 {
   double	p;
   double	energy;
@@ -913,9 +914,9 @@ struct patMET_s
   double	phi;
   double	eta;
 };
-std::vector<patMET_s> patMET(200);
+std::vector<met_s> patMET(200);
 
-std::ostream& operator<<(std::ostream& os, const patMET_s& o)
+std::ostream& operator<<(std::ostream& os, const met_s& o)
 {
   char r[1024];
   os << "patMET" << std::endl;
@@ -931,7 +932,7 @@ std::ostream& operator<<(std::ostream& os, const patMET_s& o)
   return os;
 }
 //-----------------------------------------------------------------------------
-struct patMuon_s
+struct muon_s
 {
   double	p;
   double	energy;
@@ -970,9 +971,9 @@ struct patMuon_s
   double	muonBestTrack_dxy;
   double	muonBestTrack_dz;
 };
-std::vector<patMuon_s> patMuon(200);
+std::vector<muon_s> patMuon(200);
 
-std::ostream& operator<<(std::ostream& os, const patMuon_s& o)
+std::ostream& operator<<(std::ostream& os, const muon_s& o)
 {
   char r[1024];
   os << "patMuon" << std::endl;
@@ -1015,7 +1016,7 @@ std::ostream& operator<<(std::ostream& os, const patMuon_s& o)
   return os;
 }
 //-----------------------------------------------------------------------------
-struct patTau_s
+struct tau_s
 {
   int	charge;
   double	p;
@@ -1114,9 +1115,9 @@ struct patTau_s
   double	leadPFChargedHadrCand_rapidity;
   double	leadPFChargedHadrCand_y;
 };
-std::vector<patTau_s> patTau(200);
+std::vector<tau_s> tau(200);
 
-std::ostream& operator<<(std::ostream& os, const patTau_s& o)
+std::ostream& operator<<(std::ostream& os, const tau_s& o)
 {
   char r[1024];
   os << "patTau" << std::endl;
@@ -1219,7 +1220,7 @@ std::ostream& operator<<(std::ostream& os, const patTau_s& o)
   return os;
 }
 //-----------------------------------------------------------------------------
-struct recoGenParticleHelper_s
+struct genparticlehelper_s
 {
   int	firstMother;
   int	lastMother;
@@ -1233,12 +1234,12 @@ struct recoGenParticleHelper_s
   double	phi;
   double	mass;
 };
-std::vector<recoGenParticleHelper_s> recoGenParticleHelper(100);
+std::vector<genparticlehelper_s> genparticlehelper(100);
 
-std::ostream& operator<<(std::ostream& os, const recoGenParticleHelper_s& o)
+std::ostream& operator<<(std::ostream& os, const genparticlehelper_s& o)
 {
   char r[1024];
-  os << "recoGenParticleHelper" << std::endl;
+  os << "genparticlehelper" << std::endl;
   sprintf(r, "  %-32s: %f\n", "firstMother", (double)o.firstMother); os << r;
   sprintf(r, "  %-32s: %f\n", "lastMother", (double)o.lastMother); os << r;
   sprintf(r, "  %-32s: %f\n", "firstDaughter", (double)o.firstDaughter); os << r;
@@ -1253,7 +1254,7 @@ std::ostream& operator<<(std::ostream& os, const recoGenParticleHelper_s& o)
   return os;
 }
 //-----------------------------------------------------------------------------
-struct recoGenParticleHelperPlus_s
+struct genparticlehelperplus_s
 {
   int	firstMother;
   int	lastMother;
@@ -1267,12 +1268,12 @@ struct recoGenParticleHelperPlus_s
   double	phi;
   double	mass;
 };
-std::vector<recoGenParticleHelperPlus_s> recoGenParticleHelperPlus(100);
+std::vector<genparticlehelperplus_s> genparticlehelperplus(100);
 
-std::ostream& operator<<(std::ostream& os, const recoGenParticleHelperPlus_s& o)
+std::ostream& operator<<(std::ostream& os, const genparticlehelperplus_s& o)
 {
   char r[1024];
-  os << "recoGenParticleHelperPlus" << std::endl;
+  os << "genparticlehelperplus" << std::endl;
   sprintf(r, "  %-32s: %f\n", "firstMother", (double)o.firstMother); os << r;
   sprintf(r, "  %-32s: %f\n", "lastMother", (double)o.lastMother); os << r;
   sprintf(r, "  %-32s: %f\n", "firstDaughter", (double)o.firstDaughter); os << r;
@@ -1605,143 +1606,143 @@ inline void fillpatMuon()
 
 inline void fillpatTau()
 {
-  patTau.resize(patTau_charge.size());
-  for(unsigned int i=0; i < patTau.size(); ++i)
+  tau.resize(patTau_charge.size());
+  for(unsigned int i=0; i < tau.size(); ++i)
     {
-      patTau[i].charge	= patTau_charge[i];
-      patTau[i].p	= patTau_p[i];
-      patTau[i].energy	= patTau_energy[i];
-      patTau[i].et	= patTau_et[i];
-      patTau[i].px	= patTau_px[i];
-      patTau[i].py	= patTau_py[i];
-      patTau[i].pz	= patTau_pz[i];
-      patTau[i].pt	= patTau_pt[i];
-      patTau[i].phi	= patTau_phi[i];
-      patTau[i].eta	= patTau_eta[i];
-      patTau[i].vx	= patTau_vx[i];
-      patTau[i].vy	= patTau_vy[i];
-      patTau[i].vz	= patTau_vz[i];
-      patTau[i].tauID_againstElectronDeadECAL	= patTau_tauID_againstElectronDeadECAL[i];
-      patTau[i].tauID_againstElectronLoose	= patTau_tauID_againstElectronLoose[i];
-      patTau[i].tauID_againstElectronLooseMVA5	= patTau_tauID_againstElectronLooseMVA5[i];
-      patTau[i].tauID_againstElectronMVA5category	= patTau_tauID_againstElectronMVA5category[i];
-      patTau[i].tauID_againstElectronMVA5raw	= patTau_tauID_againstElectronMVA5raw[i];
-      patTau[i].tauID_againstElectronMedium	= patTau_tauID_againstElectronMedium[i];
-      patTau[i].tauID_againstElectronMediumMVA5	= patTau_tauID_againstElectronMediumMVA5[i];
-      patTau[i].tauID_againstElectronTight	= patTau_tauID_againstElectronTight[i];
-      patTau[i].tauID_againstElectronTightMVA5	= patTau_tauID_againstElectronTightMVA5[i];
-      patTau[i].tauID_againstElectronVLooseMVA5	= patTau_tauID_againstElectronVLooseMVA5[i];
-      patTau[i].tauID_againstElectronVTightMVA5	= patTau_tauID_againstElectronVTightMVA5[i];
-      patTau[i].tauID_againstMuonLoose	= patTau_tauID_againstMuonLoose[i];
-      patTau[i].tauID_againstMuonLoose2	= patTau_tauID_againstMuonLoose2[i];
-      patTau[i].tauID_againstMuonLoose3	= patTau_tauID_againstMuonLoose3[i];
-      patTau[i].tauID_againstMuonLooseMVA	= patTau_tauID_againstMuonLooseMVA[i];
-      patTau[i].tauID_againstMuonMVAraw	= patTau_tauID_againstMuonMVAraw[i];
-      patTau[i].tauID_againstMuonMedium	= patTau_tauID_againstMuonMedium[i];
-      patTau[i].tauID_againstMuonMedium2	= patTau_tauID_againstMuonMedium2[i];
-      patTau[i].tauID_againstMuonMediumMVA	= patTau_tauID_againstMuonMediumMVA[i];
-      patTau[i].tauID_againstMuonTight	= patTau_tauID_againstMuonTight[i];
-      patTau[i].tauID_againstMuonTight2	= patTau_tauID_againstMuonTight2[i];
-      patTau[i].tauID_againstMuonTight3	= patTau_tauID_againstMuonTight3[i];
-      patTau[i].tauID_againstMuonTightMVA	= patTau_tauID_againstMuonTightMVA[i];
-      patTau[i].tauID_byCombinedIsolationDeltaBetaCorrRaw	= patTau_tauID_byCombinedIsolationDeltaBetaCorrRaw[i];
-      patTau[i].tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits	= patTau_tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits[i];
-      patTau[i].tauID_byIsolationMVA3newDMwLTraw	= patTau_tauID_byIsolationMVA3newDMwLTraw[i];
-      patTau[i].tauID_byIsolationMVA3newDMwoLTraw	= patTau_tauID_byIsolationMVA3newDMwoLTraw[i];
-      patTau[i].tauID_byIsolationMVA3oldDMwLTraw	= patTau_tauID_byIsolationMVA3oldDMwLTraw[i];
-      patTau[i].tauID_byIsolationMVA3oldDMwoLTraw	= patTau_tauID_byIsolationMVA3oldDMwoLTraw[i];
-      patTau[i].tauID_byLooseCombinedIsolationDeltaBetaCorr	= patTau_tauID_byLooseCombinedIsolationDeltaBetaCorr[i];
-      patTau[i].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits	= patTau_tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits[i];
-      patTau[i].tauID_byLooseIsolation	= patTau_tauID_byLooseIsolation[i];
-      patTau[i].tauID_byLooseIsolationMVA3newDMwLT	= patTau_tauID_byLooseIsolationMVA3newDMwLT[i];
-      patTau[i].tauID_byLooseIsolationMVA3newDMwoLT	= patTau_tauID_byLooseIsolationMVA3newDMwoLT[i];
-      patTau[i].tauID_byLooseIsolationMVA3oldDMwLT	= patTau_tauID_byLooseIsolationMVA3oldDMwLT[i];
-      patTau[i].tauID_byLooseIsolationMVA3oldDMwoLT	= patTau_tauID_byLooseIsolationMVA3oldDMwoLT[i];
-      patTau[i].tauID_byMediumCombinedIsolationDeltaBetaCorr	= patTau_tauID_byMediumCombinedIsolationDeltaBetaCorr[i];
-      patTau[i].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits	= patTau_tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits[i];
-      patTau[i].tauID_byMediumIsolationMVA3newDMwLT	= patTau_tauID_byMediumIsolationMVA3newDMwLT[i];
-      patTau[i].tauID_byMediumIsolationMVA3newDMwoLT	= patTau_tauID_byMediumIsolationMVA3newDMwoLT[i];
-      patTau[i].tauID_byMediumIsolationMVA3oldDMwLT	= patTau_tauID_byMediumIsolationMVA3oldDMwLT[i];
-      patTau[i].tauID_byMediumIsolationMVA3oldDMwoLT	= patTau_tauID_byMediumIsolationMVA3oldDMwoLT[i];
-      patTau[i].tauID_byTightCombinedIsolationDeltaBetaCorr	= patTau_tauID_byTightCombinedIsolationDeltaBetaCorr[i];
-      patTau[i].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits	= patTau_tauID_byTightCombinedIsolationDeltaBetaCorr3Hits[i];
-      patTau[i].tauID_byTightIsolationMVA3newDMwLT	= patTau_tauID_byTightIsolationMVA3newDMwLT[i];
-      patTau[i].tauID_byTightIsolationMVA3newDMwoLT	= patTau_tauID_byTightIsolationMVA3newDMwoLT[i];
-      patTau[i].tauID_byTightIsolationMVA3oldDMwLT	= patTau_tauID_byTightIsolationMVA3oldDMwLT[i];
-      patTau[i].tauID_byTightIsolationMVA3oldDMwoLT	= patTau_tauID_byTightIsolationMVA3oldDMwoLT[i];
-      patTau[i].tauID_byVLooseCombinedIsolationDeltaBetaCorr	= patTau_tauID_byVLooseCombinedIsolationDeltaBetaCorr[i];
-      patTau[i].tauID_byVLooseIsolationMVA3newDMwLT	= patTau_tauID_byVLooseIsolationMVA3newDMwLT[i];
-      patTau[i].tauID_byVLooseIsolationMVA3newDMwoLT	= patTau_tauID_byVLooseIsolationMVA3newDMwoLT[i];
-      patTau[i].tauID_byVLooseIsolationMVA3oldDMwLT	= patTau_tauID_byVLooseIsolationMVA3oldDMwLT[i];
-      patTau[i].tauID_byVLooseIsolationMVA3oldDMwoLT	= patTau_tauID_byVLooseIsolationMVA3oldDMwoLT[i];
-      patTau[i].tauID_byVTightIsolationMVA3newDMwLT	= patTau_tauID_byVTightIsolationMVA3newDMwLT[i];
-      patTau[i].tauID_byVTightIsolationMVA3newDMwoLT	= patTau_tauID_byVTightIsolationMVA3newDMwoLT[i];
-      patTau[i].tauID_byVTightIsolationMVA3oldDMwLT	= patTau_tauID_byVTightIsolationMVA3oldDMwLT[i];
-      patTau[i].tauID_byVTightIsolationMVA3oldDMwoLT	= patTau_tauID_byVTightIsolationMVA3oldDMwoLT[i];
-      patTau[i].tauID_byVVTightIsolationMVA3newDMwLT	= patTau_tauID_byVVTightIsolationMVA3newDMwLT[i];
-      patTau[i].tauID_byVVTightIsolationMVA3newDMwoLT	= patTau_tauID_byVVTightIsolationMVA3newDMwoLT[i];
-      patTau[i].tauID_byVVTightIsolationMVA3oldDMwLT	= patTau_tauID_byVVTightIsolationMVA3oldDMwLT[i];
-      patTau[i].tauID_byVVTightIsolationMVA3oldDMwoLT	= patTau_tauID_byVVTightIsolationMVA3oldDMwoLT[i];
-      patTau[i].tauID_chargedIsoPtSum	= patTau_tauID_chargedIsoPtSum[i];
-      patTau[i].tauID_decayModeFinding	= patTau_tauID_decayModeFinding[i];
-      patTau[i].tauID_decayModeFindingNewDMs	= patTau_tauID_decayModeFindingNewDMs[i];
-      patTau[i].tauID_decayModeFindingOldDMs	= patTau_tauID_decayModeFindingOldDMs[i];
-      patTau[i].tauID_neutralIsoPtSum	= patTau_tauID_neutralIsoPtSum[i];
-      patTau[i].tauID_puCorrPtSum	= patTau_tauID_puCorrPtSum[i];
-      patTau[i].leadPFChargedHadrCand_p	= patTau_leadPFChargedHadrCand_p[i];
-      patTau[i].leadPFChargedHadrCand_energy	= patTau_leadPFChargedHadrCand_energy[i];
-      patTau[i].leadPFChargedHadrCand_et	= patTau_leadPFChargedHadrCand_et[i];
-      patTau[i].leadPFChargedHadrCand_mass	= patTau_leadPFChargedHadrCand_mass[i];
-      patTau[i].leadPFChargedHadrCand_massSqr	= patTau_leadPFChargedHadrCand_massSqr[i];
-      patTau[i].leadPFChargedHadrCand_mt	= patTau_leadPFChargedHadrCand_mt[i];
-      patTau[i].leadPFChargedHadrCand_mtSqr	= patTau_leadPFChargedHadrCand_mtSqr[i];
-      patTau[i].leadPFChargedHadrCand_px	= patTau_leadPFChargedHadrCand_px[i];
-      patTau[i].leadPFChargedHadrCand_py	= patTau_leadPFChargedHadrCand_py[i];
-      patTau[i].leadPFChargedHadrCand_pz	= patTau_leadPFChargedHadrCand_pz[i];
-      patTau[i].leadPFChargedHadrCand_pt	= patTau_leadPFChargedHadrCand_pt[i];
-      patTau[i].leadPFChargedHadrCand_phi	= patTau_leadPFChargedHadrCand_phi[i];
-      patTau[i].leadPFChargedHadrCand_theta	= patTau_leadPFChargedHadrCand_theta[i];
-      patTau[i].leadPFChargedHadrCand_eta	= patTau_leadPFChargedHadrCand_eta[i];
-      patTau[i].leadPFChargedHadrCand_rapidity	= patTau_leadPFChargedHadrCand_rapidity[i];
-      patTau[i].leadPFChargedHadrCand_y	= patTau_leadPFChargedHadrCand_y[i];
+      tau[i].charge	= patTau_charge[i];
+      tau[i].p	= patTau_p[i];
+      tau[i].energy	= patTau_energy[i];
+      tau[i].et	= patTau_et[i];
+      tau[i].px	= patTau_px[i];
+      tau[i].py	= patTau_py[i];
+      tau[i].pz	= patTau_pz[i];
+      tau[i].pt	= patTau_pt[i];
+      tau[i].phi	= patTau_phi[i];
+      tau[i].eta	= patTau_eta[i];
+      tau[i].vx	= patTau_vx[i];
+      tau[i].vy	= patTau_vy[i];
+      tau[i].vz	= patTau_vz[i];
+      tau[i].tauID_againstElectronDeadECAL	= patTau_tauID_againstElectronDeadECAL[i];
+      tau[i].tauID_againstElectronLoose	= patTau_tauID_againstElectronLoose[i];
+      tau[i].tauID_againstElectronLooseMVA5	= patTau_tauID_againstElectronLooseMVA5[i];
+      tau[i].tauID_againstElectronMVA5category	= patTau_tauID_againstElectronMVA5category[i];
+      tau[i].tauID_againstElectronMVA5raw	= patTau_tauID_againstElectronMVA5raw[i];
+      tau[i].tauID_againstElectronMedium	= patTau_tauID_againstElectronMedium[i];
+      tau[i].tauID_againstElectronMediumMVA5	= patTau_tauID_againstElectronMediumMVA5[i];
+      tau[i].tauID_againstElectronTight	= patTau_tauID_againstElectronTight[i];
+      tau[i].tauID_againstElectronTightMVA5	= patTau_tauID_againstElectronTightMVA5[i];
+      tau[i].tauID_againstElectronVLooseMVA5	= patTau_tauID_againstElectronVLooseMVA5[i];
+      tau[i].tauID_againstElectronVTightMVA5	= patTau_tauID_againstElectronVTightMVA5[i];
+      tau[i].tauID_againstMuonLoose	= patTau_tauID_againstMuonLoose[i];
+      tau[i].tauID_againstMuonLoose2	= patTau_tauID_againstMuonLoose2[i];
+      tau[i].tauID_againstMuonLoose3	= patTau_tauID_againstMuonLoose3[i];
+      tau[i].tauID_againstMuonLooseMVA	= patTau_tauID_againstMuonLooseMVA[i];
+      tau[i].tauID_againstMuonMVAraw	= patTau_tauID_againstMuonMVAraw[i];
+      tau[i].tauID_againstMuonMedium	= patTau_tauID_againstMuonMedium[i];
+      tau[i].tauID_againstMuonMedium2	= patTau_tauID_againstMuonMedium2[i];
+      tau[i].tauID_againstMuonMediumMVA	= patTau_tauID_againstMuonMediumMVA[i];
+      tau[i].tauID_againstMuonTight	= patTau_tauID_againstMuonTight[i];
+      tau[i].tauID_againstMuonTight2	= patTau_tauID_againstMuonTight2[i];
+      tau[i].tauID_againstMuonTight3	= patTau_tauID_againstMuonTight3[i];
+      tau[i].tauID_againstMuonTightMVA	= patTau_tauID_againstMuonTightMVA[i];
+      tau[i].tauID_byCombinedIsolationDeltaBetaCorrRaw	= patTau_tauID_byCombinedIsolationDeltaBetaCorrRaw[i];
+      tau[i].tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits	= patTau_tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits[i];
+      tau[i].tauID_byIsolationMVA3newDMwLTraw	= patTau_tauID_byIsolationMVA3newDMwLTraw[i];
+      tau[i].tauID_byIsolationMVA3newDMwoLTraw	= patTau_tauID_byIsolationMVA3newDMwoLTraw[i];
+      tau[i].tauID_byIsolationMVA3oldDMwLTraw	= patTau_tauID_byIsolationMVA3oldDMwLTraw[i];
+      tau[i].tauID_byIsolationMVA3oldDMwoLTraw	= patTau_tauID_byIsolationMVA3oldDMwoLTraw[i];
+      tau[i].tauID_byLooseCombinedIsolationDeltaBetaCorr	= patTau_tauID_byLooseCombinedIsolationDeltaBetaCorr[i];
+      tau[i].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits	= patTau_tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits[i];
+      tau[i].tauID_byLooseIsolation	= patTau_tauID_byLooseIsolation[i];
+      tau[i].tauID_byLooseIsolationMVA3newDMwLT	= patTau_tauID_byLooseIsolationMVA3newDMwLT[i];
+      tau[i].tauID_byLooseIsolationMVA3newDMwoLT	= patTau_tauID_byLooseIsolationMVA3newDMwoLT[i];
+      tau[i].tauID_byLooseIsolationMVA3oldDMwLT	= patTau_tauID_byLooseIsolationMVA3oldDMwLT[i];
+      tau[i].tauID_byLooseIsolationMVA3oldDMwoLT	= patTau_tauID_byLooseIsolationMVA3oldDMwoLT[i];
+      tau[i].tauID_byMediumCombinedIsolationDeltaBetaCorr	= patTau_tauID_byMediumCombinedIsolationDeltaBetaCorr[i];
+      tau[i].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits	= patTau_tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits[i];
+      tau[i].tauID_byMediumIsolationMVA3newDMwLT	= patTau_tauID_byMediumIsolationMVA3newDMwLT[i];
+      tau[i].tauID_byMediumIsolationMVA3newDMwoLT	= patTau_tauID_byMediumIsolationMVA3newDMwoLT[i];
+      tau[i].tauID_byMediumIsolationMVA3oldDMwLT	= patTau_tauID_byMediumIsolationMVA3oldDMwLT[i];
+      tau[i].tauID_byMediumIsolationMVA3oldDMwoLT	= patTau_tauID_byMediumIsolationMVA3oldDMwoLT[i];
+      tau[i].tauID_byTightCombinedIsolationDeltaBetaCorr	= patTau_tauID_byTightCombinedIsolationDeltaBetaCorr[i];
+      tau[i].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits	= patTau_tauID_byTightCombinedIsolationDeltaBetaCorr3Hits[i];
+      tau[i].tauID_byTightIsolationMVA3newDMwLT	= patTau_tauID_byTightIsolationMVA3newDMwLT[i];
+      tau[i].tauID_byTightIsolationMVA3newDMwoLT	= patTau_tauID_byTightIsolationMVA3newDMwoLT[i];
+      tau[i].tauID_byTightIsolationMVA3oldDMwLT	= patTau_tauID_byTightIsolationMVA3oldDMwLT[i];
+      tau[i].tauID_byTightIsolationMVA3oldDMwoLT	= patTau_tauID_byTightIsolationMVA3oldDMwoLT[i];
+      tau[i].tauID_byVLooseCombinedIsolationDeltaBetaCorr	= patTau_tauID_byVLooseCombinedIsolationDeltaBetaCorr[i];
+      tau[i].tauID_byVLooseIsolationMVA3newDMwLT	= patTau_tauID_byVLooseIsolationMVA3newDMwLT[i];
+      tau[i].tauID_byVLooseIsolationMVA3newDMwoLT	= patTau_tauID_byVLooseIsolationMVA3newDMwoLT[i];
+      tau[i].tauID_byVLooseIsolationMVA3oldDMwLT	= patTau_tauID_byVLooseIsolationMVA3oldDMwLT[i];
+      tau[i].tauID_byVLooseIsolationMVA3oldDMwoLT	= patTau_tauID_byVLooseIsolationMVA3oldDMwoLT[i];
+      tau[i].tauID_byVTightIsolationMVA3newDMwLT	= patTau_tauID_byVTightIsolationMVA3newDMwLT[i];
+      tau[i].tauID_byVTightIsolationMVA3newDMwoLT	= patTau_tauID_byVTightIsolationMVA3newDMwoLT[i];
+      tau[i].tauID_byVTightIsolationMVA3oldDMwLT	= patTau_tauID_byVTightIsolationMVA3oldDMwLT[i];
+      tau[i].tauID_byVTightIsolationMVA3oldDMwoLT	= patTau_tauID_byVTightIsolationMVA3oldDMwoLT[i];
+      tau[i].tauID_byVVTightIsolationMVA3newDMwLT	= patTau_tauID_byVVTightIsolationMVA3newDMwLT[i];
+      tau[i].tauID_byVVTightIsolationMVA3newDMwoLT	= patTau_tauID_byVVTightIsolationMVA3newDMwoLT[i];
+      tau[i].tauID_byVVTightIsolationMVA3oldDMwLT	= patTau_tauID_byVVTightIsolationMVA3oldDMwLT[i];
+      tau[i].tauID_byVVTightIsolationMVA3oldDMwoLT	= patTau_tauID_byVVTightIsolationMVA3oldDMwoLT[i];
+      tau[i].tauID_chargedIsoPtSum	= patTau_tauID_chargedIsoPtSum[i];
+      tau[i].tauID_decayModeFinding	= patTau_tauID_decayModeFinding[i];
+      tau[i].tauID_decayModeFindingNewDMs	= patTau_tauID_decayModeFindingNewDMs[i];
+      tau[i].tauID_decayModeFindingOldDMs	= patTau_tauID_decayModeFindingOldDMs[i];
+      tau[i].tauID_neutralIsoPtSum	= patTau_tauID_neutralIsoPtSum[i];
+      tau[i].tauID_puCorrPtSum	= patTau_tauID_puCorrPtSum[i];
+      tau[i].leadPFChargedHadrCand_p	= patTau_leadPFChargedHadrCand_p[i];
+      tau[i].leadPFChargedHadrCand_energy	= patTau_leadPFChargedHadrCand_energy[i];
+      tau[i].leadPFChargedHadrCand_et	= patTau_leadPFChargedHadrCand_et[i];
+      tau[i].leadPFChargedHadrCand_mass	= patTau_leadPFChargedHadrCand_mass[i];
+      tau[i].leadPFChargedHadrCand_massSqr	= patTau_leadPFChargedHadrCand_massSqr[i];
+      tau[i].leadPFChargedHadrCand_mt	= patTau_leadPFChargedHadrCand_mt[i];
+      tau[i].leadPFChargedHadrCand_mtSqr	= patTau_leadPFChargedHadrCand_mtSqr[i];
+      tau[i].leadPFChargedHadrCand_px	= patTau_leadPFChargedHadrCand_px[i];
+      tau[i].leadPFChargedHadrCand_py	= patTau_leadPFChargedHadrCand_py[i];
+      tau[i].leadPFChargedHadrCand_pz	= patTau_leadPFChargedHadrCand_pz[i];
+      tau[i].leadPFChargedHadrCand_pt	= patTau_leadPFChargedHadrCand_pt[i];
+      tau[i].leadPFChargedHadrCand_phi	= patTau_leadPFChargedHadrCand_phi[i];
+      tau[i].leadPFChargedHadrCand_theta	= patTau_leadPFChargedHadrCand_theta[i];
+      tau[i].leadPFChargedHadrCand_eta	= patTau_leadPFChargedHadrCand_eta[i];
+      tau[i].leadPFChargedHadrCand_rapidity	= patTau_leadPFChargedHadrCand_rapidity[i];
+      tau[i].leadPFChargedHadrCand_y	= patTau_leadPFChargedHadrCand_y[i];
     }
 }
 
 inline void fillrecoGenParticleHelper()
 {
-  recoGenParticleHelper.resize(recoGenParticleHelper_firstMother.size());
-  for(unsigned int i=0; i < recoGenParticleHelper.size(); ++i)
+  genparticlehelper.resize(recoGenParticleHelper_firstMother.size());
+  for(unsigned int i=0; i < genparticlehelper.size(); ++i)
     {
-      recoGenParticleHelper[i].firstMother	= recoGenParticleHelper_firstMother[i];
-      recoGenParticleHelper[i].lastMother	= recoGenParticleHelper_lastMother[i];
-      recoGenParticleHelper[i].firstDaughter	= recoGenParticleHelper_firstDaughter[i];
-      recoGenParticleHelper[i].lastDaughter	= recoGenParticleHelper_lastDaughter[i];
-      recoGenParticleHelper[i].charge	= recoGenParticleHelper_charge[i];
-      recoGenParticleHelper[i].pdgId	= recoGenParticleHelper_pdgId[i];
-      recoGenParticleHelper[i].status	= recoGenParticleHelper_status[i];
-      recoGenParticleHelper[i].pt	= recoGenParticleHelper_pt[i];
-      recoGenParticleHelper[i].eta	= recoGenParticleHelper_eta[i];
-      recoGenParticleHelper[i].phi	= recoGenParticleHelper_phi[i];
-      recoGenParticleHelper[i].mass	= recoGenParticleHelper_mass[i];
+      genparticlehelper[i].firstMother	= recoGenParticleHelper_firstMother[i];
+      genparticlehelper[i].lastMother	= recoGenParticleHelper_lastMother[i];
+      genparticlehelper[i].firstDaughter	= recoGenParticleHelper_firstDaughter[i];
+      genparticlehelper[i].lastDaughter	= recoGenParticleHelper_lastDaughter[i];
+      genparticlehelper[i].charge	= recoGenParticleHelper_charge[i];
+      genparticlehelper[i].pdgId	= recoGenParticleHelper_pdgId[i];
+      genparticlehelper[i].status	= recoGenParticleHelper_status[i];
+      genparticlehelper[i].pt	= recoGenParticleHelper_pt[i];
+      genparticlehelper[i].eta	= recoGenParticleHelper_eta[i];
+      genparticlehelper[i].phi	= recoGenParticleHelper_phi[i];
+      genparticlehelper[i].mass	= recoGenParticleHelper_mass[i];
     }
 }
 
 inline void fillrecoGenParticleHelperPlus()
 {
-  recoGenParticleHelperPlus.resize(recoGenParticleHelperPlus_firstMother.size());
-  for(unsigned int i=0; i < recoGenParticleHelperPlus.size(); ++i)
+  genparticlehelperplus.resize(recoGenParticleHelperPlus_firstMother.size());
+  for(unsigned int i=0; i < genparticlehelperplus.size(); ++i)
     {
-      recoGenParticleHelperPlus[i].firstMother	= recoGenParticleHelperPlus_firstMother[i];
-      recoGenParticleHelperPlus[i].lastMother	= recoGenParticleHelperPlus_lastMother[i];
-      recoGenParticleHelperPlus[i].firstDaughter	= recoGenParticleHelperPlus_firstDaughter[i];
-      recoGenParticleHelperPlus[i].lastDaughter	= recoGenParticleHelperPlus_lastDaughter[i];
-      recoGenParticleHelperPlus[i].charge	= recoGenParticleHelperPlus_charge[i];
-      recoGenParticleHelperPlus[i].pdgId	= recoGenParticleHelperPlus_pdgId[i];
-      recoGenParticleHelperPlus[i].status	= recoGenParticleHelperPlus_status[i];
-      recoGenParticleHelperPlus[i].pt	= recoGenParticleHelperPlus_pt[i];
-      recoGenParticleHelperPlus[i].eta	= recoGenParticleHelperPlus_eta[i];
-      recoGenParticleHelperPlus[i].phi	= recoGenParticleHelperPlus_phi[i];
-      recoGenParticleHelperPlus[i].mass	= recoGenParticleHelperPlus_mass[i];
+      genparticlehelperplus[i].firstMother	= recoGenParticleHelperPlus_firstMother[i];
+      genparticlehelperplus[i].lastMother	= recoGenParticleHelperPlus_lastMother[i];
+      genparticlehelperplus[i].firstDaughter	= recoGenParticleHelperPlus_firstDaughter[i];
+      genparticlehelperplus[i].lastDaughter	= recoGenParticleHelperPlus_lastDaughter[i];
+      genparticlehelperplus[i].charge	= recoGenParticleHelperPlus_charge[i];
+      genparticlehelperplus[i].pdgId	= recoGenParticleHelperPlus_pdgId[i];
+      genparticlehelperplus[i].status	= recoGenParticleHelperPlus_status[i];
+      genparticlehelperplus[i].pt	= recoGenParticleHelperPlus_pt[i];
+      genparticlehelperplus[i].eta	= recoGenParticleHelperPlus_eta[i];
+      genparticlehelperplus[i].phi	= recoGenParticleHelperPlus_phi[i];
+      genparticlehelperplus[i].mass	= recoGenParticleHelperPlus_mass[i];
     }
 }
 
