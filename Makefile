@@ -1,115 +1,147 @@
 #------------------------------------------------------------------------------
-# Description: Makefile to build executable analyzer
-# Created:     Thu May 30 15:41:56 2013 by mkanalyzer.py
-#
-#               available switches:
-#
-#                 debugflag  (e.g., debugflag=-ggdb [default])
-#                 cppflags
-#                 cxxflags
-#                 optflag
-#                 verbose    (e.g., verbose=1)
-#                 withcern   (e.g., withcern=1  expects to find CERN_LIB)
+# Description: Makefile to build analyzers
+# Created:     Fri Dec 13 16:25:40 2013 by mkanalyzer.py
 # Author:      Daniele Marconi
 #------------------------------------------------------------------------------
 ifndef ROOTSYS
 $(error *** Please set up Root)
 endif
-withroot:=1
-#------------------------------------------------------------------------------
-ifndef program
-# default program name
-program := analyzer
-endif
 
-cppsrcs	:= $(wildcard *.cpp)
-ccsrcs  := $(wildcard *.cc)
+name    := analyzer
 
-# filter out all main programs except the one to be built
-# 1. search files for main(...) and write list of files to .main
-$(shell grep -H "main[(].*[)]" $(cppsrcs) $(ccsrcs)|cut -f1 -d: > .main)
-# 2. send list back to Makefile
-main	:= $(shell cat .main)
-# 3. remove subset of files (including the file to be built) from main
-main	:= $(filter-out $(program).cc $(program).cpp treestream.cc,$(main))
-# 4. remove the set main from the set of all files in the directory
-cppsrcs	:= $(filter-out $(main),$(cppsrcs))
-ccsrcs	:= $(filter-out $(main),$(ccsrcs))
+# Sub-directories
+srcdir	:= src
+tmpdir	:= tmp
+libdir	:= lib
+incdir	:= include
 
-cppobjs	:= $(patsubst %.cpp,tmp/%.o,$(cppsrcs))
-ccobjs	:= $(patsubst %.cc,tmp/%.o,$(ccsrcs))
-objects	:= $(ccobjs) $(cppobjs)
-say     := $(shell echo "Program: $(program)" >& 2)
-#------------------------------------------------------------------------------
-ifdef GCC_DIR
-GCC_BIN_PREFIX	:= $(GCC_DIR)/bin/
-else
-GCC_BIN_PREFIX	:=
-endif
-C++	    := $(GCC_BIN_PREFIX)g++
-LDSHARED:= $(GCC_BIN_PREFIX)g++
-C++VER	:= $(shell $(C++) --version)
-COMP	:= $(word 1, $(C++VER))
-CTYPE	:= $(word 2, $(C++VER))
-CVER	:= $(word 3, $(C++VER))
-say 	:= $(shell echo "$(COMP) $(CTYPE) $(CVER)" >& 2)
-#------------------------------------------------------------------------------
+$(shell mkdir -p tmp)
+$(shell mkdir -p lib)
+
+
+# Set this equal to the @ symbol to suppress display of instructions
+# while make executes
 ifdef verbose
-	AT =
+AT 	:=
 else
-	AT = @
-endif
-#------------------------------------------------------------------------------
-# Products to compile/link against
-#------------------------------------------------------------------------------
-ifdef withcern
-	ifndef CERN_LIB
-		ifdef CERN_DIR
-			CERN_LIB:= $(CERN_DIR)/lib
-		else
-			say:=$(error CERN_LIB must point to CERN lib directory)
-		endif
-	endif
-	cernlib	:= -L$(CERN_LIB) -lpacklib -lmathlib -lkernlib
+AT	:= @
 endif
 
-ifdef withroot
-	rootcpp	:= $(shell root-config --cflags)
-	rootlib	:= $(shell root-config --glibs) -lTreePlayer
+# Get list of sources to be compiled into applications
+appsrcs	:= $(wildcard *.cc)
+
+# Construct list of applications
+applications := $(appsrcs:.cc=)
+
+# Construct names of object models from list of sources
+appobjs	:= $(addprefix $(tmpdir)/,$(appsrcs:.cc=.o))
+
+# Get list of sources to be made into shared libraries
+cppsrcs	:= $(wildcard $(srcdir)/*.cpp)
+cppobjs	:= $(subst $(srcdir)/,$(tmpdir)/,$(cppsrcs:.cpp=.o))
+
+ccsrcs	:= $(wildcard $(srcdir)/*.cc) 
+ccobjs	:= $(subst $(srcdir)/,$(tmpdir)/,$(ccsrcs:.cc=.o))
+objects	:= $(cppobjs) $(ccobjs)
+
+sharedlib := $(libdir)/lib$(name).so
+
+# Display list of applications to be built
+#say	:= $(shell echo -e "Apps: $(applications)" >& 2)
+#say	:= $(shell echo -e "AppObjs: $(appobjs)" >& 2)
+#say	:= $(shell echo -e "Objects: $(objects)" >& 2)
+#$(error bye!) 
+
+#-----------------------------------------------------------------------
+
+# 	Define which compilers and linkers to use
+
+# 	C++ Compiler
+CXX	:= g++
+
+
+# 	Define paths to be searched for C++ header files (#include ....)
+
+CPPFLAGS:= -I. -I$(incdir) -I$(srcdir) $(shell root-config --cflags) 
+
+# 	Define compiler flags to be used
+#	-c		perform compilation step only 
+#	-g		include debug information in the executable file
+#	-O2		optimize
+#	-ansi	require strict adherance to C++ standard
+#	-Wall	warn if source uses any non-standard C++
+#	-pipe	communicate via different stages of compilation
+#			using pipes rather than temporary files
+
+CXXFLAGS:= -c -g -O2 -ansi -Wall -pipe -fPIC
+
+#	C++ Linker
+#   set default path to shared library
+
+LD	:= g++ -Wl,-rpath,$(PWD)/$(libdir)
+
+OS	:= $(shell uname -s)
+ifeq ($(OS),Darwin)
+	LDSHARED	:= $(LD) -dynamiclib
+else
+	LDSHARED	:= $(LD) -shared
 endif
-#------------------------------------------------------------------------------
-# Switches/includes
-# debug flag is on by default
-#------------------------------------------------------------------------------
-debugflag:=-ggdb -std=c++0x
 
-ifndef optflag
-	optflag:=-O2
-endif
+#	Linker flags
 
-CPPFLAGS:= -I. $(rootcpp) $(cppflags)
-CXXFLAGS:= -c -pipe $(optflag) -fPIC -Wall $(cxxflags) $(debugflag)
-LDFLAGS	:= $(ldflags) $(debugflag)
-LIBS	:= $(libs) $(rootlib) $(cernlib)
-#------------------------------------------------------------------------------
-# Rules
-#------------------------------------------------------------------------------
-bin:	$(program)
+LDFLAGS := -g
 
-$(program)	: $(objects)
+# 	Libraries
+
+LIBS	:=  $(shell root-config --libs) -L$(libdir) -lMinuit  -lMathMore -lMathCore
+
+
+#	Rules
+#	The structure of a rule is
+#	target : source
+#		command
+#	The command makes a target from the source. 
+#	$@ refers to the target
+#	$< refers to the source
+
+all:	$(sharedlib) $(applications) 
+
+bin:	$(applications)
+
+lib:	$(sharedlib)
+
+# Syntax:
+# list of targets : target pattern : source pattern
+
+
+# Make applications depend on shared libraries to force the latter
+# to be built first
+
+$(applications)	: %	: $(tmpdir)/%.o  $(sharedlib)
 	@echo "---> Linking $@"
-	$(AT)$(LDSHARED) $(LDFLAGS) $(objects) $(LIBS) -o $@
-	@echo ""
+	$(AT)$(LD) $(LDFLAGS) $< $(LIBS) -lanalyzer -o $@
 
-$(cppobjs)	: tmp/%.o : %.cpp
-	@echo "---> Compiling $<" 
-	$(AT)$(CXX)	$(CXXFLAGS) $(CPPFLAGS) $< -o $@
+$(sharedlib)	: $(objects)
+	@echo "---> Linking `basename $@`"
+	$(AT)$(LDSHARED) $(LDFLAGS) -fPIC $(objects) $(LIBS) -o $@
 
-$(ccobjs)	: tmp/%.o : %.cc
-	@echo "---> Compiling $<" 
+$(cppobjs)	: $(tmpdir)/%.o	: $(srcdir)/%.cpp
+	@echo "---> Compiling `basename $<`" 
+	$(AT)$(CXX) $(CXXFLAGS) $(CPPFLAGS)  $< -o $@ >& $*.FAILED
+	$(AT)rm -rf $*.FAILED
 
-	$(AT)$(CXX)	$(CXXFLAGS) $(CPPFLAGS) $< -o $@
+$(ccobjs)	: $(tmpdir)/%.o	: $(srcdir)/%.cc
+	@echo "---> Compiling `basename $<`" 
+	$(AT)$(CXX) $(CXXFLAGS) $(CPPFLAGS)  $< -o $@ >& $*.FAILED
+	$(AT)rm -rf $*.FAILED
 
-# Define clean up rule
-clean   	:
-	rm -rf tmp/*.o $(program)
+$(appobjs)	: $(tmpdir)/%.o	: %.cc
+	@echo "---> Compiling `basename $<`" 
+	$(AT)$(CXX) $(CXXFLAGS) $(CPPFLAGS)  $< -o $@ >& $*.FAILED
+	$(AT)rm -rf $*.FAILED
+# 	Define clean up rules
+clean   :
+	rm -rf $(tmpdir)/*.o
+
+veryclean   :
+	rm -rf $(tmpdir)/*.o $(applications) $(libdir)/*.so
