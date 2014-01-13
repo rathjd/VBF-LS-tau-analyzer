@@ -13,6 +13,7 @@
 
 #include "CommonHistoCollection.h"
 #include "selection.h"
+#include "analyzer.h"
 
 // Structs useful for Analyzer
 
@@ -237,7 +238,7 @@ for(unsigned int m =0;m<muon.size();++m){
             if(!(       tau[t].pt >= 45.                                            				)) continue;
             if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      				)) continue;
             baselineObjectSelectionCollection.tau.push_back(&tau[t]);
-            if(!(       tau[t].tauID_againstElectronTightMVA3 > 0.5                				)) continue;
+            if(!(       tau[t].tauID_againstElectronTightMVA5 > 0.5                				)) continue;
             if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        				)) continue;
             if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
             baselineObjectSelectionCollection.tau.push_back(&tau[t]);
@@ -331,7 +332,7 @@ for(unsigned int m =0;m<muon.size();++m){
 Selection Signal("Signal"); //label and initialisation
 Signal.InputCollection 		= &TauTightIsoObjectSelectionCollection;        //input collection
 Signal.OutputCollection 	= &myHistoColl_SignalRegion;        //output collection
-Signal.RealData        		= eventhelper_isRealData;        //pass information if event is real data
+Signal.RealData        		= edmEventHelper_isRealData;        //pass information if event is real data
 Signal.RunData        		= false;        //real data allowed
 Signal.NumberTauMin        	= 2;        //require at least N tau
 Signal.NumberTauMax        	= 3;        //require at less than N taus
@@ -370,7 +371,7 @@ if(Signal.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollection.passedTr
 Selection InvertedVBF_CR2("InvertedVBF_CR2"); //label and initialisation
 InvertedVBF_CR2.InputCollection 	= &TauTightIsoObjectSelectionCollection;        //input collection
 InvertedVBF_CR2.OutputCollection 	= &myHistoColl_CR2;        //output collection
-InvertedVBF_CR2.RealData        	= eventhelper_isRealData;        //pass information if event is real data
+InvertedVBF_CR2.RealData        	= edmEventHelper_isRealData;        //pass information if event is real data
 InvertedVBF_CR2.RunData        		= true;        //real data allowed
 InvertedVBF_CR2.NumberTauMin        	= 2;        //require at least N tau
 InvertedVBF_CR2.NumberTauMax        	= 3;        //require at less than N taus
@@ -409,7 +410,7 @@ if(InvertedVBF_CR2.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollection
 Selection oneTightTau_CR3("oneTightTau_CR3"); //label and initialisation
 oneTightTau_CR3.InputCollection 	= &Tau1TightIsoObjectSelectionCollection;        //input collection
 oneTightTau_CR3.OutputCollection 	= &myHistoColl_CR3;        //output collection
-oneTightTau_CR3.RealData        	= eventhelper_isRealData;        //pass information if event is real data
+oneTightTau_CR3.RealData        	= edmEventHelper_isRealData;        //pass information if event is real data
 oneTightTau_CR3.RunData        		= true;        //real data allowed
 oneTightTau_CR3.NumberTauMin        	= 2;        //require at least N tau
 oneTightTau_CR3.NumberTauMax        	= 3;        //require at less than N taus
@@ -448,7 +449,7 @@ if(oneTightTau_CR3.passed) h2_Trigger->Fill(Tau1TightIsoObjectSelectionCollectio
 Selection InvertedVBF_oneTightTau_CR4("InvertedVBF_oneTightTau_CR4"); //label and initialisation
 InvertedVBF_oneTightTau_CR4.InputCollection 		= &Tau1TightIsoObjectSelectionCollection;        //input collection
 InvertedVBF_oneTightTau_CR4.OutputCollection 		= &myHistoColl_CR4;        //output collection
-InvertedVBF_oneTightTau_CR4.RealData        		= eventhelper_isRealData;        //pass information if event is real data
+InvertedVBF_oneTightTau_CR4.RealData        		= edmEventHelper_isRealData;        //pass information if event is real data
 InvertedVBF_oneTightTau_CR4.RunData        		= true;        //real data allowed
 InvertedVBF_oneTightTau_CR4.NumberTauMin        	= 2;        //require at least N tau
 InvertedVBF_oneTightTau_CR4.NumberTauMax        	= 3;        //require at less than N taus
@@ -487,7 +488,7 @@ if(InvertedVBF_oneTightTau_CR4.passed) h2_Trigger->Fill(Tau1TightIsoObjectSelect
 Selection AntiTightTau_CR5("AntiTightTau_CR5"); //label and initialisation
 AntiTightTau_CR5.InputCollection 		= &TauMediumIsoObjectSelectionCollection;        //input collection
 AntiTightTau_CR5.OutputCollection 		= &myHistoColl_CR5;        //output collection
-AntiTightTau_CR5.RealData        		= eventhelper_isRealData;        //pass information if event is real data
+AntiTightTau_CR5.RealData        		= edmEventHelper_isRealData;        //pass information if event is real data
 AntiTightTau_CR5.RunData        		= true;        //real data allowed
 AntiTightTau_CR5.NumberTauMin        		= 2;        //require at least N tau
 AntiTightTau_CR5.NumberTauMax        		= 3;        //require at less than N taus
@@ -526,7 +527,7 @@ if(AntiTightTau_CR5.passed) h2_Trigger->Fill(TauMediumIsoObjectSelectionCollecti
 Selection InvertedVBF_AntiTightTau_CR6("InvertedVBF_AntiTightTau_CR6"); //label and initialisation
 InvertedVBF_AntiTightTau_CR6.InputCollection 		= &TauMediumIsoObjectSelectionCollection;        //input collection
 InvertedVBF_AntiTightTau_CR6.OutputCollection 		= &myHistoColl_CR6;        //output collection
-InvertedVBF_AntiTightTau_CR6.RealData        		= eventhelper_isRealData;        //pass information if event is real data
+InvertedVBF_AntiTightTau_CR6.RealData        		= edmEventHelper_isRealData;        //pass information if event is real data
 InvertedVBF_AntiTightTau_CR6.RunData        		= true;        //real data allowed
 InvertedVBF_AntiTightTau_CR6.NumberTauMin       	= 2;        //require at least N tau
 InvertedVBF_AntiTightTau_CR6.NumberTauMax       	= 3;        //require at less than N taus
@@ -565,7 +566,7 @@ if(InvertedVBF_AntiTightTau_CR6.passed) h2_Trigger->Fill(TauMediumIsoObjectSelec
 Selection AntiMediumTau_CR7("AntiMediumTau_CR7"); //label and initialisation
 AntiMediumTau_CR7.InputCollection 	= &TauLooseIsoObjectSelectionCollection;        //input collection
 AntiMediumTau_CR7.OutputCollection 	= &myHistoColl_CR7;        //output collection
-AntiMediumTau_CR7.RealData        	= eventhelper_isRealData;        //pass information if event is real data
+AntiMediumTau_CR7.RealData        	= edmEventHelper_isRealData;        //pass information if event is real data
 AntiMediumTau_CR7.RunData        	= true;        //real data allowed
 AntiMediumTau_CR7.NumberTauMin        	= 2;        //require at least N tau
 AntiMediumTau_CR7.NumberTauMax        	= 3;        //require at less than N taus
@@ -604,7 +605,7 @@ if(AntiMediumTau_CR7.passed) h2_Trigger->Fill(TauLooseIsoObjectSelectionCollecti
 Selection InvertedVBF_AntiMediumTau_CR8("InvertedVBF_AntiMediumTau_CR8"); //label and initialisation
 InvertedVBF_AntiMediumTau_CR8.InputCollection 		= &TauLooseIsoObjectSelectionCollection;        //input collection
 InvertedVBF_AntiMediumTau_CR8.OutputCollection 		= &myHistoColl_CR8;        //output collection
-InvertedVBF_AntiMediumTau_CR8.RealData        		= eventhelper_isRealData;        //pass information if event is real data
+InvertedVBF_AntiMediumTau_CR8.RealData        		= edmEventHelper_isRealData;        //pass information if event is real data
 InvertedVBF_AntiMediumTau_CR8.RunData        		= true;        //real data allowed
 InvertedVBF_AntiMediumTau_CR8.NumberTauMin        	= 2;        //require at least N tau
 InvertedVBF_AntiMediumTau_CR8.NumberTauMax        	= 3;        //require at less than N taus
@@ -643,7 +644,7 @@ if(InvertedVBF_AntiMediumTau_CR8.passed) h2_Trigger->Fill(TauLooseIsoObjectSelec
 Selection AntiLooseTau_CR9("AntiLooseTau_CR9"); //label and initialisation
 AntiLooseTau_CR9.InputCollection 	= &TauNoIsoObjectSelectionCollection;        //input collection
 AntiLooseTau_CR9.OutputCollection 	= &myHistoColl_CR9;        //output collection
-AntiLooseTau_CR9.RealData        	= eventhelper_isRealData;        //pass information if event is real data
+AntiLooseTau_CR9.RealData        	= edmEventHelper_isRealData;        //pass information if event is real data
 AntiLooseTau_CR9.RunData        	= true;        //real data allowed
 AntiLooseTau_CR9.NumberTauMin        	= 2;        //require at least N tau
 AntiLooseTau_CR9.NumberTauMax        	= 3;        //require at less than N taus
@@ -682,7 +683,7 @@ if(AntiLooseTau_CR9.passed) h2_Trigger->Fill(TauNoIsoObjectSelectionCollection.p
 Selection InvertedVBF_AntiLooseTau_CR10("InvertedVBF_AntiLooseTau_CR10"); //label and initialisation
 InvertedVBF_AntiLooseTau_CR10.InputCollection 		= &TauNoIsoObjectSelectionCollection;        //input collection
 InvertedVBF_AntiLooseTau_CR10.OutputCollection 		= &myHistoColl_CR10;        //output collection
-InvertedVBF_AntiLooseTau_CR10.RealData        		= eventhelper_isRealData;        //pass information if event is real data
+InvertedVBF_AntiLooseTau_CR10.RealData        		= edmEventHelper_isRealData;        //pass information if event is real data
 InvertedVBF_AntiLooseTau_CR10.RunData        		= true;        //real data allowed
 InvertedVBF_AntiLooseTau_CR10.NumberTauMin        	= 2;        //require at least N tau
 InvertedVBF_AntiLooseTau_CR10.NumberTauMax        	= 3;        //require at less than N taus
@@ -721,7 +722,7 @@ if(InvertedVBF_AntiLooseTau_CR10.passed) h2_Trigger->Fill(TauNoIsoObjectSelectio
 Selection Ztautau_CR1("Ztautau_CR1"); //label and initialisation
 Ztautau_CR1.InputCollection 		= &TauTightIsoObjectSelectionCollection;        //input collection
 Ztautau_CR1.OutputCollection 		= &myHistoColl_CR1;        //output collection
-Ztautau_CR1.RealData        		= eventhelper_isRealData;        //pass information if event is real data
+Ztautau_CR1.RealData        		= edmEventHelper_isRealData;        //pass information if event is real data
 Ztautau_CR1.RunData        		= true;        //real data allowed
 Ztautau_CR1.NumberTauMin        	= 2;        //require at least N tau
 Ztautau_CR1.NumberTauMax        	= 3;        //require at less than N taus
@@ -750,266 +751,6 @@ Ztautau_CR1.invertJetRequirements       = false;        //invert jet pt requirem
 Ztautau_CR1.invertDijetProperties       = false;        //invert dijet system properties (dR, inv mass, sign eta, dEta)
 
 Ztautau_CR1.select();        //do selection, fill histograms
-
-/*// ---------------------
-// -- Signal Region --
-// ---------------------
-//if(TauTightIsoObjectSelectionCollection.tau.size()==1 && TauNoIsoObjectSelectionCollection.tau.size()>1) std::cout<<"1 tau found"<<std::endl;
-Selection Signal("Signal"); //label and initialisation
-Signal.InputCollection = &TauTightIsoObjectSelectionCollection;	//input collection
-Signal.OutputCollection = &myHistoColl_SignalRegion;	//output collection
-Signal.RealData	= eventhelper_isRealData;	//pass information if event is real data
-Signal.RunData	= false;	//real data allowed
-Signal.NumberTauMin	= 2;	//require at least N tau
-Signal.NumberTauMax	= -1;	//require at less than N taus
-Signal.DiTauDeltaRmin	= 0.3;	//minimum delta R for tau pair
-Signal.DiTauInvMassMin	= -1;	//minimum Di-tau-mass requirement
-Signal.DiTauInvMassMax	= -1;	//maximum Di-tau-mass requirement
-Signal.DiTauSign	= +1;	//1 for LS and -1 for OS, 0 for no requirement
-Signal.Btag	= 0;	//number of btags required (exact -> 0 = none)
-Signal.JetEtaMax	= 5.;	//maximum eta for jets, set to -1 for no requirement
-Signal.LeadJetPtMin	= 75.;	//minimum pt of lead jet, set to -1 for no requirement
-Signal.LeadJetPtMax	= -1.;	//maximum pt of lead jet, set to -1 for no requirement
-Signal.SubLeadJetPtMin	= 50.;	//minimum pt of sub lead jet, set to -1 for no requirement
-Signal.SubLeadJetPtMax	= -1.;	//maximum pt of sub lead jet, set to -1 for no requirement
-Signal.DiJetDrMin	= 0.3;	//Dijet minimum delta R, set to -1 for no requirement
-Signal.DiJetDrMax	= -1;	//Dijet maximum delta R, set to -1 for no requirement
-Signal.DiJetInvMassMin	= 700.;	//Dijet minimal invariant mass, set to -1 for no requirement
-Signal.DiJetInvMassMax	= -1.;	//Dijet maximum invariant mass, set to -1 for no requirement
-Signal.DiJetSignEta	= -1;	//Dijet sign eta_1*eta_2
-Signal.DiJetDetaMin	= 4.2;	//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
-Signal.DiJetDetaMax	= -1;	//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-Signal.weight	= 1;	//event weight
-Signal.invertTauRequirements	= false;	//invert number of taus requirement
-Signal.invertTauProperties	= false;	//invert ditau properties (dR, sign)
-Signal.invertBtagRequirement	= false;	//invert number of b-jets required
-Signal.invertJetRequirements	= false;	//invert jet pt requirements
-Signal.invertDijetProperties	= false;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
-
-Signal.select();	//do selection, fill histograms
-
-// ---------------------------------
-// -- CENTRAL + INVERTED VBF CR --
-// ---------------------------------
-
-Selection InvertedVBF_CR2("InvertedVBF_CR2"); //label and initialisation
-InvertedVBF_CR2.InputCollection = &TauTightIsoObjectSelectionCollection;	//input collection
-InvertedVBF_CR2.OutputCollection = &myHistoColl_CR2;	//output collection
-InvertedVBF_CR2.RealData	= eventhelper_isRealData;	//pass information if event is real data
-InvertedVBF_CR2.RunData	= true;	//real data allowed
-InvertedVBF_CR2.NumberTauMin	= 2;	//require at least N tau
-InvertedVBF_CR2.NumberTauMax	= -1;	//require at less than N taus
-InvertedVBF_CR2.DiTauDeltaRmin	= 0.3;	//minimum delta R for tau pair
-InvertedVBF_CR2.DiTauInvMassMin	= -1;	//minimum Di-tau-mass requirement
-InvertedVBF_CR2.DiTauInvMassMax	= -1;	//maximum Di-tau-mass requirement
-InvertedVBF_CR2.DiTauSign	= +1;	//1 for LS and -1 for OS, 0 for no requirement
-InvertedVBF_CR2.Btag	= 0;	//number of btags required (exact -> 0 = none)
-InvertedVBF_CR2.JetEtaMax	= 5.;	//maximum eta for jets, set to -1 for no requirement
-InvertedVBF_CR2.LeadJetPtMin	= 75.;	//minimum pt of lead jet, set to -1 for no requirement
-InvertedVBF_CR2.LeadJetPtMax	= -1.;	//maximum pt of lead jet, set to -1 for no requirement
-InvertedVBF_CR2.SubLeadJetPtMin	= 50.;	//minimum pt of sub lead jet, set to -1 for no requirement
-InvertedVBF_CR2.SubLeadJetPtMax	= -1.;	//maximum pt of sub lead jet, set to -1 for no requirement
-InvertedVBF_CR2.DiJetDrMin	= 0.3;	//Dijet minimum delta R, set to -1 for no requirement
-InvertedVBF_CR2.DiJetDrMax	= -1.;	//Dijet maximum delta R, set to -1 for no requirement
-InvertedVBF_CR2.DiJetInvMassMin	= 700.;	//Dijet minimal invariant mass, set to -1 for no requirement
-InvertedVBF_CR2.DiJetInvMassMax	= -1.;	//Dijet maximum invariant mass, set to -1 for no requirement
-InvertedVBF_CR2.DiJetSignEta	= -1;	//Dijet sign eta_1*eta_2
-InvertedVBF_CR2.DiJetDetaMin	= 4.2;	//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
-InvertedVBF_CR2.DiJetDetaMax	= -1.;	//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-InvertedVBF_CR2.weight	= 1;	//event weight
-InvertedVBF_CR2.invertTauRequirements	= false;	//invert number of taus requirement
-InvertedVBF_CR2.invertTauProperties	= false;	//invert ditau properties (dR, sign)
-InvertedVBF_CR2.invertBtagRequirement	= false;	//invert number of b-jets required
-InvertedVBF_CR2.invertJetRequirements	= true;	//invert jet pt requirements
-InvertedVBF_CR2.invertDijetProperties	= true;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
-
-InvertedVBF_CR2.select();	//do selection, fill histograms
-
-// ------------------------------------------------------
-// -- CENTRAL + INVERTED VBF CR (with Tau Medium Iso) --
-// ------------------------------------------------------
-
-Selection InvertedVBF_CR3("InvertedVBF_TauMediumIso_CR3"); //label and initialisation
-InvertedVBF_CR3.InputCollection = &TauMediumIsoObjectSelectionCollection;	//input collection
-InvertedVBF_CR3.OutputCollection = &myHistoColl_CR3;	//output collection
-InvertedVBF_CR3.RealData	= eventhelper_isRealData;	//pass information if event is real data
-InvertedVBF_CR3.RunData	= true;	//real data allowed
-InvertedVBF_CR3.NumberTauMin	= 2;	//require at least N tau
-InvertedVBF_CR3.NumberTauMax	= -1;	//require at less than N taus
-InvertedVBF_CR3.DiTauDeltaRmin	= 0.3;	//minimum delta R for tau pair
-InvertedVBF_CR3.DiTauInvMassMin	= -1;	//minimum Di-tau-mass requirement
-InvertedVBF_CR3.DiTauInvMassMax	= -1;	//maximum Di-tau-mass requirement
-InvertedVBF_CR3.DiTauSign	= +1;	//1 for LS and -1 for OS, 0 for no requirement
-InvertedVBF_CR3.Btag	= 0;	//number of btags required (exact -> 0 = none)
-InvertedVBF_CR3.JetEtaMax	= 5.;	//maximum eta for jets, set to -1 for no requirement
-InvertedVBF_CR3.LeadJetPtMin	= 75.;	//minimum pt of lead jet, set to -1 for no requirement
-InvertedVBF_CR3.LeadJetPtMax	= -1.;	//maximum pt of lead jet, set to -1 for no requirement
-InvertedVBF_CR3.SubLeadJetPtMin	= 50.;	//minimum pt of sub lead jet, set to -1 for no requirement
-InvertedVBF_CR3.SubLeadJetPtMax	= -1.;	//maximum pt of sub lead jet, set to -1 for no requirement
-InvertedVBF_CR3.DiJetDrMin	= 0.3;	//Dijet minimum delta R, set to -1 for no requirement
-InvertedVBF_CR3.DiJetDrMax	= -1.;	//Dijet maximum delta R, set to -1 for no requirement
-InvertedVBF_CR3.DiJetInvMassMin	= 700.;	//Dijet minimal invariant mass, set to -1 for no requirement
-InvertedVBF_CR3.DiJetInvMassMax	= -1.;	//Dijet maximum invariant mass, set to -1 for no requirement
-InvertedVBF_CR3.DiJetSignEta	= -1;	//Dijet sign eta_1*eta_2
-InvertedVBF_CR3.DiJetDetaMin	= 4.2;	//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
-InvertedVBF_CR3.DiJetDetaMax	= -1.;	//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-InvertedVBF_CR3.weight	= 1;	//event weight
-InvertedVBF_CR3.invertTauRequirements	= false;	//invert number of taus requirement
-InvertedVBF_CR3.invertTauProperties	= false;	//invert ditau properties (dR, sign)
-InvertedVBF_CR3.invertBtagRequirement	= false;	//invert number of b-jets required
-InvertedVBF_CR3.invertJetRequirements	= true;	//invert jet pt requirements
-InvertedVBF_CR3.invertDijetProperties	= true;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
-
-InvertedVBF_CR3.select();	//do selection, fill histograms
-
-// ------------------------------------------------------
-// -- CENTRAL + INVERTED VBF CR (with Tau Loose Iso) --
-// ------------------------------------------------------
-
-Selection InvertedVBF_CR4("InvertedVBF_TauLooseIso_CR4"); //label and initialisation
-InvertedVBF_CR4.InputCollection = &TauLooseIsoObjectSelectionCollection;	//input collection
-InvertedVBF_CR4.OutputCollection = &myHistoColl_CR4;	//output collection
-InvertedVBF_CR4.RealData	= eventhelper_isRealData;	//pass information if event is real data
-InvertedVBF_CR4.RunData	= true;	//real data allowed
-InvertedVBF_CR4.NumberTauMin	= 2;	//require at least N tau
-InvertedVBF_CR4.NumberTauMax	= -1;	//require at less than N taus
-InvertedVBF_CR4.DiTauDeltaRmin	= 0.3;	//minimum delta R for tau pair
-InvertedVBF_CR4.DiTauInvMassMin	= -1;	//minimum Di-tau-mass requirement
-InvertedVBF_CR4.DiTauInvMassMax	= -1;	//maximum Di-tau-mass requirement
-InvertedVBF_CR4.DiTauSign	= +1;	//1 for LS and -1 for OS, 0 for no requirement
-InvertedVBF_CR4.Btag	= 0;	//number of btags required (exact -> 0 = none)
-InvertedVBF_CR4.JetEtaMax	= 5.;	//maximum eta for jets, set to -1 for no requirement
-InvertedVBF_CR4.LeadJetPtMin	= 75.;	//minimum pt of lead jet, set to -1 for no requirement
-InvertedVBF_CR4.LeadJetPtMax	= -1.;	//maximum pt of lead jet, set to -1 for no requirement
-InvertedVBF_CR4.SubLeadJetPtMin	= 50.;	//minimum pt of sub lead jet, set to -1 for no requirement
-InvertedVBF_CR4.SubLeadJetPtMax	= -1.;	//maximum pt of sub lead jet, set to -1 for no requirement
-InvertedVBF_CR4.DiJetDrMin	= 0.3;	//Dijet minimum delta R, set to -1 for no requirement
-InvertedVBF_CR4.DiJetDrMax	= -1.;	//Dijet maximum delta R, set to -1 for no requirement
-InvertedVBF_CR4.DiJetInvMassMin	= 700.;	//Dijet minimal invariant mass, set to -1 for no requirement
-InvertedVBF_CR4.DiJetInvMassMax	= -1.;	//Dijet maximum invariant mass, set to -1 for no requirement
-InvertedVBF_CR4.DiJetSignEta	= -1;	//Dijet sign eta_1*eta_2
-InvertedVBF_CR4.DiJetDetaMin	= 4.2;	//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
-InvertedVBF_CR4.DiJetDetaMax	= -1.;	//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-InvertedVBF_CR4.weight	= 1;	//event weight
-InvertedVBF_CR4.invertTauRequirements	= false;	//invert number of taus requirement
-InvertedVBF_CR4.invertTauProperties	= false;	//invert ditau properties (dR, sign)
-InvertedVBF_CR4.invertBtagRequirement	= false;	//invert number of b-jets required
-InvertedVBF_CR4.invertJetRequirements	= true;	//invert jet pt requirements
-InvertedVBF_CR4.invertDijetProperties	= true;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
-
-InvertedVBF_CR4.select();	//do selection, fill histograms
-
-// ------------------------------------------------------
-// -- CENTRAL + INVERTED VBF CR (without Tau Iso) --
-// ------------------------------------------------------
-
-Selection InvertedVBF_CR5("InvertedVBF_TauNoIso_CR5"); //label and initialisation
-InvertedVBF_CR5.InputCollection = &TauNoIsoObjectSelectionCollection;	//input collection
-InvertedVBF_CR5.OutputCollection = &myHistoColl_CR5;	//output collection
-InvertedVBF_CR5.RealData	= eventhelper_isRealData;	//pass information if event is real data
-InvertedVBF_CR5.RunData	= true;	//real data allowed
-InvertedVBF_CR5.NumberTauMin	= 2;	//require at least N tau
-InvertedVBF_CR5.NumberTauMax	= -1;	//require at less than N taus
-InvertedVBF_CR5.DiTauDeltaRmin	= 0.3;	//minimum delta R for tau pair
-InvertedVBF_CR5.DiTauInvMassMin	= -1;	//minimum Di-tau-mass requirement
-InvertedVBF_CR5.DiTauInvMassMax	= -1;	//maximum Di-tau-mass requirement
-InvertedVBF_CR5.DiTauSign	= +1;	//1 for LS and -1 for OS, 0 for no requirement
-InvertedVBF_CR5.Btag	= 0;	//number of btags required (exact -> 0 = none)
-InvertedVBF_CR5.JetEtaMax	= 5.;	//maximum eta for jets, set to -1 for no requirement
-InvertedVBF_CR5.LeadJetPtMin	= 75.;	//minimum pt of lead jet, set to -1 for no requirement
-InvertedVBF_CR5.LeadJetPtMax	= -1.;	//maximum pt of lead jet, set to -1 for no requirement
-InvertedVBF_CR5.SubLeadJetPtMin	= 50.;	//minimum pt of sub lead jet, set to -1 for no requirement
-InvertedVBF_CR5.SubLeadJetPtMax	= -1.;	//maximum pt of sub lead jet, set to -1 for no requirement
-InvertedVBF_CR5.DiJetDrMin	= 0.3;	//Dijet minimum delta R, set to -1 for no requirement
-InvertedVBF_CR5.DiJetDrMax	= -1.;	//Dijet maximum delta R, set to -1 for no requirement
-InvertedVBF_CR5.DiJetInvMassMin	= 700.;	//Dijet minimal invariant mass, set to -1 for no requirement
-InvertedVBF_CR5.DiJetInvMassMax	= -1.;	//Dijet maximum invariant mass, set to -1 for no requirement
-InvertedVBF_CR5.DiJetSignEta	= -1;	//Dijet sign eta_1*eta_2
-InvertedVBF_CR5.DiJetDetaMin	= 4.2;	//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
-InvertedVBF_CR5.DiJetDetaMax	= -1.;	//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-InvertedVBF_CR5.weight	= 1;	//event weight
-InvertedVBF_CR5.invertTauRequirements	= false;	//invert number of taus requirement
-InvertedVBF_CR5.invertTauProperties	= false;	//invert ditau properties (dR, sign)
-InvertedVBF_CR5.invertBtagRequirement	= false;	//invert number of b-jets required
-InvertedVBF_CR5.invertJetRequirements	= true;	//invert jet pt requirements
-InvertedVBF_CR5.invertDijetProperties	= true;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
-
-InvertedVBF_CR5.select();	//do selection, fill histograms
-
-// ---------------------
-// -- Z -> TauTau CR --
-// ---------------------
-
-Selection Ztautau_CR1("Ztautau_CR1"); //label and initialisation
-Ztautau_CR1.InputCollection = &TauTightIsoObjectSelectionCollection;	//input collection
-Ztautau_CR1.OutputCollection = &myHistoColl_CR1;	//output collection
-Ztautau_CR1.RealData	= eventhelper_isRealData;	//pass information if event is real data
-Ztautau_CR1.RunData	= true;	//real data allowed
-Ztautau_CR1.NumberTauMin	= 2;	//require at least N tau
-Ztautau_CR1.NumberTauMax	= -1;	//require at less than N taus
-Ztautau_CR1.DiTauDeltaRmin	= 0.3;	//minimum delta R for tau pair
-Ztautau_CR1.DiTauInvMassMin	= -1.;	//minimum Di-tau-mass requirement
-Ztautau_CR1.DiTauInvMassMax	= 90.;	//maximum Di-tau-mass requirement
-Ztautau_CR1.DiTauSign	= -1;	//1 for LS and -1 for OS, 0 for no requirement
-Ztautau_CR1.Btag	= 0;	//number of btags required (exact -> 0 = none)
-Ztautau_CR1.JetEtaMax	= -1.;	//maximum eta for jets, set to -1 for no requirement
-Ztautau_CR1.LeadJetPtMin	= -1.;	//minimum pt of lead jet, set to -1 for no requirement
-Ztautau_CR1.LeadJetPtMax	= -1.;	//maximum pt of lead jet, set to -1 for no requirement
-Ztautau_CR1.SubLeadJetPtMin	= -1.;	//minimum pt of sub lead jet, set to -1 for no requirement
-Ztautau_CR1.SubLeadJetPtMax	= -1.;	//maximum pt of sub lead jet, set to -1 for no requirement
-Ztautau_CR1.DiJetDrMin	= -1.;	//Dijet minimum delta R, set to -1 for no requirement
-Ztautau_CR1.DiJetDrMax	= -1.;	//Dijet maximum delta R, set to -1 for no requirement
-Ztautau_CR1.DiJetInvMassMin	= -1.;	//Dijet minimal invariant mass, set to -1 for no requirement
-Ztautau_CR1.DiJetInvMassMax	= -1.;	//Dijet maximum invariant mass, set to -1 for no requirement
-Ztautau_CR1.DiJetSignEta	= 0;	//Dijet sign eta_1*eta_2
-Ztautau_CR1.DiJetDetaMin	= -1.;	//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
-Ztautau_CR1.DiJetDetaMax	= -1.;	//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-Ztautau_CR1.weight	= 1;	//event weight
-Ztautau_CR1.invertTauRequirements	= false;	//invert number of taus requirement
-Ztautau_CR1.invertTauProperties	= false;	//invert ditau properties (dR, sign)
-Ztautau_CR1.invertBtagRequirement	= false;	//invert number of b-jets required
-Ztautau_CR1.invertJetRequirements	= false;	//invert jet pt requirements
-Ztautau_CR1.invertDijetProperties	= false;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
-
-Ztautau_CR1.select();	//do selection, fill histograms
-*/
-/*// ---------------------
-// -- Central Loose Region --
-// ---------------------
-
-Selection Central_TauLooseIso_CR5("Central_TauLooseIso_CR5"); //label and initialisation
-Central_TauLooseIso_CR5.InputCollection = &TauLooseIsoObjectSelectionCollection;	//input collection
-Central_TauLooseIso_CR5.OutputCollection = &myHistoColl_CR5;	//output collection
-Central_TauLooseIso_CR5.RealData	= eventhelper_isRealData;	//pass information if event is real data
-Central_TauLooseIso_CR5.RunData	= true;	//real data allowed
-Central_TauLooseIso_CR5.NumberTauMin	= 2;	//require at least N tau
-Central_TauLooseIso_CR5.NumberTauMax	= -1;	//require at less than N taus
-Central_TauLooseIso_CR5.DiTauDeltaRmin	= 0.3;	//minimum delta R for tau pair
-Central_TauLooseIso_CR5.DiTauInvMassMin	= -1;	//minimum Di-tau-mass requirement
-Central_TauLooseIso_CR5.DiTauInvMassMax	= -1;	//maximum Di-tau-mass requirement
-Central_TauLooseIso_CR5.DiTauSign	= +1;	//1 for LS and -1 for OS, 0 for no requirement
-Central_TauLooseIso_CR5.Btag	= 0;	//number of btags required (exact -> 0 = none)
-Central_TauLooseIso_CR5.JetEtaMax	= 5.;	//maximum eta for jets, set to -1 for no requirement
-Central_TauLooseIso_CR5.LeadJetPtMin	= 75.;	//minimum pt of lead jet, set to -1 for no requirement
-Central_TauLooseIso_CR5.LeadJetPtMax	= -1.;	//maximum pt of lead jet, set to -1 for no requirement
-Central_TauLooseIso_CR5.SubLeadJetPtMin	= 50.;	//minimum pt of sub lead jet, set to -1 for no requirement
-Central_TauLooseIso_CR5.SubLeadJetPtMax	= -1.;	//maximum pt of sub lead jet, set to -1 for no requirement
-Central_TauLooseIso_CR5.DiJetDrMin	= 0.3;	//Dijet minimum delta R, set to -1 for no requirement
-Central_TauLooseIso_CR5.DiJetDrMax	= -1;	//Dijet maximum delta R, set to -1 for no requirement
-Central_TauLooseIso_CR5.DiJetInvMassMin	= 700.;	//Dijet minimal invariant mass, set to -1 for no requirement
-Central_TauLooseIso_CR5.DiJetInvMassMax	= -1.;	//Dijet maximum invariant mass, set to -1 for no requirement
-Central_TauLooseIso_CR5.DiJetSignEta	= -1;	//Dijet sign eta_1*eta_2
-Central_TauLooseIso_CR5.DiJetDetaMin	= 4.2;	//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
-Central_TauLooseIso_CR5.DiJetDetaMax	= -1;	//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-Central_TauLooseIso_CR5.weight	= 1;	//event weight
-Central_TauLooseIso_CR5.invertTauRequirements	= false;	//invert number of taus requirement
-Central_TauLooseIso_CR5.invertTauProperties	= false;	//invert ditau properties (dR, sign)
-Central_TauLooseIso_CR5.invertBtagRequirement	= false;	//invert number of b-jets required
-Central_TauLooseIso_CR5.invertJetRequirements	= false;	//invert jet pt requirements
-Central_TauLooseIso_CR5.invertDijetProperties	= false;	//invert dijet system properties (dR, inv mass, sign eta, dEta)
-
-Central_TauLooseIso_CR5.select();*/	
-
 
 //Clearing Object Collections
 TauTightIsoObjectSelectionCollection.clear();

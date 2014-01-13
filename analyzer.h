@@ -354,7 +354,7 @@ int	npatJet;
 int	npatMET;
 int	npatMuon;
 int	npatTau;
-std::vector<size_t>	npatTau_signalPFChargedHadrCands(200,0);
+std::vector<size_t>	patTau_signalPFChargedHadrCands_size(200,0);
 int	nrecoGenParticleHelper;
 int	nrecoGenParticleHelperPlus;
 int	nrecoGsfElectron;
@@ -749,12 +749,12 @@ struct electron_s
   double	gsfTrack_d0;
   double	gsfTrack_dz;
 };
-std::vector<electron_s> patElectron(200);
+std::vector<electron_s> electron(200);
 
 std::ostream& operator<<(std::ostream& os, const electron_s& o)
 {
   char r[1024];
-  os << "patElectron" << std::endl;
+  os << "electron" << std::endl;
   sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
   sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
   sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
@@ -838,12 +838,12 @@ struct jet_s
   float	bDiscriminator_combinedInclusiveSecondaryVertexBJetTags;
   float	bDiscriminator_combinedMVABJetTags;
 };
-std::vector<jet_s> patJet(200);
+std::vector<jet_s> jet(200);
 
 std::ostream& operator<<(std::ostream& os, const jet_s& o)
 {
   char r[1024];
-  os << "patJet" << std::endl;
+  os << "jet" << std::endl;
   sprintf(r, "  %-32s: %f\n", "charge", (double)o.charge); os << r;
   sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
   sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
@@ -914,12 +914,12 @@ struct met_s
   double	phi;
   double	eta;
 };
-std::vector<met_s> patMET(200);
+std::vector<met_s> met(200);
 
 std::ostream& operator<<(std::ostream& os, const met_s& o)
 {
   char r[1024];
-  os << "patMET" << std::endl;
+  os << "met" << std::endl;
   sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
   sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
   sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
@@ -971,12 +971,12 @@ struct muon_s
   double	muonBestTrack_dxy;
   double	muonBestTrack_dz;
 };
-std::vector<muon_s> patMuon(200);
+std::vector<muon_s> muon(200);
 
 std::ostream& operator<<(std::ostream& os, const muon_s& o)
 {
   char r[1024];
-  os << "patMuon" << std::endl;
+  os << "muon" << std::endl;
   sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
   sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
   sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
@@ -1114,13 +1114,14 @@ struct tau_s
   double	leadPFChargedHadrCand_eta;
   double	leadPFChargedHadrCand_rapidity;
   double	leadPFChargedHadrCand_y;
+  size_t	signalPFChargedHadrCands_size;
 };
 std::vector<tau_s> tau(200);
 
 std::ostream& operator<<(std::ostream& os, const tau_s& o)
 {
   char r[1024];
-  os << "patTau" << std::endl;
+  os << "tau" << std::endl;
   sprintf(r, "  %-32s: %f\n", "charge", (double)o.charge); os << r;
   sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
   sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
@@ -1217,6 +1218,7 @@ std::ostream& operator<<(std::ostream& os, const tau_s& o)
   sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_eta", (double)o.leadPFChargedHadrCand_eta); os << r;
   sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_rapidity", (double)o.leadPFChargedHadrCand_rapidity); os << r;
   sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_y", (double)o.leadPFChargedHadrCand_y); os << r;
+  sprintf(r, "  %-32s: %f\n", "signalPFChargedHadrCands_size", (double)o.signalPFChargedHadrCands_size); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -1404,7 +1406,7 @@ std::ostream& operator<<(std::ostream& os, const recoPFMET1_s& o)
   return os;
 }
 //-----------------------------------------------------------------------------
-struct recoVertex_s
+struct vertex_s
 {
   int	isFake;
   double	ndof;
@@ -1412,12 +1414,12 @@ struct recoVertex_s
   double	y;
   double	z;
 };
-std::vector<recoVertex_s> recoVertex(200);
+std::vector<vertex_s> vertex(200);
 
-std::ostream& operator<<(std::ostream& os, const recoVertex_s& o)
+std::ostream& operator<<(std::ostream& os, const vertex_s& o)
 {
   char r[1024];
-  os << "recoVertex" << std::endl;
+  os << "vertex" << std::endl;
   sprintf(r, "  %-32s: %f\n", "isFake", (double)o.isFake); os << r;
   sprintf(r, "  %-32s: %f\n", "ndof", (double)o.ndof); os << r;
   sprintf(r, "  %-32s: %f\n", "x", (double)o.x); os << r;
@@ -1452,155 +1454,155 @@ inline void fillak5GenJets()
 
 inline void fillpatElectron()
 {
-  patElectron.resize(patElectron_p.size());
-  for(unsigned int i=0; i < patElectron.size(); ++i)
+  electron.resize(patElectron_p.size());
+  for(unsigned int i=0; i < electron.size(); ++i)
     {
-      patElectron[i].p	= patElectron_p[i];
-      patElectron[i].energy	= patElectron_energy[i];
-      patElectron[i].et	= patElectron_et[i];
-      patElectron[i].px	= patElectron_px[i];
-      patElectron[i].py	= patElectron_py[i];
-      patElectron[i].pz	= patElectron_pz[i];
-      patElectron[i].pt	= patElectron_pt[i];
-      patElectron[i].phi	= patElectron_phi[i];
-      patElectron[i].eta	= patElectron_eta[i];
-      patElectron[i].eSuperClusterOverP	= patElectron_eSuperClusterOverP[i];
-      patElectron[i].deltaEtaSuperClusterTrackAtVtx	= patElectron_deltaEtaSuperClusterTrackAtVtx[i];
-      patElectron[i].deltaPhiSuperClusterTrackAtVtx	= patElectron_deltaPhiSuperClusterTrackAtVtx[i];
-      patElectron[i].sigmaIetaIeta	= patElectron_sigmaIetaIeta[i];
-      patElectron[i].scE1x5	= patElectron_scE1x5[i];
-      patElectron[i].scE2x5Max	= patElectron_scE2x5Max[i];
-      patElectron[i].scE5x5	= patElectron_scE5x5[i];
-      patElectron[i].hadronicOverEm	= patElectron_hadronicOverEm[i];
-      patElectron[i].dr04TkSumPt	= patElectron_dr04TkSumPt[i];
-      patElectron[i].dr04EcalRecHitSumEt	= patElectron_dr04EcalRecHitSumEt[i];
-      patElectron[i].gsfTrack_dxy	= patElectron_gsfTrack_dxy[i];
-      patElectron[i].gsfTrack_d0	= patElectron_gsfTrack_d0[i];
-      patElectron[i].gsfTrack_dz	= patElectron_gsfTrack_dz[i];
+      electron[i].p	= patElectron_p[i];
+      electron[i].energy	= patElectron_energy[i];
+      electron[i].et	= patElectron_et[i];
+      electron[i].px	= patElectron_px[i];
+      electron[i].py	= patElectron_py[i];
+      electron[i].pz	= patElectron_pz[i];
+      electron[i].pt	= patElectron_pt[i];
+      electron[i].phi	= patElectron_phi[i];
+      electron[i].eta	= patElectron_eta[i];
+      electron[i].eSuperClusterOverP	= patElectron_eSuperClusterOverP[i];
+      electron[i].deltaEtaSuperClusterTrackAtVtx	= patElectron_deltaEtaSuperClusterTrackAtVtx[i];
+      electron[i].deltaPhiSuperClusterTrackAtVtx	= patElectron_deltaPhiSuperClusterTrackAtVtx[i];
+      electron[i].sigmaIetaIeta	= patElectron_sigmaIetaIeta[i];
+      electron[i].scE1x5	= patElectron_scE1x5[i];
+      electron[i].scE2x5Max	= patElectron_scE2x5Max[i];
+      electron[i].scE5x5	= patElectron_scE5x5[i];
+      electron[i].hadronicOverEm	= patElectron_hadronicOverEm[i];
+      electron[i].dr04TkSumPt	= patElectron_dr04TkSumPt[i];
+      electron[i].dr04EcalRecHitSumEt	= patElectron_dr04EcalRecHitSumEt[i];
+      electron[i].gsfTrack_dxy	= patElectron_gsfTrack_dxy[i];
+      electron[i].gsfTrack_d0	= patElectron_gsfTrack_d0[i];
+      electron[i].gsfTrack_dz	= patElectron_gsfTrack_dz[i];
     }
 }
 
 inline void fillpatJet()
 {
-  patJet.resize(patJet_charge.size());
-  for(unsigned int i=0; i < patJet.size(); ++i)
+  jet.resize(patJet_charge.size());
+  for(unsigned int i=0; i < jet.size(); ++i)
     {
-      patJet[i].charge	= patJet_charge[i];
-      patJet[i].p	= patJet_p[i];
-      patJet[i].energy	= patJet_energy[i];
-      patJet[i].et	= patJet_et[i];
-      patJet[i].px	= patJet_px[i];
-      patJet[i].py	= patJet_py[i];
-      patJet[i].pz	= patJet_pz[i];
-      patJet[i].pt	= patJet_pt[i];
-      patJet[i].phi	= patJet_phi[i];
-      patJet[i].eta	= patJet_eta[i];
-      patJet[i].neutralHadronEnergy	= patJet_neutralHadronEnergy[i];
-      patJet[i].chargedHadronEnergyFraction	= patJet_chargedHadronEnergyFraction[i];
-      patJet[i].neutralHadronEnergyFraction	= patJet_neutralHadronEnergyFraction[i];
-      patJet[i].chargedEmEnergyFraction	= patJet_chargedEmEnergyFraction[i];
-      patJet[i].neutralEmEnergyFraction	= patJet_neutralEmEnergyFraction[i];
-      patJet[i].photonEnergy	= patJet_photonEnergy[i];
-      patJet[i].photonEnergyFraction	= patJet_photonEnergyFraction[i];
-      patJet[i].electronEnergy	= patJet_electronEnergy[i];
-      patJet[i].electronEnergyFraction	= patJet_electronEnergyFraction[i];
-      patJet[i].muonEnergy	= patJet_muonEnergy[i];
-      patJet[i].muonEnergyFraction	= patJet_muonEnergyFraction[i];
-      patJet[i].HFHadronEnergy	= patJet_HFHadronEnergy[i];
-      patJet[i].HFHadronEnergyFraction	= patJet_HFHadronEnergyFraction[i];
-      patJet[i].HFEMEnergy	= patJet_HFEMEnergy[i];
-      patJet[i].HFEMEnergyFraction	= patJet_HFEMEnergyFraction[i];
-      patJet[i].chargedHadronMultiplicity	= patJet_chargedHadronMultiplicity[i];
-      patJet[i].neutralHadronMultiplicity	= patJet_neutralHadronMultiplicity[i];
-      patJet[i].photonMultiplicity	= patJet_photonMultiplicity[i];
-      patJet[i].electronMultiplicity	= patJet_electronMultiplicity[i];
-      patJet[i].HFHadronMultiplicity	= patJet_HFHadronMultiplicity[i];
-      patJet[i].HFEMMultiplicity	= patJet_HFEMMultiplicity[i];
-      patJet[i].numberOfDaughters	= patJet_numberOfDaughters[i];
-      patJet[i].bDiscriminator_impactParameterTagInfos	= patJet_bDiscriminator_impactParameterTagInfos[i];
-      patJet[i].bDiscriminator_secondaryVertexTagInfos	= patJet_bDiscriminator_secondaryVertexTagInfos[i];
-      patJet[i].bDiscriminator_softMuonTagInfos	= patJet_bDiscriminator_softMuonTagInfos[i];
-      patJet[i].bDiscriminator_secondaryVertexNegativeTagInfos	= patJet_bDiscriminator_secondaryVertexNegativeTagInfos[i];
-      patJet[i].bDiscriminator_inclusiveSecondaryVertexFinderTagInfos	= patJet_bDiscriminator_inclusiveSecondaryVertexFinderTagInfos[i];
-      patJet[i].bDiscriminator_softElectronTagInfos	= patJet_bDiscriminator_softElectronTagInfos[i];
-      patJet[i].bDiscriminator_jetBProbabilityBJetTags	= patJet_bDiscriminator_jetBProbabilityBJetTags[i];
-      patJet[i].bDiscriminator_jetProbabilityBJetTags	= patJet_bDiscriminator_jetProbabilityBJetTags[i];
-      patJet[i].bDiscriminator_trackCountingHighPurBJetTags	= patJet_bDiscriminator_trackCountingHighPurBJetTags[i];
-      patJet[i].bDiscriminator_trackCountingHighEffBJetTags	= patJet_bDiscriminator_trackCountingHighEffBJetTags[i];
-      patJet[i].bDiscriminator_simpleSecondaryVertexHighEffBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexHighEffBJetTags[i];
-      patJet[i].bDiscriminator_simpleSecondaryVertexHighPurBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexHighPurBJetTags[i];
-      patJet[i].bDiscriminator_combinedSecondaryVertexBJetTags	= patJet_bDiscriminator_combinedSecondaryVertexBJetTags[i];
-      patJet[i].bDiscriminator_combinedSecondaryVertexMVABJetTags	= patJet_bDiscriminator_combinedSecondaryVertexMVABJetTags[i];
-      patJet[i].bDiscriminator_softMuonBJetTags	= patJet_bDiscriminator_softMuonBJetTags[i];
-      patJet[i].bDiscriminator_softMuonByPtBJetTags	= patJet_bDiscriminator_softMuonByPtBJetTags[i];
-      patJet[i].bDiscriminator_softMuonByIP3dBJetTags	= patJet_bDiscriminator_softMuonByIP3dBJetTags[i];
-      patJet[i].bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags[i];
-      patJet[i].bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags[i];
-      patJet[i].bDiscriminator_negativeTrackCountingHighEffJetTags	= patJet_bDiscriminator_negativeTrackCountingHighEffJetTags[i];
-      patJet[i].bDiscriminator_negativeTrackCountingHighPurJetTags	= patJet_bDiscriminator_negativeTrackCountingHighPurJetTags[i];
-      patJet[i].bDiscriminator_combinedInclusiveSecondaryVertexBJetTags	= patJet_bDiscriminator_combinedInclusiveSecondaryVertexBJetTags[i];
-      patJet[i].bDiscriminator_combinedMVABJetTags	= patJet_bDiscriminator_combinedMVABJetTags[i];
+      jet[i].charge	= patJet_charge[i];
+      jet[i].p	= patJet_p[i];
+      jet[i].energy	= patJet_energy[i];
+      jet[i].et	= patJet_et[i];
+      jet[i].px	= patJet_px[i];
+      jet[i].py	= patJet_py[i];
+      jet[i].pz	= patJet_pz[i];
+      jet[i].pt	= patJet_pt[i];
+      jet[i].phi	= patJet_phi[i];
+      jet[i].eta	= patJet_eta[i];
+      jet[i].neutralHadronEnergy	= patJet_neutralHadronEnergy[i];
+      jet[i].chargedHadronEnergyFraction	= patJet_chargedHadronEnergyFraction[i];
+      jet[i].neutralHadronEnergyFraction	= patJet_neutralHadronEnergyFraction[i];
+      jet[i].chargedEmEnergyFraction	= patJet_chargedEmEnergyFraction[i];
+      jet[i].neutralEmEnergyFraction	= patJet_neutralEmEnergyFraction[i];
+      jet[i].photonEnergy	= patJet_photonEnergy[i];
+      jet[i].photonEnergyFraction	= patJet_photonEnergyFraction[i];
+      jet[i].electronEnergy	= patJet_electronEnergy[i];
+      jet[i].electronEnergyFraction	= patJet_electronEnergyFraction[i];
+      jet[i].muonEnergy	= patJet_muonEnergy[i];
+      jet[i].muonEnergyFraction	= patJet_muonEnergyFraction[i];
+      jet[i].HFHadronEnergy	= patJet_HFHadronEnergy[i];
+      jet[i].HFHadronEnergyFraction	= patJet_HFHadronEnergyFraction[i];
+      jet[i].HFEMEnergy	= patJet_HFEMEnergy[i];
+      jet[i].HFEMEnergyFraction	= patJet_HFEMEnergyFraction[i];
+      jet[i].chargedHadronMultiplicity	= patJet_chargedHadronMultiplicity[i];
+      jet[i].neutralHadronMultiplicity	= patJet_neutralHadronMultiplicity[i];
+      jet[i].photonMultiplicity	= patJet_photonMultiplicity[i];
+      jet[i].electronMultiplicity	= patJet_electronMultiplicity[i];
+      jet[i].HFHadronMultiplicity	= patJet_HFHadronMultiplicity[i];
+      jet[i].HFEMMultiplicity	= patJet_HFEMMultiplicity[i];
+      jet[i].numberOfDaughters	= patJet_numberOfDaughters[i];
+      jet[i].bDiscriminator_impactParameterTagInfos	= patJet_bDiscriminator_impactParameterTagInfos[i];
+      jet[i].bDiscriminator_secondaryVertexTagInfos	= patJet_bDiscriminator_secondaryVertexTagInfos[i];
+      jet[i].bDiscriminator_softMuonTagInfos	= patJet_bDiscriminator_softMuonTagInfos[i];
+      jet[i].bDiscriminator_secondaryVertexNegativeTagInfos	= patJet_bDiscriminator_secondaryVertexNegativeTagInfos[i];
+      jet[i].bDiscriminator_inclusiveSecondaryVertexFinderTagInfos	= patJet_bDiscriminator_inclusiveSecondaryVertexFinderTagInfos[i];
+      jet[i].bDiscriminator_softElectronTagInfos	= patJet_bDiscriminator_softElectronTagInfos[i];
+      jet[i].bDiscriminator_jetBProbabilityBJetTags	= patJet_bDiscriminator_jetBProbabilityBJetTags[i];
+      jet[i].bDiscriminator_jetProbabilityBJetTags	= patJet_bDiscriminator_jetProbabilityBJetTags[i];
+      jet[i].bDiscriminator_trackCountingHighPurBJetTags	= patJet_bDiscriminator_trackCountingHighPurBJetTags[i];
+      jet[i].bDiscriminator_trackCountingHighEffBJetTags	= patJet_bDiscriminator_trackCountingHighEffBJetTags[i];
+      jet[i].bDiscriminator_simpleSecondaryVertexHighEffBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexHighEffBJetTags[i];
+      jet[i].bDiscriminator_simpleSecondaryVertexHighPurBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexHighPurBJetTags[i];
+      jet[i].bDiscriminator_combinedSecondaryVertexBJetTags	= patJet_bDiscriminator_combinedSecondaryVertexBJetTags[i];
+      jet[i].bDiscriminator_combinedSecondaryVertexMVABJetTags	= patJet_bDiscriminator_combinedSecondaryVertexMVABJetTags[i];
+      jet[i].bDiscriminator_softMuonBJetTags	= patJet_bDiscriminator_softMuonBJetTags[i];
+      jet[i].bDiscriminator_softMuonByPtBJetTags	= patJet_bDiscriminator_softMuonByPtBJetTags[i];
+      jet[i].bDiscriminator_softMuonByIP3dBJetTags	= patJet_bDiscriminator_softMuonByIP3dBJetTags[i];
+      jet[i].bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags[i];
+      jet[i].bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags[i];
+      jet[i].bDiscriminator_negativeTrackCountingHighEffJetTags	= patJet_bDiscriminator_negativeTrackCountingHighEffJetTags[i];
+      jet[i].bDiscriminator_negativeTrackCountingHighPurJetTags	= patJet_bDiscriminator_negativeTrackCountingHighPurJetTags[i];
+      jet[i].bDiscriminator_combinedInclusiveSecondaryVertexBJetTags	= patJet_bDiscriminator_combinedInclusiveSecondaryVertexBJetTags[i];
+      jet[i].bDiscriminator_combinedMVABJetTags	= patJet_bDiscriminator_combinedMVABJetTags[i];
     }
 }
 
 inline void fillpatMET()
 {
-  patMET.resize(patMET_p.size());
-  for(unsigned int i=0; i < patMET.size(); ++i)
+  met.resize(patMET_p.size());
+  for(unsigned int i=0; i < met.size(); ++i)
     {
-      patMET[i].p	= patMET_p[i];
-      patMET[i].energy	= patMET_energy[i];
-      patMET[i].et	= patMET_et[i];
-      patMET[i].px	= patMET_px[i];
-      patMET[i].py	= patMET_py[i];
-      patMET[i].pz	= patMET_pz[i];
-      patMET[i].pt	= patMET_pt[i];
-      patMET[i].phi	= patMET_phi[i];
-      patMET[i].eta	= patMET_eta[i];
+      met[i].p	= patMET_p[i];
+      met[i].energy	= patMET_energy[i];
+      met[i].et	= patMET_et[i];
+      met[i].px	= patMET_px[i];
+      met[i].py	= patMET_py[i];
+      met[i].pz	= patMET_pz[i];
+      met[i].pt	= patMET_pt[i];
+      met[i].phi	= patMET_phi[i];
+      met[i].eta	= patMET_eta[i];
     }
 }
 
 inline void fillpatMuon()
 {
-  patMuon.resize(patMuon_p.size());
-  for(unsigned int i=0; i < patMuon.size(); ++i)
+  muon.resize(patMuon_p.size());
+  for(unsigned int i=0; i < muon.size(); ++i)
     {
-      patMuon[i].p	= patMuon_p[i];
-      patMuon[i].energy	= patMuon_energy[i];
-      patMuon[i].et	= patMuon_et[i];
-      patMuon[i].px	= patMuon_px[i];
-      patMuon[i].py	= patMuon_py[i];
-      patMuon[i].pz	= patMuon_pz[i];
-      patMuon[i].pt	= patMuon_pt[i];
-      patMuon[i].phi	= patMuon_phi[i];
-      patMuon[i].eta	= patMuon_eta[i];
-      patMuon[i].isGlobalMuon	= patMuon_isGlobalMuon[i];
-      patMuon[i].isTrackerMuon	= patMuon_isTrackerMuon[i];
-      patMuon[i].isPFMuon	= patMuon_isPFMuon[i];
-      patMuon[i].pfIsolationR03_sumChargedHadronPt	= patMuon_pfIsolationR03_sumChargedHadronPt[i];
-      patMuon[i].pfIsolationR03_sumChargedParticlePt	= patMuon_pfIsolationR03_sumChargedParticlePt[i];
-      patMuon[i].pfIsolationR03_sumNeutralHadronEt	= patMuon_pfIsolationR03_sumNeutralHadronEt[i];
-      patMuon[i].pfIsolationR03_sumNeutralHadronEtHighThreshold	= patMuon_pfIsolationR03_sumNeutralHadronEtHighThreshold[i];
-      patMuon[i].pfIsolationR03_sumPhotonEt	= patMuon_pfIsolationR03_sumPhotonEt[i];
-      patMuon[i].pfIsolationR03_sumPhotonEtHighThreshold	= patMuon_pfIsolationR03_sumPhotonEtHighThreshold[i];
-      patMuon[i].pfIsolationR03_sumPUPt	= patMuon_pfIsolationR03_sumPUPt[i];
-      patMuon[i].pfIsolationR04_sumChargedHadronPt	= patMuon_pfIsolationR04_sumChargedHadronPt[i];
-      patMuon[i].pfIsolationR04_sumChargedParticlePt	= patMuon_pfIsolationR04_sumChargedParticlePt[i];
-      patMuon[i].pfIsolationR04_sumNeutralHadronEt	= patMuon_pfIsolationR04_sumNeutralHadronEt[i];
-      patMuon[i].pfIsolationR04_sumNeutralHadronEtHighThreshold	= patMuon_pfIsolationR04_sumNeutralHadronEtHighThreshold[i];
-      patMuon[i].pfIsolationR04_sumPhotonEt	= patMuon_pfIsolationR04_sumPhotonEt[i];
-      patMuon[i].pfIsolationR04_sumPhotonEtHighThreshold	= patMuon_pfIsolationR04_sumPhotonEtHighThreshold[i];
-      patMuon[i].pfIsolationR04_sumPUPt	= patMuon_pfIsolationR04_sumPUPt[i];
-      patMuon[i].numberOfMatchedStations	= patMuon_numberOfMatchedStations[i];
-      patMuon[i].innerTrack_normalizedChi2	= patMuon_innerTrack_normalizedChi2[i];
-      patMuon[i].innerTrack_dxy	= patMuon_innerTrack_dxy[i];
-      patMuon[i].innerTrack_dz	= patMuon_innerTrack_dz[i];
-      patMuon[i].innerTrack_hitPattern_numberOfValidPixelHits	= patMuon_innerTrack_hitPattern_numberOfValidPixelHits[i];
-      patMuon[i].innerTrack_hitPattern_pixelLayersWithMeasurement	= patMuon_innerTrack_hitPattern_pixelLayersWithMeasurement[i];
-      patMuon[i].globalTrack_normalizedChi2	= patMuon_globalTrack_normalizedChi2[i];
-      patMuon[i].globalTrack_hitPattern_numberOfValidMuonHits	= patMuon_globalTrack_hitPattern_numberOfValidMuonHits[i];
-      patMuon[i].muonBestTrack_dxy	= patMuon_muonBestTrack_dxy[i];
-      patMuon[i].muonBestTrack_dz	= patMuon_muonBestTrack_dz[i];
+      muon[i].p	= patMuon_p[i];
+      muon[i].energy	= patMuon_energy[i];
+      muon[i].et	= patMuon_et[i];
+      muon[i].px	= patMuon_px[i];
+      muon[i].py	= patMuon_py[i];
+      muon[i].pz	= patMuon_pz[i];
+      muon[i].pt	= patMuon_pt[i];
+      muon[i].phi	= patMuon_phi[i];
+      muon[i].eta	= patMuon_eta[i];
+      muon[i].isGlobalMuon	= patMuon_isGlobalMuon[i];
+      muon[i].isTrackerMuon	= patMuon_isTrackerMuon[i];
+      muon[i].isPFMuon	= patMuon_isPFMuon[i];
+      muon[i].pfIsolationR03_sumChargedHadronPt	= patMuon_pfIsolationR03_sumChargedHadronPt[i];
+      muon[i].pfIsolationR03_sumChargedParticlePt	= patMuon_pfIsolationR03_sumChargedParticlePt[i];
+      muon[i].pfIsolationR03_sumNeutralHadronEt	= patMuon_pfIsolationR03_sumNeutralHadronEt[i];
+      muon[i].pfIsolationR03_sumNeutralHadronEtHighThreshold	= patMuon_pfIsolationR03_sumNeutralHadronEtHighThreshold[i];
+      muon[i].pfIsolationR03_sumPhotonEt	= patMuon_pfIsolationR03_sumPhotonEt[i];
+      muon[i].pfIsolationR03_sumPhotonEtHighThreshold	= patMuon_pfIsolationR03_sumPhotonEtHighThreshold[i];
+      muon[i].pfIsolationR03_sumPUPt	= patMuon_pfIsolationR03_sumPUPt[i];
+      muon[i].pfIsolationR04_sumChargedHadronPt	= patMuon_pfIsolationR04_sumChargedHadronPt[i];
+      muon[i].pfIsolationR04_sumChargedParticlePt	= patMuon_pfIsolationR04_sumChargedParticlePt[i];
+      muon[i].pfIsolationR04_sumNeutralHadronEt	= patMuon_pfIsolationR04_sumNeutralHadronEt[i];
+      muon[i].pfIsolationR04_sumNeutralHadronEtHighThreshold	= patMuon_pfIsolationR04_sumNeutralHadronEtHighThreshold[i];
+      muon[i].pfIsolationR04_sumPhotonEt	= patMuon_pfIsolationR04_sumPhotonEt[i];
+      muon[i].pfIsolationR04_sumPhotonEtHighThreshold	= patMuon_pfIsolationR04_sumPhotonEtHighThreshold[i];
+      muon[i].pfIsolationR04_sumPUPt	= patMuon_pfIsolationR04_sumPUPt[i];
+      muon[i].numberOfMatchedStations	= patMuon_numberOfMatchedStations[i];
+      muon[i].innerTrack_normalizedChi2	= patMuon_innerTrack_normalizedChi2[i];
+      muon[i].innerTrack_dxy	= patMuon_innerTrack_dxy[i];
+      muon[i].innerTrack_dz	= patMuon_innerTrack_dz[i];
+      muon[i].innerTrack_hitPattern_numberOfValidPixelHits	= patMuon_innerTrack_hitPattern_numberOfValidPixelHits[i];
+      muon[i].innerTrack_hitPattern_pixelLayersWithMeasurement	= patMuon_innerTrack_hitPattern_pixelLayersWithMeasurement[i];
+      muon[i].globalTrack_normalizedChi2	= patMuon_globalTrack_normalizedChi2[i];
+      muon[i].globalTrack_hitPattern_numberOfValidMuonHits	= patMuon_globalTrack_hitPattern_numberOfValidMuonHits[i];
+      muon[i].muonBestTrack_dxy	= patMuon_muonBestTrack_dxy[i];
+      muon[i].muonBestTrack_dz	= patMuon_muonBestTrack_dz[i];
     }
 }
 
@@ -1705,6 +1707,7 @@ inline void fillpatTau()
       tau[i].leadPFChargedHadrCand_eta	= patTau_leadPFChargedHadrCand_eta[i];
       tau[i].leadPFChargedHadrCand_rapidity	= patTau_leadPFChargedHadrCand_rapidity[i];
       tau[i].leadPFChargedHadrCand_y	= patTau_leadPFChargedHadrCand_y[i];
+      tau[i].signalPFChargedHadrCands_size	= patTau_signalPFChargedHadrCands_size[i];
     }
 }
 
@@ -1812,14 +1815,14 @@ inline void fillrecoPFMET1()
 
 inline void fillrecoVertex()
 {
-  recoVertex.resize(recoVertex_isFake.size());
-  for(unsigned int i=0; i < recoVertex.size(); ++i)
+  vertex.resize(recoVertex_isFake.size());
+  for(unsigned int i=0; i < vertex.size(); ++i)
     {
-      recoVertex[i].isFake	= recoVertex_isFake[i];
-      recoVertex[i].ndof	= recoVertex_ndof[i];
-      recoVertex[i].x	= recoVertex_x[i];
-      recoVertex[i].y	= recoVertex_y[i];
-      recoVertex[i].z	= recoVertex_z[i];
+      vertex[i].isFake	= recoVertex_isFake[i];
+      vertex[i].ndof	= recoVertex_ndof[i];
+      vertex[i].x	= recoVertex_x[i];
+      vertex[i].y	= recoVertex_y[i];
+      vertex[i].z	= recoVertex_z[i];
     }
 }
 
@@ -2190,6 +2193,7 @@ void saveSelectedObjects()
           patTau_leadPFChargedHadrCand_eta[i]	= patTau_leadPFChargedHadrCand_eta[j];
           patTau_leadPFChargedHadrCand_rapidity[i]	= patTau_leadPFChargedHadrCand_rapidity[j];
           patTau_leadPFChargedHadrCand_y[i]	= patTau_leadPFChargedHadrCand_y[j];
+	  patTau_signalPFChargedHadrCands_size[i]	= patTau_signalPFChargedHadrCands_size[j];
         }
       npatTau = n;
     }
@@ -2684,7 +2688,7 @@ void selectVariables(itreestream& stream)
   stream.select("npatMET_patMETs", npatMET);
   stream.select("npatMuon_patMuons", npatMuon);
   stream.select("npatTauHelper_patTaus", npatTau);
-  stream.select("patTauHelper_patTaus.signalPFChargedHadrCands_size", npatTau_signalPFChargedHadrCands);
+  stream.select("patTauHelper_patTaus.signalPFChargedHadrCands_size", patTau_signalPFChargedHadrCands_size);
   stream.select("nrecoGenParticleHelper_genParticles", nrecoGenParticleHelper);
   stream.select("nrecoGenParticleHelperPlus_genParticles", nrecoGenParticleHelperPlus);
   stream.select("nrecoGsfElectron_gsfElectrons", nrecoGsfElectron);
