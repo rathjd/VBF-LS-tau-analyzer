@@ -237,7 +237,6 @@ for(unsigned int m =0;m<muon.size();++m){
             if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
             if(!(       tau[t].pt >= 45.                                            				)) continue;
             if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      				)) continue;
-            baselineObjectSelectionCollection.tau.push_back(&tau[t]);
             if(!(       tau[t].tauID_againstElectronTightMVA5 > 0.5                				)) continue;
             if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        				)) continue;
             if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
