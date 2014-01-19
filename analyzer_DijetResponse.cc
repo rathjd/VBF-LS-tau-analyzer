@@ -619,7 +619,6 @@ if( goodVertex ) {
           //smart tau selection
 	  for(unsigned int t =0;t<tau.size();++t){
             if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
-            if(!(       tau[t].pt >= 45.                                            				)) continue;
             if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      				)) continue;
             if(!(       tau[t].tauID_againstElectronTightMVA3 > 0.5                				)) continue;
             if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        				)) continue;
@@ -629,6 +628,7 @@ if( goodVertex ) {
 	    else if(!(tau[t].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits  <= 0.5))  TauLooseIsoObjectSelectionCollection.tau.push_back(&tau[t]);
 	    else TauNoIsoObjectSelectionCollection.tau.push_back(&tau[t]);
 	    //section for exclusive tau ID plot
+	    if(!(       tau[t].pt >= 45.                                            				)) continue;
 	    if(!(tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) tight++;
 	    else if(!(tau[t].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) medium++;
 	    else if(!(tau[t].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) loose++;
@@ -708,7 +708,7 @@ if( goodVertex ) {
 		  if( deltaRn.first < 0.1 ){
 			h2_tauResponseN->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 		  }
-		  if(tight==2 && (medium+loose+NoIso)==0 &&  deltaRt.first < 0.1 ){
+		  if(tight==2 && (medium+loose+NoIso)==0 &&  deltaRt.first < 0.1){
 	      	    if(TauTrigger) h1_Trigger2Tight->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 		    else h1_NoTrigger2Tight->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 	    	  }	
