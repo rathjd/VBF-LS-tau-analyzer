@@ -98,19 +98,6 @@ int main(int argc, char** argv)
 	double weight = 1.;
 
 	MyHistoCollection myHistoColl_Skim (ofile.file_, "Skim");
-	/*
-	MyHistoCollection myHistoColl_SignalRegion(ofile.file_, "SignalRegion");
-	MyHistoCollection myHistoColl_CR1 (ofile.file_, "Ztautau_CR1");
-	MyHistoCollection myHistoColl_CR2 (ofile.file_, "Central_invertedVBF_CR2");
-	MyHistoCollection myHistoColl_CR3 (ofile.file_, "Central_invertedVBF_TauMediumIso_CR3");	
-	MyHistoCollection myHistoColl_CR4 (ofile.file_, "Central_invertedVBF_TauLooseIso_CR4");
-	MyHistoCollection myHistoColl_CR5 (ofile.file_, "Central_invertedVBF_NoIso_CR5");
-
-	MyEventCollection baselineObjectSelectionCollection ("baselineObjectSelection");
-	MyEventCollection TauTightIsoObjectSelectionCollection ("TauTightIsoObjectSelection");
-	MyEventCollection TauMediumIsoObjectSelectionCollection ("TauMediumIsoObjectSelection");
-	MyEventCollection TauLooseIsoObjectSelectionCollection ("TauLooseIsoObjectSelection");
-	MyEventCollection TauNoIsoObjectSelectionCollection ("TauNoIsoObjectSelection");*/
 	
 	MyHistoCollection myHistoColl_SignalRegion(ofile.file_, "SignalRegion");        
 	MyHistoCollection myHistoColl_CR1 (ofile.file_, "Ztautau_CR1");
@@ -123,13 +110,6 @@ int main(int argc, char** argv)
 	MyHistoCollection myHistoColl_CR8 (ofile.file_, "Central_invertedVBF_AntiMediumIso_CR8");
 	MyHistoCollection myHistoColl_CR9 (ofile.file_, "Central_AntiLooseIso_CR9");
 	MyHistoCollection myHistoColl_CR10 (ofile.file_, "Central_invertedVBF_AntiLooseIso_CR10");
-
-/*MyHistoCollection myHistoColl_SignalRegion(ofile.file_, "SignalRegion");	
-MyHistoCollection myHistoColl_CR1 (ofile.file_, "Ztautau_CR1");
-MyHistoCollection myHistoColl_CR2 (ofile.file_, "Central_invertedVBF_CR2");
-MyHistoCollection myHistoColl_CR3 (ofile.file_, "Central_invertedVBF_TauMediumIso_CR3");	
-MyHistoCollection myHistoColl_CR4 (ofile.file_, "Central_invertedVBF_TauLooseIso_CR4");
-MyHistoCollection myHistoColl_CR5 (ofile.file_, "Central_invertedVBF_NoIso_CR5");*/
 
 	MyEventCollection baselineObjectSelectionCollection ("baselineObjectSelection");
 	MyEventCollection TauTightIsoObjectSelectionCollection ("TauTightIsoObjectSelection");
