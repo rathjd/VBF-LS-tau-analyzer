@@ -98,12 +98,12 @@ int main(int argc, char** argv)
 	double weight = 1.;
 
 	MyHistoCollection myHistoColl_Skim_noIso_wiTrigger (ofile.file_, "Skim_noIso_wiTrigger");
-	MyHistoCollection myHistoColl_Skim_looseIso_wiTrigger (ofile.file_, "Skim_looseIso_wiTrigger");
-	MyHistoCollection myHistoColl_Skim_mediumIso_wiTrigger (ofile.file_, "Skim_mediumIso_wiTrigger");
-	MyHistoCollection myHistoColl_Skim_tightIso_wiTrigger (ofile.file_, "Skim_tightIso_wiTrigger");
 	MyHistoCollection myHistoColl_Skim_noIso_woTrigger (ofile.file_, "Skim_noIso_woTrigger");
+	MyHistoCollection myHistoColl_Skim_looseIso_wiTrigger (ofile.file_, "Skim_looseIso_wiTrigger");
 	MyHistoCollection myHistoColl_Skim_looseIso_woTrigger (ofile.file_, "Skim_looseIso_woTrigger");
+	MyHistoCollection myHistoColl_Skim_mediumIso_wiTrigger (ofile.file_, "Skim_mediumIso_wiTrigger");
 	MyHistoCollection myHistoColl_Skim_mediumIso_woTrigger (ofile.file_, "Skim_mediumIso_woTrigger");
+	MyHistoCollection myHistoColl_Skim_tightIso_wiTrigger (ofile.file_, "Skim_tightIso_wiTrigger");
 	MyHistoCollection myHistoColl_Skim_tightIso_woTrigger (ofile.file_, "Skim_tightIso_woTrigger");
 	
 	MyHistoCollection myHistoColl_SignalRegion_wiTrigger(ofile.file_, "SignalRegion_wiTrigger");
@@ -343,7 +343,7 @@ for(unsigned int m =0;m<muon.size();++m){
 	fillHistoCollection (myHistoColl_Skim_tightIso_woTrigger, baselineObjectSelectionCollection_tightIso,weight);
 
 	//Requiring trigger fired
-	if (!( baselineObjectSelectionCollection_noIso.passedTrigger     )) {
+	if ( baselineObjectSelectionCollection_noIso.passedTrigger     ) {
 
 	  // ------------------------
 	  // -- Skimming Studies   --
@@ -403,7 +403,7 @@ Signal.invertDijetProperties    = false;        //invert dijet system properties
 Signal.select();        //do selection, fill histograms
 
 //Requiring trigger fired
-if (!( baselineObjectSelectionCollection_noIso.passedTrigger     )) {
+if ( baselineObjectSelectionCollection_noIso.passedTrigger     ) {
 	Signal.OutputCollection 	= &myHistoColl_SignalRegion_wiTrigger;        //output collection
 	Signal.select();        //do selection, fill histograms
 }
