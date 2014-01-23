@@ -243,7 +243,7 @@ for(unsigned int m =0;m<muon.size();++m){
 
 	    if(!(       genMatchedTau            )) continue;
             if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
-            //if(!(       tau[t].pt >= 40.                                            				)) continue; ////TEMPORARY SWITCHED OFF!!!!!!!!
+            if(!(       tau[t].pt >= 40.                                            				)) continue; ////TEMPORARY SWITCHED OFF!!!!!!!!
             if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      				)) continue;
             if(!(       tau[t].tauID_againstElectronTightMVA5 > 0.5                				)) continue;
             if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        				)) continue;
