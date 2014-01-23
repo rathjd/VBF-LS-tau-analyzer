@@ -104,6 +104,9 @@ int main(int argc, char** argv)
   TH1F* h_C1pt;
   TH1F* h_C1eta;
 
+  TH1F* h_N2pt;
+  TH1F* h_N2eta;
+
   TH1F* h_met;
 
   //---------------------------------------------------------------------------
@@ -126,6 +129,8 @@ int main(int argc, char** argv)
 
   h_C1pt = new TH1F("h_C1pt", "h_C1pt", 50, 0., 800.);
   h_C1eta = new TH1F("h_C1eta", "h_C1eta", 30, -3., 3.);
+  h_N2pt = new TH1F("h_N2pt", "h_N2pt", 50, 0., 800.);
+  h_N2eta = new TH1F("h_N2eta", "h_N2eta", 30, -3., 3.);
 
   h_met = new TH1F("h_met", "h_met", 12, 0., 240.);
 
@@ -167,6 +172,7 @@ int main(int argc, char** argv)
 	  std::vector<genparticlehelper_s*> genParton;
 	  std::vector<genparticlehelper_s*> genInvis;
 	  std::vector<genparticlehelper_s*> genC1nos;
+	  std::vector<genparticlehelper_s*> genN2nos;
 
 
 	  while (true){
@@ -176,6 +182,7 @@ int main(int argc, char** argv)
 		  if (fabs(genparticlehelper[g].pdgId) == 15) genTau.push_back(&genparticlehelper[g]);
 		  if (fabs(genparticlehelper[g].pdgId) == 1000022 || fabs(genparticlehelper[g].pdgId) == 12 || fabs(genparticlehelper[g].pdgId) == 14 || fabs(genparticlehelper[g].pdgId) == 16 ) genInvis.push_back(&genparticlehelper[g]);
 		  if (fabs(genparticlehelper[g].pdgId) == 1000024) genC1nos.push_back(&genparticlehelper[g]);
+		  if (fabs(genparticlehelper[g].pdgId) == 1000023) genN2nos.push_back(&genparticlehelper[g]);
 
 		}
 
@@ -232,6 +239,13 @@ int main(int argc, char** argv)
 		for (unsigned int g = 0; g < genC1nos.size(); g++) {
 		  h_C1pt->Fill(genC1nos[g]->pt,weight);
 		  h_C1eta->Fill(genC1nos[g]->eta,weight);
+		}
+
+		//Fill N2 Plots
+
+		for (unsigned int g = 0; g < genN2nos.size(); g++) {
+		  h_N2pt->Fill(genN2nos[g]->pt,weight);
+		  h_N2eta->Fill(genN2nos[g]->eta,weight);
 		}
 
 		//Fill Tau Plots			
