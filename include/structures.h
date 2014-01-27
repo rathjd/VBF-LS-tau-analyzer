@@ -134,7 +134,7 @@ struct MyHistoCollection {
 		h_ditaucharge = new TH1F("h_ditaucharge", "h_ditaucharge", 5, -4., 6.);
 		h_ditaucosdeltaphi = new TH1F("h_ditaucosdeltaphi", "h_ditaucosdeltaphi", 50, -1.1, 1.1);
 
-		h_met = new TH1F("h_met", "h_met", 12, 0., 120.);
+		h_met = new TH1F("h_met", "h_met", 24, 0., 240.);
 
 		h_ht = new TH1F("h_ht", "h_ht", 50, 0., 1300.);
 		h_ht_withtau = new TH1F("h_ht_withtau", "h_ht_withtau", 50, 0., 1300.);
