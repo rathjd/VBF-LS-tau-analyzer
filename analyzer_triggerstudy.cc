@@ -220,15 +220,17 @@ for(unsigned int m =0;m<muon.size();++m){
 	TauNoIsoObjectSelectionCollection.muon.push_back(&muon[m]);
 }     
 
-	std::vector<int> tights;
-	std::vector<int> mediums;
-	std::vector<int> looses;
-	std::vector<int> nones;
-	
           //smart tau selection
+
+
 	  bool genMatchedTau = false;
 	  for(unsigned int t =0;t<tau.size();++t){
-	  	for (unsigned int g = 0; g < genparticlehelper.size(); g++){
+            if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
+            //if(!(       tau[t].pt >= 40.                                            				)) continue;
+            if(!(       tau[t].pt >= 5.                                            				)) continue;
+
+	  //Gen Tau Matching
+	  for (unsigned int g = 0; g < genparticlehelper.size(); g++){
 			if (  !(fabs(genparticlehelper[g].status) ==  3)  ) continue;
 			if (  !(fabs(genparticlehelper[g].pdgId)  == 15)  ) continue;
 
@@ -242,25 +244,17 @@ for(unsigned int m =0;m<muon.size();++m){
 	    }
 
 	    if(!(       genMatchedTau            )) continue;
-            if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
-            if(!(       tau[t].pt >= 40.                                            				)) continue; ////TEMPORARY SWITCHED OFF!!!!!!!!
             if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      				)) continue;
             if(!(       tau[t].tauID_againstElectronTightMVA5 > 0.5                				)) continue;
             if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        				)) continue;
             if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
             baselineObjectSelectionCollection_noIso.tau.push_back(&tau[t]);
-	    if(!(tau[t].tauID_byTightIsolationMVA3newDMwLT  <= 0.5)) {baselineObjectSelectionCollection_tightIso.tau.push_back(&tau[t]); tights.push_back(t);}
-	    else if(!(tau[t].tauID_byMediumIsolationMVA3newDMwLT  <= 0.5)) {baselineObjectSelectionCollection_mediumIso.tau.push_back(&tau[t]); mediums.push_back(t);}
-	    else if(!(tau[t].tauID_byLooseIsolationMVA3newDMwLT  <= 0.5)) {baselineObjectSelectionCollection_looseIso.tau.push_back(&tau[t]); looses.push_back(t);}
-	    else nones.push_back(t);
+	    if(tau[t].tauID_byTightIsolationMVA3newDMwLT  > 0.5) {baselineObjectSelectionCollection_tightIso.tau.push_back(&tau[t]);}
+	    if(tau[t].tauID_byMediumIsolationMVA3newDMwLT  > 0.5) {baselineObjectSelectionCollection_mediumIso.tau.push_back(&tau[t]);}
+	    if(tau[t].tauID_byLooseIsolationMVA3newDMwLT  > 0.5) {baselineObjectSelectionCollection_looseIso.tau.push_back(&tau[t]);}
+
           }
           
-	  if(tights.size()==2) for(unsigned int t =0;t<tights.size();++t) {int i=tights[t]; TauTightIsoObjectSelectionCollection.tau.push_back(&tau[i]);}
-	  else if(tights.size()==1 && (mediums.size()+looses.size()+nones.size())==1) {tights.insert(tights.end(),mediums.begin(), mediums.end()); tights.insert(tights.end(),looses.begin(), looses.end()); tights.insert(tights.end(),nones.begin(), nones.end()); for(unsigned int t =0;t<tights.size();++t) {int i=tights[t]; Tau1TightIsoObjectSelectionCollection.tau.push_back(&tau[i]);}}
-	  else if(mediums.size()>=1 && (mediums.size()+looses.size()+nones.size())==2) {mediums.insert(mediums.end(), looses.begin(), looses.end()); mediums.insert(mediums.end(), nones.begin(), nones.end()); for(unsigned int t =0;t<mediums.size();++t) {int i=mediums[t]; TauMediumIsoObjectSelectionCollection.tau.push_back(&tau[i]);}}
-	  else if(looses.size()>=1 && (looses.size()+nones.size())==2) {looses.insert(looses.end(), nones.begin(), nones.end()); for(unsigned int t =0;t<looses.size();++t) {int i=looses[t]; TauLooseIsoObjectSelectionCollection.tau.push_back(&tau[i]);}}
-	  else if(nones.size()==2) for(unsigned int t =0;t<nones.size();++t) {int i=nones[t]; TauNoIsoObjectSelectionCollection.tau.push_back(&tau[i]);}
-	  
           // jet && bjet selection
 	  // ? id ?
 	  for(unsigned int j = 0;j<jet.size();++j){
@@ -345,17 +339,12 @@ for(unsigned int m =0;m<muon.size();++m){
 	//Requiring trigger fired
 	if ( baselineObjectSelectionCollection_noIso.passedTrigger     ) {
 
-	  // ------------------------
-	  // -- Skimming Studies   --
-	  // ------------------------
-
           myHistoColl_Skim_noIso_wiTrigger.h_count->Fill("NoCuts",0);
 	  myHistoColl_Skim_looseIso_wiTrigger.h_count->Fill("NoCuts",0);
 	  myHistoColl_Skim_mediumIso_wiTrigger.h_count->Fill("NoCuts",0);
 	  myHistoColl_Skim_tightIso_wiTrigger.h_count->Fill("NoCuts",0);
 
 
-	  //NoCuts
 	  myHistoColl_Skim_noIso_wiTrigger.h_count->Fill("NoCuts",1);
 	  myHistoColl_Skim_looseIso_wiTrigger.h_count->Fill("NoCuts",1);
 	  myHistoColl_Skim_mediumIso_wiTrigger.h_count->Fill("NoCuts",1);
