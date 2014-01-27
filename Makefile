@@ -73,7 +73,7 @@ CPPFLAGS:= -I. -I$(incdir) -I$(srcdir) $(shell root-config --cflags)
 #	-pipe	communicate via different stages of compilation
 #			using pipes rather than temporary files
 
-CXXFLAGS:= -c -g -O2 -ansi -Wall -pipe -fPIC
+CXXFLAGS:= -c -ggdb -O2 -ansi -Wall -pipe -fPIC -std=c++0x
 
 #	C++ Linker
 #   set default path to shared library
@@ -89,7 +89,7 @@ endif
 
 #	Linker flags
 
-LDFLAGS := -g
+LDFLAGS := -ggdb -std=c++0x
 
 # 	Libraries
 
