@@ -311,7 +311,7 @@ for(unsigned int m =0;m<muon.size();++m){
 Selection Signal("Signal"); //label and initialisation
 Signal.InputCollection 		= &TauTightIsoObjectSelectionCollection;        //input collection
 Signal.OutputCollection 	= &myHistoColl_SignalRegion;        //output collection
-Signal.RealData        		= edmEventHelper_isRealData;        //pass information if event is real data
+Signal.RealData        		= eventhelper_isRealData;        //pass information if event is real data
 Signal.RunData        		= false;        //real data allowed
 Signal.NumberTauMin        	= 2;        //require at least N tau
 Signal.NumberTauMax        	= 3;        //require at less than N taus
@@ -350,7 +350,7 @@ if(Signal.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollection.passedTr
 Selection InvertedVBF_CR2("InvertedVBF_CR2"); //label and initialisation
 InvertedVBF_CR2.InputCollection 	= &TauTightIsoObjectSelectionCollection;        //input collection
 InvertedVBF_CR2.OutputCollection 	= &myHistoColl_CR2;        //output collection
-InvertedVBF_CR2.RealData        	= edmEventHelper_isRealData;        //pass information if event is real data
+InvertedVBF_CR2.RealData        	= eventhelper_isRealData;        //pass information if event is real data
 InvertedVBF_CR2.RunData        		= true;        //real data allowed
 InvertedVBF_CR2.NumberTauMin        	= 2;        //require at least N tau
 InvertedVBF_CR2.NumberTauMax        	= 3;        //require at less than N taus
@@ -389,7 +389,7 @@ if(InvertedVBF_CR2.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollection
 Selection oneTightTau_CR3("oneTightTau_CR3"); //label and initialisation
 oneTightTau_CR3.InputCollection 	= &Tau1TightIsoObjectSelectionCollection;        //input collection
 oneTightTau_CR3.OutputCollection 	= &myHistoColl_CR3;        //output collection
-oneTightTau_CR3.RealData        	= edmEventHelper_isRealData;        //pass information if event is real data
+oneTightTau_CR3.RealData        	= eventhelper_isRealData;        //pass information if event is real data
 oneTightTau_CR3.RunData        		= true;        //real data allowed
 oneTightTau_CR3.NumberTauMin        	= 2;        //require at least N tau
 oneTightTau_CR3.NumberTauMax        	= 3;        //require at less than N taus
@@ -428,7 +428,7 @@ if(oneTightTau_CR3.passed) h2_Trigger->Fill(Tau1TightIsoObjectSelectionCollectio
 Selection InvertedVBF_oneTightTau_CR4("InvertedVBF_oneTightTau_CR4"); //label and initialisation
 InvertedVBF_oneTightTau_CR4.InputCollection 		= &Tau1TightIsoObjectSelectionCollection;        //input collection
 InvertedVBF_oneTightTau_CR4.OutputCollection 		= &myHistoColl_CR4;        //output collection
-InvertedVBF_oneTightTau_CR4.RealData        		= edmEventHelper_isRealData;        //pass information if event is real data
+InvertedVBF_oneTightTau_CR4.RealData        		= eventhelper_isRealData;        //pass information if event is real data
 InvertedVBF_oneTightTau_CR4.RunData        		= true;        //real data allowed
 InvertedVBF_oneTightTau_CR4.NumberTauMin        	= 2;        //require at least N tau
 InvertedVBF_oneTightTau_CR4.NumberTauMax        	= 3;        //require at less than N taus
@@ -467,7 +467,7 @@ if(InvertedVBF_oneTightTau_CR4.passed) h2_Trigger->Fill(Tau1TightIsoObjectSelect
 Selection AntiTightTau_CR5("AntiTightTau_CR5"); //label and initialisation
 AntiTightTau_CR5.InputCollection 		= &TauMediumIsoObjectSelectionCollection;        //input collection
 AntiTightTau_CR5.OutputCollection 		= &myHistoColl_CR5;        //output collection
-AntiTightTau_CR5.RealData        		= edmEventHelper_isRealData;        //pass information if event is real data
+AntiTightTau_CR5.RealData        		= eventhelper_isRealData;        //pass information if event is real data
 AntiTightTau_CR5.RunData        		= true;        //real data allowed
 AntiTightTau_CR5.NumberTauMin        		= 2;        //require at least N tau
 AntiTightTau_CR5.NumberTauMax        		= 3;        //require at less than N taus
@@ -506,7 +506,7 @@ if(AntiTightTau_CR5.passed) h2_Trigger->Fill(TauMediumIsoObjectSelectionCollecti
 Selection InvertedVBF_AntiTightTau_CR6("InvertedVBF_AntiTightTau_CR6"); //label and initialisation
 InvertedVBF_AntiTightTau_CR6.InputCollection 		= &TauMediumIsoObjectSelectionCollection;        //input collection
 InvertedVBF_AntiTightTau_CR6.OutputCollection 		= &myHistoColl_CR6;        //output collection
-InvertedVBF_AntiTightTau_CR6.RealData        		= edmEventHelper_isRealData;        //pass information if event is real data
+InvertedVBF_AntiTightTau_CR6.RealData        		= eventhelper_isRealData;        //pass information if event is real data
 InvertedVBF_AntiTightTau_CR6.RunData        		= true;        //real data allowed
 InvertedVBF_AntiTightTau_CR6.NumberTauMin       	= 2;        //require at least N tau
 InvertedVBF_AntiTightTau_CR6.NumberTauMax       	= 3;        //require at less than N taus
@@ -545,7 +545,7 @@ if(InvertedVBF_AntiTightTau_CR6.passed) h2_Trigger->Fill(TauMediumIsoObjectSelec
 Selection AntiMediumTau_CR7("AntiMediumTau_CR7"); //label and initialisation
 AntiMediumTau_CR7.InputCollection 	= &TauLooseIsoObjectSelectionCollection;        //input collection
 AntiMediumTau_CR7.OutputCollection 	= &myHistoColl_CR7;        //output collection
-AntiMediumTau_CR7.RealData        	= edmEventHelper_isRealData;        //pass information if event is real data
+AntiMediumTau_CR7.RealData        	= eventhelper_isRealData;        //pass information if event is real data
 AntiMediumTau_CR7.RunData        	= true;        //real data allowed
 AntiMediumTau_CR7.NumberTauMin        	= 2;        //require at least N tau
 AntiMediumTau_CR7.NumberTauMax        	= 3;        //require at less than N taus
@@ -584,7 +584,7 @@ if(AntiMediumTau_CR7.passed) h2_Trigger->Fill(TauLooseIsoObjectSelectionCollecti
 Selection InvertedVBF_AntiMediumTau_CR8("InvertedVBF_AntiMediumTau_CR8"); //label and initialisation
 InvertedVBF_AntiMediumTau_CR8.InputCollection 		= &TauLooseIsoObjectSelectionCollection;        //input collection
 InvertedVBF_AntiMediumTau_CR8.OutputCollection 		= &myHistoColl_CR8;        //output collection
-InvertedVBF_AntiMediumTau_CR8.RealData        		= edmEventHelper_isRealData;        //pass information if event is real data
+InvertedVBF_AntiMediumTau_CR8.RealData        		= eventhelper_isRealData;        //pass information if event is real data
 InvertedVBF_AntiMediumTau_CR8.RunData        		= true;        //real data allowed
 InvertedVBF_AntiMediumTau_CR8.NumberTauMin        	= 2;        //require at least N tau
 InvertedVBF_AntiMediumTau_CR8.NumberTauMax        	= 3;        //require at less than N taus
@@ -623,7 +623,7 @@ if(InvertedVBF_AntiMediumTau_CR8.passed) h2_Trigger->Fill(TauLooseIsoObjectSelec
 Selection AntiLooseTau_CR9("AntiLooseTau_CR9"); //label and initialisation
 AntiLooseTau_CR9.InputCollection 	= &TauNoIsoObjectSelectionCollection;        //input collection
 AntiLooseTau_CR9.OutputCollection 	= &myHistoColl_CR9;        //output collection
-AntiLooseTau_CR9.RealData        	= edmEventHelper_isRealData;        //pass information if event is real data
+AntiLooseTau_CR9.RealData        	= eventhelper_isRealData;        //pass information if event is real data
 AntiLooseTau_CR9.RunData        	= true;        //real data allowed
 AntiLooseTau_CR9.NumberTauMin        	= 2;        //require at least N tau
 AntiLooseTau_CR9.NumberTauMax        	= 3;        //require at less than N taus
@@ -662,7 +662,7 @@ if(AntiLooseTau_CR9.passed) h2_Trigger->Fill(TauNoIsoObjectSelectionCollection.p
 Selection InvertedVBF_AntiLooseTau_CR10("InvertedVBF_AntiLooseTau_CR10"); //label and initialisation
 InvertedVBF_AntiLooseTau_CR10.InputCollection 		= &TauNoIsoObjectSelectionCollection;        //input collection
 InvertedVBF_AntiLooseTau_CR10.OutputCollection 		= &myHistoColl_CR10;        //output collection
-InvertedVBF_AntiLooseTau_CR10.RealData        		= edmEventHelper_isRealData;        //pass information if event is real data
+InvertedVBF_AntiLooseTau_CR10.RealData        		= eventhelper_isRealData;        //pass information if event is real data
 InvertedVBF_AntiLooseTau_CR10.RunData        		= true;        //real data allowed
 InvertedVBF_AntiLooseTau_CR10.NumberTauMin        	= 2;        //require at least N tau
 InvertedVBF_AntiLooseTau_CR10.NumberTauMax        	= 3;        //require at less than N taus
@@ -701,7 +701,7 @@ if(InvertedVBF_AntiLooseTau_CR10.passed) h2_Trigger->Fill(TauNoIsoObjectSelectio
 Selection Ztautau_CR1("Ztautau_CR1"); //label and initialisation
 Ztautau_CR1.InputCollection 		= &TauTightIsoObjectSelectionCollection;        //input collection
 Ztautau_CR1.OutputCollection 		= &myHistoColl_CR1;        //output collection
-Ztautau_CR1.RealData        		= edmEventHelper_isRealData;        //pass information if event is real data
+Ztautau_CR1.RealData        		= eventhelper_isRealData;        //pass information if event is real data
 Ztautau_CR1.RunData        		= true;        //real data allowed
 Ztautau_CR1.NumberTauMin        	= 2;        //require at least N tau
 Ztautau_CR1.NumberTauMax        	= 3;        //require at less than N taus
