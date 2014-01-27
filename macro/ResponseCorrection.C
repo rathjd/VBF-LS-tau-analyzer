@@ -14,7 +14,7 @@ void ResponseCorrection(double ptMin)
 {
 
 
-TFile _file0("Response_Jet30Tau45_ExclusiveIso.root","UPDATE");
+TFile _file0("QCD_Complete_Lukas.root","UPDATE");
 
 TH2F *projectN=(TH2F*)_file0.Get("h2_tauResponseN")->Clone("project");
 TH2F *projectL=(TH2F*)_file0.Get("h2_tauResponseL")->Clone("project");
@@ -78,6 +78,18 @@ scalesLi.push_back(0);
 scalesM.push_back(0);
 scalesMi.push_back(0);
 scalesT.push_back(0);
+std::vector<double> scalesErrorN;
+std::vector<double> scalesErrorL;
+std::vector<double> scalesErrorLi;
+std::vector<double> scalesErrorM;
+std::vector<double> scalesErrorMi;
+std::vector<double> scalesErrorT;
+scalesErrorN.push_back(0);
+scalesErrorL.push_back(0);
+scalesErrorLi.push_back(0);
+scalesErrorM.push_back(0);
+scalesErrorMi.push_back(0);
+scalesErrorT.push_back(0);
 
 for(int p=0; p<projectN->GetNbinsX(); p++)
   {
@@ -127,6 +139,7 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       c->SaveAs(TString::Format("N_pT%.0f.png",pT));
       histN->GetXaxis()->SetRange(x,histN->GetNbinsX()+1);
       scalesN.push_back(histN->GetMean());
+      scalesErrorN.push_back(histN->GetMeanError());
     }
   if(histL->GetEntries()!=0) for(unsigned int x=histL->GetNbinsX(); x>0; x--)
     {
@@ -149,6 +162,7 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       c->SaveAs(TString::Format("L_pT%.0f.png",pT));
       histL->GetXaxis()->SetRange(x,histL->GetNbinsX()+1);
       scalesL.push_back(histL->GetMean());
+      scalesErrorL.push_back(histL->GetMeanError());
     }
   if(histLi->GetEntries()!=0) for(unsigned int x=histLi->GetNbinsX(); x>0; x--)
     {
@@ -171,6 +185,7 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       c->SaveAs(TString::Format("Li_pT%.0f.png",pT));
       histLi->GetXaxis()->SetRange(x,histLi->GetNbinsX()+1);
       scalesLi.push_back(histLi->GetMean());
+      scalesErrorLi.push_back(histLi->GetMeanError());
     }    
   if(histM->GetEntries()!=0) for(unsigned int x=histM->GetNbinsX(); x>0; x--)
     {
@@ -193,6 +208,7 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       c->SaveAs(TString::Format("M_pT%.0f.png",pT));
       histM->GetXaxis()->SetRange(x,histM->GetNbinsX()+1);
       scalesM.push_back(histM->GetMean());
+      scalesErrorM.push_back(histM->GetMeanError());
     }
   if(histMi->GetEntries()!=0) for(unsigned int x=histMi->GetNbinsX(); x>0; x--)
     {
@@ -215,6 +231,7 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       c->SaveAs(TString::Format("Mi_pT%.0f.png",pT));
       histMi->GetXaxis()->SetRange(x,histMi->GetNbinsX()+1);
       scalesMi.push_back(histMi->GetMean());
+      scalesErrorMi.push_back(histMi->GetMeanError());
     }    
   if(histT->GetEntries()!=0) for(unsigned int x=histT->GetNbinsX(); x>0; x--)
     {
@@ -237,6 +254,7 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       c->SaveAs(TString::Format("T_pT%.0f.png",pT));
       histT->GetXaxis()->SetRange(x,histT->GetNbinsX()+1);
       scalesT.push_back(histT->GetMean());
+      scalesErrorT.push_back(histT->GetMeanError());
     }
     if(finish)break;
   }
@@ -347,39 +365,45 @@ for(unsigned int x=0; x<RescalesN.size(); x++)
     RescaleWeightN->SetBinContent(x+1,RescalesN[x]);
     RescaleWeightN->SetBinError(x+1,RescaleErrorsN[x]);
     scaleN->SetBinContent(x+1,scalesN[x]);
+    scaleN->SetBinError(x+1,scalesErrorN[x]);
   }
 for(unsigned int x=0; x<RescalesL.size(); x++)
   {
     RescaleWeightL->SetBinContent(x+1,RescalesL[x]);
     RescaleWeightL->SetBinError(x+1,RescaleErrorsL[x]);
     scaleL->SetBinContent(x+1,scalesL[x]);
+    scaleL->SetBinError(x+1,scalesErrorL[x]);    
   }
 for(unsigned int x=0; x<RescalesLi.size(); x++)
   {
     RescaleWeightLi->SetBinContent(x+1,RescalesLi[x]);
     RescaleWeightLi->SetBinError(x+1,RescaleErrorsLi[x]);
     scaleLi->SetBinContent(x+1,scalesLi[x]);
+    scaleLi->SetBinError(x+1,scalesErrorLi[x]);    
   } 
 for(unsigned int x=0; x<RescalesM.size(); x++)
   {
     RescaleWeightM->SetBinContent(x+1,RescalesM[x]);
     RescaleWeightM->SetBinError(x+1,RescaleErrorsM[x]);
     scaleM->SetBinContent(x+1,scalesM[x]);
+    scaleM->SetBinError(x+1,scalesErrorM[x]);    
   }
 for(unsigned int x=0; x<RescalesMi.size(); x++)
   {
     RescaleWeightMi->SetBinContent(x+1,RescalesMi[x]);
     RescaleWeightMi->SetBinError(x+1,RescaleErrorsMi[x]);
     scaleMi->SetBinContent(x+1,scalesMi[x]);
+    scaleMi->SetBinError(x+1,scalesErrorMi[x]);    
   }  
 for(unsigned int x=0; x<RescalesT.size(); x++)
   {
     RescaleWeightT->SetBinContent(x+1,RescalesT[x]);
     RescaleWeightT->SetBinError(x+1,RescaleErrorsT[x]);
     scaleT->SetBinContent(x+1,scalesT[x]);
+    scaleT->SetBinError(x+1,scalesErrorT[x]);    
   }
 
-TFile *f=new TFile("ResponseFactors_InclAndExclIsos_Jet30Tau45_15up.root","RECREATE");
+TFile *f=new TFile("ResponseFactors_InclAndExclIsos_Jet30Lukas_MC_Tau45.root","RECREATE");
 RescaleWeightN->Write();
 RescaleWeightL->Write();
 RescaleWeightLi->Write();
