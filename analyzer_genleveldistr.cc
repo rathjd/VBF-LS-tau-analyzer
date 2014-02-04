@@ -107,6 +107,8 @@ int main(int argc, char** argv)
   TH1F* h_N2pt;
   TH1F* h_N2eta;
 
+  TH1F* h_decaychain;
+  TH1F* h_vertexz;
   TH1F* h_met;
 
   //---------------------------------------------------------------------------
@@ -132,7 +134,14 @@ int main(int argc, char** argv)
   h_N2pt = new TH1F("h_N2pt", "h_N2pt", 50, 0., 800.);
   h_N2eta = new TH1F("h_N2eta", "h_N2eta", 30, -3., 3.);
 
+  h_decaychain = new TH1F("h_decaychain", "h_decaychain", 1,0,1);
+  h_vertexz = new TH1F("h_vertexz", "h_vertexz", 60, -60., 60.);
   h_met = new TH1F("h_met", "h_met", 12, 0., 240.);
+
+  //decay chai plot init
+  h_decaychain->Fill("C1->Stau->Tau",0.); 
+  h_decaychain->Fill("N2->Stau->Tau",0.); 
+  h_decaychain->Fill("noChain",0.); 
 
   //---------------------------------------------------------------------------
   // Loop over events
@@ -173,7 +182,7 @@ int main(int argc, char** argv)
 	  std::vector<genparticlehelper_s*> genInvis;
 	  std::vector<genparticlehelper_s*> genC1nos;
 	  std::vector<genparticlehelper_s*> genN2nos;
-
+	  
 
 	  while (true){
 
@@ -202,6 +211,62 @@ int main(int argc, char** argv)
 		  if (  !(fabs(genparticlehelper[g].status) == 3)  ) continue;
 		  if (fabs(genparticlehelper[g].pdgId) < 7) {genParton.push_back(&genparticlehelper[g]);}
 		}
+
+		//Check for correct stau decay chain
+
+		bool hasC1Mother = false;
+		bool hasN2Mother = false;
+		bool hasTauDaughter = false;
+
+		unsigned int staufirstDaughter = 0;
+		unsigned int staulastDaughter = 0;
+		unsigned int staufirstMother = 0;
+		unsigned int staulastMother = 0;
+
+		for (unsigned int g = 0; g < genparticlehelperplus.size(); g++){
+		
+			hasC1Mother = false;
+			hasN2Mother = false;
+			hasTauDaughter = false;
+
+			staufirstDaughter = 0;
+			staulastDaughter = 0;
+			staufirstMother = 0;
+			staulastMother = 0;
+
+			if (  !(fabs(genparticlehelperplus[g].status) == 3)  ) continue;
+			if (!(fabs(genparticlehelperplus[g].pdgId) == 1000015)) continue;
+
+			staufirstDaughter = genparticlehelperplus[g].firstDaughter;
+			staulastDaughter = genparticlehelperplus[g].lastDaughter;
+			staufirstMother = genparticlehelperplus[g].firstMother;
+			staulastMother = genparticlehelperplus[g].lastMother;
+
+			for (unsigned int gg = staufirstDaughter; gg < staulastDaughter + 1; gg++) {
+				if (fabs(genparticlehelperplus[gg].pdgId) == 15) hasTauDaughter = true; 
+			}
+
+			for (unsigned int gg = staufirstMother; gg < staulastMother + 1; gg++) {
+				if (fabs(genparticlehelperplus[gg].pdgId) == 1000024)  hasC1Mother = true;
+				if (fabs(genparticlehelperplus[gg].pdgId) == 1000023)  hasN2Mother = true;
+				//cout<<"Mother PDGID: "<< genparticlehelperplus[gg].pdgId << endl;
+			}
+
+			//cout << "------------------------------------"<< endl;
+			//cout << "hasTauDaughter: " << hasTauDaughter << " hasC1Mother: " << hasC1Mother << " hasN2Mother: " << hasN2Mother << endl;
+			if ( hasTauDaughter && hasC1Mother) {h_decaychain->Fill("C1->Stau->Tau", weight);
+				//cout<<"C1->Stau->Tau"<<endl;
+			} 
+			else if (hasTauDaughter && hasN2Mother) {h_decaychain->Fill("N2->Stau->Tau", weight);
+				//cout<<"N2->Stau->Tau"<<endl;
+			} 
+			else {h_decaychain->Fill("noChain", weight);
+				//cout<<"noChain"<<endl;
+			}
+
+			
+		}
+
 
 		//Selection of Gen Tau 1,2
 
@@ -233,6 +298,9 @@ int main(int argc, char** argv)
 		if ((genParton[i]->pt > parton2pt) && (genParton[i]->pt < parton1pt)) {parton2pt = genParton[i]->pt; parton2index = i;}
 		}
 
+		//Fill Vertex Z Plot
+
+		h_vertexz->Fill(vertex[0].z);
 
 		//Fill C1 Plots
 
