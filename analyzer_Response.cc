@@ -87,13 +87,13 @@ int main(int argc, char** argv)
   //TH1F* h_mindeltaR = new TH1F("h_mindeltaR", "h_mindeltaR", 50,0. , 3.);
 
   double etaedges[5]={0.,1.4,1.6,2.,2.2};
-  double ptedges[12]={0.,30.,45.,55.,75.,100.,250.,400.,600.,900.,1500.,2500.};
-  double respEdges[29]={0.10,0.15,0.20,0.25,0.30,0.35,0.40,0.45,0.50,0.55,0.60,0.65,0.70,0.75,0.80,0.85,0.90,0.95,1.00,1.05,1.10,1.15,1.20,1.25,1.30,1.35,1.40,1.45,1.50};
+  double ptedges[21]={22.5,23.7,25.,26.5,28.1,30.,32.1,34.6,37.5,40.9,45.,50.,56.3,64.3,75.,90.,112.5,150.,225.,450.,2500.};
+  double respEdges[21]={0.,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.00,1.10,1.20,1.30,1.40,1.50, 1.6, 1.7, 1.8, 1.9, 2.};
 
-  TH2F* h2_tauResponseN = new TH2F("h2_tauResponseN", "NoIso #tau response", 11, ptedges, 60, 0, 3);
-  TH2F* h2_tauResponseL = new TH2F("h2_tauResponseL", "LooseIso #tau response", 11, ptedges, 60, 0, 3);
-  TH2F* h2_tauResponseM = new TH2F("h2_tauResponseM", "MediumIso #tau response", 11, ptedges, 60, 0, 3);
-  TH2F* h2_tauResponseT = new TH2F("h2_tauResponseT", "TightIso #tau response", 11, ptedges, 60, 0, 3); 
+  TH2F* h2_tauResponseN = new TH2F("h2_tauResponseN", "NoIso #tau response", 20, ptedges, 20, respEdges);
+  TH2F* h2_tauResponseL = new TH2F("h2_tauResponseL", "LooseIso #tau response", 20, ptedges, 20, respEdges);
+  TH2F* h2_tauResponseM = new TH2F("h2_tauResponseM", "MediumIso #tau response", 20, ptedges, 20, respEdges);
+  TH2F* h2_tauResponseT = new TH2F("h2_tauResponseT", "TightIso #tau response", 02, ptedges, 20, respEdges); 
   h2_tauResponseN->Sumw2();
   h2_tauResponseL->Sumw2();  
   h2_tauResponseM->Sumw2();
@@ -107,7 +107,7 @@ int main(int argc, char** argv)
   h2_tauResponseT->GetXaxis()->SetTitle("p_{T}^{jet}");
   h2_tauResponseT->GetYaxis()->SetTitle("p_{T}^{#tau}/p_{T}^{jet}");
   
-  TH3F* h3_tauCompleteN = new TH3F("h3_tauCompleteN","NoIso #tau response", 11, ptedges, 28, respEdges, 4, etaedges); 
+/*  TH3F* h3_tauCompleteN = new TH3F("h3_tauCompleteN","NoIso #tau response", 11, ptedges, 28, respEdges, 4, etaedges); 
   h3_tauCompleteN->GetXaxis()->SetTitle("p_{T}^{jet}");
   h3_tauCompleteN->GetYaxis()->SetTitle("p_{T}^{#tau}/p_{T}^{jet}");
   h3_tauCompleteN->GetZaxis()->SetTitle("|#eta|");
@@ -154,7 +154,7 @@ int main(int argc, char** argv)
   TH2F* h2_tauNumberByIDN = new TH2F("h2_tauNumberByIDN", "1 NoIso #tau ID + N occurence", 5, -0.5, 4.5, 21, -0.5, 20.5);
   h2_tauNumberByIDN->GetXaxis()->SetTitle("exclusive ID_{#tau}");
   h2_tauNumberByIDN->GetYaxis()->SetTitle("N_{#tau} per ID in collection");
-  h2_tauNumberByIDN->Sumw2();     
+  h2_tauNumberByIDN->Sumw2();   */  
  
     
   //---------------------------------------------------------------------------
@@ -229,9 +229,9 @@ int main(int argc, char** argv)
           //smart tau selection
 	  for(unsigned int t =0;t<tau.size();++t){
             if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
-            if(!(       tau[t].pt >= 45.                                            				)) continue;
+            //if(!(       tau[t].pt >= 45.                                            				)) continue;
             if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      				)) continue;
-            if(!(       tau[t].tauID_againstElectronTightMVA3 > 0.5                				)) continue;
+            if(!(       tau[t].tauID_againstElectronTightMVA5 > 0.5                				)) continue;
             if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        				)) continue;
             if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
 	    if(!(tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits  <= 0.5))  TauTightIsoObjectSelectionCollection.tau.push_back(&tau[t]);
@@ -245,7 +245,7 @@ int main(int argc, char** argv)
 	    else NoIso++;
           }
 	  
-	  if(tight>=2)
+	  /*if(tight>=2)
 	    {
 	      h2_tauNumberByIDtight->Fill(3.,tight-2);
 	      h2_tauNumberByIDtight->Fill(2.,medium);
@@ -284,7 +284,7 @@ int main(int argc, char** argv)
 	      h2_tauNumberByIDN->Fill(1.,loose);
 	      h2_tauNumberByIDN->Fill(0.,NoIso-1); 
 	      h2_tauNumberByIDN->Fill(4.,NoIso+loose+medium+tight-2);
-	    } 
+	    } */
 
           // jet baseline selection
 	for(unsigned int j = 0;j<jet.size();++j){
@@ -315,19 +315,15 @@ int main(int argc, char** argv)
 		if(jetMindR > 0.5){ //only count isolated jets
 		  if( deltaRt.first < 0.1 ){
 			h2_tauResponseT->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			h3_tauCompleteT->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));
 		  }	
 		  if( deltaRm.first < 0.1 ){
 			h2_tauResponseM->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			h3_tauCompleteM->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));
 		  }		  
 		  if( deltaRl.first < 0.1 ){
 			h2_tauResponseL->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			h3_tauCompleteL->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));
 		  }
 		  if( deltaRn.first < 0.1 ){
 			h2_tauResponseN->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			h3_tauCompleteN->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt, TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt/JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta));
 		  }		  
 		}
 	}
