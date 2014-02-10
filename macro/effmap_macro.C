@@ -12,7 +12,7 @@ cout<<"begin"<<endl;
 //TFile _file0 ("effmap.root","UPDATE");
 TFile _file0 ("ChargeMap_InclAndExclIsos_wNom_Jet30Tau45_15up.root","UPDATE");
 
-((TH2F*)(_file0->Get("h2_taufakerate_num")))->Clone("h2_taufakerate_eff");
+/*((TH2F*)(_file0->Get("h2_taufakerate_num")))->Clone("h2_taufakerate_eff");
 
 ((TH2F*)(_file0->Get("h2_taufakerate_eff")))->Divide((TH2F*)(_file0->Get("h2_taufakerate_den")));
 
@@ -113,7 +113,7 @@ TFile _file0 ("ChargeMap_InclAndExclIsos_wNom_Jet30Tau45_15up.root","UPDATE");
 ((TH1F*)(_file0->Get("Nod_eff")))->Divide((TH1F*)(_file0->Get("Nod_den")));
 
 ((TH1F*)(_file0->Get("Nod_eff")))->Write();
-
+*/
 ((TH2F*)(_file0->Get("ChargeMapN_num")))->Clone("ChargeMapN_eff");
 
 ((TH2F*)(_file0->Get("ChargeMapN_eff")))->Divide((TH2F*)(_file0->Get("ChargeMapN_den")));
