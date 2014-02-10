@@ -30,12 +30,15 @@ struct Selection {
 	int DiJetSignEta;
 	float DiJetDetaMin;
 	float DiJetDetaMax;
+	float METMin;
+	float METMax;
 	float weight;
 	bool invertJetRequirements;
 	bool invertTauRequirements;
 	bool invertTauProperties;
 	bool invertDijetProperties;
 	bool invertBtagRequirement;
+	bool invertMETRequirement;
 	bool passed;
 	
 	Selection (const std::string & inputlabel){
@@ -62,11 +65,14 @@ struct Selection {
 	  DiJetDetaMin = 4.2;
 	  DiJetDetaMin = -1;
 	  weight = 0;
+	  METMin = 30.;
+	  METMax = -1;
 	  invertJetRequirements = false;
 	  invertTauRequirements = false;
 	  invertTauProperties = false;
 	  invertDijetProperties = false;
 	  invertBtagRequirement = false;
+	  invertMETRequirement = false;
 	  passed = false;
 	}
 	
@@ -95,6 +101,14 @@ struct Selection {
 	  }
 	  if(invertBtagRequirement && Btag >= 0) (*OutputCollection).h_count->Fill("InverseNoBTag",0);
 	  else if(Btag >= 0) (*OutputCollection).h_count->Fill("NoBTag",0);
+	  if (invertMETRequirement){
+	    if (METMin > 0) (*OutputCollection).h_count->Fill("InverseMinMETCut",0);
+	    if (METMax > 0) (*OutputCollection).h_count->Fill("InverseMaxMETCut",0);
+	  }
+	  else{
+	    if (METMin > 0) (*OutputCollection).h_count->Fill("MinMETCut",0);
+	    if (METMax > 0) (*OutputCollection).h_count->Fill("MaxMETCut",0);
+	  }
 	  if(invertJetRequirements){
 	    (*OutputCollection).h_count->Fill("InverseNumberOfJetsCut",0);
 	    if(LeadJetPtMin > 0 || LeadJetPtMax > 0) (*OutputCollection).h_count->Fill("InverseLeadJetCut",0);
@@ -116,6 +130,7 @@ struct Selection {
 	    if(DiJetSignEta != 0)(*OutputCollection).h_count->Fill("DiJetEtaSignCut",0);
 	    if(DiJetDetaMin > 0 || DiJetDetaMax > 0)(*OutputCollection).h_count->Fill("DiJetDetaCut",0);	  
 	  }
+
 	  
 	  if(!RunData && RealData)	 					return; //check if sample is real data and whether you want to run on real data
 	  else (*OutputCollection).h_count->Fill("NoCuts",weight);
@@ -217,6 +232,33 @@ struct Selection {
 	    }
 	    else if(!invertBtagRequirement) (*OutputCollection).h_count->Fill("NoBTag",weight);
 	  }
+	 
+	  if(METMin >= 0){
+	    if(!(METMin 	<	(double)(*InputCollection).met[0]->pt)){		//check minumum MET cut
+	      if(invertMETRequirement){
+	        (*OutputCollection).h_count->Fill("InverseMinMETCut",weight);
+		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		passed=true;
+		return;
+	      }
+	      else return;
+	    }
+	    else if(!invertMETRequirement) (*OutputCollection).h_count->Fill("MinMETCut",weight);
+	  }
+	 
+	  if(METMax >= 0){
+	    if(!(METMax 	>	(double)(*InputCollection).met[0]->pt)){		//check maximum MET cut
+	      if(invertMETRequirement){
+	        (*OutputCollection).h_count->Fill("InverseMaxMETCut",weight);
+		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		passed=true;
+		return;
+	      }
+	      else return;
+	    }
+	    else if(!invertMETRequirement) (*OutputCollection).h_count->Fill("MaxMETCut",weight);
+	  }
+	 
 	  
 	  //find index of leading jets
 	  pair<unsigned int,unsigned int> jetIndex=LeadingJets((*InputCollection));
