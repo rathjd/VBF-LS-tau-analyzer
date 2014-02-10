@@ -86,6 +86,9 @@ ofile.count("MET", 0)
 
 TH1::SetDefaultSumw2();
 TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/ChargeMap_Fq-pT_30up.root", "read");
+//TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/ChargeMap_Default_Jet30Tau45_MC.root", "read");
+//TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/ChargeMap_Lukas_Jet30_MC.root", "read");
+//TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/ResponseFactors_InclAndExclIsos_Jet30Tau45_MC.root", "read");
 TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/ResponseFactors_InclAndExclIsos_Jet30Tau45_NoPt15-30_Lukas_MC.root", "read");
 
 MyHistoCollection myHistoColl_SignalRegion(ofile.file_, "SignalRegion");        
@@ -555,7 +558,7 @@ if(verbose)std::cout<<"Dice 2TightIso"<<std::endl;
 FakeTausTT.generate(jet_taufakerateT,jet_taufakerateT, true);
 
 //apply TT trigger scaling factor out of dijet data:
-FakeTausTT.weight*=1;
+//FakeTausTT.weight*=1;
 
 tau_s faketauT1T;
 tau_s faketauT2T;
