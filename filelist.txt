@@ -1,1 +1,5 @@
-dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_Dec13/VBFSUSY_C1pmN2_N1_90_C1_180_Stau_135/ntuple_83_2_50W.root
+dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_Dec13/TauParked_amkalsi-2012B_DiTauTrigger/ntuple_103_1_tWH.root
+dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_Dec13/TauParked_amkalsi-2012B_DiTauTrigger/ntuple_104_1_1fe.root
+dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_Dec13/TauParked_amkalsi-2012B_DiTauTrigger/ntuple_105_1_eQb.root
+dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_Dec13/TauParked_amkalsi-2012B_DiTauTrigger/ntuple_106_1_hH6.root
+dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_Dec13/TauParked_amkalsi-2012B_DiTauTrigger/ntuple_107_1_1TU.root
