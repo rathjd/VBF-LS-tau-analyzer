@@ -10,7 +10,7 @@
 cout<<"begin"<<endl;
 
 //TFile _file0 ("effmap.root","UPDATE");
-TFile _file0 ("ChargeMap_InclAndExclIsos_wNom_Jet30Tau45_15up.root","UPDATE");
+TFile _file0 ("ChargeMap_Fq-pT_30up.root","UPDATE");
 
 /*((TH2F*)(_file0->Get("h2_taufakerate_num")))->Clone("h2_taufakerate_eff");
 
