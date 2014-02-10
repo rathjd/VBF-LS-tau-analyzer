@@ -85,8 +85,8 @@ ofile.count("MET", 0)
   //---------------------------------------------------------------------------
 
 TH1::SetDefaultSumw2();
-TFile file_eff("/afs/naf.desy.de/user/r/rathjd/public/VBFAnalyzer/ChargeMap_Jet30Tau45_DijetV2.root", "read");
-TFile file_Resp("/afs/naf.desy.de/user/r/rathjd/public/VBFAnalyzer/ResponseFactors_InclAndExclIsos_Jet30Tau45_Dijet.root", "read");
+TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/ChargeMap_Fq-pT_30up.root", "read");
+TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/ResponseFactors_InclAndExclIsos_Jet30Tau45_NoPt15-30_Lukas_MC.root", "read");
 
 MyHistoCollection myHistoColl_SignalRegion(ofile.file_, "SignalRegion");        
 MyHistoCollection myHistoColl_CR1 (ofile.file_, "Ztautau_CR1");
@@ -241,17 +241,18 @@ vector<double> jet_taufakerateT;
 
 for(unsigned int i = 0;i<JetLooseIsoObjectSelectionCollection.jet.size();++i){
 double jetMindR=JetJetMinDistance(JetLooseIsoObjectSelectionCollection,JetLooseIsoObjectSelectionCollection.jet[i]->eta,JetLooseIsoObjectSelectionCollection.jet[i]->phi);
-int nbinN = ChargeMapN_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction);
+double Fq=JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction;		
+int nbinN = ChargeMapN_eff->FindBin(Fq,JetLooseIsoObjectSelectionCollection.jet[i]->pt);
 int nRescaleBinN= ReweightFactorN->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
-int nbinL = ChargeMapL_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction);
+int nbinL = ChargeMapL_eff->FindBin(Fq,JetLooseIsoObjectSelectionCollection.jet[i]->pt);
 int nRescaleBinL= ReweightFactorL->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
-int nbinLi = ChargeMapLi_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction);
+int nbinLi = ChargeMapLi_eff->FindBin(Fq,JetLooseIsoObjectSelectionCollection.jet[i]->pt);
 int nRescaleBinLi= ReweightFactorLi->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
-int nbinM = ChargeMapM_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction);
+int nbinM = ChargeMapM_eff->FindBin(Fq,JetLooseIsoObjectSelectionCollection.jet[i]->pt);
 int nRescaleBinM= ReweightFactorM->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
-int nbinMi = ChargeMapMi_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction);
+int nbinMi = ChargeMapMi_eff->FindBin(Fq,JetLooseIsoObjectSelectionCollection.jet[i]->pt);
 int nRescaleBinMi= ReweightFactorMi->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
-int nbinT = ChargeMapT_eff->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[i]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[i]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[i]->chargedHadronEnergyFraction);
+int nbinT = ChargeMapT_eff->FindBin(Fq,JetLooseIsoObjectSelectionCollection.jet[i]->pt);
 int nRescaleBinT= ReweightFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
 if(verbose)std::cout<<"Jet "<<i<<" out of "<<JetLooseIsoObjectSelectionCollection.jet.size()<<": pT="<<JetLooseIsoObjectSelectionCollection.jet[i]->pt<<", eta="<<JetLooseIsoObjectSelectionCollection.jet[i]->eta<<", phi="<<JetLooseIsoObjectSelectionCollection.jet[i]->phi<<std::endl;
 if(jetMindR > 0.5 && fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta) <=2.1)
@@ -297,7 +298,7 @@ if(verbose)std::cout<<"Dice NoIso"<<std::endl;
 FakeTausN.generate(jet_taufakerateN,jet_taufakerateN, true);
 
 //apply NN trigger scaling factor out of dijet data:
-FakeTausN.weight*=1.65/10000;
+//FakeTausN.weight*=1.65/10000;
 
 tau_s faketau1N;
 tau_s faketau2N;
@@ -359,7 +360,7 @@ if(verbose)std::cout<<"Dice LooseIso"<<std::endl;
 FakeTausL.generate(jet_taufakerateL,jet_taufakerateLi, false);
 
 //apply LL,LN trigger scaling factor out of dijet data:
-FakeTausL.weight*=2.6/1000;
+//FakeTausL.weight*=2.6/1000;
 
 tau_s faketau1L;
 tau_s faketau2L;
@@ -425,7 +426,7 @@ if(verbose)std::cout<<"Dice MediumIso"<<std::endl;
 FakeTausM.generate(jet_taufakerateM,jet_taufakerateMi, false);
 
 //apply MM,ML,MN trigger scaling factor out of dijet data:
-FakeTausM.weight*=6.3/1000;
+//FakeTausM.weight*=6.3/1000;
 
 tau_s faketau1M;
 tau_s faketau2M;
@@ -490,7 +491,7 @@ if(verbose)std::cout<<"Dice 1TightIso"<<std::endl;
 FakeTausT.generate(jet_taufakerateT,jet_taufakerateMi, false);
 
 //apply TM,TL,TN trigger scaling factor out of dijet data:
-FakeTausT.weight*=5.7/1000;
+//FakeTausT.weight*=5.7/1000;
 
 tau_s faketau1T;
 tau_s faketau2T;
