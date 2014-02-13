@@ -86,6 +86,7 @@ ofile.count("MET", 0)
 
 TH1::SetDefaultSumw2();
 TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/ChargeMap_Fq-pT_30up.root", "read");
+//TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/ChargeMap_AlteredpTbinning_taug45.root", "read");
 //TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/ChargeMap_Default_Jet30Tau45_MC.root", "read");
 //TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/ChargeMap_Lukas_Jet30_MC.root", "read");
 //TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/ResponseFactors_InclAndExclIsos_Jet30Tau45_MC.root", "read");
@@ -666,7 +667,7 @@ ofile.count("NoCuts");
 // ---------------------
 // -- Signal Region --
 // ---------------------
-
+if(TauTightIsoObjectSelectionCollection.jet.size()>=2){
 Selection Signal("Signal"); //label and initialisation
 Signal.InputCollection 		= &TauTightIsoObjectSelectionCollection;        //input collection
 Signal.OutputCollection 	= &myHistoColl_SignalRegion;        //output collection
@@ -679,6 +680,8 @@ Signal.DiTauInvMassMin        	= -1;        //minimum Di-tau-mass requirement
 Signal.DiTauInvMassMax        	= -1;        //maximum Di-tau-mass requirement
 Signal.DiTauSign        	= +1;        //1 for LS and -1 for OS, 0 for no requirement
 Signal.Btag        		= 0;        //number of btags required (exact -> 0 = none)
+Signal.METMin                   = 30.;      // minimum MET requirement
+Signal.METMax                   = -1;       // maximum MET requirement
 Signal.JetEtaMax        	= 5.;        //maximum eta for jets, set to -1 for no requirement
 Signal.LeadJetPtMin        	= 30.;        //minimum pt of lead jet, set to -1 for no requirement
 Signal.LeadJetPtMax        	= -1.;        //maximum pt of lead jet, set to -1 for no requirement
@@ -689,7 +692,7 @@ Signal.DiJetDrMax        	= -1;        //Dijet maximum delta R, set to -1 for no
 Signal.DiJetInvMassMin        	= 250.;        //Dijet minimal invariant mass, set to -1 for no requirement
 Signal.DiJetInvMassMax        	= -1.;        //Dijet maximum invariant mass, set to -1 for no requirement
 Signal.DiJetSignEta        	= -1;        //Dijet sign eta_1*eta_2
-Signal.DiJetDetaMin        	= 3.9;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+Signal.DiJetDetaMin        	= 4.2;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 Signal.DiJetDetaMax        	= -1;        //Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
 Signal.weight        		= FakeTausTT.weight;        //event weight
 Signal.invertTauRequirements    = false;        //invert number of taus requirement
@@ -716,6 +719,8 @@ InvertedVBF_CR2.DiTauInvMassMin        	= -1;        //minimum Di-tau-mass requi
 InvertedVBF_CR2.DiTauInvMassMax        	= -1;        //maximum Di-tau-mass requirement
 InvertedVBF_CR2.DiTauSign        	= +1;        //1 for LS and -1 for OS, 0 for no requirement
 InvertedVBF_CR2.Btag        		= 0;        //number of btags required (exact -> 0 = none)
+InvertedVBF_CR2.METMin                   = 30.;      // minimum MET requirement
+InvertedVBF_CR2.METMax                   = -1;       // maximum MET requirement
 InvertedVBF_CR2.JetEtaMax        	= 5.;        //maximum eta for jets, set to -1 for no requirement
 InvertedVBF_CR2.LeadJetPtMin        	= 30.;        //minimum pt of lead jet, set to -1 for no requirement
 InvertedVBF_CR2.LeadJetPtMax        	= -1.;        //maximum pt of lead jet, set to -1 for no requirement
@@ -726,7 +731,7 @@ InvertedVBF_CR2.DiJetDrMax        	= -1.;        //Dijet maximum delta R, set to
 InvertedVBF_CR2.DiJetInvMassMin        	= 250.;        //Dijet minimal invariant mass, set to -1 for no requirement
 InvertedVBF_CR2.DiJetInvMassMax        	= -1.;        //Dijet maximum invariant mass, set to -1 for no requirement
 InvertedVBF_CR2.DiJetSignEta        	= -1;        //Dijet sign eta_1*eta_2
-InvertedVBF_CR2.DiJetDetaMin        	= 3.9;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+InvertedVBF_CR2.DiJetDetaMin        	= 4.2;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 InvertedVBF_CR2.DiJetDetaMax        	= -1.;        //Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
 InvertedVBF_CR2.weight        		= FakeTausTT.weight;        //event weight
 InvertedVBF_CR2.invertTauRequirements   = false;        //invert number of taus requirement
@@ -736,11 +741,11 @@ InvertedVBF_CR2.invertJetRequirements   = true;        //invert jet pt requireme
 InvertedVBF_CR2.invertDijetProperties   = true;        //invert dijet system properties (dR, inv mass, sign eta, dEta)
 
 InvertedVBF_CR2.select();        //do selection, fill histograms
-
+}
 // -------------------------------
 // -- CENTRAL + 1 Tight Tau CR3 --
 // -------------------------------
-
+if(Tau1TightIsoObjectSelectionCollection.jet.size()>=2){
 Selection oneTightTau_CR3("oneTightTau_CR3"); //label and initialisation
 oneTightTau_CR3.InputCollection 	= &Tau1TightIsoObjectSelectionCollection;        //input collection
 oneTightTau_CR3.OutputCollection 	= &myHistoColl_CR3;        //output collection
@@ -753,6 +758,8 @@ oneTightTau_CR3.DiTauInvMassMin        	= -1;        //minimum Di-tau-mass requi
 oneTightTau_CR3.DiTauInvMassMax        	= -1;        //maximum Di-tau-mass requirement
 oneTightTau_CR3.DiTauSign        	= +1;        //1 for LS and -1 for OS, 0 for no requirement
 oneTightTau_CR3.Btag        		= 0;        //number of btags required (exact -> 0 = none)
+oneTightTau_CR3.METMin                   = 30.;      // minimum MET requirement
+oneTightTau_CR3.METMax                   = -1;       // maximum MET requirement
 oneTightTau_CR3.JetEtaMax        	= 5.;        //maximum eta for jets, set to -1 for no requirement
 oneTightTau_CR3.LeadJetPtMin        	= 30.;        //minimum pt of lead jet, set to -1 for no requirement
 oneTightTau_CR3.LeadJetPtMax        	= -1.;        //maximum pt of lead jet, set to -1 for no requirement
@@ -763,7 +770,7 @@ oneTightTau_CR3.DiJetDrMax        	= -1;        //Dijet maximum delta R, set to 
 oneTightTau_CR3.DiJetInvMassMin        	= 250.;        //Dijet minimal invariant mass, set to -1 for no requirement
 oneTightTau_CR3.DiJetInvMassMax        	= -1.;        //Dijet maximum invariant mass, set to -1 for no requirement
 oneTightTau_CR3.DiJetSignEta        	= -1;        //Dijet sign eta_1*eta_2
-oneTightTau_CR3.DiJetDetaMin        	= 3.9;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+oneTightTau_CR3.DiJetDetaMin        	= 4.2;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 oneTightTau_CR3.DiJetDetaMax        	= -1;        //Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
 oneTightTau_CR3.weight        		= FakeTausT.weight;        //event weight
 oneTightTau_CR3.invertTauRequirements   = false;        //invert number of taus requirement
@@ -790,6 +797,8 @@ InvertedVBF_oneTightTau_CR4.DiTauInvMassMin        	= -1;        //minimum Di-ta
 InvertedVBF_oneTightTau_CR4.DiTauInvMassMax        	= -1;        //maximum Di-tau-mass requirement
 InvertedVBF_oneTightTau_CR4.DiTauSign        		= +1;        //1 for LS and -1 for OS, 0 for no requirement
 InvertedVBF_oneTightTau_CR4.Btag        		= 0;        //number of btags required (exact -> 0 = none)
+InvertedVBF_oneTightTau_CR4.METMin                   = 30.;      // minimum MET requirement
+InvertedVBF_oneTightTau_CR4.METMax                   = -1;       // maximum MET requirement
 InvertedVBF_oneTightTau_CR4.JetEtaMax        		= 5.;        //maximum eta for jets, set to -1 for no requirement
 InvertedVBF_oneTightTau_CR4.LeadJetPtMin        	= 30.;        //minimum pt of lead jet, set to -1 for no requirement
 InvertedVBF_oneTightTau_CR4.LeadJetPtMax        	= -1.;        //maximum pt of lead jet, set to -1 for no requirement
@@ -800,7 +809,7 @@ InvertedVBF_oneTightTau_CR4.DiJetDrMax        		= -1;        //Dijet maximum del
 InvertedVBF_oneTightTau_CR4.DiJetInvMassMin        	= 250.;        //Dijet minimal invariant mass, set to -1 for no requirement
 InvertedVBF_oneTightTau_CR4.DiJetInvMassMax        	= -1.;        //Dijet maximum invariant mass, set to -1 for no requirement
 InvertedVBF_oneTightTau_CR4.DiJetSignEta        	= -1;        //Dijet sign eta_1*eta_2
-InvertedVBF_oneTightTau_CR4.DiJetDetaMin        	= 3.9;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+InvertedVBF_oneTightTau_CR4.DiJetDetaMin        	= 4.2;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 InvertedVBF_oneTightTau_CR4.DiJetDetaMax        	= -1;        //Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
 InvertedVBF_oneTightTau_CR4.weight        		= FakeTausT.weight;        //event weight
 InvertedVBF_oneTightTau_CR4.invertTauRequirements       = false;        //invert number of taus requirement
@@ -810,11 +819,11 @@ InvertedVBF_oneTightTau_CR4.invertJetRequirements       = true;        //invert 
 InvertedVBF_oneTightTau_CR4.invertDijetProperties       = true;        //invert dijet system properties (dR, inv mass, sign eta, dEta)
 
 InvertedVBF_oneTightTau_CR4.select();        //do selection, fill histograms
-
+}
 // ----------------------------------
 // -- CENTRAL + Anti Tight Tau CR5 --
 // ----------------------------------
-
+if(TauMediumIsoObjectSelectionCollection.jet.size()>=2){
 Selection AntiTightTau_CR5("AntiTightTau_CR5"); //label and initialisation
 AntiTightTau_CR5.InputCollection 		= &TauMediumIsoObjectSelectionCollection;        //input collection
 AntiTightTau_CR5.OutputCollection 		= &myHistoColl_CR5;        //output collection
@@ -827,6 +836,8 @@ AntiTightTau_CR5.DiTauInvMassMin        	= -1;        //minimum Di-tau-mass requ
 AntiTightTau_CR5.DiTauInvMassMax        	= -1;        //maximum Di-tau-mass requirement
 AntiTightTau_CR5.DiTauSign        		= +1;        //1 for LS and -1 for OS, 0 for no requirement
 AntiTightTau_CR5.Btag        			= 0;        //number of btags required (exact -> 0 = none)
+AntiTightTau_CR5.METMin                   = 30.;      // minimum MET requirement
+AntiTightTau_CR5.METMax                   = -1;       // maximum MET requirement
 AntiTightTau_CR5.JetEtaMax        		= 5.;        //maximum eta for jets, set to -1 for no requirement
 AntiTightTau_CR5.LeadJetPtMin        		= 30.;        //minimum pt of lead jet, set to -1 for no requirement
 AntiTightTau_CR5.LeadJetPtMax        		= -1.;        //maximum pt of lead jet, set to -1 for no requirement
@@ -837,7 +848,7 @@ AntiTightTau_CR5.DiJetDrMax        		= -1;        //Dijet maximum delta R, set t
 AntiTightTau_CR5.DiJetInvMassMin        	= 250.;        //Dijet minimal invariant mass, set to -1 for no requirement
 AntiTightTau_CR5.DiJetInvMassMax        	= -1.;        //Dijet maximum invariant mass, set to -1 for no requirement
 AntiTightTau_CR5.DiJetSignEta        		= -1;        //Dijet sign eta_1*eta_2
-AntiTightTau_CR5.DiJetDetaMin        		= 3.9;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+AntiTightTau_CR5.DiJetDetaMin        		= 4.2;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 AntiTightTau_CR5.DiJetDetaMax        		= -1;        //Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
 AntiTightTau_CR5.weight        			= FakeTausM.weight;        //event weight
 AntiTightTau_CR5.invertTauRequirements        	= false;        //invert number of taus requirement
@@ -864,6 +875,8 @@ InvertedVBF_AntiTightTau_CR6.DiTauInvMassMin    	= -1;        //minimum Di-tau-m
 InvertedVBF_AntiTightTau_CR6.DiTauInvMassMax    	= -1;        //maximum Di-tau-mass requirement
 InvertedVBF_AntiTightTau_CR6.DiTauSign        		= +1;        //1 for LS and -1 for OS, 0 for no requirement
 InvertedVBF_AntiTightTau_CR6.Btag        		= 0;        //number of btags required (exact -> 0 = none)
+InvertedVBF_AntiTightTau_CR6.METMin                   = 30.;      // minimum MET requirement
+InvertedVBF_AntiTightTau_CR6.METMax                   = -1;       // maximum MET requirement
 InvertedVBF_AntiTightTau_CR6.JetEtaMax        		= 5.;        //maximum eta for jets, set to -1 for no requirement
 InvertedVBF_AntiTightTau_CR6.LeadJetPtMin       	= 30.;        //minimum pt of lead jet, set to -1 for no requirement
 InvertedVBF_AntiTightTau_CR6.LeadJetPtMax       	= -1.;        //maximum pt of lead jet, set to -1 for no requirement
@@ -874,7 +887,7 @@ InvertedVBF_AntiTightTau_CR6.DiJetDrMax        		= -1;        //Dijet maximum de
 InvertedVBF_AntiTightTau_CR6.DiJetInvMassMin    	= 250.;        //Dijet minimal invariant mass, set to -1 for no requirement
 InvertedVBF_AntiTightTau_CR6.DiJetInvMassMax    	= -1.;        //Dijet maximum invariant mass, set to -1 for no requirement
 InvertedVBF_AntiTightTau_CR6.DiJetSignEta       	= -1;        //Dijet sign eta_1*eta_2
-InvertedVBF_AntiTightTau_CR6.DiJetDetaMin       	= 3.9;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+InvertedVBF_AntiTightTau_CR6.DiJetDetaMin       	= 4.2;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 InvertedVBF_AntiTightTau_CR6.DiJetDetaMax       	= -1;        //Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
 InvertedVBF_AntiTightTau_CR6.weight        		= FakeTausM.weight;        //event weight
 InvertedVBF_AntiTightTau_CR6.invertTauRequirements      = false;        //invert number of taus requirement
@@ -884,11 +897,11 @@ InvertedVBF_AntiTightTau_CR6.invertJetRequirements      = true;        //invert 
 InvertedVBF_AntiTightTau_CR6.invertDijetProperties      = true;        //invert dijet system properties (dR, inv mass, sign eta, dEta)
 
 InvertedVBF_AntiTightTau_CR6.select();        //do selection, fill histograms
-
+}
 // -----------------------------------
 // -- CENTRAL + Anti Medium Tau CR7 --
 // -----------------------------------
-
+if(TauLooseIsoObjectSelectionCollection.jet.size()>=2){
 Selection AntiMediumTau_CR7("AntiMediumTau_CR7"); //label and initialisation
 AntiMediumTau_CR7.InputCollection 	= &TauLooseIsoObjectSelectionCollection;        //input collection
 AntiMediumTau_CR7.OutputCollection 	= &myHistoColl_CR7;        //output collection
@@ -901,6 +914,8 @@ AntiMediumTau_CR7.DiTauInvMassMin       = -1;        //minimum Di-tau-mass requi
 AntiMediumTau_CR7.DiTauInvMassMax       = -1;        //maximum Di-tau-mass requirement
 AntiMediumTau_CR7.DiTauSign        	= +1;        //1 for LS and -1 for OS, 0 for no requirement
 AntiMediumTau_CR7.Btag        		= 0;        //number of btags required (exact -> 0 = none)
+AntiMediumTau_CR7.METMin                   = 30.;      // minimum MET requirement
+AntiMediumTau_CR7.METMax                   = -1;       // maximum MET requirement
 AntiMediumTau_CR7.JetEtaMax        	= 5.;        //maximum eta for jets, set to -1 for no requirement
 AntiMediumTau_CR7.LeadJetPtMin        	= 30.;        //minimum pt of lead jet, set to -1 for no requirement
 AntiMediumTau_CR7.LeadJetPtMax        	= -1.;        //maximum pt of lead jet, set to -1 for no requirement
@@ -911,7 +926,7 @@ AntiMediumTau_CR7.DiJetDrMax        	= -1;        //Dijet maximum delta R, set t
 AntiMediumTau_CR7.DiJetInvMassMin       = 250.;        //Dijet minimal invariant mass, set to -1 for no requirement
 AntiMediumTau_CR7.DiJetInvMassMax       = -1.;        //Dijet maximum invariant mass, set to -1 for no requirement
 AntiMediumTau_CR7.DiJetSignEta        	= -1;        //Dijet sign eta_1*eta_2
-AntiMediumTau_CR7.DiJetDetaMin        	= 3.9;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+AntiMediumTau_CR7.DiJetDetaMin        	= 4.2;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 AntiMediumTau_CR7.DiJetDetaMax        	= -1;        //Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
 AntiMediumTau_CR7.weight        	= FakeTausL.weight;        //event weight
 AntiMediumTau_CR7.invertTauRequirements = false;        //invert number of taus requirement
@@ -938,6 +953,8 @@ InvertedVBF_AntiMediumTau_CR8.DiTauInvMassMin        	= -1;        //minimum Di-
 InvertedVBF_AntiMediumTau_CR8.DiTauInvMassMax        	= -1;        //maximum Di-tau-mass requirement
 InvertedVBF_AntiMediumTau_CR8.DiTauSign        		= +1;        //1 for LS and -1 for OS, 0 for no requirement
 InvertedVBF_AntiMediumTau_CR8.Btag        		= 0;        //number of btags required (exact -> 0 = none)
+InvertedVBF_AntiMediumTau_CR8.METMin                   = 30.;      // minimum MET requirement
+InvertedVBF_AntiMediumTau_CR8.METMax                   = -1;       // maximum MET requirement
 InvertedVBF_AntiMediumTau_CR8.JetEtaMax        		= 5.;        //maximum eta for jets, set to -1 for no requirement
 InvertedVBF_AntiMediumTau_CR8.LeadJetPtMin        	= 30.;        //minimum pt of lead jet, set to -1 for no requirement
 InvertedVBF_AntiMediumTau_CR8.LeadJetPtMax        	= -1.;        //maximum pt of lead jet, set to -1 for no requirement
@@ -948,7 +965,7 @@ InvertedVBF_AntiMediumTau_CR8.DiJetDrMax        	= -1;        //Dijet maximum de
 InvertedVBF_AntiMediumTau_CR8.DiJetInvMassMin        	= 250.;        //Dijet minimal invariant mass, set to -1 for no requirement
 InvertedVBF_AntiMediumTau_CR8.DiJetInvMassMax        	= -1.;        //Dijet maximum invariant mass, set to -1 for no requirement
 InvertedVBF_AntiMediumTau_CR8.DiJetSignEta        	= -1;        //Dijet sign eta_1*eta_2
-InvertedVBF_AntiMediumTau_CR8.DiJetDetaMin        	= 3.9;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+InvertedVBF_AntiMediumTau_CR8.DiJetDetaMin        	= 4.2;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 InvertedVBF_AntiMediumTau_CR8.DiJetDetaMax        	= -1;        //Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
 InvertedVBF_AntiMediumTau_CR8.weight        		= FakeTausL.weight;        //event weight
 InvertedVBF_AntiMediumTau_CR8.invertTauRequirements     = false;        //invert number of taus requirement
@@ -958,11 +975,11 @@ InvertedVBF_AntiMediumTau_CR8.invertJetRequirements     = true;        //invert 
 InvertedVBF_AntiMediumTau_CR8.invertDijetProperties     = true;        //invert dijet system properties (dR, inv mass, sign eta, dEta)
 
 InvertedVBF_AntiMediumTau_CR8.select();        //do selection, fill histograms
-
+}
 // -----------------------------------
 // -- CENTRAL + Anti Loose Tau CR9 ---
 // -----------------------------------
-
+if(TauNoIsoObjectSelectionCollection.jet.size()>=2){
 Selection AntiLooseTau_CR9("AntiLooseTau_CR9"); //label and initialisation
 AntiLooseTau_CR9.InputCollection 	= &TauNoIsoObjectSelectionCollection;        //input collection
 AntiLooseTau_CR9.OutputCollection 	= &myHistoColl_CR9;        //output collection
@@ -975,6 +992,8 @@ AntiLooseTau_CR9.DiTauInvMassMin        = -1;        //minimum Di-tau-mass requi
 AntiLooseTau_CR9.DiTauInvMassMax        = -1;        //maximum Di-tau-mass requirement
 AntiLooseTau_CR9.DiTauSign        	= +1;        //1 for LS and -1 for OS, 0 for no requirement
 AntiLooseTau_CR9.Btag        		= 0;        //number of btags required (exact -> 0 = none)
+AntiLooseTau_CR9.METMin                   = 30.;      // minimum MET requirement
+AntiLooseTau_CR9.METMax                   = -1;       // maximum MET requirement
 AntiLooseTau_CR9.JetEtaMax        	= 5.;        //maximum eta for jets, set to -1 for no requirement
 AntiLooseTau_CR9.LeadJetPtMin        	= 30.;        //minimum pt of lead jet, set to -1 for no requirement
 AntiLooseTau_CR9.LeadJetPtMax        	= -1.;        //maximum pt of lead jet, set to -1 for no requirement
@@ -985,7 +1004,7 @@ AntiLooseTau_CR9.DiJetDrMax        	= -1;        //Dijet maximum delta R, set to
 AntiLooseTau_CR9.DiJetInvMassMin        = 250.;        //Dijet minimal invariant mass, set to -1 for no requirement
 AntiLooseTau_CR9.DiJetInvMassMax        = -1.;        //Dijet maximum invariant mass, set to -1 for no requirement
 AntiLooseTau_CR9.DiJetSignEta        	= -1;        //Dijet sign eta_1*eta_2
-AntiLooseTau_CR9.DiJetDetaMin        	= 3.9;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+AntiLooseTau_CR9.DiJetDetaMin        	= 4.2;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 AntiLooseTau_CR9.DiJetDetaMax        	= -1;        //Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
 AntiLooseTau_CR9.weight        		= FakeTausN.weight;        //event weight
 AntiLooseTau_CR9.invertTauRequirements  = false;        //invert number of taus requirement
@@ -1012,6 +1031,8 @@ InvertedVBF_AntiLooseTau_CR10.DiTauInvMassMin        	= -1;        //minimum Di-
 InvertedVBF_AntiLooseTau_CR10.DiTauInvMassMax        	= -1;        //maximum Di-tau-mass requirement
 InvertedVBF_AntiLooseTau_CR10.DiTauSign        		= +1;        //1 for LS and -1 for OS, 0 for no requirement
 InvertedVBF_AntiLooseTau_CR10.Btag        		= 0;        //number of btags required (exact -> 0 = none)
+InvertedVBF_AntiLooseTau_CR10.METMin                   = 30.;      // minimum MET requirement
+InvertedVBF_AntiLooseTau_CR10.METMax                   = -1;       // maximum MET requirement
 InvertedVBF_AntiLooseTau_CR10.JetEtaMax        		= 5.;        //maximum eta for jets, set to -1 for no requirement
 InvertedVBF_AntiLooseTau_CR10.LeadJetPtMin        	= 30.;        //minimum pt of lead jet, set to -1 for no requirement
 InvertedVBF_AntiLooseTau_CR10.LeadJetPtMax        	= -1.;        //maximum pt of lead jet, set to -1 for no requirement
@@ -1022,7 +1043,7 @@ InvertedVBF_AntiLooseTau_CR10.DiJetDrMax        	= -1;        //Dijet maximum de
 InvertedVBF_AntiLooseTau_CR10.DiJetInvMassMin        	= 250.;        //Dijet minimal invariant mass, set to -1 for no requirement
 InvertedVBF_AntiLooseTau_CR10.DiJetInvMassMax        	= -1.;        //Dijet maximum invariant mass, set to -1 for no requirement
 InvertedVBF_AntiLooseTau_CR10.DiJetSignEta        	= -1;        //Dijet sign eta_1*eta_2
-InvertedVBF_AntiLooseTau_CR10.DiJetDetaMin        	= 3.9;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
+InvertedVBF_AntiLooseTau_CR10.DiJetDetaMin        	= 4.2;        //Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 InvertedVBF_AntiLooseTau_CR10.DiJetDetaMax        	= -1;        //Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
 InvertedVBF_AntiLooseTau_CR10.weight        		= FakeTausN.weight;        //event weight
 InvertedVBF_AntiLooseTau_CR10.invertTauRequirements     = false;        //invert number of taus requirement
@@ -1032,7 +1053,7 @@ InvertedVBF_AntiLooseTau_CR10.invertJetRequirements     = true;        //invert 
 InvertedVBF_AntiLooseTau_CR10.invertDijetProperties     = true;        //invert dijet system properties (dR, inv mass, sign eta, dEta)
 
 InvertedVBF_AntiLooseTau_CR10.select();        //do selection, fill histograms
-
+}
 
 // ---------------------
 // -- Z -> TauTau CR --
