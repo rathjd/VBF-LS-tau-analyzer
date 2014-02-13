@@ -92,7 +92,8 @@ struct Fake {
 	  //randomize tau indizes
 	  if(weight>=1) return; //sanity check
 	  std::uniform_real_distribution<double> distributionOne(0.0, maxProb1);
-	  std::mt19937 engine; // Mersenne twister MT19937
+	  std::random_device rd;
+	  std::mt19937 engine(rd()); // Mersenne twister MT19937
 	  
 	  double TossOne=distributionOne(engine);
 	  double temp=0.;
