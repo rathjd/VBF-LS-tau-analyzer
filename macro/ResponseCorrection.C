@@ -14,7 +14,7 @@ void ResponseCorrection(double ptMin)
 {
 
 
-TFile _file0("Response_Lukas_50-80only.root","UPDATE");
+TFile _file0("ResponseLimitedJetPt_50-80only.root","READ");
 
 TH2F *projectN=(TH2F*)_file0.Get("h2_tauResponseN")->Clone("project");
 TH2F *projectL=(TH2F*)_file0.Get("h2_tauResponseL")->Clone("project");
@@ -91,7 +91,7 @@ scalesErrorM.push_back(0);
 scalesErrorMi.push_back(0);
 scalesErrorT.push_back(0);
 
-for(int p=projectN->GetNbinsX(); p>0; p--)
+for(int p=0; p<projectN->GetNbinsX(); p++)
   {
   TH1F *histN=(TH1F*)projectN->ProjectionY(TString::Format("histN_%d",p+1),p+1,p+1);
   TH1F *histL=(TH1F*)projectL->ProjectionY(TString::Format("histL_%d",p+1),p+1,p+1);
@@ -104,6 +104,7 @@ for(int p=projectN->GetNbinsX(); p>0; p--)
   histMi->SetTitle("MediumInclIso #tau response");
   TH1F *histT=(TH1F*)projectT->ProjectionY(TString::Format("histT_%d",p+1),p+1,p+1);
   bool finish=false;
+  cout<<projectN->GetXaxis()->GetBinLowEdge(p+1)<<endl;
   /*if(ptEdges[p+1]>ptMin/histN->GetBinLowEdge(2))
     {
       histN=(TH1F*)projectN->ProjectionY(TString::Format("histN_%d",p+1),p+1,-1);
@@ -118,20 +119,21 @@ for(int p=projectN->GetNbinsX(); p>0; p--)
       histT=(TH1F*)projectT->ProjectionY(TString::Format("histT_%d",p+1),p+1,-1);
       finish=true;
     }*/
+  int x=22-p;
   if(histN->GetEntries()!=0)
     {
-      double pT=ptMin/histN->GetBinLowEdge(p+1);
-      //cout<<histN->GetBinLowEdge(p+1)<<" = "<<pT<<endl;
+      double pT=ptMin/histN->GetBinLowEdge(x);
+      cout<<histN->GetBinLowEdge(x)<<" = "<<pT<<endl;
       EdgesN.push_back(pT);
       double E1=0;
       double E2=0;
-      RescalesN.push_back(histN->IntegralAndError(p+1,-1,E1)/histN->IntegralAndError(0,-1,E2));
-      RescaleErrorsN.push_back(TMath::Sqrt(TMath::Power(E1/histN->Integral(0,-1),2)+TMath::Power(E2*histN->Integral(p+1,-1)/TMath::Power(histN->Integral(0,-1),2),2)));
+      RescalesN.push_back(histN->IntegralAndError(x,-1,E1)/histN->IntegralAndError(0,-1,E2));
+      RescaleErrorsN.push_back(TMath::Sqrt(TMath::Power(E1/histN->Integral(0,-1),2)+TMath::Power(E2*histN->Integral(x,-1)/TMath::Power(histN->Integral(0,-1),2),2)));
       TCanvas *c=new TCanvas("c",TString::Format("NoIso p_{T}=%.0f",pT));
       c->cd();
       histN->GetXaxis()->SetRange(0,histN->GetNbinsX()+1);
       histN->Draw();
-      TLine *l=new TLine(histN->GetBinLowEdge(p+1),0,histN->GetBinLowEdge(p+1),histN->GetMaximum());
+      TLine *l=new TLine(histN->GetBinLowEdge(x),0,histN->GetBinLowEdge(x),histN->GetMaximum());
       l->SetLineStyle(2);
       l->SetLineColor(2);
       l->Draw();
@@ -142,17 +144,17 @@ for(int p=projectN->GetNbinsX(); p>0; p--)
     }
   if(histL->GetEntries()!=0)
     {
-      double pT=ptMin/histL->GetBinLowEdge(p+1);
+      double pT=ptMin/histL->GetBinLowEdge(x);
       EdgesL.push_back(pT);
       double E1=0;
       double E2=0;
-      RescalesL.push_back(histL->IntegralAndError(p+1,-1,E1)/histL->IntegralAndError(0,-1,E2));
-      RescaleErrorsL.push_back(TMath::Sqrt(TMath::Power(E1/histL->Integral(0,-1),2)+TMath::Power(E2*histL->Integral(p+1,-1)/TMath::Power(histL->Integral(0,-1),2),2)));
+      RescalesL.push_back(histL->IntegralAndError(x,-1,E1)/histL->IntegralAndError(0,-1,E2));
+      RescaleErrorsL.push_back(TMath::Sqrt(TMath::Power(E1/histL->Integral(0,-1),2)+TMath::Power(E2*histL->Integral(x,-1)/TMath::Power(histL->Integral(0,-1),2),2)));
       TCanvas *c=new TCanvas("c",TString::Format("LooseIso p_{T}=%.0f",pT));
       c->cd();
       histL->GetXaxis()->SetRange(0,histL->GetNbinsX()+1);
       histL->Draw();
-      TLine *l=new TLine(histL->GetBinLowEdge(p+1),0,histL->GetBinLowEdge(p+1),histL->GetMaximum());
+      TLine *l=new TLine(histL->GetBinLowEdge(x),0,histL->GetBinLowEdge(x),histL->GetMaximum());
       l->SetLineStyle(2);
       l->SetLineColor(2);
       l->Draw();
@@ -163,17 +165,17 @@ for(int p=projectN->GetNbinsX(); p>0; p--)
     }
   if(histLi->GetEntries()!=0)
     {
-      double pT=ptMin/histLi->GetBinLowEdge(p+1);
+      double pT=ptMin/histLi->GetBinLowEdge(x);
       EdgesLi.push_back(pT);
       double E1=0;
       double E2=0;
-      RescalesLi.push_back(histLi->IntegralAndError(p+1,-1,E1)/histLi->IntegralAndError(0,-1,E2));
-      RescaleErrorsLi.push_back(TMath::Sqrt(TMath::Power(E1/histLi->Integral(0,-1),2)+TMath::Power(E2*histLi->Integral(p+1,-1)/TMath::Power(histLi->Integral(0,-1),2),2)));
+      RescalesLi.push_back(histLi->IntegralAndError(x,-1,E1)/histLi->IntegralAndError(0,-1,E2));
+      RescaleErrorsLi.push_back(TMath::Sqrt(TMath::Power(E1/histLi->Integral(0,-1),2)+TMath::Power(E2*histLi->Integral(x,-1)/TMath::Power(histLi->Integral(0,-1),2),2)));
       TCanvas *c=new TCanvas("c",TString::Format("LooseInclIso p_{T}=%.0f",pT));
       c->cd();
       histLi->GetXaxis()->SetRange(0,histLi->GetNbinsX()+1);
       histLi->Draw();
-      TLine *l=new TLine(histLi->GetBinLowEdge(p+1),0,histLi->GetBinLowEdge(p+1),histLi->GetMaximum());
+      TLine *l=new TLine(histLi->GetBinLowEdge(x),0,histLi->GetBinLowEdge(x),histLi->GetMaximum());
       l->SetLineStyle(2);
       l->SetLineColor(2);
       l->Draw();
@@ -184,17 +186,17 @@ for(int p=projectN->GetNbinsX(); p>0; p--)
     }    
   if(histM->GetEntries()!=0)
     {
-      double pT=ptMin/histM->GetBinLowEdge(p+1);
+      double pT=ptMin/histM->GetBinLowEdge(x);
       EdgesM.push_back(pT);
       double E1=0;
       double E2=0;
-      RescalesM.push_back(histM->IntegralAndError(p+1,-1,E1)/histM->IntegralAndError(0,-1,E2));
-      RescaleErrorsM.push_back(TMath::Sqrt(TMath::Power(E1/histM->Integral(0,-1),2)+TMath::Power(E2*histM->Integral(p+1,-1)/TMath::Power(histM->Integral(0,-1),2),2)));
+      RescalesM.push_back(histM->IntegralAndError(x,-1,E1)/histM->IntegralAndError(0,-1,E2));
+      RescaleErrorsM.push_back(TMath::Sqrt(TMath::Power(E1/histM->Integral(0,-1),2)+TMath::Power(E2*histM->Integral(x,-1)/TMath::Power(histM->Integral(0,-1),2),2)));
       TCanvas *c=new TCanvas("c",TString::Format("MediumIso p_{T}=%.0f",pT));
       c->cd();
       histM->GetXaxis()->SetRange(0,histM->GetNbinsX()+1);
       histM->Draw();
-      TLine *l=new TLine(histM->GetBinLowEdge(p+1),0,histM->GetBinLowEdge(p+1),histM->GetMaximum());
+      TLine *l=new TLine(histM->GetBinLowEdge(x),0,histM->GetBinLowEdge(x),histM->GetMaximum());
       l->SetLineStyle(2);
       l->SetLineColor(2);
       l->Draw();
@@ -205,17 +207,17 @@ for(int p=projectN->GetNbinsX(); p>0; p--)
     }
   if(histMi->GetEntries()!=0)
     {
-      double pT=ptMin/histMi->GetBinLowEdge(p+1);
+      double pT=ptMin/histMi->GetBinLowEdge(x);
       EdgesMi.push_back(pT);
       double E1=0;
       double E2=0;
-      RescalesMi.push_back(histMi->IntegralAndError(p+1,-1,E1)/histMi->IntegralAndError(0,-1,E2));
-      RescaleErrorsMi.push_back(TMath::Sqrt(TMath::Power(E1/histMi->Integral(0,-1),2)+TMath::Power(E2*histMi->Integral(p+1,-1)/TMath::Power(histMi->Integral(0,-1),2),2)));
+      RescalesMi.push_back(histMi->IntegralAndError(x,-1,E1)/histMi->IntegralAndError(0,-1,E2));
+      RescaleErrorsMi.push_back(TMath::Sqrt(TMath::Power(E1/histMi->Integral(0,-1),2)+TMath::Power(E2*histMi->Integral(x,-1)/TMath::Power(histMi->Integral(0,-1),2),2)));
       TCanvas *c=new TCanvas("c",TString::Format("MediumInclIso p_{T}=%.0f",pT));
       c->cd();
       histMi->GetXaxis()->SetRange(0,histMi->GetNbinsX()+1);
       histMi->Draw();
-      TLine *l=new TLine(histMi->GetBinLowEdge(p+1),0,histMi->GetBinLowEdge(p+1),histMi->GetMaximum());
+      TLine *l=new TLine(histMi->GetBinLowEdge(x),0,histMi->GetBinLowEdge(x),histMi->GetMaximum());
       l->SetLineStyle(2);
       l->SetLineColor(2);
       l->Draw();
@@ -226,17 +228,17 @@ for(int p=projectN->GetNbinsX(); p>0; p--)
     }    
   if(histT->GetEntries()!=0)
     {
-      double pT=ptMin/histT->GetBinLowEdge(p+1);
+      double pT=ptMin/histT->GetBinLowEdge(x);
       EdgesT.push_back(pT);
       double E1=0;
       double E2=0;
-      RescalesT.push_back(histT->IntegralAndError(p+1,-1,E1)/histT->IntegralAndError(0,-1,E2));
-      RescaleErrorsT.push_back(TMath::Sqrt(TMath::Power(E1/histT->Integral(0,-1),2)+TMath::Power(E2*histT->Integral(p+1,-1)/TMath::Power(histT->Integral(0,-1),2),2)));
+      RescalesT.push_back(histT->IntegralAndError(x,-1,E1)/histT->IntegralAndError(0,-1,E2));
+      RescaleErrorsT.push_back(TMath::Sqrt(TMath::Power(E1/histT->Integral(0,-1),2)+TMath::Power(E2*histT->Integral(x,-1)/TMath::Power(histT->Integral(0,-1),2),2)));
       TCanvas *c=new TCanvas("c",TString::Format("TightIso p_{T}=%.0f",pT));
       c->cd();
       histT->GetXaxis()->SetRange(0,histT->GetNbinsX()+1);
       histT->Draw();
-      TLine *l=new TLine(histT->GetBinLowEdge(p+1),0,histT->GetBinLowEdge(p+1),histT->GetMaximum());
+      TLine *l=new TLine(histT->GetBinLowEdge(x),0,histT->GetBinLowEdge(x),histT->GetMaximum());
       l->SetLineStyle(2);
       l->SetLineColor(2);
       l->Draw();
@@ -392,7 +394,7 @@ for(unsigned int x=0; x<RescalesT.size(); x++)
     scaleT->SetBinError(x+1,scalesErrorT[x]);    
   }
 
-TFile *f=new TFile("ResponseFactors_InclAndExclIsos_50-80only_Jet30Lukas_MC_Tau45.root","RECREATE");
+TFile *f=new TFile("ResponseFactors_LimitedJetPt_50-80only.root","RECREATE");
 RescaleWeightN->Write();
 RescaleWeightL->Write();
 RescaleWeightLi->Write();
