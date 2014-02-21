@@ -11,6 +11,7 @@ struct Selection {
 	MyHistoCollection *OutputCollection;
 	bool RealData;
 	bool RunData;
+	bool RequireTriggers;
 	int NumberTauMin;
 	int NumberTauMax;
 	float DiTauDeltaRmin;
@@ -45,6 +46,7 @@ struct Selection {
 	  label = inputlabel;
 	  RealData = true;
 	  RunData = false;
+	  RequireTriggers = false;
 	  NumberTauMin = 2;
 	  NumberTauMax = -1;
 	  DiTauDeltaRmin = 0.3;
@@ -65,7 +67,7 @@ struct Selection {
 	  DiJetDetaMin = 4.2;
 	  DiJetDetaMin = -1;
 	  weight = 0;
-	  METMin = 30.;
+	  METMin = 0.;
 	  METMax = -1;
 	  invertJetRequirements = false;
 	  invertTauRequirements = false;
@@ -135,7 +137,7 @@ struct Selection {
 	  if(!RunData && RealData)	 					return; //check if sample is real data and whether you want to run on real data
 	  else (*OutputCollection).h_count->Fill("NoCuts",weight);
 	  
-	  if(RealData		&& !(*InputCollection).passedTrigger) 		return; //check on trigger pass, if sample is real data
+	  if((RequireTriggers || RealData)	&& !(*InputCollection).passedTrigger) 		return; //check on trigger pass, if sample is real data
 	  else if(RealData) (*OutputCollection).h_count->Fill("TriggerRequirement",weight);
 	  
 	  //Tau requirements
@@ -194,7 +196,7 @@ struct Selection {
 	    }
 	    else if(!invertTauProperties) (*OutputCollection).h_count->Fill("DiTauInvMassMinCut", weight);
 	  }
-	  ;
+	  
 	  if(DiTauInvMassMax > 0){
 	    if(!(Inv2t.Mass < DiTauInvMassMax)){					//check maximum ditau mass
 	      if(invertTauProperties){
