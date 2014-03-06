@@ -88,7 +88,8 @@ int main(int argc, char** argv)
 
   double etaedges[5]={0.,1.4,1.6,2.,2.2};
   double etaExtended[23]={0.,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0,2.1,2.2};
-  double ptedges[12]={0.,30.,45.,55.,75.,100.,250.,400.,600.,900.,1500.,2500.};
+  //double ptedges[12]={0.,30.,45.,55.,75.,100.,250.,400.,600.,900.,1500.,2500.};
+  double ptedges[21]={22.5,23.7,25.,26.5,28.1,30.,32.1,34.6,37.5,40.9,45.,50.,56.3,64.3,75.,90.,112.5,150.,225.,450.,2500.};
   double respEdges[29]={0.10,0.15,0.20,0.25,0.30,0.35,0.40,0.45,0.50,0.55,0.60,0.65,0.70,0.75,0.80,0.85,0.90,0.95,1.00,1.05,1.10,1.15,1.20,1.25,1.30,1.35,1.40,1.45,1.50};
   double Nedges[31]={0,1,2,3,4,5,6,7,8,10,12,14,16,20,24,28,32,36,40,45,50,55,60,70,80,90,100,120,140,170,200};
   double FractionEdges[17]={0.0,0.05,0.1,0.15,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.8,0.85,0.9,0.95,1., 1.01};
@@ -102,8 +103,8 @@ int main(int argc, char** argv)
   h2_Nq_Fq_num->Sumw2();
   h2_Nq_Fq_den->Sumw2();
   
-  TH2F* h2_Nq_pT_num = new TH2F("h2_Nq_pT_num", "h2_Nq_pT_num", 30, Nedges, 11, ptedges);
-  TH2F* h2_Nq_pT_den = new TH2F("h2_Nq_pT_den", "h2_Nq_pT_den", 30, Nedges, 11, ptedges);
+  TH2F* h2_Nq_pT_num = new TH2F("h2_Nq_pT_num", "h2_Nq_pT_num", 30, Nedges, 20, ptedges);
+  TH2F* h2_Nq_pT_den = new TH2F("h2_Nq_pT_den", "h2_Nq_pT_den", 30, Nedges, 20, ptedges);
   h2_Nq_pT_num->GetXaxis()->SetTitle("N^{q}");
   h2_Nq_pT_den->GetXaxis()->SetTitle("N^{q}");
   h2_Nq_pT_num->GetYaxis()->SetTitle("p_{T}");
@@ -120,8 +121,8 @@ int main(int argc, char** argv)
   h2_Nq_Abseta_num->Sumw2();
   h2_Nq_Abseta_den->Sumw2();  
   
-  TH2F* h2_Fq_pT_num = new TH2F("h2_Fq_pT_num", "h2_Fq_pT_num", 16, FractionEdges, 11, ptedges);
-  TH2F* h2_Fq_pT_den = new TH2F("h2_Fq_pT_den", "h2_Fq_pT_den", 16, FractionEdges, 11, ptedges);
+  TH2F* h2_Fq_pT_num = new TH2F("h2_Fq_pT_num", "h2_Fq_pT_num", 16, FractionEdges, 20, ptedges);
+  TH2F* h2_Fq_pT_den = new TH2F("h2_Fq_pT_den", "h2_Fq_pT_den", 16, FractionEdges, 20, ptedges);
   h2_Fq_pT_num->GetXaxis()->SetTitle("F^{q}");
   h2_Fq_pT_den->GetXaxis()->SetTitle("F^{q}");
   h2_Fq_pT_num->GetYaxis()->SetTitle("p_{T}");
@@ -138,8 +139,8 @@ int main(int argc, char** argv)
   h2_Fq_Abseta_num->Sumw2();
   h2_Fq_Abseta_den->Sumw2();   
 
-  TH2F* h2_pT_Abseta_num = new TH2F("h2_pT_Abseta_num", "h2_pT_Abseta_num", 11, ptedges, 4, etaedges);
-  TH2F* h2_pT_Abseta_den = new TH2F("h2_pT_Abseta_den", "h2_pT_Abseta_den", 11, ptedges, 4, etaedges);
+  TH2F* h2_pT_Abseta_num = new TH2F("h2_pT_Abseta_num", "h2_pT_Abseta_num", 20, ptedges, 4, etaedges);
+  TH2F* h2_pT_Abseta_den = new TH2F("h2_pT_Abseta_den", "h2_pT_Abseta_den", 20, ptedges, 4, etaedges);
   h2_pT_Abseta_num->GetXaxis()->SetTitle("p_{T}^{jet}");
   h2_pT_Abseta_den->GetXaxis()->SetTitle("p_{T}^{jet}");
   h2_pT_Abseta_num->GetYaxis()->SetTitle("|#eta|");
@@ -154,12 +155,14 @@ int main(int argc, char** argv)
   TFile file_Pt("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/ResponseFactors_InclAndExclIsos_Jet30Tau45_NoPt15-30_Lukas_MC.root", "read");       
 
   MyEventCollection TauTightIsoObjectSelectionCollection ("TauTightIsoObjectSelection");
+  MyEventCollection TauTightIsoObjectSelectionCutCollection ("TauTightIsoObjectSelectionCut");
   /*MyEventCollection TauMediumIsoObjectSelectionCollection ("TauMediumIsoObjectSelection");
   MyEventCollection TauMediumInclIsoObjectSelectionCollection ("TauMediumInclIsoObjectSelection");
   MyEventCollection TauLooseIsoObjectSelectionCollection ("TauLooseIsoObjectSelection");
   MyEventCollection TauLooseInclIsoObjectSelectionCollection ("TauLooseInclIsoObjectSelection");
   MyEventCollection TauNoIsoObjectSelectionCollection ("TauNoIsoObjectSelection");*/
   MyEventCollection JetLooseIsoObjectSelectionCollection ("JetLooseIsoObjectSelection");
+  MyEventCollection JetLooseIsoNoPtObjectSelectionCollection ("JetLooseIsoNoPtObjectSelection");
 
   //---------------------------------------------------------------------------
   // Loop over events
@@ -223,7 +226,11 @@ int main(int argc, char** argv)
             if(!(       tau[t].tauID_againstElectronTightMVA5 > 0.5                				)) continue;
             if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        				)) continue;
             if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
-	    if(!(tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits  <= 0.5))  TauTightIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	    if(!(tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits  <= 0.5))
+	      {
+	        TauTightIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+		if(tau[t].pt>=45.) TauTightIsoObjectSelectionCutCollection.tau.push_back(&tau[t]);
+	      }
 	    /*else if(!(tau[t].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)){
 	      TauMediumIsoObjectSelectionCollection.tau.push_back(&tau[t]);
 	      TauMediumInclIsoObjectSelectionCollection.tau.push_back(&tau[t]);
@@ -242,8 +249,9 @@ int main(int argc, char** argv)
 
           // jet baseline selection
 	for(unsigned int j = 0;j<jet.size();++j){
-	    if(!(      jet[j].pt >= 30.                                                                      )) continue;
 	    if(!(      fabs(jet[j].eta) <= 2.7                                                               )) continue;
+	    JetLooseIsoNoPtObjectSelectionCollection.jet.push_back(&jet[j]);
+	    if(!(      jet[j].pt >= 30.                                                                      )) continue;
 	    JetLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	}
 
@@ -266,10 +274,32 @@ int main(int argc, char** argv)
 	//TH1F* ReweightFactorLi = (TH1F*)(file_Pt.Get("RescaleWeightLi"));
 	//TH1F* ReweightFactorM = (TH1F*)(file_Pt.Get("RescaleWeightM"));
 	//TH1F* ReweightFactorMi = (TH1F*)(file_Pt.Get("RescaleWeightMi"));
-	TH1F* ReweightFactorT = (TH1F*)(file_Pt.Get("RescaleWeightT"));
-
+	//TH1F* ReweightFactorT = (TH1F*)(file_Pt.Get("RescaleWeightT"));
+	
+	/*for(unsigned int j = 0;j<JetLooseIsoNoPtObjectSelectionCollection.jet.size();++j){
+	  double jetMindR=JetJetMinDistance(JetLooseIsoNoPtObjectSelectionCollection,JetLooseIsoNoPtObjectSelectionCollection.jet[j]->eta,JetLooseIsoNoPtObjectSelectionCollection.jet[j]->phi);
+	  pair <double, unsigned int>deltaRt = TauJetMinDistanceExtended(TauTightIsoObjectSelectionCollection, JetLooseIsoNoPtObjectSelectionCollection.jet[j]->eta, JetLooseIsoNoPtObjectSelectionCollection.jet[j]->phi);
+	  double Nq=JetLooseIsoNoPtObjectSelectionCollection.jet[j]->chargedHadronMultiplicity+JetLooseIsoNoPtObjectSelectionCollection.jet[j]->electronMultiplicity;
+	  double Fq=JetLooseIsoNoPtObjectSelectionCollection.jet[j]->chargedEmEnergyFraction+JetLooseIsoNoPtObjectSelectionCollection.jet[j]->muonEnergyFraction+JetLooseIsoNoPtObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction;		
+	  if(jetMindR > 0.5 && abs(JetLooseIsoNoPtObjectSelectionCollection.jet[j]->eta)<=2.1){ //only count isolated jets
+  	    if( deltaRt.first < 0.1){
+	      //h2_Nq_Fq_num->Fill(Nq,Fq,weightT);
+	      h2_Nq_pT_num->Fill(Nq,JetLooseIsoNoPtObjectSelectionCollection.jet[j]->pt,1);
+	      //h2_Nq_Abseta_num->Fill(Nq,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta),1);
+	      h2_Fq_pT_num->Fill(Fq,JetLooseIsoNoPtObjectSelectionCollection.jet[j]->pt,1);
+	      //h2_Fq_Abseta_num->Fill(Fq,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta),1);
+	      h2_pT_Abseta_num->Fill(JetLooseIsoNoPtObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoNoPtObjectSelectionCollection.jet[j]->eta),1);			//if(Fq==1)std::cout<<"num"<<std::endl;
+	    }
+	    //if(fabs(JetLooseIsoNoPtObjectSelectionCollection.jet[j]->eta)<2.1){
+	      h2_Nq_pT_den->Fill(Nq,JetLooseIsoNoPtObjectSelectionCollection.jet[j]->pt,1);
+	      h2_Fq_pT_den->Fill(Fq,JetLooseIsoNoPtObjectSelectionCollection.jet[j]->pt,1);
+	      h2_pT_Abseta_den->Fill(JetLooseIsoNoPtObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoNoPtObjectSelectionCollection.jet[j]->eta),1);
+	    //}
+	  }
+	}*/
 	for(unsigned int j = 0;j<JetLooseIsoObjectSelectionCollection.jet.size();++j){	
 		double jetMindR=JetJetMinDistance(JetLooseIsoObjectSelectionCollection,JetLooseIsoObjectSelectionCollection.jet[j]->eta,JetLooseIsoObjectSelectionCollection.jet[j]->phi);
+		//pair <double, unsigned int>deltaRt = TauJetMinDistanceExtended(TauTightIsoObjectSelectionCutCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
 		pair <double, unsigned int>deltaRt = TauJetMinDistanceExtended(TauTightIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
 		/*pair <double, unsigned int>deltaRm = TauJetMinDistanceExtended(TauMediumIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
 		pair <double, unsigned int>deltaRmi = TauJetMinDistanceExtended(TauMediumInclIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
@@ -282,24 +312,24 @@ int main(int argc, char** argv)
 		//int nRescaleBinLi= ReweightFactorLi->FindBin(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		//int nRescaleBinM= ReweightFactorM->FindBin(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		//int nRescaleBinMi= ReweightFactorMi->FindBin(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		int nRescaleBinT= ReweightFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		//int nRescaleBinT= ReweightFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		/*double weightN=1;//ReweightFactorN->GetBinContent(nRescaleBinN);
 		double weightL=1;//ReweightFactorL->GetBinContent(nRescaleBinL);
 		double weightLi=1;//ReweightFactorLi->GetBinContent(nRescaleBinLi);
 		double weightM=1;//ReweightFactorM->GetBinContent(nRescaleBinM);
 		double weightMi=1;//ReweightFactorMi->GetBinContent(nRescaleBinMi);*/
-		double weightT=ReweightFactorT->GetBinContent(nRescaleBinT);
+		//double weightT=ReweightFactorT->GetBinContent(nRescaleBinT);
 		double Nq=JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[j]->electronMultiplicity;
 		double Fq=JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction;		
 		/*if(Fq>1){std::cout<<"!!!scream!!!"<<std::endl;
 		std::cout<<Fq<<" out of EM="<<JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction<<", Emu="<<JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction<<", Ehad="<<JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction<<std::endl;}*/
-		if(jetMindR > 0.5){ //only count isolated jets
+		if(jetMindR > 0.5 && abs(JetLooseIsoObjectSelectionCollection.jet[j]->eta)<=2.1){ //only count isolated jets
 		  if( deltaRt.first < 0.1 ){
-		  	h2_Nq_Fq_num->Fill(Nq,Fq,weightT);
+		  	h2_Nq_Fq_num->Fill(Nq,Fq,1);
 			h2_Nq_pT_num->Fill(Nq,JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-			h2_Nq_Abseta_num->Fill(Nq,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta),weightT);
+			h2_Nq_Abseta_num->Fill(Nq,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta),1);
 			h2_Fq_pT_num->Fill(Fq,JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-			h2_Fq_Abseta_num->Fill(Fq,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta),weightT);
+			h2_Fq_Abseta_num->Fill(Fq,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta),1);
 			h2_pT_Abseta_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta),1);
 			//if(Fq==1)std::cout<<"num"<<std::endl;
 		  }
@@ -308,14 +338,14 @@ int main(int argc, char** argv)
 		  if( deltaRl.first < 0.1 ) ChargeMapL_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[j]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction,weightL);		  
 		  if( deltaRli.first < 0.1 ) ChargeMapLi_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[j]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction,weightLi);		  
 		  if( deltaRn.first < 0.1 ) ChargeMapN_num->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronMultiplicity+JetLooseIsoObjectSelectionCollection.jet[j]->electronMultiplicity,JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction,weightN);*/		  		  
-		  if(fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta)<2.2)
-		    {
+		  //if(fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta)<2.2)
+		    //{
 		      //if(Fq==1)std::cout<<"den"<<std::endl;
-		      h2_Nq_Fq_den->Fill(Nq,Fq,weightT);
+		      h2_Nq_Fq_den->Fill(Nq,Fq,1);
 		      h2_Nq_pT_den->Fill(Nq,JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		      h2_Nq_Abseta_den->Fill(Nq,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta),weightT);
+		      h2_Nq_Abseta_den->Fill(Nq,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta),1);
 		      h2_Fq_pT_den->Fill(Fq,JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		      h2_Fq_Abseta_den->Fill(Fq,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta),weightT);
+		      h2_Fq_Abseta_den->Fill(Fq,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta),1);
 		      h2_pT_Abseta_den->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta),1);
 		      /*if(fabs(JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->neutralEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->HFEMEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->neutralHadronEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->HFHadronEnergyFraction-1)>0.01){
 		      std::cout<<"jet "<<j<<std::endl;
@@ -331,18 +361,20 @@ int main(int argc, char** argv)
 		      }*/
 		      //double R_MPF=RMPF(mainObjectSelectionCollection.met[0]->pt,mainObjectSelectionCollection.met[0]->phi,JetLooseIsoObjectSelectionCollection.jet[j]->pt,JetLooseIsoObjectSelectionCollection.jet[j]->phi);
 		      //MetProjFrac_den->Fill(R_MPF,weight);
-		    }
+		    //}
 		}
 	}
 	
 	//Clearing Object Collections 
 	TauTightIsoObjectSelectionCollection.clear();
+	TauTightIsoObjectSelectionCutCollection.clear();
 	/*TauMediumIsoObjectSelectionCollection.clear();
 	TauMediumInclIsoObjectSelectionCollection.clear();
 	TauLooseIsoObjectSelectionCollection.clear();
 	TauLooseInclIsoObjectSelectionCollection.clear();
 	TauNoIsoObjectSelectionCollection.clear();*/
 	JetLooseIsoObjectSelectionCollection.clear();
+	JetLooseIsoNoPtObjectSelectionCollection.clear();
 	}
 
   stream.close();
