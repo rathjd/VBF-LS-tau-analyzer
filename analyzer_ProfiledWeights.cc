@@ -246,7 +246,7 @@ int main(int argc, char** argv)
 		pair <double, unsigned int>deltaRm = TauJetMinDistanceExtended(TauMediumIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
 		pair <double, unsigned int>deltaRl = TauJetMinDistanceExtended(TauLooseIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
 		pair <double, unsigned int>deltaRn = TauJetMinDistanceExtended(TauNoIsoObjectSelectionCollection, JetLooseIsoObjectSelectionCollection.jet[j]->eta, JetLooseIsoObjectSelectionCollection.jet[j]->phi);
-		if(jetMindR > 0.5){ //only count isolated jets
+		if(jetMindR > 0.5 && fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta) <=2.1){ //only count isolated jets
 		  if( deltaRt.first < 0.3 ){
 		    if(TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt>=45){
 		      RescaleWeightT->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
