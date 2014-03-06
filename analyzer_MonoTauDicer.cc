@@ -13,6 +13,7 @@
 #include "CommonHistoCollection.h"
 #include "FakeTau.h"
 #include "selection.h"
+#include "TProfile.h"
 
 using namespace std;
 
@@ -86,8 +87,10 @@ ofile.count("MET", 0)
 
 TH1::SetDefaultSumw2();
 
-TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/EffmapVariations_BugFixed.root", "read");
-TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/ResponseFactors_InclAndExclIsos_Jet30Tau45_NoPt15-30_Lukas_MC.root", "read");
+TFile
+file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/EffmapVariations21.root", "read");
+//TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/ResponseFactors_InclAndExclIsos_Jet30Tau45_NoPt15-30_Lukas_MC.root", "read");
+TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/ResponseProfilesV2.root", "read");
 
 MyHistoCollection myHistoColl_SR_Nq_Fq (ofile.file_, "SR_Nq_Fq");        
 MyHistoCollection myHistoColl_CR_Nq_Fq (ofile.file_, "CR_Nq_Fq");
@@ -221,8 +224,8 @@ TH2F* Fq_pT = (TH2F*)(file_eff.Get("h2_Fq_pT_eff"));
 TH2F* Fq_Abseta = (TH2F*)(file_eff.Get("h2_Fq_Abseta_eff"));
 TH2F* pT_Abseta = (TH2F*)(file_eff.Get("h2_pT_Abseta_eff"));
 
-TH1F* ReweightFactorT = (TH1F*)(file_Resp.Get("RescaleWeightT"));
-TH1F* ScaleFactorT    = (TH1F*)(file_Resp.Get("scaleT"));
+TProfile* ReweightFactorT = (TProfile*)(file_Resp.Get("RescaleWeightT"));
+TProfile* ScaleFactorT    = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 
 vector<double> jet_taufakerate_Nq_Fq;
 vector<double> jet_taufakerate_Nq_pT;
@@ -257,7 +260,7 @@ if(jetMindR > 0.5 && fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta) <=2.
     if(JetLooseIsoObjectSelectionCollection.jet[i]->pt*scale>45) jet_taufakerate_even.push_back(1.);
     else  jet_taufakerate_even.push_back(0.);                 
   }
-else
+/*else
   {
     double jetMindR2=JetJetMinDistance(JetLooseIsoObjectSelectionCollection,JetLooseIsoObjectSelectionCollection.jet[i]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta)*2.1,JetLooseIsoObjectSelectionCollection.jet[i]->phi);
     if(jetMindR > 0.5 && jetMindR2 > 0.5 && fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta) <=2.2)
@@ -270,7 +273,7 @@ else
     	jet_taufakerate_pT_Abseta.push_back(pT_Abseta->GetBinContent(nbinpT_Abseta)*ReweightFactorT->GetBinContent(nRescaleBinT));
     	if(JetLooseIsoObjectSelectionCollection.jet[i]->pt*scale>45) jet_taufakerate_even.push_back(1.);
     	else  jet_taufakerate_even.push_back(0.); 
-      }
+      }*/
     else
       {
     	jet_taufakerate_Nq_Fq.push_back(0.);
@@ -281,7 +284,7 @@ else
     	jet_taufakerate_pT_Abseta.push_back(0.);
     	jet_taufakerate_even.push_back(0.);
       }
-  }
+  //}
 }
 
 
@@ -324,7 +327,7 @@ faketau1_Nq_Fq.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Fq.ind
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Fq.index.first]->eta<=2.1) faketau1_Nq_Fq.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Fq.index.first]->eta;
 else faketau1_Nq_Fq.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Fq.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Fq.index.first]->eta)*2.1;
 
-int nScaleBin2	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Fq.index.first]->pt);
+int nScaleBin2	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Fq.index.second]->pt);
 double scale2 	  = ScaleFactorT->GetBinContent(nScaleBin2);
 if(scale2 == 0) {scale2 = 0.851; FakeTaus_Nq_Fq.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Fq.index.second]->charge >= 0 )
@@ -393,7 +396,7 @@ faketau1_Nq_pT.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_pT.ind
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_pT.index.first]->eta<=2.1) faketau1_Nq_pT.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_pT.index.first]->eta;
 else faketau1_Nq_pT.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_pT.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_pT.index.first]->eta)*2.1;
 
-int nScaleBin2	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_pT.index.first]->pt);
+int nScaleBin2	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_pT.index.second]->pt);
 double scale2 	  = ScaleFactorT->GetBinContent(nScaleBin2);
 if(scale2 == 0) {scale2 = 0.851; FakeTaus_Nq_pT.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_pT.index.second]->charge >= 0 )
@@ -462,7 +465,7 @@ faketau1_Nq_Abseta.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Ab
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Abseta.index.first]->eta<=2.1) faketau1_Nq_Abseta.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Abseta.index.first]->eta;
 else faketau1_Nq_Abseta.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Abseta.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Abseta.index.first]->eta)*2.1;
 
-int nScaleBin2	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Abseta.index.first]->pt);
+int nScaleBin2	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Abseta.index.second]->pt);
 double scale2 	  = ScaleFactorT->GetBinContent(nScaleBin2);
 if(scale2 == 0) {scale2 = 0.851; FakeTaus_Nq_Abseta.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Nq_Abseta.index.second]->charge >= 0 )
@@ -531,7 +534,7 @@ faketau1_Fq_pT.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_pT.ind
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_pT.index.first]->eta<=2.1) faketau1_Fq_pT.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_pT.index.first]->eta;
 else faketau1_Fq_pT.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_pT.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_pT.index.first]->eta)*2.1;
 
-int nScaleBin2	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_pT.index.first]->pt);
+int nScaleBin2	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_pT.index.second]->pt);
 double scale2 	  = ScaleFactorT->GetBinContent(nScaleBin2);
 if(scale2 == 0) {scale2 = 0.851; FakeTaus_Fq_pT.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_pT.index.second]->charge >= 0 )
@@ -600,7 +603,7 @@ faketau1_Fq_Abseta.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_Ab
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_Abseta.index.first]->eta<=2.1) faketau1_Fq_Abseta.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_Abseta.index.first]->eta;
 else faketau1_Fq_Abseta.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_Abseta.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_Abseta.index.first]->eta)*2.1;
 
-int nScaleBin2	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_Abseta.index.first]->pt);
+int nScaleBin2	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_Abseta.index.second]->pt);
 double scale2 	  = ScaleFactorT->GetBinContent(nScaleBin2);
 if(scale2 == 0) {scale2 = 0.851; FakeTaus_Fq_Abseta.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_Fq_Abseta.index.second]->charge >= 0 )
@@ -669,7 +672,7 @@ faketau1_pT_Abseta.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_pT_Ab
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_pT_Abseta.index.first]->eta<=2.1) faketau1_pT_Abseta.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_pT_Abseta.index.first]->eta;
 else faketau1_pT_Abseta.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTaus_pT_Abseta.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_pT_Abseta.index.first]->eta)*2.1;
 
-int nScaleBin2	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_pT_Abseta.index.first]->pt);
+int nScaleBin2	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_pT_Abseta.index.second]->pt);
 double scale2 	  = ScaleFactorT->GetBinContent(nScaleBin2);
 if(scale2 == 0) {scale2 = 0.851; FakeTaus_pT_Abseta.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTaus_pT_Abseta.index.second]->charge >= 0 )
