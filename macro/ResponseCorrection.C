@@ -138,9 +138,10 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       l->SetLineColor(2);
       l->Draw();
       c->SaveAs(TString::Format("N_pT%.0f.png",pT));
-      histN->GetXaxis()->SetRange(p,histN->GetNbinsX()+1);
+      histN->GetXaxis()->SetRange(x,histN->GetNbinsX()+1);
       scalesN.push_back(histN->GetMean());
       scalesErrorN.push_back(histN->GetMeanError());
+      cout<<histN->IntegralAndError(x,-1,E1)/histN->IntegralAndError(0,-1,E2)<<" and "<<histN->GetMean()<<endl;
     }
   if(histL->GetEntries()!=0)
     {
@@ -159,7 +160,7 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       l->SetLineColor(2);
       l->Draw();
       c->SaveAs(TString::Format("L_pT%.0f.png",pT));
-      histL->GetXaxis()->SetRange(p,histL->GetNbinsX()+1);
+      histL->GetXaxis()->SetRange(x,histL->GetNbinsX()+1);
       scalesL.push_back(histL->GetMean());
       scalesErrorL.push_back(histL->GetMeanError());
     }
@@ -180,7 +181,7 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       l->SetLineColor(2);
       l->Draw();
       c->SaveAs(TString::Format("Li_pT%.0f.png",pT));
-      histLi->GetXaxis()->SetRange(p,histLi->GetNbinsX()+1);
+      histLi->GetXaxis()->SetRange(x,histLi->GetNbinsX()+1);
       scalesLi.push_back(histLi->GetMean());
       scalesErrorLi.push_back(histLi->GetMeanError());
     }    
@@ -201,7 +202,7 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       l->SetLineColor(2);
       l->Draw();
       c->SaveAs(TString::Format("M_pT%.0f.png",pT));
-      histM->GetXaxis()->SetRange(p,histM->GetNbinsX()+1);
+      histM->GetXaxis()->SetRange(x,histM->GetNbinsX()+1);
       scalesM.push_back(histM->GetMean());
       scalesErrorM.push_back(histM->GetMeanError());
     }
@@ -222,7 +223,7 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       l->SetLineColor(2);
       l->Draw();
       c->SaveAs(TString::Format("Mi_pT%.0f.png",pT));
-      histMi->GetXaxis()->SetRange(p,histMi->GetNbinsX()+1);
+      histMi->GetXaxis()->SetRange(x,histMi->GetNbinsX()+1);
       scalesMi.push_back(histMi->GetMean());
       scalesErrorMi.push_back(histMi->GetMeanError());
     }    
@@ -243,7 +244,7 @@ for(int p=0; p<projectN->GetNbinsX(); p++)
       l->SetLineColor(2);
       l->Draw();
       c->SaveAs(TString::Format("T_pT%.0f.png",pT));
-      histT->GetXaxis()->SetRange(p,histT->GetNbinsX()+1);
+      histT->GetXaxis()->SetRange(x,histT->GetNbinsX()+1);
       scalesT.push_back(histT->GetMean());
       scalesErrorT.push_back(histT->GetMeanError());
     }
