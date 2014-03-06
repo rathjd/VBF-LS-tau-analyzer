@@ -13,6 +13,7 @@
 #include "CommonHistoCollection.h"
 #include "FakeTau.h"
 #include "selection.h"
+#include "TProfile.h"
 
 using namespace std;
 
@@ -90,7 +91,8 @@ TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/ChargeMap_Fq-pT_
 //TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/ChargeMap_Default_Jet30Tau45_MC.root", "read");
 //TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/ChargeMap_Lukas_Jet30_MC.root", "read");
 //TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/ResponseFactors_InclAndExclIsos_Jet30Tau45_MC.root", "read");
-TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/ResponseFactors_InclAndExclIsos_Jet30Tau45_NoPt15-30_Lukas_MC.root", "read");
+//TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/ResponseFactors_InclAndExclIsos_Jet30Tau45_NoPt15-30_Lukas_MC.root", "read");
+TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/ResponseProfilesV2.root", "read");
 
 MyHistoCollection myHistoColl_SignalRegion(ofile.file_, "SignalRegion");        
 MyHistoCollection myHistoColl_CR1 (ofile.file_, "Ztautau_CR1");
@@ -220,27 +222,27 @@ bool verbose=false;
 if(verbose)std::cout<<"Event: "<<eventhelper_event<<std::endl;
 
 TH2F* ChargeMapN_eff = (TH2F*)(file_eff.Get("ChargeMapN_eff"));
-TH1F* ReweightFactorN = (TH1F*)(file_Resp.Get("RescaleWeightN"));
+TProfile* ReweightFactorN = (TProfile*)(file_Resp.Get("RescaleWeightN"));
 vector<double> jet_taufakerateN;
 
 TH2F* ChargeMapL_eff = (TH2F*)(file_eff.Get("ChargeMapL_eff"));
-TH1F* ReweightFactorL = (TH1F*)(file_Resp.Get("RescaleWeightL"));
+TProfile* ReweightFactorL = (TProfile*)(file_Resp.Get("RescaleWeightL"));
 vector<double> jet_taufakerateL;
 
 TH2F* ChargeMapLi_eff = (TH2F*)(file_eff.Get("ChargeMapLi_eff"));
-TH1F* ReweightFactorLi = (TH1F*)(file_Resp.Get("RescaleWeightLi"));
+TProfile* ReweightFactorLi = (TProfile*)(file_Resp.Get("RescaleWeightLi"));
 vector<double> jet_taufakerateLi;
 
 TH2F* ChargeMapM_eff = (TH2F*)(file_eff.Get("ChargeMapM_eff"));
-TH1F* ReweightFactorM = (TH1F*)(file_Resp.Get("RescaleWeightM"));
+TProfile* ReweightFactorM = (TProfile*)(file_Resp.Get("RescaleWeightM"));
 vector<double> jet_taufakerateM;
 
 TH2F* ChargeMapMi_eff = (TH2F*)(file_eff.Get("ChargeMapMi_eff"));
-TH1F* ReweightFactorMi = (TH1F*)(file_Resp.Get("RescaleWeightMi"));
+TProfile* ReweightFactorMi = (TProfile*)(file_Resp.Get("RescaleWeightMi"));
 vector<double> jet_taufakerateMi;
 
 TH2F* ChargeMapT_eff = (TH2F*)(file_eff.Get("ChargeMapT_eff"));
-TH1F* ReweightFactorT = (TH1F*)(file_Resp.Get("RescaleWeightT"));
+TProfile* ReweightFactorT = (TProfile*)(file_Resp.Get("RescaleWeightT"));
 vector<double> jet_taufakerateT;
 
 for(unsigned int i = 0;i<JetLooseIsoObjectSelectionCollection.jet.size();++i){
@@ -307,7 +309,7 @@ FakeTausN.generate(jet_taufakerateN,jet_taufakerateN, true);
 tau_s faketau1N;
 tau_s faketau2N;
 
-TH1F* h1_taufakescaleN_fac = (TH1F*)(file_Resp.Get("scaleN"));
+TProfile* h1_taufakescaleN_fac = (TProfile*)(file_Resp.Get("ScaleFactorN"));
 
 if ( FakeTausN.index.first >= 0 && FakeTausN.index.second >= 0 ) {
 
@@ -369,7 +371,7 @@ FakeTausL.generate(jet_taufakerateL,jet_taufakerateLi, false);
 tau_s faketau1L;
 tau_s faketau2L;
 
-TH1F* h1_taufakescaleL_fac = (TH1F*)(file_Resp.Get("scaleL"));
+TProfile* h1_taufakescaleL_fac = (TProfile*)(file_Resp.Get("ScaleFactorL"));
 
 if ( FakeTausL.index.first >= 0 && FakeTausL.index.second >= 0 ) {
 
@@ -392,7 +394,7 @@ faketau1L.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]-
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta<=2.1) faketau1L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta;
 else faketau1L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta)*2.1;
 
-TH1F* h1_taufakescaleLi_fac = (TH1F*)(file_Resp.Get("scaleLi")); 
+TProfile* h1_taufakescaleLi_fac = (TProfile*)(file_Resp.Get("ScaleFactorLi")); 
 double scale2 = h1_taufakescaleLi_fac->GetBinContent(h1_taufakescaleLi_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pt));
 if(scale2 == 0) {scale2 = 0.851; FakeTausL.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->charge >= 0 )
@@ -435,7 +437,7 @@ FakeTausM.generate(jet_taufakerateM,jet_taufakerateMi, false);
 tau_s faketau1M;
 tau_s faketau2M;
 
-TH1F* h1_taufakescaleM_fac = (TH1F*)(file_Resp.Get("scaleM"));
+TProfile* h1_taufakescaleM_fac = (TProfile*)(file_Resp.Get("ScaleFactorM"));
 
 if ( FakeTausM.index.first >= 0 && FakeTausM.index.second >= 0 ) {
 
@@ -458,7 +460,7 @@ faketau1M.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]-
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta<=2.1) faketau1M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta;
 else faketau1M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta)*2.1;
 
-TH1F* h1_taufakescaleMi_fac = (TH1F*)(file_Resp.Get("scaleMi"));
+TProfile* h1_taufakescaleMi_fac = (TProfile*)(file_Resp.Get("ScaleFactorMi"));
 double scale2 = h1_taufakescaleMi_fac->GetBinContent(h1_taufakescaleMi_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pt));
 if(scale2 == 0) {scale2 = 0.851; FakeTausM.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->charge >= 0 )
@@ -500,7 +502,7 @@ FakeTausT.generate(jet_taufakerateT,jet_taufakerateMi, false);
 tau_s faketau1T;
 tau_s faketau2T;
 
-TH1F* h1_taufakescaleT_fac = (TH1F*)(file_Resp.Get("scaleT"));
+TProfile* h1_taufakescaleT_fac = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 
 if ( FakeTausT.index.first >= 0 && FakeTausT.index.second >= 0 ) {
 
@@ -523,7 +525,7 @@ faketau1T.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]-
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta<=2.1) faketau1T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta;
 else faketau1T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta)*2.1;
 
-TH1F* h1_taufakescaleMi_fac = (TH1F*)(file_Resp.Get("scaleMi"));
+TProfile* h1_taufakescaleMi_fac = (TProfile*)(file_Resp.Get("ScaleFactorMi"));
 double scale2 = h1_taufakescaleMi_fac->GetBinContent(h1_taufakescaleMi_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pt));
 if(scale2 == 0) {scale2 = 0.851; FakeTausT.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->charge >= 0 )
@@ -568,7 +570,7 @@ tau_s faketauT2T;
 
 if ( FakeTausTT.index.first >= 0 && FakeTausTT.index.second >= 0 ) {
 
-TH1F* h1_taufakescaleT_fac = (TH1F*)(file_Resp.Get("scaleT"));
+TProfile* h1_taufakescaleT_fac = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 double scale = h1_taufakescaleT_fac->GetBinContent(h1_taufakescaleT_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->pt)); 
 if(scale == 0) {scale = 0.851; FakeTausTT.weight=0;}
 
