@@ -7,9 +7,12 @@
 void VariationCrosscheckComparison()
 {
 
-TFile Dice ("MonoTauDice_FqFix.root","UPDATE");
-TFile MC ("MonoTauRead_NoPt15-30.root","UPDATE");
-
+TFile Dice ("MonoTauDicerSecondFix.root","UPDATE");
+//TFile Dice ("MonoTauDicerAlternateV1-1.root","UPDATE");
+//TFile MC ("MonoTauReader45.root","UPDATE"); //old errors
+TFile MC ("MonoTauReader45_newErrors.root","UPDATE"); //new errors
+//TFile Dice ("Rediced.root","UPDATE");
+//TFile MC ("Reread.root","UPDATE");
 
 TH1F *tau1pt_SR=(TH1F*)MC.Get("VBF/h_tau1pt")->Clone("tau1pt_SR");
 tau1pt_SR->SetLineColor(1);
@@ -29,11 +32,11 @@ tau1pt_SR_pT_Abseta->SetLineColor(7);
 TCanvas *c_SR_tau1pt = new TCanvas("VBF: c_SR_tau1pt", "p_{T}^{#tau_{1}}");
 TLegend *leg = new TLegend(0.7,0.7,1.,1.,"samples");
 leg->AddEntry(tau1pt_SR, "baseline", "l");
-leg->AddEntry(tau1pt_SR_Nq_Fq, "N^{q} vs F^{q}", "l");
+//leg->AddEntry(tau1pt_SR_Nq_Fq, "N^{q} vs F^{q}", "l");
 leg->AddEntry(tau1pt_SR_Nq_pT, "N^{q} vs p_{T}", "l");
-leg->AddEntry(tau1pt_SR_Nq_Abseta, "N^{q} vs |#eta|", "l");
+//leg->AddEntry(tau1pt_SR_Nq_Abseta, "N^{q} vs |#eta|", "l");
 leg->AddEntry(tau1pt_SR_Fq_pT, "F^{q} vs p_{T}", "l");
-leg->AddEntry(tau1pt_SR_Fq_Abseta, "F^{q} vs |#eta|", "l");
+//leg->AddEntry(tau1pt_SR_Fq_Abseta, "F^{q} vs |#eta|", "l");
 leg->AddEntry(tau1pt_SR_pT_Abseta, "p_{T} vs |#eta|", "l");
 leg->SetFillColor(0);
 tau1pt_SR->GetYaxis()->SetRangeUser(1, 1000000);
@@ -141,6 +144,81 @@ c_CR_tau2pt->SetLogy(1);
 c_CR_tau2pt->Update();
 
 c_CR_tau2pt->SaveAs("CR_tau2pt.eps");
+
+//inclusive tau pt
+TH1F *taupt_SR=(TH1F*)tau1pt_SR->Clone("taupt_SR");
+taupt_SR->Add(tau2pt_SR);
+taupt_SR->SetLineColor(1);
+TH1F *taupt_SR_Nq_Fq=(TH1F*)tau1pt_SR_Nq_Fq->Clone("taupt_SR_Nq_Fq");
+taupt_SR_Nq_Fq->Add(tau2pt_SR_Nq_Fq);
+taupt_SR_Nq_Fq->SetLineColor(2);
+TH1F *taupt_SR_Nq_pT=(TH1F*)tau1pt_SR_Nq_pT->Clone("taupt_SR_Nq_pT");
+taupt_SR_Nq_pT->Add(tau2pt_SR_Nq_pT);
+taupt_SR_Nq_pT->SetLineColor(3);
+TH1F *taupt_SR_Nq_Abseta=(TH1F*)tau1pt_SR_Nq_Abseta->Clone("taupt_SR_Nq_Abseta");
+taupt_SR_Nq_Abseta->Add(tau2pt_SR_Nq_Abseta);
+taupt_SR_Nq_Abseta->SetLineColor(4);
+TH1F *taupt_SR_Fq_pT=(TH1F*)tau1pt_SR_Fq_pT->Clone("taupt_CR_Fq_pT");
+taupt_SR_Fq_pT->Add(tau2pt_SR_Fq_pT);
+taupt_SR_Fq_pT->SetLineColor(5);
+TH1F *taupt_SR_Fq_Abseta=(TH1F*)tau1pt_SR_Fq_Abseta->Clone("taupt_CR_Fq_Abseta");
+taupt_SR_Fq_Abseta->Add(tau2pt_SR_Fq_Abseta);
+taupt_SR_Fq_Abseta->SetLineColor(6);
+TH1F *taupt_SR_pT_Abseta=(TH1F*)tau1pt_SR_pT_Abseta->Clone("taupt_CR_pT_Abseta");
+taupt_SR_pT_Abseta->Add(tau2pt_SR_pT_Abseta);
+taupt_SR_pT_Abseta->SetLineColor(7);
+
+TCanvas *c_SR_taupt = new TCanvas("c_SR_taupt", "VBF: p_{T}^{#tau}");
+taupt_SR->GetYaxis()->SetRangeUser(1, 100000000);
+taupt_SR->DrawCopy();
+taupt_SR_Nq_Fq->DrawCopy("same");
+taupt_SR_Nq_pT->DrawCopy("same");
+taupt_SR_Nq_Abseta->DrawCopy("same");
+taupt_SR_Fq_pT->DrawCopy("same");
+taupt_SR_Fq_Abseta->DrawCopy("same");
+taupt_SR_pT_Abseta->DrawCopy("same");
+leg->Draw("same");
+c_SR_taupt->SetLogy(1);
+c_SR_taupt->Update();
+
+c_SR_taupt->SaveAs("SR_taupt.eps");
+
+TH1F *taupt_CR=(TH1F*)tau1pt_CR->Clone("taupt_CR");
+taupt_CR->Add(tau2pt_CR);
+taupt_CR->SetLineColor(1);
+TH1F *taupt_CR_Nq_Fq=(TH1F*)tau1pt_CR_Nq_Fq->Clone("taupt_CR_Nq_Fq");
+taupt_CR_Nq_Fq->Add(tau2pt_CR_Nq_Fq);
+taupt_CR_Nq_Fq->SetLineColor(2);
+TH1F *taupt_CR_Nq_pT=(TH1F*)tau1pt_CR_Nq_pT->Clone("taupt_CR_Nq_pT");
+taupt_CR_Nq_pT->Add(tau2pt_CR_Nq_pT);
+taupt_CR_Nq_pT->SetLineColor(3);
+TH1F *taupt_CR_Nq_Abseta=(TH1F*)tau1pt_CR_Nq_Abseta->Clone("taupt_CR_Nq_Abseta");
+taupt_CR_Nq_Abseta->Add(tau2pt_CR_Nq_Abseta);
+taupt_CR_Nq_Abseta->SetLineColor(4);
+TH1F *taupt_CR_Fq_pT=(TH1F*)tau1pt_CR_Fq_pT->Clone("taupt_CR_Fq_pT");
+taupt_CR_Fq_pT->Add(tau2pt_CR_Fq_pT);
+taupt_CR_Fq_pT->SetLineColor(5);
+TH1F *taupt_CR_Fq_Abseta=(TH1F*)tau1pt_CR_Fq_Abseta->Clone("taupt_CR_Fq_Abseta");
+taupt_CR_Fq_Abseta->Add(tau2pt_CR_Fq_Abseta);
+taupt_CR_Fq_Abseta->SetLineColor(6);
+TH1F *taupt_CR_pT_Abseta=(TH1F*)tau1pt_CR_pT_Abseta->Clone("taupt_CR_pT_Abseta");
+taupt_CR_pT_Abseta->Add(tau2pt_CR_pT_Abseta);
+taupt_CR_pT_Abseta->SetLineColor(7);
+
+TCanvas *c_CR_taupt = new TCanvas("c_CR_taupt", "#bar{VBF}: p_{T}^{#tau}");
+taupt_CR->GetYaxis()->SetRangeUser(1, 100000000);
+taupt_CR->DrawCopy();
+taupt_CR_Nq_Fq->DrawCopy("same");
+taupt_CR_Nq_pT->DrawCopy("same");
+taupt_CR_Nq_Abseta->DrawCopy("same");
+taupt_CR_Fq_pT->DrawCopy("same");
+taupt_CR_Fq_Abseta->DrawCopy("same");
+taupt_CR_pT_Abseta->DrawCopy("same");
+leg->Draw("same");
+c_CR_taupt->SetLogy(1);
+c_CR_taupt->Update();
+
+c_CR_taupt->SaveAs("CR_taupt.eps");
 
 //tau1eta
 
@@ -264,6 +342,81 @@ c_CR_tau2eta->SetLogy(1);
 c_CR_tau2eta->Update();
 
 c_CR_tau2eta->SaveAs("CR_tau2eta.eps");
+
+//inclusive tau eta
+TH1F *taueta_SR=(TH1F*)tau1eta_SR->Clone("taueta_SR");
+taueta_SR->Add(tau2eta_SR);
+taueta_SR->SetLineColor(1);
+TH1F *taueta_SR_Nq_Fq=(TH1F*)tau1eta_SR_Nq_Fq->Clone("taueta_SR_Nq_Fq");
+taueta_SR_Nq_Fq->Add(tau2eta_SR_Nq_Fq);
+taueta_SR_Nq_Fq->SetLineColor(2);
+TH1F *taueta_SR_Nq_pT=(TH1F*)tau1eta_SR_Nq_pT->Clone("taueta_SR_Nq_pT");
+taueta_SR_Nq_pT->Add(tau2eta_SR_Nq_pT);
+taueta_SR_Nq_pT->SetLineColor(3);
+TH1F *taueta_SR_Nq_Abseta=(TH1F*)tau1eta_SR_Nq_Abseta->Clone("taueta_SR_Nq_Abseta");
+taueta_SR_Nq_Abseta->Add(tau2eta_SR_Nq_Abseta);
+taueta_SR_Nq_Abseta->SetLineColor(4);
+TH1F *taueta_SR_Fq_pT=(TH1F*)tau1eta_SR_Fq_pT->Clone("taueta_CR_Fq_pT");
+taueta_SR_Fq_pT->Add(tau2eta_SR_Fq_pT);
+taueta_SR_Fq_pT->SetLineColor(5);
+TH1F *taueta_SR_Fq_Abseta=(TH1F*)tau1eta_SR_Fq_Abseta->Clone("taueta_CR_Fq_Abseta");
+taueta_SR_Fq_Abseta->Add(tau2eta_SR_Fq_Abseta);
+taueta_SR_Fq_Abseta->SetLineColor(6);
+TH1F *taueta_SR_pT_Abseta=(TH1F*)tau1eta_SR_pT_Abseta->Clone("taueta_CR_pT_Abseta");
+taueta_SR_pT_Abseta->Add(tau2eta_SR_pT_Abseta);
+taueta_SR_pT_Abseta->SetLineColor(7);
+
+TCanvas *c_SR_taueta = new TCanvas("c_SR_taueta", "VBF: #eta^{#tau}");
+taueta_SR->GetYaxis()->SetRangeUser(10000, 100000000);
+taueta_SR->DrawCopy();
+taueta_SR_Nq_Fq->DrawCopy("same");
+taueta_SR_Nq_pT->DrawCopy("same");
+taueta_SR_Nq_Abseta->DrawCopy("same");
+taueta_SR_Fq_pT->DrawCopy("same");
+taueta_SR_Fq_Abseta->DrawCopy("same");
+taueta_SR_pT_Abseta->DrawCopy("same");
+leg->Draw("same");
+c_SR_taueta->SetLogy(1);
+c_SR_taueta->Update();
+
+c_SR_taueta->SaveAs("SR_taueta.eps");
+
+TH1F *taueta_CR=(TH1F*)tau1eta_CR->Clone("taueta_CR");
+taueta_CR->Add(tau2eta_CR);
+taueta_CR->SetLineColor(1);
+TH1F *taueta_CR_Nq_Fq=(TH1F*)tau1eta_CR_Nq_Fq->Clone("taueta_CR_Nq_Fq");
+taueta_CR_Nq_Fq->Add(tau2eta_CR_Nq_Fq);
+taueta_CR_Nq_Fq->SetLineColor(2);
+TH1F *taueta_CR_Nq_pT=(TH1F*)tau1eta_CR_Nq_pT->Clone("taueta_CR_Nq_pT");
+taueta_CR_Nq_pT->Add(tau2eta_CR_Nq_pT);
+taueta_CR_Nq_pT->SetLineColor(3);
+TH1F *taueta_CR_Nq_Abseta=(TH1F*)tau1eta_CR_Nq_Abseta->Clone("taueta_CR_Nq_Abseta");
+taueta_CR_Nq_Abseta->Add(tau2eta_CR_Nq_Abseta);
+taueta_CR_Nq_Abseta->SetLineColor(4);
+TH1F *taueta_CR_Fq_pT=(TH1F*)tau1eta_CR_Fq_pT->Clone("taueta_CR_Fq_pT");
+taueta_CR_Fq_pT->Add(tau2eta_CR_Fq_pT);
+taueta_CR_Fq_pT->SetLineColor(5);
+TH1F *taueta_CR_Fq_Abseta=(TH1F*)tau1eta_CR_Fq_Abseta->Clone("taueta_CR_Fq_Abseta");
+taueta_CR_Fq_Abseta->Add(tau2eta_CR_Fq_Abseta);
+taueta_CR_Fq_Abseta->SetLineColor(6);
+TH1F *taueta_CR_pT_Abseta=(TH1F*)tau1eta_CR_pT_Abseta->Clone("taueta_CR_pT_Abseta");
+taueta_CR_pT_Abseta->Add(tau2eta_CR_pT_Abseta);
+taueta_CR_pT_Abseta->SetLineColor(7);
+
+TCanvas *c_CR_taueta = new TCanvas("c_CR_taueta", "#bar{VBF}: #eta^{#tau}");
+taueta_CR->GetYaxis()->SetRangeUser(10000, 100000000);
+taueta_CR->DrawCopy();
+taueta_CR_Nq_Fq->DrawCopy("same");
+taueta_CR_Nq_pT->DrawCopy("same");
+taueta_CR_Nq_Abseta->DrawCopy("same");
+taueta_CR_Fq_pT->DrawCopy("same");
+taueta_CR_Fq_Abseta->DrawCopy("same");
+taueta_CR_pT_Abseta->DrawCopy("same");
+leg->Draw("same");
+c_CR_taueta->SetLogy(1);
+c_CR_taueta->Update();
+
+c_CR_taueta->SaveAs("CR_taueta.eps");
 
 //ditaucharge
 TH1F *ditaucharge_SR=(TH1F*)MC.Get("VBF/h_ditaucharge")->Clone("ditaucharge_SR");
@@ -814,6 +967,67 @@ c_CR_jet2pt->Update();
 
 c_CR_jet2pt->SaveAs("CR_jet2pt.eps");
 
+//h_jetpt
+TH1F *jetpt_SR=(TH1F*)MC.Get("VBF/h_jetpt")->Clone("jetpt_SR");
+jetpt_SR->SetLineColor(1);
+TH1F *jetpt_SR_Nq_Fq=(TH1F*)Dice.Get("SR_Nq_Fq/h_jetpt")->Clone("jetpt_SR_Nq_Fq");
+jetpt_SR_Nq_Fq->SetLineColor(2);
+TH1F *jetpt_SR_Nq_pT=(TH1F*)Dice.Get("SR_Nq_pT/h_jetpt")->Clone("jetpt_SR_Nq_pT");
+jetpt_SR_Nq_pT->SetLineColor(3);
+TH1F *jetpt_SR_Nq_Abseta=(TH1F*)Dice.Get("SR_Nq_Abseta/h_jetpt")->Clone("jetpt_SR_Nq_Abseta");
+jetpt_SR_Nq_Abseta->SetLineColor(4);
+TH1F *jetpt_SR_Fq_pT=(TH1F*)Dice.Get("SR_Fq_pT/h_jetpt")->Clone("jetpt_SR_Fq_pT");
+jetpt_SR_Fq_pT->SetLineColor(5);
+TH1F *jetpt_SR_Fq_Abseta=(TH1F*)Dice.Get("SR_Fq_Abseta/h_jetpt")->Clone("jetpt_SR_Fq_Abseta");
+jetpt_SR_Fq_Abseta->SetLineColor(6);
+TH1F *jetpt_SR_pT_Abseta=(TH1F*)Dice.Get("SR_pT_Abseta/h_jetpt")->Clone("jetpt_SR_pT_Abseta");
+jetpt_SR_pT_Abseta->SetLineColor(7);
+
+TCanvas *c_SR_jetpt = new TCanvas("VBF: c_SR_jetpt", "p_{T}^{jet_{2}}");
+jetpt_SR->GetYaxis()->SetRangeUser(1, 1000000);
+jetpt_SR->DrawCopy();
+jetpt_SR_Nq_Fq->DrawCopy("same");
+jetpt_SR_Nq_pT->DrawCopy("same");
+jetpt_SR_Nq_Abseta->DrawCopy("same");
+jetpt_SR_Fq_pT->DrawCopy("same");
+jetpt_SR_Fq_Abseta->DrawCopy("same");
+jetpt_SR_pT_Abseta->DrawCopy("same");
+leg->Draw("same");
+c_SR_jetpt->SetLogy(1);
+c_SR_jetpt->Update();
+
+c_SR_jetpt->SaveAs("SR_jetpt.eps");
+
+TH1F *jetpt_CR=(TH1F*)MC.Get("invertedVBF/h_jetpt")->Clone("jetpt_CR");
+jetpt_CR->SetLineColor(1);
+TH1F *jetpt_CR_Nq_Fq=(TH1F*)Dice.Get("CR_Nq_Fq/h_jetpt")->Clone("jetpt_CR_Nq_Fq");
+jetpt_CR_Nq_Fq->SetLineColor(2);
+TH1F *jetpt_CR_Nq_pT=(TH1F*)Dice.Get("CR_Nq_pT/h_jetpt")->Clone("jetpt_CR_Nq_pT");
+jetpt_CR_Nq_pT->SetLineColor(3);
+TH1F *jetpt_CR_Nq_Abseta=(TH1F*)Dice.Get("CR_Nq_Abseta/h_jetpt")->Clone("jetpt_CR_Nq_Abseta");
+jetpt_CR_Nq_Abseta->SetLineColor(4);
+TH1F *jetpt_CR_Fq_pT=(TH1F*)Dice.Get("CR_Fq_pT/h_jetpt")->Clone("jetpt_CR_Fq_pT");
+jetpt_CR_Fq_pT->SetLineColor(5);
+TH1F *jetpt_CR_Fq_Abseta=(TH1F*)Dice.Get("CR_Fq_Abseta/h_jetpt")->Clone("jetpt_CR_Fq_Abseta");
+jetpt_CR_Fq_Abseta->SetLineColor(6);
+TH1F *jetpt_CR_pT_Abseta=(TH1F*)Dice.Get("CR_pT_Abseta/h_jetpt")->Clone("jetpt_CR_pT_Abseta");
+jetpt_CR_pT_Abseta->SetLineColor(7);
+
+TCanvas *c_CR_jetpt = new TCanvas("c_CR_jetpt", "#bar{VBF}: p_{T}^{jet_{2}}");
+jetpt_CR->GetYaxis()->SetRangeUser(1, 10000000);
+jetpt_CR->DrawCopy();
+jetpt_CR_Nq_Fq->DrawCopy("same");
+jetpt_CR_Nq_pT->DrawCopy("same");
+jetpt_CR_Nq_Abseta->DrawCopy("same");
+jetpt_CR_Fq_pT->DrawCopy("same");
+jetpt_CR_Fq_Abseta->DrawCopy("same");
+jetpt_CR_pT_Abseta->DrawCopy("same");
+leg->Draw("same");
+c_CR_jetpt->SetLogy(1);
+c_CR_jetpt->Update();
+
+c_CR_jetpt->SaveAs("CR_jetpt.eps");
+
 //h_jet1eta
 TH1F *jet1eta_SR=(TH1F*)MC.Get("VBF/h_jet1eta")->Clone("jet1eta_SR");
 jet1eta_SR->SetLineColor(1);
@@ -935,6 +1149,67 @@ c_CR_jet2eta->SetLogy(1);
 c_CR_jet2eta->Update();
 
 c_CR_jet2eta->SaveAs("CR_jet2eta.eps");
+
+//h_jeteta
+TH1F *jeteta_SR=(TH1F*)MC.Get("VBF/h_jeteta")->Clone("jeteta_SR");
+jeteta_SR->SetLineColor(1);
+TH1F *jeteta_SR_Nq_Fq=(TH1F*)Dice.Get("SR_Nq_Fq/h_jeteta")->Clone("jeteta_SR_Nq_Fq");
+jeteta_SR_Nq_Fq->SetLineColor(2);
+TH1F *jeteta_SR_Nq_pT=(TH1F*)Dice.Get("SR_Nq_pT/h_jeteta")->Clone("jeteta_SR_Nq_pT");
+jeteta_SR_Nq_pT->SetLineColor(3);
+TH1F *jeteta_SR_Nq_Abseta=(TH1F*)Dice.Get("SR_Nq_Abseta/h_jeteta")->Clone("jeteta_SR_Nq_Abseta");
+jeteta_SR_Nq_Abseta->SetLineColor(4);
+TH1F *jeteta_SR_Fq_pT=(TH1F*)Dice.Get("SR_Fq_pT/h_jeteta")->Clone("jeteta_SR_Fq_pT");
+jeteta_SR_Fq_pT->SetLineColor(5);
+TH1F *jeteta_SR_Fq_Abseta=(TH1F*)Dice.Get("SR_Fq_Abseta/h_jeteta")->Clone("jeteta_SR_Fq_Abseta");
+jeteta_SR_Fq_Abseta->SetLineColor(6);
+TH1F *jeteta_SR_pT_Abseta=(TH1F*)Dice.Get("SR_pT_Abseta/h_jeteta")->Clone("jeteta_SR_pT_Abseta");
+jeteta_SR_pT_Abseta->SetLineColor(7);
+
+TCanvas *c_SR_jeteta = new TCanvas("VBF: c_SR_jeteta", "#eta^{jet_{2}}");
+jeteta_SR->GetYaxis()->SetRangeUser(1, 1000000);
+jeteta_SR->DrawCopy();
+jeteta_SR_Nq_Fq->DrawCopy("same");
+jeteta_SR_Nq_pT->DrawCopy("same");
+jeteta_SR_Nq_Abseta->DrawCopy("same");
+jeteta_SR_Fq_pT->DrawCopy("same");
+jeteta_SR_Fq_Abseta->DrawCopy("same");
+jeteta_SR_pT_Abseta->DrawCopy("same");
+leg->Draw("same");
+c_SR_jeteta->SetLogy(1);
+c_SR_jeteta->Update();
+
+c_SR_jeteta->SaveAs("SR_jeteta.eps");
+
+TH1F *jeteta_CR=(TH1F*)MC.Get("invertedVBF/h_jeteta")->Clone("jeteta_CR");
+jeteta_CR->SetLineColor(1);
+TH1F *jeteta_CR_Nq_Fq=(TH1F*)Dice.Get("CR_Nq_Fq/h_jeteta")->Clone("jeteta_CR_Nq_Fq");
+jeteta_CR_Nq_Fq->SetLineColor(2);
+TH1F *jeteta_CR_Nq_pT=(TH1F*)Dice.Get("CR_Nq_pT/h_jeteta")->Clone("jeteta_CR_Nq_pT");
+jeteta_CR_Nq_pT->SetLineColor(3);
+TH1F *jeteta_CR_Nq_Abseta=(TH1F*)Dice.Get("CR_Nq_Abseta/h_jeteta")->Clone("jeteta_CR_Nq_Abseta");
+jeteta_CR_Nq_Abseta->SetLineColor(4);
+TH1F *jeteta_CR_Fq_pT=(TH1F*)Dice.Get("CR_Fq_pT/h_jeteta")->Clone("jeteta_CR_Fq_pT");
+jeteta_CR_Fq_pT->SetLineColor(5);
+TH1F *jeteta_CR_Fq_Abseta=(TH1F*)Dice.Get("CR_Fq_Abseta/h_jeteta")->Clone("jeteta_CR_Fq_Abseta");
+jeteta_CR_Fq_Abseta->SetLineColor(6);
+TH1F *jeteta_CR_pT_Abseta=(TH1F*)Dice.Get("CR_pT_Abseta/h_jeteta")->Clone("jeteta_CR_pT_Abseta");
+jeteta_CR_pT_Abseta->SetLineColor(7);
+
+TCanvas *c_CR_jeteta = new TCanvas("c_CR_jeteta", "#bar{VBF}: #eta^{jet_{2}}");
+jeteta_CR->GetYaxis()->SetRangeUser(1, 10000000);
+jeteta_CR->DrawCopy();
+jeteta_CR_Nq_Fq->DrawCopy("same");
+jeteta_CR_Nq_pT->DrawCopy("same");
+jeteta_CR_Nq_Abseta->DrawCopy("same");
+jeteta_CR_Fq_pT->DrawCopy("same");
+jeteta_CR_Fq_Abseta->DrawCopy("same");
+jeteta_CR_pT_Abseta->DrawCopy("same");
+leg->Draw("same");
+c_CR_jeteta->SetLogy(1);
+c_CR_jeteta->Update();
+
+c_CR_jeteta->SaveAs("CR_jeteta.eps");
 
 //h_dijetinvariantmass
 TH1F *dijetinvariantmass_SR=(TH1F*)MC.Get("VBF/h_dijetinvariantmass")->Clone("dijetinvariantmass_SR");
