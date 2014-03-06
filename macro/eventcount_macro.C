@@ -21,11 +21,11 @@ void eventcount(TFile* inputfile){
 	TH1F* h1_CR9counts = ((TH1F*)(inputfile->Get("Central_AntiLooseIso_CR9/counts")));
 	TH1F* h1_CR10counts = ((TH1F*)(inputfile->Get("Central_invertedVBF_AntiLooseIso_CR10/counts")));
 
-	double SRcounts = h1_SRcounts->GetBinContent(12);
-	double CR3counts = h1_CR3counts->GetBinContent(12);
-	double CR5counts = h1_CR5counts->GetBinContent(12);
-	double CR7counts = h1_CR7counts->GetBinContent(12);
-	double CR9counts = h1_CR9counts->GetBinContent(12);
+	double SRcounts = h1_SRcounts->GetBinContent(14);
+	double CR3counts = h1_CR3counts->GetBinContent(14);
+	double CR5counts = h1_CR5counts->GetBinContent(14);
+	double CR7counts = h1_CR7counts->GetBinContent(14);
+	double CR9counts = h1_CR9counts->GetBinContent(14);
 
 	double SRcounts_err = 0.;
 	double CR3counts_err = 0.;
@@ -45,7 +45,7 @@ void eventcount(TFile* inputfile){
 	double CR8counts = 0;
 	double CR10counts = 0;
 
-	for (int i = 7 ; i < 15; i++){
+	for (int i = 9 ; i < 16; i++){
 
 		CR2counts += h1_CR2counts->GetBinContent(i);
 		CR4counts += h1_CR4counts->GetBinContent(i);
@@ -88,6 +88,9 @@ void eventcount(TFile* inputfile){
 	double antimediumbgpred_err = sqrt(  pow(   ((antimediumeff * CR2counts_err)/( 1. - antimediumeff))    , 2.)   +   pow(   (((double)CR2counts * antimediumeff_err)/(pow( (1 - antimediumeff) ,2.)))    , 2.)    );
 	double antiloosebgpred_err = sqrt(  pow(   ((antilooseeff * CR2counts_err)/( 1. - antilooseeff))    , 2.)   +   pow(   (((double)CR2counts * antilooseeff_err)/(pow( (1 - antilooseeff) ,2.)))    , 2.)    );
 
+
+	cout << "//-------------------Study Done using Eventcount as input------------------------//" << endl;
+	cout << endl;
 	cout << "#Event Counting#" << endl;
 	cout << "SR: "<< SRcounts  << " +- " << SRcounts_err <<endl;
 	cout << "CR2: "<< CR2counts  << " +- " << CR2counts_err <<endl;
@@ -112,4 +115,112 @@ void eventcount(TFile* inputfile){
 	cout <<"Anti medium region-- "<< "BG Prediction: " << antimediumbgpred<< " +- "<< antimediumbgpred_err << endl;
 	cout <<"Anti loose region-- "<<	"BG Prediction: " << antiloosebgpred<< " +- "<< antiloosebgpred_err << endl;
 
+
+	((TH1F*)(inputfile->Get("SignalRegion/h_dijetinvariantmass")))->Clone("h1_dijetinvariantmass_onetight");
+	((TH1F*)(inputfile->Get("SignalRegion/h_dijetinvariantmass")))->Clone("h1_dijetinvariantmass_antitight");
+	((TH1F*)(inputfile->Get("SignalRegion/h_dijetinvariantmass")))->Clone("h1_dijetinvariantmass_antimedium");
+	((TH1F*)(inputfile->Get("SignalRegion/h_dijetinvariantmass")))->Clone("h1_dijetinvariantmass_antiloose");
+
+	Int_t nbins = ((TH1F*)(inputfile->Get("SignalRegion/h_dijetinvariantmass")))->GetXaxis()->GetNbins();
+
+	double SRcounts_dijetinvmass = 0.;
+	double CR3counts_dijetinvmass = 0.;
+	double CR5counts_dijetinvmass = 0.;
+	double CR7counts_dijetinvmass = 0.;
+	double CR9counts_dijetinvmass = 0.;
+	double CR2counts_dijetinvmass = 0;
+	double CR4counts_dijetinvmass = 0;
+	double CR6counts_dijetinvmass = 0;
+	double CR8counts_dijetinvmass = 0;
+	double CR10counts_dijetinvmass = 0;
+
+	double CR2counts_dijetinvmass_err = 0.;
+	double CR4counts_dijetinvmass_err = 0.;
+	double CR6counts_dijetinvmass_err = 0.;
+	double CR8counts_dijetinvmass_err = 0.;
+	double CR10counts_dijetinvmass_err = 0.;
+	double SRcounts_dijetinvmass_err = 0.;
+	double CR3counts_dijetinvmass_err = 0.;
+	double CR5counts_dijetinvmass_err = 0.;
+	double CR7counts_dijetinvmass_err = 0.;
+	double CR9counts_dijetinvmass_err = 0.;
+
+	for (Int_t i = 2; i < nbins ; i ++) {
+		SRcounts_dijetinvmass += 0.;
+		CR3counts_dijetinvmass += (double)((TH1F*)(inputfile->Get("Central_1TightIso_CR3/h_dijetinvariantmass")))->GetBinContent(i);
+		CR5counts_dijetinvmass += (double)((TH1F*)(inputfile->Get("Central_AntiTightIso_CR5/h_dijetinvariantmass")))->GetBinContent(i);
+		CR7counts_dijetinvmass += (double)((TH1F*)(inputfile->Get("Central_AntiMediumIso_CR7/h_dijetinvariantmass")))->GetBinContent(i);
+		CR9counts_dijetinvmass += (double)((TH1F*)(inputfile->Get("Central_AntiLooseIso_CR9/h_dijetinvariantmass")))->GetBinContent(i);
+		CR2counts_dijetinvmass += (double)((TH1F*)(inputfile->Get("Central_invertedVBF_2TightIso_CR2/h_dijetinvariantmass")))->GetBinContent(i);
+		CR4counts_dijetinvmass += (double)((TH1F*)(inputfile->Get("Central_invertedVBF_1TightIso_CR4/h_dijetinvariantmass")))->GetBinContent(i);
+		CR6counts_dijetinvmass += (double)((TH1F*)(inputfile->Get("Central_invertedVBF_AntiTightIso_CR6/h_dijetinvariantmass")))->GetBinContent(i);
+		CR8counts_dijetinvmass += (double)((TH1F*)(inputfile->Get("Central_invertedVBF_AntiMediumIso_CR8/h_dijetinvariantmass")))->GetBinContent(i);
+		CR10counts_dijetinvmass += (double)((TH1F*)(inputfile->Get("Central_invertedVBF_AntiLooseIso_CR10/h_dijetinvariantmass")))->GetBinContent(i);
+
+
+	}
+
+	if (SRcounts_dijetinvmass > 0.) SRcounts_dijetinvmass_err = sqrt(SRcounts_dijetinvmass);
+	if (CR3counts_dijetinvmass > 0.) CR3counts_dijetinvmass_err = sqrt(CR3counts_dijetinvmass);
+	if (CR5counts_dijetinvmass > 0.) CR5counts_dijetinvmass_err = sqrt(CR5counts_dijetinvmass);
+	if (CR7counts_dijetinvmass > 0.) CR7counts_dijetinvmass_err = sqrt(CR7counts_dijetinvmass);
+	if (CR9counts_dijetinvmass > 0.) CR9counts_dijetinvmass_err = sqrt(CR9counts_dijetinvmass);
+
+	if (CR2counts_dijetinvmass > 0.) CR2counts_dijetinvmass_err = sqrt(CR2counts_dijetinvmass);
+	if (CR4counts_dijetinvmass > 0.) CR4counts_dijetinvmass_err = sqrt(CR4counts_dijetinvmass);
+	if (CR6counts_dijetinvmass > 0.) CR6counts_dijetinvmass_err = sqrt(CR6counts_dijetinvmass);
+	if (CR8counts_dijetinvmass > 0.) CR8counts_dijetinvmass_err = sqrt(CR8counts_dijetinvmass);
+	if (CR10counts_dijetinvmass > 0.) CR10counts_dijetinvmass_err = sqrt(CR10counts_dijetinvmass);
+
+	double onetighteff_dijetinvmass = (double)CR3counts_dijetinvmass / (double)(CR3counts_dijetinvmass + CR4counts_dijetinvmass);
+	double antitighteff_dijetinvmass = (double)CR5counts_dijetinvmass / (double)(CR5counts_dijetinvmass + CR6counts_dijetinvmass);
+	double antimediumeff_dijetinvmass = (double)CR7counts_dijetinvmass / (double)(CR7counts_dijetinvmass + CR8counts_dijetinvmass);
+	double antilooseeff_dijetinvmass = (double)CR9counts_dijetinvmass / (double)(CR9counts_dijetinvmass + CR10counts_dijetinvmass);
+
+	double onetighteff_dijetinvmass_err = sqrt( pow(  (((double)CR4counts_dijetinvmass * CR3counts_dijetinvmass_err)/(pow(((double)CR3counts_dijetinvmass + (double)CR4counts_dijetinvmass),2.))), 2.)  + pow(  (((double)CR3counts_dijetinvmass * CR4counts_dijetinvmass_err)/(pow(((double)CR3counts_dijetinvmass + (double)CR4counts_dijetinvmass),2.))), 2.)    );
+	double antitighteff_dijetinvmass_err = sqrt( pow(  (((double)CR6counts_dijetinvmass * CR5counts_dijetinvmass_err)/(pow(((double)CR5counts_dijetinvmass + (double)CR6counts_dijetinvmass),2.))), 2.)  + pow(  (((double)CR5counts_dijetinvmass * CR6counts_dijetinvmass_err)/(pow(((double)CR5counts_dijetinvmass + (double)CR6counts_dijetinvmass),2.))), 2.)    );
+	double antimediumeff_dijetinvmass_err = sqrt( pow(  (((double)CR8counts_dijetinvmass * CR7counts_dijetinvmass_err)/(pow(((double)CR7counts_dijetinvmass + (double)CR8counts_dijetinvmass),2.))), 2.)  + pow(  (((double)CR7counts_dijetinvmass * CR8counts_dijetinvmass_err)/(pow(((double)CR7counts_dijetinvmass + (double)CR8counts_dijetinvmass),2.))), 2.)    );
+	double antilooseeff_dijetinvmass_err = sqrt( pow(  (((double)CR10counts_dijetinvmass * CR9counts_dijetinvmass_err)/(pow(((double)CR9counts_dijetinvmass + (double)CR10counts_dijetinvmass),2.))), 2.)  + pow(  (((double)CR9counts_dijetinvmass * CR10counts_dijetinvmass_err)/(pow(((double)CR9counts_dijetinvmass + (double)CR10counts_dijetinvmass),2.))), 2.)    );
+
+	double onetightbgpred_dijetinvmass = (double)CR2counts_dijetinvmass * (onetighteff_dijetinvmass / (1. - onetighteff_dijetinvmass) );
+	double antitightbgpred_dijetinvmass = (double)CR2counts_dijetinvmass * (antitighteff_dijetinvmass / (1. - antitighteff_dijetinvmass) );
+	double antimediumbgpred_dijetinvmass = (double)CR2counts_dijetinvmass * (antimediumeff_dijetinvmass / (1. - antimediumeff_dijetinvmass) );
+	double antiloosebgpred_dijetinvmass = (double)CR2counts_dijetinvmass * (antilooseeff_dijetinvmass / (1. - antilooseeff_dijetinvmass) );
+
+	double onetightbgpred_dijetinvmass_err = sqrt(  pow(   ((onetighteff_dijetinvmass * CR2counts_dijetinvmass_err)/( 1. - onetighteff_dijetinvmass))    , 2.)   +   pow(   (((double)CR2counts_dijetinvmass * onetighteff_dijetinvmass_err)/(pow( (1 - onetighteff_dijetinvmass) ,2.)))    , 2.)    );
+	double antitightbgpred_dijetinvmass_err = sqrt(  pow(   ((antitighteff_dijetinvmass * CR2counts_dijetinvmass_err)/( 1. - antitighteff_dijetinvmass))    , 2.)   +   pow(   (((double)CR2counts_dijetinvmass * antitighteff_dijetinvmass_err)/(pow( (1 - antitighteff_dijetinvmass) ,2.)))    , 2.)    );
+	double antimediumbgpred_dijetinvmass_err = sqrt(  pow(   ((antimediumeff_dijetinvmass * CR2counts_dijetinvmass_err)/( 1. - antimediumeff_dijetinvmass))    , 2.)   +   pow(   (((double)CR2counts_dijetinvmass * antimediumeff_dijetinvmass_err)/(pow( (1 - antimediumeff_dijetinvmass) ,2.)))    , 2.)    );
+	double antiloosebgpred_dijetinvmass_err = sqrt(  pow(   ((antilooseeff_dijetinvmass * CR2counts_dijetinvmass_err)/( 1. - antilooseeff_dijetinvmass))    , 2.)   +   pow(   (((double)CR2counts_dijetinvmass * antilooseeff_dijetinvmass_err)/(pow( (1 - antilooseeff_dijetinvmass) ,2.)))    , 2.)    );
+
+
+	cout << endl;
+	cout << "//-------------------Study Done using DiJetInvMass Plot entries as input------------------------//" << endl;
+	cout << endl;
+	cout << "#Event Counting#" << endl;
+	cout << "SR: "<< SRcounts_dijetinvmass  << " +- " << SRcounts_dijetinvmass_err <<endl;
+	cout << "CR2: "<< CR2counts_dijetinvmass  << " +- " << CR2counts_dijetinvmass_err <<endl;
+	cout << "CR3: "<< CR3counts_dijetinvmass  << " +- " << CR3counts_dijetinvmass_err <<endl;
+	cout << "CR4: "<< CR4counts_dijetinvmass  << " +- " << CR4counts_dijetinvmass_err <<endl;
+	cout << "CR5: "<< CR5counts_dijetinvmass  << " +- " << CR5counts_dijetinvmass_err <<endl;
+	cout << "CR6: "<< CR6counts_dijetinvmass  << " +- " << CR6counts_dijetinvmass_err <<endl;
+	cout << "CR7: "<< CR7counts_dijetinvmass  << " +- " << CR7counts_dijetinvmass_err <<endl;
+	cout << "CR8: "<< CR8counts_dijetinvmass  << " +- " << CR8counts_dijetinvmass_err <<endl;
+	cout << "CR9: "<< CR9counts_dijetinvmass  << " +- " << CR9counts_dijetinvmass_err <<endl;
+	cout << "CR10: "<< CR10counts_dijetinvmass  << " +- " << CR10counts_dijetinvmass_err<<endl;
+	cout << endl;
+	cout << "#VBF Efficency#" << endl;
+	cout <<"One tight region-- "<<"VBF Efficency: "<< onetighteff_dijetinvmass << " +- "<<onetighteff_dijetinvmass_err<<endl;
+	cout <<"Anti tight region-- "<<"VBF Efficency: "<< antitighteff_dijetinvmass << " +- "<<antitighteff_dijetinvmass_err<<endl;
+	cout <<"Anti medium region-- "<<"VBF Efficency: "<< antimediumeff_dijetinvmass << " +- "<<antimediumeff_dijetinvmass_err<<endl;
+	cout <<"Anti loose region-- "<<"VBF Efficency: "<< antilooseeff_dijetinvmass << " +- "<<antilooseeff_dijetinvmass_err<<endl;
+	cout << endl;
+	cout << "BG Prediction#" << endl;
+	cout <<"One tight region-- "<< "BG Prediction: " << onetightbgpred_dijetinvmass<< " +- "<< onetightbgpred_dijetinvmass_err << endl;
+	cout <<"Anti tight region-- "<<	"BG Prediction: " << antitightbgpred_dijetinvmass<< " +- "<< antitightbgpred_dijetinvmass_err << endl;
+	cout <<"Anti medium region-- "<< "BG Prediction: " << antimediumbgpred_dijetinvmass<< " +- "<< antimediumbgpred_dijetinvmass_err << endl;
+	cout <<"Anti loose region-- "<<	"BG Prediction: " << antiloosebgpred_dijetinvmass<< " +- "<< antiloosebgpred_dijetinvmass_err << endl;
+
+
+
+	
 } 

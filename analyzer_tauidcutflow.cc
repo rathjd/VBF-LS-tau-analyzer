@@ -91,6 +91,7 @@ ofile.count("MediumIso",0.);
 ofile.count("TightIso",0.);
 ofile.count("EtaCut",0.);
 ofile.count("PtCut",0.);
+ofile.count("1TauPlusNoCuts",0.);
 ofile.count("1TauPlusElectronVeto",0.);
 ofile.count("1TauPlusMuonVeto",0.);
 ofile.count("1TauPlusDecayMode",0.);
@@ -137,7 +138,6 @@ ofile.count("1TauPlusPtCut",0.);
 
           // vertex selection
 	  //Event Count
-	  ofile.count("NoCuts",weight);
 	
 	
 
@@ -145,64 +145,66 @@ ofile.count("1TauPlusPtCut",0.);
 	  // -- Tau ID CUtFlow     --
 	  // ------------------------
 
-		int tauID_againstElectronTightMVA5 = 0;
-		int tauID_againstMuonTight2 = 0;
-		int tauID_decayModeFindingandbla = 0;
-		int leadPFChargedHadrCand_pt = 0;
-		int tightiso = 0;
-		int mediumiso = 0;
-		int looseiso = 0;
-		int taueta = 0;
-		int taupt = 0;
+		int ntauid = 0;
 
 		for(unsigned int t =0;t<tau.size();++t){
-		
-			if(!( tau[t].tauID_againstElectronTightMVA5 > 0.5                                 )) continue;
-			tauID_againstElectronTightMVA5++;
-			if(!( tau[t].tauID_againstMuonTight2 > 0.5                                 )) continue;
-			tauID_againstMuonTight2++;
-			if(!( (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)        )) continue;
-			tauID_decayModeFindingandbla++;
-			if(!( tau[t].leadPFChargedHadrCand_pt >= 5.0                                 )) continue;
-			leadPFChargedHadrCand_pt++;
-			if(!(tau[t].tauID_byLooseIsolationMVA3newDMwLT > 0.5)) continue;
-			looseiso++;
-			if(!(tau[t].tauID_byMediumIsolationMVA3newDMwLT > 0.5)) continue;
-			mediumiso++;
-			if(!(tau[t].tauID_byTightIsolationMVA3newDMwLT > 0.5)) continue;
-			tightiso++;
-			if(!(        fabs(tau[t].eta) <= 2.1                                         )) continue;
-			taueta++;
-			if(!( tau[t].pt >= 40.                                 )) continue;
-			taupt++;
-		
+
+	  		ofile.count("NoCuts",weight);
+			if (ntauid == 1) ofile.count("1TauPlusNoCuts",weight);
+
+			if (ntauid == 1) {
+			
+				if(!( tau[t].tauID_againstElectronTightMVA5 > 0.5                                 )) continue;
+				ofile.count("1TauPlusElectronVeto",weight);
+				if(!( tau[t].tauID_againstMuonTight2 > 0.5                                 )) continue;
+				ofile.count("1TauPlusMuonVeto", weight);
+				if(!( (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)        )) continue;
+				ofile.count("1TauPlusDecayMode", weight);
+				if(!( tau[t].leadPFChargedHadrCand_pt >= 5.0                                 )) continue;
+				ofile.count("1TauPlusChargeHadrCandPt", weight);
+				if(!(tau[t].tauID_byLooseIsolationMVA3newDMwLT > 0.5)) continue;
+				ofile.count("1TauPlusLooseIso", weight);
+				if(!(tau[t].tauID_byMediumIsolationMVA3newDMwLT > 0.5)) continue;
+				ofile.count("1TauPlusMediumIso", weight);
+				if(!(tau[t].tauID_byTightIsolationMVA3newDMwLT > 0.5)) continue;
+				ofile.count("1TauPlusTightIso", weight);
+				if(!(        fabs(tau[t].eta) <= 2.1                                         )) continue;
+				ofile.count("1TauPlusEtaCut", weight);
+				if(!( tau[t].pt >= 45.                                 )) continue;
+				ofile.count("1TauPlusPtCut", weight);
+				ntauid++;
+			
+			}
+
+			if (ntauid == 0) {
+
+				if(!( tau[t].tauID_againstElectronTightMVA5 > 0.5                                 )) continue;
+				ofile.count("ElectronVeto",weight);
+				if(!( tau[t].tauID_againstMuonTight2 > 0.5                                 )) continue;
+				ofile.count("MuonVeto", weight);
+				if(!( (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)        )) continue;
+				ofile.count("DecayMode", weight);
+				if(!( tau[t].leadPFChargedHadrCand_pt >= 5.0                                 )) continue;
+				ofile.count("ChargeHadrCandPt", weight);
+				if(!(tau[t].tauID_byLooseIsolationMVA3newDMwLT > 0.5)) continue;
+				ofile.count("LooseIso", weight);
+				if(!(tau[t].tauID_byMediumIsolationMVA3newDMwLT > 0.5)) continue;
+				ofile.count("MediumIso", weight);
+				if(!(tau[t].tauID_byTightIsolationMVA3newDMwLT > 0.5)) continue;
+				ofile.count("TightIso", weight);
+				if(!(        fabs(tau[t].eta) <= 2.1                                         )) continue;
+				ofile.count("EtaCut", weight);
+				if(!( tau[t].pt >= 45.                                 )) continue;
+				ofile.count("PtCut", weight);
+				ntauid++;
+
+			}
+
 		}
 
-		if (tauID_againstElectronTightMVA5 > 0) ofile.count("ElectronVeto",weight);
-		if (tauID_againstMuonTight2 > 0) ofile.count("MuonVeto", weight);
-		if (tauID_decayModeFindingandbla > 0) ofile.count("DecayMode", weight);
-		if (leadPFChargedHadrCand_pt > 0) ofile.count("ChargeHadrCandPt", weight);
-		if (looseiso > 0) ofile.count("LooseIso", weight);
-		if (mediumiso > 0) ofile.count("MediumIso", weight);	
-		if (tightiso > 0) ofile.count("TightIso", weight);
-		if (taueta > 0) ofile.count("EtaCut", weight);
-		if (taupt > 0) ofile.count("PtCut", weight);
-
-		if (taupt > 0) {
-			if (tauID_againstElectronTightMVA5 > 1) ofile.count("1TauPlusElectronVeto",weight);
-			if (tauID_againstMuonTight2 > 1) ofile.count("1TauPlusMuonVeto", weight);
-			if (tauID_decayModeFindingandbla > 1) ofile.count("1TauPlusDecayMode", weight);
-			if (leadPFChargedHadrCand_pt > 1) ofile.count("1TauPlusChargeHadrCandPt", weight);
-			if (looseiso > 1) ofile.count("1TauPlusLooseIso", weight);
-			if (mediumiso > 1) ofile.count("1TauPlusMediumIso", weight);	
-			if (tightiso > 1) ofile.count("1TauPlusTightIso", weight);
-			if (taueta > 1) ofile.count("1TauPlusEtaCut", weight);
-			if (taupt > 1) ofile.count("1TauPlusPtCut", weight);
-		}
 
 }
   stream.close();
   ofile.close();
   return 0;
 }
-
