@@ -84,54 +84,54 @@ int main(int argc, char** argv)
   // Declare histograms
   //---------------------------------------------------------------------------
 
-  double ptedges[12]={0.,30.,45.,55.,75.,100.,250.,400.,600.,900.,1500.,2500.};
+  double ptedges[21]={22.5,23.7,25.,26.5,28.1,30.,32.1,34.6,37.5,40.9,45.,50.,56.3,64.3,75.,90.,112.5,150.,225.,450.,2500.};
   double FractionEdges[17]={0.0,0.05,0.1,0.15,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.8,0.85,0.9,0.95,1.,1.01};
 
-  TH2F* ChargeMapN_num = new TH2F("ChargeMapN_num","charged energy fraction vs transverse impulse", 16, FractionEdges, 11, ptedges);
+  TH2F* ChargeMapN_num = new TH2F("ChargeMapN_num","charged energy fraction vs transverse impulse", 16, FractionEdges, 20, ptedges);
   ChargeMapN_num->GetXaxis()->SetTitle("F^{q}");
   ChargeMapN_num->GetYaxis()->SetTitle("p_{T}^{jet}");
   ChargeMapN_num->Sumw2();
-  TH2F* ChargeMapL_num = new TH2F("ChargeMapL_num","charged energy fraction vs transverse impulse", 16, FractionEdges, 11, ptedges);
+  TH2F* ChargeMapL_num = new TH2F("ChargeMapL_num","charged energy fraction vs transverse impulse", 16, FractionEdges, 20, ptedges);
   ChargeMapL_num->GetXaxis()->SetTitle("F^{q}");
   ChargeMapL_num->GetYaxis()->SetTitle("p_{T}^{jet}");
   ChargeMapL_num->Sumw2();  
-  TH2F* ChargeMapLi_num = new TH2F("ChargeMapLi_num","charged energy fraction vs transverse impulse", 16, FractionEdges, 11, ptedges);
+  TH2F* ChargeMapLi_num = new TH2F("ChargeMapLi_num","charged energy fraction vs transverse impulse", 16, FractionEdges, 20, ptedges);
   ChargeMapLi_num->GetXaxis()->SetTitle("F^{q}");
   ChargeMapLi_num->GetYaxis()->SetTitle("p_{T}^{jet}");
   ChargeMapLi_num->Sumw2();    
-  TH2F* ChargeMapM_num = new TH2F("ChargeMapM_num","charged energy fraction vs transverse impulse", 16, FractionEdges, 11, ptedges);
+  TH2F* ChargeMapM_num = new TH2F("ChargeMapM_num","charged energy fraction vs transverse impulse", 16, FractionEdges, 20, ptedges);
   ChargeMapM_num->GetXaxis()->SetTitle("F^{q}");
   ChargeMapM_num->GetYaxis()->SetTitle("p_{T}^{jet}");
   ChargeMapM_num->Sumw2();
-  TH2F* ChargeMapMi_num = new TH2F("ChargeMapMi_num","charged energy fraction vs transverse impulse", 16, FractionEdges, 11, ptedges);
+  TH2F* ChargeMapMi_num = new TH2F("ChargeMapMi_num","charged energy fraction vs transverse impulse", 16, FractionEdges, 20, ptedges);
   ChargeMapMi_num->GetXaxis()->SetTitle("F^{q}");
   ChargeMapMi_num->GetYaxis()->SetTitle("p_{T}^{jet}");
   ChargeMapMi_num->Sumw2(); 
-  TH2F* ChargeMapT_num = new TH2F("ChargeMapT_num","charged energy fraction vs transverse impulse", 16, FractionEdges, 11, ptedges);
+  TH2F* ChargeMapT_num = new TH2F("ChargeMapT_num","charged energy fraction vs transverse impulse", 16, FractionEdges, 20, ptedges);
   ChargeMapT_num->GetXaxis()->SetTitle("F^{q}");
   ChargeMapT_num->GetYaxis()->SetTitle("p_{T}^{jet}");
   ChargeMapT_num->Sumw2();    
-  TH2F* ChargeMapN_den = new TH2F("ChargeMapN_den","charged energy fraction vs transverse impulse", 16, FractionEdges, 11, ptedges);  
+  TH2F* ChargeMapN_den = new TH2F("ChargeMapN_den","charged energy fraction vs transverse impulse", 16, FractionEdges, 20, ptedges);  
   ChargeMapN_den->GetXaxis()->SetTitle("F^{q}");
   ChargeMapN_den->GetYaxis()->SetTitle("p_{T}^{jet}");
   ChargeMapN_den->Sumw2();
-  TH2F* ChargeMapL_den = new TH2F("ChargeMapL_den","charged energy fraction vs transverse impulse", 16, FractionEdges, 11, ptedges);  
+  TH2F* ChargeMapL_den = new TH2F("ChargeMapL_den","charged energy fraction vs transverse impulse", 16, FractionEdges, 20, ptedges);  
   ChargeMapL_den->GetXaxis()->SetTitle("F^{q}");
   ChargeMapL_den->GetYaxis()->SetTitle("p_{T}^{jet}");
   ChargeMapL_den->Sumw2();  
-  TH2F* ChargeMapLi_den = new TH2F("ChargeMapLi_den","charged energy fraction vs transverse impulse", 16, FractionEdges, 11, ptedges);  
+  TH2F* ChargeMapLi_den = new TH2F("ChargeMapLi_den","charged energy fraction vs transverse impulse", 16, FractionEdges, 20, ptedges);  
   ChargeMapLi_den->GetXaxis()->SetTitle("F^{q}");
   ChargeMapLi_den->GetYaxis()->SetTitle("p_{T}^{jet}");
   ChargeMapLi_den->Sumw2();   
-  TH2F* ChargeMapM_den = new TH2F("ChargeMapM_den","charged energy fraction vs transverse impulse", 16, FractionEdges, 11, ptedges);  
+  TH2F* ChargeMapM_den = new TH2F("ChargeMapM_den","charged energy fraction vs transverse impulse", 16, FractionEdges, 20, ptedges);  
   ChargeMapM_den->GetXaxis()->SetTitle("F^{q}");
   ChargeMapM_den->GetYaxis()->SetTitle("p_{T}^{jet}");
   ChargeMapM_den->Sumw2();  
-  TH2F* ChargeMapMi_den = new TH2F("ChargeMapMi_den","charged energy fraction vs transverse impulse", 16, FractionEdges, 11, ptedges);  
+  TH2F* ChargeMapMi_den = new TH2F("ChargeMapMi_den","charged energy fraction vs transverse impulse", 16, FractionEdges, 20, ptedges);  
   ChargeMapMi_den->GetXaxis()->SetTitle("F^{q}");
   ChargeMapMi_den->GetYaxis()->SetTitle("p_{T}^{jet}");
   ChargeMapMi_den->Sumw2();   
-  TH2F* ChargeMapT_den = new TH2F("ChargeMapT_den","charged energy fraction vs transverse impulse", 16, FractionEdges, 11, ptedges);  
+  TH2F* ChargeMapT_den = new TH2F("ChargeMapT_den","charged energy fraction vs transverse impulse", 16, FractionEdges, 20, ptedges);  
   ChargeMapT_den->GetXaxis()->SetTitle("F^{q}");
   ChargeMapT_den->GetYaxis()->SetTitle("p_{T}^{jet}");
   ChargeMapT_den->Sumw2();  
@@ -231,7 +231,7 @@ int main(int argc, char** argv)
 
           // jet baseline selection
 	for(unsigned int j = 0;j<jet.size();++j){
-	    if(!(      jet[j].pt >= 30.                                                                      )) continue;
+	    //if(!(      jet[j].pt >= 30.                                                                      )) continue;
 	    if(!(      fabs(jet[j].eta) <= 2.7                                                               )) continue;
 	    JetLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	}
