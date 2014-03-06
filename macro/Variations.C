@@ -3,10 +3,10 @@
 #include "TH2F.h"
 
 
-void EffmapVariations()
+void Variations()
 {
 
-TFile _file0 ("EffmapVariations_pTrebalance.root","UPDATE");
+TFile _file0 ("EffmapVariationsEta21Ptg30_50-80only.root","UPDATE");
 
 TH2F *h2_Nq_Fq_eff=(TH2F*)_file0.Get("h2_Nq_Fq_num")->Clone("h2_Nq_Fq_eff");
 h2_Nq_Fq_eff->Divide((TH2F*)_file0.Get("h2_Nq_Fq_den"));
