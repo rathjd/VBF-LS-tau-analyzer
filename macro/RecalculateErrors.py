@@ -62,9 +62,9 @@ for _sample in sorted(file.keys()):
 	    	events = _o.GetBinContent(x+1)
 		if(events>0):
 			alpha=0.32
-			low  = ROOT.TMath.ChisquareQuantile(alpha/2,2*events)/2
-			high = ROOT.TMath.ChisquareQuantile(1-alpha/2,2*events+2)/2
-			if(low>high):
+			low  = events - ROOT.TMath.ChisquareQuantile(alpha/2,2*events)/2
+			high = ROOT.TMath.ChisquareQuantile(1-alpha/2,2*events+2)/2 - events
+			if(low-events>high):
 				error=low
 			else:
 				error=high
