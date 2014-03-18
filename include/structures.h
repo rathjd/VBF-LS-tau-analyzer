@@ -32,6 +32,7 @@ struct TauProperties {
 	unsigned int second;
 	double Mass;
 	double dR;
+	double dEta;
 	double cosDphi;
 	int charge;
 	
@@ -41,6 +42,7 @@ struct TauProperties {
 	  second = 99999;
 	  Mass = -1.;
 	  dR = 0.;
+	  dEta=0.;
 	  cosDphi = 1;
 	  charge = -1;
 	}
@@ -96,6 +98,7 @@ struct MyHistoCollection {
 	TH1F* h_ditauinvariantmass;
 	TH1F* h_ditaucharge;
 	TH1F* h_ditaucosdeltaphi;
+	TH1F* h_ditaudeltaeta;
 
 	TH1F* h_met;
 
@@ -130,9 +133,10 @@ struct MyHistoCollection {
 		h_tau1eta = new TH1F("h_tau1eta", "h_tau1eta", 30 , -3., 3.);
 		h_tau2pt = new TH1F("h_tau2pt", "h_tau2pt", 50, 0., 500.);
 		h_tau2eta = new TH1F("h_tau2eta", "h_tau2eta", 30 , -3., 3.);
-		h_ditauinvariantmass = new TH1F("h_ditauinvariantmass", "h_ditauinvariantmass", 30, 0., 300.);
+		h_ditauinvariantmass = new TH1F("h_ditauinvariantmass", "h_ditauinvariantmass", 50, 0., 500.);
 		h_ditaucharge = new TH1F("h_ditaucharge", "h_ditaucharge", 5, -4., 6.);
 		h_ditaucosdeltaphi = new TH1F("h_ditaucosdeltaphi", "h_ditaucosdeltaphi", 50, -1.1, 1.1);
+		h_ditaudeltaeta = new TH1F ("h_ditaudeltaeta", "h_ditaudeltaeta", 20, 0., 10.);
 
 		h_met = new TH1F("h_met", "h_met", 24, 0., 240.);
 
