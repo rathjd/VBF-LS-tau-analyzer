@@ -175,11 +175,13 @@ TauProperties Inv2tMassIndex(MyEventCollection collection)
          double dR=tau1_4v.DeltaR(tau2_4v);
          int charge = collection.tau[tauIndex.first]->charge * collection.tau[tauIndex.second]->charge;
          double cosdeltaphiDiTau = cos(tau1_4v.DeltaPhi(tau2_4v));
+	 double dEta=fabs(collection.tau[tauIndex.first]->eta - collection.tau[tauIndex.second]->eta);
     
          Inv2tMass.Mass = ditau_4v.M();
          Inv2tMass.dR = dR;
          Inv2tMass.charge = charge;
          Inv2tMass.cosDphi = cosdeltaphiDiTau;
+	 Inv2tMass.dEta=dEta;
       }
     return Inv2tMass;
   }
