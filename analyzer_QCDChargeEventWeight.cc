@@ -124,6 +124,74 @@ MyEventCollection JetLooseIsoObjectSelectionCollection ("JetLooseIsoObjectSelect
   //---------------------------------------------------------------------------
   // Loop over events
   //---------------------------------------------------------------------------
+//make scaled ChargeMaps
+TH2F* ChargeMapN_eff = (TH2F*)(file_eff.Get("ChargeMapN_eff"));
+ChargeMapN_eff->Scale(0.052); //out of Wjets
+
+TH2F* ChargeMapL_eff = (TH2F*)(file_eff.Get("ChargeMapL_eff"));
+ChargeMapL_eff->Scale(0.46); //out of Wjets
+
+TH2F* ChargeMapLi_eff = (TH2F*)(file_eff.Get("ChargeMapL_num")->Clone("ChargeMapLi_eff"));
+ChargeMapLi_eff->Scale(0.46); //out of Wjets
+ChargeMapLi_eff->Add((TH2F*)file_eff.Get("ChargeMapN_num"),0.052); //out of Wjets
+ChargeMapLi_eff->Divide((TH2F*)file_eff.Get("ChargeMapLi_den"));
+
+TH2F* ChargeMapM_eff = (TH2F*)(file_eff.Get("ChargeMapM_eff"));
+ChargeMapM_eff->Scale(0.64); //out of Wjets
+
+TH2F* ChargeMapMi_eff = (TH2F*)(file_eff.Get("ChargeMapM_num")->Clone("ChargeMapMi_eff"));
+ChargeMapMi_eff->Scale(0.64); //out of Wjets
+ChargeMapMi_eff->Add((TH2F*)file_eff.Get("ChargeMapL_num"),0.46); //out of Wjets
+ChargeMapMi_eff->Add((TH2F*)file_eff.Get("ChargeMapN_num"),0.052); //out of Wjets
+ChargeMapMi_eff->Divide((TH2F*)file_eff.Get("ChargeMapMi_den"));
+
+TH2F* ChargeMapT_eff = (TH2F*)(file_eff.Get("ChargeMapT_eff"));
+ChargeMapT_eff->Scale(0.72); //out of Wjets
+
+//make correctly combined ReweightFactors
+TProfile* ReweightFactorN = (TProfile*)(file_Resp.Get("RescaleWeightN"));
+
+TProfile* ReweightFactorL = (TProfile*)(file_Resp.Get("RescaleWeightL"));
+
+TProfile* ReweightFactorLi = (TProfile*)(file_Resp.Get("RescaleWeightLi")->Clone("ReweightFactorLi"));
+TProfile* ReweightFactorMi = (TProfile*)(file_Resp.Get("RescaleWeightMi")->Clone("ReweightFactorMi"));
+for(int i=0; i<ReweightFactorLi->GetNbinsX(); i++) {
+double L=((TProfile*)file_Resp.Get("RescaleWeightL"))->GetBinContent(i+1);
+double Nl=((TProfile*)file_Resp.Get("RescaleWeightL"))->GetBinEntries(i+1);
+double N=((TProfile*)file_Resp.Get("RescaleWeightN"))->GetBinContent(i+1);
+double Nn=((TProfile*)file_Resp.Get("RescaleWeightN"))->GetBinEntries(i+1);
+double M=((TProfile*)file_Resp.Get("RescaleWeightM"))->GetBinContent(i+1);
+double Nm=((TProfile*)file_Resp.Get("RescaleWeightM"))->GetBinEntries(i+1);
+if(Nl+Nn>0) {ReweightFactorLi->SetBinContent(i+1, (0.46*Nl*L+0.052*Nn*N)/(0.46*Nl+0.052*Nn)); ReweightFactorLi->SetBinEntries(i+1, 1);}
+if(Nm+Nl+Nn>0) {ReweightFactorMi->SetBinContent(i+1, (0.64*Nm*M+0.46*Nl*L+0.052*Nn*N)/(0.64*Nm+0.46*Nl+0.052*Nn)); ReweightFactorMi->SetBinEntries(i+1, 1);}
+}
+
+for(int i=0; i<ReweightFactorLi->GetNbinsX(); i++) std::cout<<ReweightFactorLi->GetBinContent(i+1)<<std::endl;
+TProfile* ReweightFactorM = (TProfile*)(file_Resp.Get("RescaleWeightM"));
+
+TProfile* ReweightFactorT = (TProfile*)(file_Resp.Get("RescaleWeightT"));
+
+//make correctly combined scale factors
+TProfile* h1_taufakescaleN_fac = (TProfile*)(file_Resp.Get("ScaleFactorN"));
+
+TProfile* h1_taufakescaleL_fac = (TProfile*)(file_Resp.Get("ScaleFactorL"));
+
+TProfile* h1_taufakescaleLi_fac = (TProfile*)(file_Resp.Get("ScaleFactorLi")->Clone("ScaleFactorLi")); 
+TProfile* h1_taufakescaleMi_fac = (TProfile*)(file_Resp.Get("ScaleFactorMi")->Clone("ScaleFactorMi"));
+for(int i=0; i<h1_taufakescaleLi_fac->GetNbinsX(); i++) {
+double L=((TProfile*)file_Resp.Get("ScaleFactorL"))->GetBinContent(i+1);
+double Nl=((TProfile*)file_Resp.Get("ScaleFactorL"))->GetBinEntries(i+1);
+double N=((TProfile*)file_Resp.Get("ScaleFactorN"))->GetBinContent(i+1);
+double Nn=((TProfile*)file_Resp.Get("ScaleFactorN"))->GetBinEntries(i+1);
+double M=((TProfile*)file_Resp.Get("ScaleFactorM"))->GetBinContent(i+1);
+double Nm=((TProfile*)file_Resp.Get("ScaleFactorM"))->GetBinEntries(i+1);
+if(Nl+Nn>0) {h1_taufakescaleLi_fac->SetBinContent(i+1, (0.46*Nl*L+0.052*Nn*N)/(0.46*Nl+0.052*Nn)); h1_taufakescaleLi_fac->SetBinEntries(i+1, 1);}
+if(Nm+Nl+Nn>0) {h1_taufakescaleMi_fac->SetBinContent(i+1, (0.64*Nm*M+0.46*Nl*L+0.052*Nn*N)/(0.64*Nm+0.46*Nl+0.052*Nn)); h1_taufakescaleMi_fac->SetBinEntries(i+1, 1);}
+}
+
+TProfile* h1_taufakescaleM_fac = (TProfile*)(file_Resp.Get("ScaleFactorM"));
+
+TProfile* h1_taufakescaleT_fac = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 
 for(int entry=0; entry < nevents; ++entry)
 {
@@ -221,28 +289,12 @@ for(unsigned int j = 0;j<jet.size();++j){
 bool verbose=false;
 if(verbose)std::cout<<"Event: "<<eventhelper_event<<std::endl;
 
-TH2F* ChargeMapN_eff = (TH2F*)(file_eff.Get("ChargeMapN_eff"));
-TProfile* ReweightFactorN = (TProfile*)(file_Resp.Get("RescaleWeightN"));
+
 vector<double> jet_taufakerateN;
-
-TH2F* ChargeMapL_eff = (TH2F*)(file_eff.Get("ChargeMapL_eff"));
-TProfile* ReweightFactorL = (TProfile*)(file_Resp.Get("RescaleWeightL"));
 vector<double> jet_taufakerateL;
-
-TH2F* ChargeMapLi_eff = (TH2F*)(file_eff.Get("ChargeMapLi_eff"));
-TProfile* ReweightFactorLi = (TProfile*)(file_Resp.Get("RescaleWeightLi"));
 vector<double> jet_taufakerateLi;
-
-TH2F* ChargeMapM_eff = (TH2F*)(file_eff.Get("ChargeMapM_eff"));
-TProfile* ReweightFactorM = (TProfile*)(file_Resp.Get("RescaleWeightM"));
 vector<double> jet_taufakerateM;
-
-TH2F* ChargeMapMi_eff = (TH2F*)(file_eff.Get("ChargeMapMi_eff"));
-TProfile* ReweightFactorMi = (TProfile*)(file_Resp.Get("RescaleWeightMi"));
 vector<double> jet_taufakerateMi;
-
-TH2F* ChargeMapT_eff = (TH2F*)(file_eff.Get("ChargeMapT_eff"));
-TProfile* ReweightFactorT = (TProfile*)(file_Resp.Get("RescaleWeightT"));
 vector<double> jet_taufakerateT;
 
 for(unsigned int i = 0;i<JetLooseIsoObjectSelectionCollection.jet.size();++i){
@@ -309,8 +361,6 @@ FakeTausN.generate(jet_taufakerateN,jet_taufakerateN, true);
 tau_s faketau1N;
 tau_s faketau2N;
 
-TProfile* h1_taufakescaleN_fac = (TProfile*)(file_Resp.Get("ScaleFactorN"));
-
 if ( FakeTausN.index.first >= 0 && FakeTausN.index.second >= 0 ) {
 
 double scale = h1_taufakescaleN_fac->GetBinContent(h1_taufakescaleN_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->pt)); 
@@ -371,8 +421,6 @@ FakeTausL.generate(jet_taufakerateL,jet_taufakerateLi, false);
 tau_s faketau1L;
 tau_s faketau2L;
 
-TProfile* h1_taufakescaleL_fac = (TProfile*)(file_Resp.Get("ScaleFactorL"));
-
 if ( FakeTausL.index.first >= 0 && FakeTausL.index.second >= 0 ) {
 
 double scale = h1_taufakescaleL_fac->GetBinContent(h1_taufakescaleL_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->pt)); 
@@ -394,7 +442,6 @@ faketau1L.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]-
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta<=2.1) faketau1L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta;
 else faketau1L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta)*2.1;
 
-TProfile* h1_taufakescaleLi_fac = (TProfile*)(file_Resp.Get("ScaleFactorLi")); 
 double scale2 = h1_taufakescaleLi_fac->GetBinContent(h1_taufakescaleLi_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pt));
 if(scale2 == 0) {scale2 = 0.851; FakeTausL.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->charge >= 0 )
@@ -437,8 +484,6 @@ FakeTausM.generate(jet_taufakerateM,jet_taufakerateMi, false);
 tau_s faketau1M;
 tau_s faketau2M;
 
-TProfile* h1_taufakescaleM_fac = (TProfile*)(file_Resp.Get("ScaleFactorM"));
-
 if ( FakeTausM.index.first >= 0 && FakeTausM.index.second >= 0 ) {
 
 double scale = h1_taufakescaleM_fac->GetBinContent(h1_taufakescaleM_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->pt)); 
@@ -460,7 +505,6 @@ faketau1M.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]-
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta<=2.1) faketau1M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta;
 else faketau1M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta)*2.1;
 
-TProfile* h1_taufakescaleMi_fac = (TProfile*)(file_Resp.Get("ScaleFactorMi"));
 double scale2 = h1_taufakescaleMi_fac->GetBinContent(h1_taufakescaleMi_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pt));
 if(scale2 == 0) {scale2 = 0.851; FakeTausM.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->charge >= 0 )
@@ -502,8 +546,6 @@ FakeTausT.generate(jet_taufakerateT,jet_taufakerateMi, false);
 tau_s faketau1T;
 tau_s faketau2T;
 
-TProfile* h1_taufakescaleT_fac = (TProfile*)(file_Resp.Get("ScaleFactorT"));
-
 if ( FakeTausT.index.first >= 0 && FakeTausT.index.second >= 0 ) {
 
 double scale = h1_taufakescaleT_fac->GetBinContent(h1_taufakescaleT_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->pt)); 
@@ -525,7 +567,6 @@ faketau1T.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]-
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta<=2.1) faketau1T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta;
 else faketau1T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta)*2.1;
 
-TProfile* h1_taufakescaleMi_fac = (TProfile*)(file_Resp.Get("ScaleFactorMi"));
 double scale2 = h1_taufakescaleMi_fac->GetBinContent(h1_taufakescaleMi_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pt));
 if(scale2 == 0) {scale2 = 0.851; FakeTausT.weight=0;}
 if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->charge >= 0 )
@@ -570,7 +611,6 @@ tau_s faketauT2T;
 
 if ( FakeTausTT.index.first >= 0 && FakeTausTT.index.second >= 0 ) {
 
-TProfile* h1_taufakescaleT_fac = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 double scale = h1_taufakescaleT_fac->GetBinContent(h1_taufakescaleT_fac->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->pt)); 
 if(scale == 0) {scale = 0.851; FakeTausTT.weight=0;}
 
