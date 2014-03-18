@@ -79,7 +79,8 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 	  
 	  //fill tau charge and  cosdeltaphi
           inputHistoCollection.h_ditaucharge ->Fill(Inv2t.charge,weight);
-          inputHistoCollection.h_ditaucosdeltaphi ->Fill(Inv2t.cosDphi,weight);	  
+          inputHistoCollection.h_ditaucosdeltaphi ->Fill(Inv2t.cosDphi,weight);	
+	  inputHistoCollection.h_ditaudeltaeta->Fill(Inv2t.dEta,weight);  
 	}
 
 	//fill tau pt and eta
