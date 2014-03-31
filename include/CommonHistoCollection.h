@@ -77,10 +77,11 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
 	  //determine leading two tau invariant mass
 	  inputHistoCollection.h_ditauinvariantmass ->Fill(Inv2t.Mass,weight);
 	  
-	  //fill tau charge and  cosdeltaphi
+	  //fill tau charge and  cosdeltaphi and deltaeta and 2Dpt-plot
           inputHistoCollection.h_ditaucharge ->Fill(Inv2t.charge,weight);
           inputHistoCollection.h_ditaucosdeltaphi ->Fill(Inv2t.cosDphi,weight);	
-	  inputHistoCollection.h_ditaudeltaeta->Fill(Inv2t.dEta,weight);  
+	  inputHistoCollection.h_ditaudeltaeta->Fill(Inv2t.dEta,weight);
+	  inputHistoCollection.h2_tau1pt_vs_tau2pt->Fill(inputEventCollection.tau[Inv2t.first]->pt,inputEventCollection.tau[Inv2t.second]->pt,weight);   
 	}
 
 	//fill tau pt and eta
