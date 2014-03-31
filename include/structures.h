@@ -109,6 +109,7 @@ struct MyHistoCollection {
 	TH1F* h_jetTauDistanceSecond;
 
 	TH2F* h2_DiJetInvMass_vs_DiJetDEta;
+	TH2F* h2_tau1pt_vs_tau2pt;
 
 	MyHistoCollection(TFile * f, const std::string & inputlabel) {
 
@@ -120,14 +121,22 @@ struct MyHistoCollection {
 		h_count->SetBit(TH1::kCanRebin);
 		h_count->SetStats(0);
 		h_njet = new TH1F("h_njet", "h_njet", 21, -0.5, 20.5);
+		h_njet->GetXaxis()->SetTitle("number of jets not matched to #tau");
 		h_jetpt = new TH1F("h_jetpt", "h_jetpt", 50, 0., 500.);
+		h_jetpt->GetXaxis()->SetTitle("p_{T}^{jet}");
 		h_jeteta = new TH1F("h_jeteta", "h_jeteta", 30 , -5., 5.);
+		h_jeteta->GetXaxis()->SetTitle("#eta^{jet}");
 		h_jet1pt = new TH1F("h_jet1pt", "h_jet1pt", 50, 0., 500.);
+		h_jet1pt->GetXaxis()->SetTitle("p_{T}^{jet 1}");
 		h_jet1eta = new TH1F("h_jet1eta", "h_jet1eta", 50 , -5., 5.);
+		h_jet1eta->GetXaxis()->SetTitle("#eta^{jet 1}");
 		h_jet2pt = new TH1F("h_jet2pt", "h_jet2pt", 50, 0., 500.);
+		h_jet2pt->GetXaxis()->SetTitle("p_{T}^{jet 2}");
 		h_jet2eta = new TH1F("h_jet2eta", "h_jet2eta", 50 , -5., 5.);
+		h_jet2eta->GetXaxis()->SetTitle("#eta^{jet 2}");
 		h_dijetinvariantmass = new TH1F("h_dijetinvariantmass","h_dijetinvariantmass", 10, 0., 2500.);
 		h_dijetdeltaeta = new TH1F ("h_dijetdeltaeta", "h_dijetdeltaeta", 20, 0., 10.);
+		h_dijetdeltaeta->GetXaxis()->SetTitle("#Delta#eta^{jj}");
 
 		h_tau1pt = new TH1F("h_tau1pt", "h_tau1pt", 50, 0., 500.);
 		h_tau1eta = new TH1F("h_tau1eta", "h_tau1eta", 30 , -3., 3.);
@@ -147,7 +156,9 @@ struct MyHistoCollection {
 		h_jetTauDistanceSecond = new TH1F("h_jetTauDistanceSecond", "h_jetTauDistanceSecond", 25, 0., 0.5);
 
 		h2_DiJetInvMass_vs_DiJetDEta = new TH2F("h2_DiJetInvMass_vs_DiJetDEta","h2_DiJetInvMass_vs_DiJetDEta", 20, 0., 10., 10, 0., 2500.);
-
+		h2_tau1pt_vs_tau2pt = new TH2F("h2_tau1pt_vs_tau2pt","correlation of first and second p_{T}^{#tau}", 50, 0., 500., 50, 0., 500.);
+		h2_tau1pt_vs_tau2pt->GetXaxis()->SetTitle("p_{T}^{#tau 1}");
+		h2_tau1pt_vs_tau2pt->GetYaxis()->SetTitle("p_{T}^{#tau 2}");
 	}
 };
 
