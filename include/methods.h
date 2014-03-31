@@ -186,4 +186,26 @@ TauProperties Inv2tMassIndex(MyEventCollection collection)
     return Inv2tMass;
   }
   
+//--------------------------
+// defining fake taus
+//__________________________    
+
+tau_s fakeTau(MyEventCollection JetColl, unsigned int TauIndex, double pTscale, double Escale)
+  {
+    tau_s faketau;
+    if(JetColl.jet[TauIndex]->charge > 0) faketau.charge=+1;
+    else if(JetColl.jet[TauIndex]->charge < 0) faketau.charge=-1;
+    else faketau.charge=0;
+    faketau.p      = JetColl.jet[TauIndex]->p;
+    faketau.energy = JetColl.jet[TauIndex]->energy * Escale;
+    faketau.et     = JetColl.jet[TauIndex]->et;
+    faketau.px     = JetColl.jet[TauIndex]->px;
+    faketau.py     = JetColl.jet[TauIndex]->py;
+    faketau.pz     = JetColl.jet[TauIndex]->pz;
+    faketau.pt     = JetColl.jet[TauIndex]->pt * pTscale;
+    faketau.phi    = JetColl.jet[TauIndex]->phi;
+    faketau.eta    = JetColl.jet[TauIndex]->eta;
+    return faketau;
+  }
+  
 #endif
