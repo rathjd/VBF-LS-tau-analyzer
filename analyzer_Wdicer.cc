@@ -95,7 +95,7 @@ int main(int argc, char** argv)
 	TH1::SetDefaultSumw2();
 	double weight = 1.;
 	TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/ChargeMap_Fq-pT_30up.root", "read");
-	TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/ResponseProfilesV2.root", "read");
+	TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/ResponseProfilesEnergy.root", "read");
 	
 	MyHistoCollection myHistoColl_SignalRegion(ofile.file_, "SignalRegion");        
 	MyHistoCollection myHistoColl_CR1 (ofile.file_, "Ztautau_CR1");
@@ -207,6 +207,28 @@ if(Nm+Nl+Nn>0) {ScaleFactorMi->SetBinContent(i+1, (eff_fake_M*Nm*M+eff_fake_L*Nl
 TProfile* ScaleFactorM = (TProfile*)(file_Resp.Get("ScaleFactorM"));
 
 TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
+
+//make correctly combined energy scale factors
+TProfile* ScaleFactorEnergyN = (TProfile*)(file_Resp.Get("ScaleFactorEnergyN"));
+
+TProfile* ScaleFactorEnergyL = (TProfile*)(file_Resp.Get("ScaleFactorEnergyL"));
+
+TProfile* ScaleFactorEnergyLi = (TProfile*)(file_Resp.Get("ScaleFactorEnergyLi")->Clone("ScaleFactorEnergyLi")); 
+TProfile* ScaleFactorEnergyMi = (TProfile*)(file_Resp.Get("ScaleFactorEnergyMi")->Clone("ScaleFactorEnergyMi"));
+for(int i=0; i<ScaleFactorEnergyLi->GetNbinsX(); i++) {
+double L=((TProfile*)file_Resp.Get("ScaleFactorEnergyL"))->GetBinContent(i+1);
+double Nl=((TProfile*)file_Resp.Get("ScaleFactorEnergyL"))->GetBinEntries(i+1);
+double N=((TProfile*)file_Resp.Get("ScaleFactorEnergyN"))->GetBinContent(i+1);
+double Nn=((TProfile*)file_Resp.Get("ScaleFactorEnergyN"))->GetBinEntries(i+1);
+double M=((TProfile*)file_Resp.Get("ScaleFactorEnergyM"))->GetBinContent(i+1);
+double Nm=((TProfile*)file_Resp.Get("ScaleFactorEnergyM"))->GetBinEntries(i+1);
+if(Nl+Nn>0) {ScaleFactorEnergyLi->SetBinContent(i+1, (0.46*Nl*L+0.052*Nn*N)/(0.46*Nl+0.052*Nn)); ScaleFactorEnergyLi->SetBinEntries(i+1, 1);}
+if(Nm+Nl+Nn>0) {ScaleFactorEnergyMi->SetBinContent(i+1, (0.64*Nm*M+0.46*Nl*L+0.052*Nn*N)/(0.64*Nm+0.46*Nl+0.052*Nn)); ScaleFactorEnergyMi->SetBinEntries(i+1, 1);}
+}
+
+TProfile* ScaleFactorEnergyM = (TProfile*)(file_Resp.Get("ScaleFactorEnergyM"));
+
+TProfile* ScaleFactorEnergyT = (TProfile*)(file_Resp.Get("ScaleFactorEnergyT"));
 
   for(int entry=0; entry < nevents; ++entry)
 	{
@@ -420,26 +442,13 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 	      if(jet_taufakerateT[i]==0) continue;
 	      if(temp>=Toss){
 	        if(verbose)std::cout<<"chosen jet "<<i<<std::endl;
-	        tau_s faketauT;
-	        int nScaleBin	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
-		double scale 	  = ScaleFactorT->GetBinContent(nScaleBin);
-		if(scale == 0) {scale = 0.851; weightTT=0;}
-
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->charge >= 0 )
-		faketauT.charge = +1;
-		else if(JetLooseIsoObjectSelectionCollection.jet[i]->charge < 0 )
-		faketauT.charge = -1;
-		faketauT.p = JetLooseIsoObjectSelectionCollection.jet[i]->p;
-		faketauT.energy = JetLooseIsoObjectSelectionCollection.jet[i]->energy;
-		faketauT.et = JetLooseIsoObjectSelectionCollection.jet[i]->et;
-		faketauT.px = JetLooseIsoObjectSelectionCollection.jet[i]->px;
-		faketauT.py = JetLooseIsoObjectSelectionCollection.jet[i]->py;
-		faketauT.pz = JetLooseIsoObjectSelectionCollection.jet[i]->pz;
-		faketauT.pt = JetLooseIsoObjectSelectionCollection.jet[i]->pt * scale;
-		if(faketauT.pt < 45) weightTT=0;
-		faketauT.phi = JetLooseIsoObjectSelectionCollection.jet[i]->phi;
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->eta<=2.1) faketauT.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta;
-		else faketauT.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta)*2.1;
+	        int nScaleBinP	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleP 	  = ScaleFactorT->GetBinContent(nScaleBinP);
+	        int nScaleBinE	  = ScaleFactorEnergyT->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleE 	  = ScaleFactorEnergyT->GetBinContent(nScaleBinE);		
+		if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE = 1.; weightTT=0;}
+		tau_s faketauT = fakeTau(JetLooseIsoObjectSelectionCollection, i, scaleP, scaleE);
+		
 		if(verbose)std::cout<<"assigning memory"<<std::endl;
 		if(TauTightIsoObjectSelectionCollection.tau[0]->pt > faketauT.pt){
 		  TauTTIsoObjectSelectionCollection.tau.push_back(TauTightIsoObjectSelectionCollection.tau[0]);
@@ -475,26 +484,13 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 	      temp+=jet_taufakerateMi[i];
 	      if(jet_taufakerateMi[i]==0) continue;
 	      if(temp>=Toss){
-	        tau_s faketauMi;
-	        int nScaleBin	  = ScaleFactorMi->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
-		double scale 	  = ScaleFactorMi->GetBinContent(nScaleBin);
-		if(scale == 0) {scale = 0.851; weightTMi=0;}
-
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->charge >= 0 )
-		faketauMi.charge = +1;
-		else if(JetLooseIsoObjectSelectionCollection.jet[i]->charge < 0 )
-		faketauMi.charge = -1;
-		faketauMi.p = JetLooseIsoObjectSelectionCollection.jet[i]->p;
-		faketauMi.energy = JetLooseIsoObjectSelectionCollection.jet[i]->energy;
-		faketauMi.et = JetLooseIsoObjectSelectionCollection.jet[i]->et;
-		faketauMi.px = JetLooseIsoObjectSelectionCollection.jet[i]->px;
-		faketauMi.py = JetLooseIsoObjectSelectionCollection.jet[i]->py;
-		faketauMi.pz = JetLooseIsoObjectSelectionCollection.jet[i]->pz;
-		faketauMi.pt = JetLooseIsoObjectSelectionCollection.jet[i]->pt * scale;
-		if(faketauMi.pt < 45) weightTMi=0;
-		faketauMi.phi = JetLooseIsoObjectSelectionCollection.jet[i]->phi;
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->eta<=2.1) faketauMi.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta;
-		else faketauMi.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta)*2.1;
+	        int nScaleBinP	  = ScaleFactorMi->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleP 	  = ScaleFactorMi->GetBinContent(nScaleBinP);
+	        int nScaleBinE	  = ScaleFactorEnergyMi->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleE 	  = ScaleFactorEnergyMi->GetBinContent(nScaleBinE);		
+		if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE = 1.; weightTMi=0;}
+		tau_s faketauMi = fakeTau(JetLooseIsoObjectSelectionCollection, i, scaleP, scaleE);
+	        
 		if(TauTightIsoObjectSelectionCollection.tau[0]->pt > faketauMi.pt){
 		  TauTMiIsoObjectSelectionCollection.tau.push_back(TauTightIsoObjectSelectionCollection.tau[0]);
 		  TauTMiIsoObjectSelectionCollection.tau.push_back(&faketauMi);
@@ -532,26 +528,13 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 	      temp+=jet_taufakerateT[i];
 	      if(jet_taufakerateT[i]==0) continue;
 	      if(temp>=Toss){
-	        tau_s faketauT;
-	        int nScaleBin	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
-		double scale 	  = ScaleFactorT->GetBinContent(nScaleBin);
-		if(scale == 0) {scale = 0.851; weightTMi=0;}
+	        int nScaleBinP	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleP 	  = ScaleFactorT->GetBinContent(nScaleBinP);
+	        int nScaleBinE	  = ScaleFactorEnergyT->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleE 	  = ScaleFactorEnergyT->GetBinContent(nScaleBinE);		
+		if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE = 1.; weightTMi=0;}
+		tau_s faketauT = fakeTau(JetLooseIsoObjectSelectionCollection, i, scaleP, scaleE);
 
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->charge >= 0 )
-		faketauT.charge = +1;
-		else if(JetLooseIsoObjectSelectionCollection.jet[i]->charge < 0 )
-		faketauT.charge = -1;
-		faketauT.p = JetLooseIsoObjectSelectionCollection.jet[i]->p;
-		faketauT.energy = JetLooseIsoObjectSelectionCollection.jet[i]->energy;
-		faketauT.et = JetLooseIsoObjectSelectionCollection.jet[i]->et;
-		faketauT.px = JetLooseIsoObjectSelectionCollection.jet[i]->px;
-		faketauT.py = JetLooseIsoObjectSelectionCollection.jet[i]->py;
-		faketauT.pz = JetLooseIsoObjectSelectionCollection.jet[i]->pz;
-		faketauT.pt = JetLooseIsoObjectSelectionCollection.jet[i]->pt * scale;
-		if(faketauT.pt < 45) weightTT=0;
-		faketauT.phi = JetLooseIsoObjectSelectionCollection.jet[i]->phi;
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->eta<=2.1) faketauT.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta;
-		else faketauT.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta)*2.1;
 		if(TauMediumIsoObjectSelectionCollection.tau[0]->pt > faketauT.pt){
 		  TauTMiIsoObjectSelectionCollection.tau.push_back(TauMediumIsoObjectSelectionCollection.tau[0]);
 		  TauTMiIsoObjectSelectionCollection.tau.push_back(&faketauT);
@@ -585,26 +568,17 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 	      temp+=jet_taufakerateMi[i];
 	      if(jet_taufakerateMi[i]==0) continue;
 	      if(temp>=Toss){
-	        tau_s faketauMi;
+	        int nScaleBinP	  = ScaleFactorMi->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleP 	  = ScaleFactorMi->GetBinContent(nScaleBinP);
+	        int nScaleBinE	  = ScaleFactorEnergyMi->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleE 	  = ScaleFactorEnergyMi->GetBinContent(nScaleBinE);		
+		if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE = 1.; weightMMi=0;}
+		tau_s faketauMi = fakeTau(JetLooseIsoObjectSelectionCollection, i, scaleP, scaleE);
+	      
 	        int nScaleBin	  = ScaleFactorMi->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
 		double scale 	  = ScaleFactorMi->GetBinContent(nScaleBin);
 		if(scale == 0) {scale = 0.851; weightMMi=0;}
 
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->charge >= 0 )
-		faketauMi.charge = +1;
-		else if(JetLooseIsoObjectSelectionCollection.jet[i]->charge < 0 )
-		faketauMi.charge = -1;
-		faketauMi.p = JetLooseIsoObjectSelectionCollection.jet[i]->p;
-		faketauMi.energy = JetLooseIsoObjectSelectionCollection.jet[i]->energy;
-		faketauMi.et = JetLooseIsoObjectSelectionCollection.jet[i]->et;
-		faketauMi.px = JetLooseIsoObjectSelectionCollection.jet[i]->px;
-		faketauMi.py = JetLooseIsoObjectSelectionCollection.jet[i]->py;
-		faketauMi.pz = JetLooseIsoObjectSelectionCollection.jet[i]->pz;
-		faketauMi.pt = JetLooseIsoObjectSelectionCollection.jet[i]->pt * scale;
-		if(faketauMi.pt < 45) weightTMi=0;
-		faketauMi.phi = JetLooseIsoObjectSelectionCollection.jet[i]->phi;
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->eta<=2.1) faketauMi.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta;
-		else faketauMi.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta)*2.1;
 		if(TauMediumIsoObjectSelectionCollection.tau[0]->pt > faketauMi.pt){
 		  TauMMiIsoObjectSelectionCollection.tau.push_back(TauMediumIsoObjectSelectionCollection.tau[0]);
 		  TauMMiIsoObjectSelectionCollection.tau.push_back(&faketauMi);
@@ -642,26 +616,13 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 	      temp+=jet_taufakerateT[i];
 	      if(jet_taufakerateT[i]==0) continue;
 	      if(temp>=Toss){
-	        tau_s faketauT;
-	        int nScaleBin	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
-		double scale 	  = ScaleFactorT->GetBinContent(nScaleBin);
-		if(scale == 0) {scale = 0.851; weightTMi=0;}
+	        int nScaleBinP	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleP 	  = ScaleFactorT->GetBinContent(nScaleBinP);
+	        int nScaleBinE	  = ScaleFactorEnergyT->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleE 	  = ScaleFactorEnergyT->GetBinContent(nScaleBinE);		
+		if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE = 1.; weightTMi=0;}
+		tau_s faketauT = fakeTau(JetLooseIsoObjectSelectionCollection, i, scaleP, scaleE);
 
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->charge >= 0 )
-		faketauT.charge = +1;
-		else if(JetLooseIsoObjectSelectionCollection.jet[i]->charge < 0 )
-		faketauT.charge = -1;
-		faketauT.p = JetLooseIsoObjectSelectionCollection.jet[i]->p;
-		faketauT.energy = JetLooseIsoObjectSelectionCollection.jet[i]->energy;
-		faketauT.et = JetLooseIsoObjectSelectionCollection.jet[i]->et;
-		faketauT.px = JetLooseIsoObjectSelectionCollection.jet[i]->px;
-		faketauT.py = JetLooseIsoObjectSelectionCollection.jet[i]->py;
-		faketauT.pz = JetLooseIsoObjectSelectionCollection.jet[i]->pz;
-		faketauT.pt = JetLooseIsoObjectSelectionCollection.jet[i]->pt * scale;
-		if(faketauT.pt < 45) weightTT=0;
-		faketauT.phi = JetLooseIsoObjectSelectionCollection.jet[i]->phi;
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->eta<=2.1) faketauT.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta;
-		else faketauT.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta)*2.1;
 		if(TauLooseIsoObjectSelectionCollection.tau[0]->pt > faketauT.pt){
 		  TauTMiIsoObjectSelectionCollection.tau.push_back(TauLooseIsoObjectSelectionCollection.tau[0]);
 		  TauTMiIsoObjectSelectionCollection.tau.push_back(&faketauT);
@@ -695,26 +656,13 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 	      temp+=jet_taufakerateM[i];
 	      if(jet_taufakerateM[i]==0) continue;
 	      if(temp>=Toss){
-	        tau_s faketauM;
-	        int nScaleBin	  = ScaleFactorM->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
-		double scale 	  = ScaleFactorM->GetBinContent(nScaleBin);
-		if(scale == 0) {scale = 0.851; weightMMi=0;}
+	        int nScaleBinP	  = ScaleFactorM->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleP 	  = ScaleFactorM->GetBinContent(nScaleBinP);
+	        int nScaleBinE	  = ScaleFactorEnergyM->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleE 	  = ScaleFactorEnergyM->GetBinContent(nScaleBinE);		
+		if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE = 1.; weightMMi=0;}
+		tau_s faketauM = fakeTau(JetLooseIsoObjectSelectionCollection, i, scaleP, scaleE);
 
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->charge >= 0 )
-		faketauM.charge = +1;
-		else if(JetLooseIsoObjectSelectionCollection.jet[i]->charge < 0 )
-		faketauM.charge = -1;
-		faketauM.p = JetLooseIsoObjectSelectionCollection.jet[i]->p;
-		faketauM.energy = JetLooseIsoObjectSelectionCollection.jet[i]->energy;
-		faketauM.et = JetLooseIsoObjectSelectionCollection.jet[i]->et;
-		faketauM.px = JetLooseIsoObjectSelectionCollection.jet[i]->px;
-		faketauM.py = JetLooseIsoObjectSelectionCollection.jet[i]->py;
-		faketauM.pz = JetLooseIsoObjectSelectionCollection.jet[i]->pz;
-		faketauM.pt = JetLooseIsoObjectSelectionCollection.jet[i]->pt * scale;
-		if(faketauM.pt < 45) weightTMi=0;
-		faketauM.phi = JetLooseIsoObjectSelectionCollection.jet[i]->phi;
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->eta<=2.1) faketauM.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta;
-		else faketauM.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta)*2.1;
 		if(TauLooseIsoObjectSelectionCollection.tau[0]->pt > faketauM.pt){
 		  TauMMiIsoObjectSelectionCollection.tau.push_back(TauLooseIsoObjectSelectionCollection.tau[0]);
 		  TauMMiIsoObjectSelectionCollection.tau.push_back(&faketauM);
@@ -748,26 +696,13 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 	      temp+=jet_taufakerateLi[i];
 	      if(jet_taufakerateLi[i]==0) continue;
 	      if(temp>=Toss){
-	        tau_s faketauLi;
-	        int nScaleBin	  = ScaleFactorLi->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
-		double scale 	  = ScaleFactorLi->GetBinContent(nScaleBin);
-		if(scale == 0) {scale = 0.851; weightLLi=0;}
+	        int nScaleBinP	  = ScaleFactorLi->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleP 	  = ScaleFactorLi->GetBinContent(nScaleBinP);
+	        int nScaleBinE	  = ScaleFactorEnergyLi->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleE 	  = ScaleFactorEnergyLi->GetBinContent(nScaleBinE);		
+		if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE = 1.; weightLLi=0;}
+		tau_s faketauLi = fakeTau(JetLooseIsoObjectSelectionCollection, i, scaleP, scaleE);
 
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->charge >= 0 )
-		faketauLi.charge = +1;
-		else if(JetLooseIsoObjectSelectionCollection.jet[i]->charge < 0 )
-		faketauLi.charge = -1;
-		faketauLi.p = JetLooseIsoObjectSelectionCollection.jet[i]->p;
-		faketauLi.energy = JetLooseIsoObjectSelectionCollection.jet[i]->energy;
-		faketauLi.et = JetLooseIsoObjectSelectionCollection.jet[i]->et;
-		faketauLi.px = JetLooseIsoObjectSelectionCollection.jet[i]->px;
-		faketauLi.py = JetLooseIsoObjectSelectionCollection.jet[i]->py;
-		faketauLi.pz = JetLooseIsoObjectSelectionCollection.jet[i]->pz;
-		faketauLi.pt = JetLooseIsoObjectSelectionCollection.jet[i]->pt * scale;
-		if(faketauLi.pt < 45) weightTMi=0;
-		faketauLi.phi = JetLooseIsoObjectSelectionCollection.jet[i]->phi;
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->eta<=2.1) faketauLi.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta;
-		else faketauLi.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta)*2.1;
 		if(TauLooseIsoObjectSelectionCollection.tau[0]->pt > faketauLi.pt){
 		  TauLLiIsoObjectSelectionCollection.tau.push_back(TauLooseIsoObjectSelectionCollection.tau[0]);
 		  TauLLiIsoObjectSelectionCollection.tau.push_back(&faketauLi);
@@ -805,26 +740,13 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 	      temp+=jet_taufakerateT[i];
 	      if(jet_taufakerateT[i]==0) continue;
 	      if(temp>=Toss){
-	        tau_s faketauT;
-	        int nScaleBin	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
-		double scale 	  = ScaleFactorT->GetBinContent(nScaleBin);
-		if(scale == 0) {scale = 0.851; weightTMi=0;}
+	        int nScaleBinP	  = ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleP 	  = ScaleFactorT->GetBinContent(nScaleBinP);
+	        int nScaleBinE	  = ScaleFactorEnergyT->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleE 	  = ScaleFactorEnergyT->GetBinContent(nScaleBinE);		
+		if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE = 1.; weightTMi=0;}
+		tau_s faketauT = fakeTau(JetLooseIsoObjectSelectionCollection, i, scaleP, scaleE);
 
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->charge >= 0 )
-		faketauT.charge = +1;
-		else if(JetLooseIsoObjectSelectionCollection.jet[i]->charge < 0 )
-		faketauT.charge = -1;
-		faketauT.p = JetLooseIsoObjectSelectionCollection.jet[i]->p;
-		faketauT.energy = JetLooseIsoObjectSelectionCollection.jet[i]->energy;
-		faketauT.et = JetLooseIsoObjectSelectionCollection.jet[i]->et;
-		faketauT.px = JetLooseIsoObjectSelectionCollection.jet[i]->px;
-		faketauT.py = JetLooseIsoObjectSelectionCollection.jet[i]->py;
-		faketauT.pz = JetLooseIsoObjectSelectionCollection.jet[i]->pz;
-		faketauT.pt = JetLooseIsoObjectSelectionCollection.jet[i]->pt * scale;
-		if(faketauT.pt < 45) weightTT=0;
-		faketauT.phi = JetLooseIsoObjectSelectionCollection.jet[i]->phi;
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->eta<=2.1) faketauT.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta;
-		else faketauT.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta)*2.1;
 		if(TauNoIsoObjectSelectionCollection.tau[0]->pt > faketauT.pt){
 		  TauTMiIsoObjectSelectionCollection.tau.push_back(TauNoIsoObjectSelectionCollection.tau[0]);
 		  TauTMiIsoObjectSelectionCollection.tau.push_back(&faketauT);
@@ -858,26 +780,13 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 	      temp+=jet_taufakerateM[i];
 	      if(jet_taufakerateM[i]==0) continue;
 	      if(temp>=Toss){
-	        tau_s faketauM;
-	        int nScaleBin	  = ScaleFactorM->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
-		double scale 	  = ScaleFactorM->GetBinContent(nScaleBin);
-		if(scale == 0) {scale = 0.851; weightMMi=0;}
+	        int nScaleBinP	  = ScaleFactorM->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleP 	  = ScaleFactorM->GetBinContent(nScaleBinP);
+	        int nScaleBinE	  = ScaleFactorEnergyM->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleE 	  = ScaleFactorEnergyM->GetBinContent(nScaleBinE);		
+		if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE = 1.; weightMMi=0;}
+		tau_s faketauM = fakeTau(JetLooseIsoObjectSelectionCollection, i, scaleP, scaleE);
 
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->charge >= 0 )
-		faketauM.charge = +1;
-		else if(JetLooseIsoObjectSelectionCollection.jet[i]->charge < 0 )
-		faketauM.charge = -1;
-		faketauM.p = JetLooseIsoObjectSelectionCollection.jet[i]->p;
-		faketauM.energy = JetLooseIsoObjectSelectionCollection.jet[i]->energy;
-		faketauM.et = JetLooseIsoObjectSelectionCollection.jet[i]->et;
-		faketauM.px = JetLooseIsoObjectSelectionCollection.jet[i]->px;
-		faketauM.py = JetLooseIsoObjectSelectionCollection.jet[i]->py;
-		faketauM.pz = JetLooseIsoObjectSelectionCollection.jet[i]->pz;
-		faketauM.pt = JetLooseIsoObjectSelectionCollection.jet[i]->pt * scale;
-		if(faketauM.pt < 45) weightTMi=0;
-		faketauM.phi = JetLooseIsoObjectSelectionCollection.jet[i]->phi;
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->eta<=2.1) faketauM.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta;
-		else faketauM.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta)*2.1;
 		if(TauNoIsoObjectSelectionCollection.tau[0]->pt > faketauM.pt){
 		  TauMMiIsoObjectSelectionCollection.tau.push_back(TauNoIsoObjectSelectionCollection.tau[0]);
 		  TauMMiIsoObjectSelectionCollection.tau.push_back(&faketauM);
@@ -911,26 +820,13 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 	      temp+=jet_taufakerateL[i];
 	      if(jet_taufakerateL[i]==0) continue;
 	      if(temp>=Toss){
-	        tau_s faketauL;
-	        int nScaleBin	  = ScaleFactorL->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
-		double scale 	  = ScaleFactorL->GetBinContent(nScaleBin);
-		if(scale == 0) {scale = 0.851; weightLLi=0;}
+	        int nScaleBinP	  = ScaleFactorL->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleP 	  = ScaleFactorL->GetBinContent(nScaleBinP);
+	        int nScaleBinE	  = ScaleFactorEnergyL->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleE 	  = ScaleFactorEnergyL->GetBinContent(nScaleBinE);		
+		if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE = 1.; weightLLi=0;}
+		tau_s faketauL = fakeTau(JetLooseIsoObjectSelectionCollection, i, scaleP, scaleE);
 
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->charge >= 0 )
-		faketauL.charge = +1;
-		else if(JetLooseIsoObjectSelectionCollection.jet[i]->charge < 0 )
-		faketauL.charge = -1;
-		faketauL.p = JetLooseIsoObjectSelectionCollection.jet[i]->p;
-		faketauL.energy = JetLooseIsoObjectSelectionCollection.jet[i]->energy;
-		faketauL.et = JetLooseIsoObjectSelectionCollection.jet[i]->et;
-		faketauL.px = JetLooseIsoObjectSelectionCollection.jet[i]->px;
-		faketauL.py = JetLooseIsoObjectSelectionCollection.jet[i]->py;
-		faketauL.pz = JetLooseIsoObjectSelectionCollection.jet[i]->pz;
-		faketauL.pt = JetLooseIsoObjectSelectionCollection.jet[i]->pt * scale;
-		if(faketauL.pt < 45) weightTMi=0;
-		faketauL.phi = JetLooseIsoObjectSelectionCollection.jet[i]->phi;
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->eta<=2.1) faketauL.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta;
-		else faketauL.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta)*2.1;
 		if(TauNoIsoObjectSelectionCollection.tau[0]->pt > faketauL.pt){
 		  TauLLiIsoObjectSelectionCollection.tau.push_back(TauNoIsoObjectSelectionCollection.tau[0]);
 		  TauLLiIsoObjectSelectionCollection.tau.push_back(&faketauL);
@@ -964,26 +860,13 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 	      temp+=jet_taufakerateN[i];
 	      if(jet_taufakerateN[i]==0) continue;
 	      if(temp>=Toss){
-	        tau_s faketauN;
-	        int nScaleBin	  = ScaleFactorN->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
-		double scale 	  = ScaleFactorN->GetBinContent(nScaleBin);
-		if(scale == 0) {scale = 0.851; weightNN=0;}
+	        int nScaleBinP	  = ScaleFactorN->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleP 	  = ScaleFactorN->GetBinContent(nScaleBinP);
+	        int nScaleBinE	  = ScaleFactorEnergyN->FindBin(JetLooseIsoObjectSelectionCollection.jet[i]->pt);
+		double scaleE 	  = ScaleFactorEnergyN->GetBinContent(nScaleBinE);		
+		if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE = 1.; weightNN=0;}
+		tau_s faketauN = fakeTau(JetLooseIsoObjectSelectionCollection, i, scaleP, scaleE);
 
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->charge >= 0 )
-		faketauN.charge = +1;
-		else if(JetLooseIsoObjectSelectionCollection.jet[i]->charge < 0 )
-		faketauN.charge = -1;
-		faketauN.p = JetLooseIsoObjectSelectionCollection.jet[i]->p;
-		faketauN.energy = JetLooseIsoObjectSelectionCollection.jet[i]->energy;
-		faketauN.et = JetLooseIsoObjectSelectionCollection.jet[i]->et;
-		faketauN.px = JetLooseIsoObjectSelectionCollection.jet[i]->px;
-		faketauN.py = JetLooseIsoObjectSelectionCollection.jet[i]->py;
-		faketauN.pz = JetLooseIsoObjectSelectionCollection.jet[i]->pz;
-		faketauN.pt = JetLooseIsoObjectSelectionCollection.jet[i]->pt * scale;
-		if(faketauN.pt < 45) weightTMi=0;
-		faketauN.phi = JetLooseIsoObjectSelectionCollection.jet[i]->phi;
-		if(JetLooseIsoObjectSelectionCollection.jet[i]->eta<=2.1) faketauN.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta;
-		else faketauN.eta = JetLooseIsoObjectSelectionCollection.jet[i]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[i]->eta)*2.1;
 		if(TauNoIsoObjectSelectionCollection.tau[0]->pt > faketauN.pt){
 		  TauNNIsoObjectSelectionCollection.tau.push_back(TauNoIsoObjectSelectionCollection.tau[0]);
 		  TauNNIsoObjectSelectionCollection.tau.push_back(&faketauN);
@@ -1009,41 +892,16 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 	tau_s faketau2N;
 
 	if ( FakeTausN.index.first >= 0 && FakeTausN.index.second >= 0 ) {
+	  double scaleP = ScaleFactorN->GetBinContent(ScaleFactorN->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->pt));
+	  double scaleE = ScaleFactorEnergyN->GetBinContent(ScaleFactorEnergyN->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->pt)); 
+	  if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE=1.; FakeTausN.weight=0;}
+	  faketau1N = fakeTau(JetLooseIsoObjectSelectionCollection, FakeTausN.index.first, scaleP, scaleE);
+	  
+	  double scaleP2 = ScaleFactorN->GetBinContent(ScaleFactorN->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pt));
+	  double scaleE2 = ScaleFactorEnergyN->GetBinContent(ScaleFactorEnergyN->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pt));
+	  if(scaleP2 == 0 || scaleE2 == 0) {scaleP2 = 1.; scaleE2=1.; FakeTausN.weight=0;}
+	  faketau2N = fakeTau(JetLooseIsoObjectSelectionCollection, FakeTausN.index.second, scaleP2, scaleE2);
 
-	  double scale = ScaleFactorN->GetBinContent(ScaleFactorN->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->pt)); 
-	  if(scale == 0) {scale = 0.851; FakeTausN.weight=0;}
-
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->charge >= 0 ) faketau1N.charge = +1;
-	  else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->charge < 0 ) faketau1N.charge = -1;
-	  faketau1N.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->p;
-	  faketau1N.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->energy;
-	  faketau1N.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->et;
-	  faketau1N.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->px;
-	  faketau1N.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->py;
-	  faketau1N.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->pz;
-	  faketau1N.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->pt * scale;
-	  if(faketau1N.pt < 45) FakeTausN.weight=0;
-	  faketau1N.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->phi;
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->eta<=2.1) faketau1N.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->eta;
-	  else faketau1N.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.first]->eta)*2.1;
-
-	  double scale2 = ScaleFactorN->GetBinContent(ScaleFactorN->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pt));
-	  if(scale2 == 0) {scale2 = 0.851; FakeTausN.weight=0;}
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->charge >= 0 )
-	  faketau2N.charge = +1;
-	  else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->charge < 0 )
-	  faketau2N.charge = -1;	
-	  faketau2N.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->p;
-	  faketau2N.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->energy;
-	  faketau2N.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->et;
-	  faketau2N.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->px;
-	  faketau2N.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->py;
-	  faketau2N.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pz;
-	  faketau2N.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->pt * scale2;
-	  if(faketau2N.pt < 45) FakeTausN.weight=0;
-	  faketau2N.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->phi;
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->eta<=2.1) faketau2N.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->eta;
-	  else faketau2N.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausN.index.second]->eta)*2.1;
 	  if(faketau1N.pt > faketau2N.pt){
   	    TauNNIsoObjectSelectionCollection.tau.push_back(&faketau1N);
   	    TauNNIsoObjectSelectionCollection.tau.push_back(&faketau2N);
@@ -1063,43 +921,16 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 	tau_s faketau2L;
 
 	if ( FakeTausL.index.first >= 0 && FakeTausL.index.second >= 0 ) {
-
-	  double scale = ScaleFactorL->GetBinContent(ScaleFactorL->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->pt)); 
-	  if(scale == 0) {scale = 0.851; FakeTausL.weight=0;}
-
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->charge >= 0 )
-	  faketau1L.charge = +1;
-	  else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->charge < 0 )
-	  faketau1L.charge = -1;
-	  faketau1L.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->p;
-	  faketau1L.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->energy;
-	  faketau1L.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->et;
-	  faketau1L.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->px;
-	  faketau1L.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->py;
-	  faketau1L.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->pz;
-	  faketau1L.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->pt * scale;
-	  if(faketau1L.pt < 45) FakeTausL.weight=0;
-	  faketau1L.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->phi;
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta<=2.1) faketau1L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta;
-	  else faketau1L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->eta)*2.1;
-
-	  double scale2 = ScaleFactorLi->GetBinContent(ScaleFactorLi->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pt));
-	  if(scale2 == 0) {scale2 = 0.851; FakeTausL.weight=0;}
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->charge >= 0 )
-	  faketau2L.charge = +1;
-	  else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->charge < 0 )
-	  faketau2L.charge = -1;	
-	  faketau2L.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->p;
-	  faketau2L.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->energy;
-	  faketau2L.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->et;
-	  faketau2L.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->px;
-	  faketau2L.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->py;
-	  faketau2L.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pz;
-	  faketau2L.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pt * scale2;
-	  if(faketau2L.pt < 45) FakeTausL.weight=0;
-	  faketau2L.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->phi;
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->eta<=2.1) faketau2L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->eta;
-	  else faketau2L.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->eta)*2.1;
+	  
+	  double scaleP = ScaleFactorL->GetBinContent(ScaleFactorL->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->pt)); 
+	  double scaleE = ScaleFactorEnergyL->GetBinContent(ScaleFactorEnergyL->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.first]->pt));
+	  if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE=1.; FakeTausL.weight=0;}
+	  faketau1L = fakeTau(JetLooseIsoObjectSelectionCollection, FakeTausL.index.first, scaleP, scaleE);
+	  
+	  double scaleP2 = ScaleFactorLi->GetBinContent(ScaleFactorLi->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pt));
+	  double scaleE2 = ScaleFactorEnergyL->GetBinContent(ScaleFactorEnergyL->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausL.index.second]->pt));
+	  if(scaleP2 == 0 || scaleE2 == 0) {scaleP2 = 1.; scaleE2=1.; FakeTausL.weight=0;}
+	  faketau2L = fakeTau(JetLooseIsoObjectSelectionCollection, FakeTausL.index.second, scaleP2, scaleE2);
 
 	  if(faketau1L.pt > faketau2L.pt){
   	    TauLooseIsoObjectSelectionCollection.tau.push_back(&faketau1L);
@@ -1121,42 +952,15 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 
 	if ( FakeTausM.index.first >= 0 && FakeTausM.index.second >= 0 ) {
 
-	  double scale = ScaleFactorM->GetBinContent(ScaleFactorM->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->pt)); 
-	  if(scale == 0) {scale = 0.851; FakeTausM.weight=0;}
+	  double scaleP = ScaleFactorM->GetBinContent(ScaleFactorM->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->pt));
+	  double scaleE = ScaleFactorEnergyM->GetBinContent(ScaleFactorEnergyM->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->pt)); 
+	  if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE=1.; FakeTausM.weight=0;}
+	  faketau1M = fakeTau(JetLooseIsoObjectSelectionCollection, FakeTausM.index.first, scaleP, scaleE);
 
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->charge >= 0 )
-	  faketau1M.charge = +1;
-	  else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->charge < 0 )
-	  faketau1M.charge = -1;
-	  faketau1M.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->p;
-	  faketau1M.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->energy;
-	  faketau1M.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->et;
-	  faketau1M.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->px;
-	  faketau1M.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->py;
-	  faketau1M.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->pz;
-	  faketau1M.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->pt * scale;
-	  if(faketau1M.pt < 45) FakeTausM.weight=0;
-	  faketau1M.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->phi;
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta<=2.1) faketau1M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta;
-	  else faketau1M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.first]->eta)*2.1;
-
-	  double scale2 = ScaleFactorMi->GetBinContent(ScaleFactorMi->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pt));
-	  if(scale2 == 0) {scale2 = 0.851; FakeTausM.weight=0;}
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->charge >= 0 )
-	  faketau2M.charge = +1;
-	  else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->charge < 0 )
-	  faketau2M.charge = -1;	
-	  faketau2M.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->p;
-	  faketau2M.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->energy;
-	  faketau2M.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->et;
-	  faketau2M.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->px;
-	  faketau2M.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->py;
-	  faketau2M.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pz;
-	  faketau2M.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pt * scale2;
-	  if(faketau2M.pt < 45) FakeTausM.weight=0;
-	  faketau2M.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->phi;
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->eta<=2.1) faketau2M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->eta;
-	  else faketau2M.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->eta)*2.1;
+	  double scaleP2 = ScaleFactorMi->GetBinContent(ScaleFactorMi->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pt));
+	  double scaleE2 = ScaleFactorEnergyMi->GetBinContent(ScaleFactorEnergyMi->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausM.index.second]->pt));
+	  if(scaleP2 == 0 || scaleE2 == 0) {scaleP2 = 1.; scaleE2=1.; FakeTausM.weight=0;}
+	  faketau2M = fakeTau(JetLooseIsoObjectSelectionCollection, FakeTausM.index.second, scaleP2, scaleE2);
 
 	  if(faketau1M.pt > faketau2M.pt){
   	    TauMediumIsoObjectSelectionCollection.tau.push_back(&faketau1M);
@@ -1177,42 +981,16 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 
 	if ( FakeTausT.index.first >= 0 && FakeTausT.index.second >= 0 ) {
 
-	  double scale = ScaleFactorT->GetBinContent(ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->pt)); 
-	  if(scale == 0) {scale = 0.851; FakeTausT.weight=0;}
+	  double scaleP = ScaleFactorT->GetBinContent(ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->pt)); 
+	  double scaleE = ScaleFactorEnergyT->GetBinContent(ScaleFactorEnergyT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->pt));
+	  if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE=1.; FakeTausT.weight=0;}
+	  faketau1T = fakeTau(JetLooseIsoObjectSelectionCollection, FakeTausT.index.first, scaleP, scaleE);
 
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->charge >= 0 )
-	  faketau1T.charge = +1;
-	  else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->charge < 0 )
-	  faketau1T.charge = -1;
-	  faketau1T.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->p;
-	  faketau1T.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->energy;
-	  faketau1T.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->et;
-	  faketau1T.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->px;
-	  faketau1T.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->py;
-	  faketau1T.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->pz;
-	  faketau1T.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->pt * scale;
-	  if(faketau1T.pt < 45) FakeTausT.weight=0;
-	  faketau1T.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->phi;
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta<=2.1) faketau1T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta;
-	  else faketau1T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.first]->eta)*2.1;
+	  double scaleP2 = ScaleFactorMi->GetBinContent(ScaleFactorMi->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pt));
+	  double scaleE2 = ScaleFactorEnergyMi->GetBinContent(ScaleFactorEnergyMi->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pt));
+	  if(scaleP2 == 0 || scaleE2 == 0) {scaleP2 = 1.; scaleE2=1.; FakeTausT.weight=0;}
+	  faketau2T = fakeTau(JetLooseIsoObjectSelectionCollection, FakeTausT.index.second, scaleP2, scaleE2);
 
-	  double scale2 = ScaleFactorMi->GetBinContent(ScaleFactorMi->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pt));
-	  if(scale2 == 0) {scale2 = 0.851; FakeTausT.weight=0;}
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->charge >= 0 )
-	  faketau2T.charge = +1;
-	  else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->charge < 0 )
-	  faketau2T.charge = -1;	
-	  faketau2T.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->p;
-	  faketau2T.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->energy;
-	  faketau2T.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->et;
-	  faketau2T.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->px;
-	  faketau2T.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->py;
-	  faketau2T.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pz;
-	  faketau2T.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->pt * scale2;
-	  if(faketau2T.pt < 45) FakeTausT.weight=0;
-	  faketau2T.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->phi;
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->eta<=2.1) faketau2T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->eta;
-	  else faketau2T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausT.index.second]->eta)*2.1;
 	  if(faketau1T.pt > faketau2T.pt){
   	    TauTMiIsoObjectSelectionCollection.tau.push_back(&faketau1T);
   	    TauTMiIsoObjectSelectionCollection.tau.push_back(&faketau2T);
@@ -1231,43 +1009,17 @@ TProfile* ScaleFactorT = (TProfile*)(file_Resp.Get("ScaleFactorT"));
 	tau_s faketauT2T;
 
 	if ( FakeTausTT.index.first >= 0 && FakeTausTT.index.second >= 0 ) {
+	
+	  double scaleP = ScaleFactorT->GetBinContent(ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->pt));
+	  double scaleE = ScaleFactorEnergyT->GetBinContent(ScaleFactorEnergyT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->pt));
+	  if(scaleP == 0 || scaleE == 0) {scaleP = 1.; scaleE=1.; FakeTausTT.weight=0;}
+	  faketauT1T = fakeTau(JetLooseIsoObjectSelectionCollection, FakeTausTT.index.first, scaleP, scaleE);
 
-	  double scale = ScaleFactorT->GetBinContent(ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->pt)); 
-	  if(scale == 0) {scale = 0.851; FakeTausTT.weight=0;}
+	  double scaleP2 = ScaleFactorT->GetBinContent(ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->pt));
+	  double scaleE2 = ScaleFactorEnergyT->GetBinContent(ScaleFactorEnergyT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->pt));
+	  if(scaleP2 == 0 || scaleE2 == 0) {scaleP2 = 1.; scaleE2=1.; FakeTausTT.weight=0;}
+	  faketauT2T = fakeTau(JetLooseIsoObjectSelectionCollection, FakeTausTT.index.second, scaleP2, scaleE2);
 
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->charge >= 0 )
-	  faketauT1T.charge = +1;
-	  else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->charge < 0 )
-	  faketauT1T.charge = -1;
-	  faketauT1T.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->p;
-	  faketauT1T.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->energy;
-	  faketauT1T.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->et;
-	  faketauT1T.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->px;
-	  faketauT1T.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->py;
-	  faketauT1T.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->pz;
-	  faketauT1T.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->pt * scale;
-	  if(faketauT1T.pt < 45) FakeTausTT.weight=0;
-	  faketauT1T.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->phi;
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->eta<=2.1) faketauT1T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->eta;
-	  else faketauT1T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.first]->eta)*2.1;
-
-	  double scale2 = ScaleFactorT->GetBinContent(ScaleFactorT->FindBin(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->pt));
-	  if(scale2 == 0) {scale2 = 0.851; FakeTausTT.weight=0;}
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->charge >= 0 )
-	  faketauT2T.charge = +1;
-	  else if(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->charge < 0 )
-	  faketauT2T.charge = -1;	
-	  faketauT2T.p = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->p;
-	  faketauT2T.energy = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->energy;
-	  faketauT2T.et = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->et;
-	  faketauT2T.px = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->px;
-	  faketauT2T.py = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->py;
-	  faketauT2T.pz = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->pz;
-	  faketauT2T.pt = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->pt * scale2;
-	  if(faketauT2T.pt < 45) FakeTausTT.weight=0;
-	  faketauT2T.phi = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->phi;
-	  if(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->eta<=2.1) faketauT2T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->eta;
-	  else faketauT2T.eta = JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->eta/fabs(JetLooseIsoObjectSelectionCollection.jet[FakeTausTT.index.second]->eta)*2.1;
 	  if(faketauT1T.pt > faketauT2T.pt){
   	    TauTTIsoObjectSelectionCollection.tau.push_back(&faketauT1T);
   	    TauTTIsoObjectSelectionCollection.tau.push_back(&faketauT2T);
