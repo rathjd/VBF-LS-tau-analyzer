@@ -39,3 +39,5 @@ void CutConfiguration(Selection *Region, bool VBF, bool LS){
   }
   return;
 }
+
+#endif
