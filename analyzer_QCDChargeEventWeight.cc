@@ -627,7 +627,7 @@ LS_Signal.OutputCollection 	= &myHistoColl_LS_SignalRegion;        	//output col
 LS_Signal.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
 LS_Signal.RunData        	= false;        			//real data allowed
 LS_Signal.RequireTriggers       = false;       				//require at least one of the triggers fired
-LS_Signal.weight        	= 1.;        				//event weight
+LS_Signal.weight        	= FakeTausTT.weight;			//event weight
 CutConfiguration(&LS_Signal, true, LS); 				//selection, VBF, LS
 
 LS_Signal.select();        						//do selection, fill histograms
@@ -640,9 +640,9 @@ Selection InvertedVBF_LS_CR2("InvertedVBF_LS_CR2"); 				//label and initialisati
 InvertedVBF_LS_CR2.InputCollection 	= &TauTightIsoObjectSelectionCollection;//input collection
 InvertedVBF_LS_CR2.OutputCollection 	= &myHistoColl_LS_CR2;        		//output collection
 InvertedVBF_LS_CR2.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
-InvertedVBF_LS_CR2.RunData        	= false;        				//real data allowed
+InvertedVBF_LS_CR2.RunData        	= false;        			//real data allowed
 InvertedVBF_LS_CR2.RequireTriggers      = false;       				//require at least one of the triggers fired
-InvertedVBF_LS_CR2.weight        	= 1.;        				//event weight
+InvertedVBF_LS_CR2.weight        	= FakeTausTT.weight;        		//event weight
 CutConfiguration(&InvertedVBF_LS_CR2, false, LS); 				//selection, VBF, LS
 
 InvertedVBF_LS_CR2.select();        						//do selection, fill histograms
@@ -656,9 +656,9 @@ Selection oneTightTau_LS_CR3("oneTightTau_LS_CR3"); 					//label and initialisat
 oneTightTau_LS_CR3.InputCollection 	= &Tau1TightIsoObjectSelectionCollection;	//input collection
 oneTightTau_LS_CR3.OutputCollection 	= &myHistoColl_LS_CR3;        			//output collection
 oneTightTau_LS_CR3.RealData        	= eventhelper_isRealData;        		//pass information if event is real data
-oneTightTau_LS_CR3.RunData        	= false;        					//real data allowed
+oneTightTau_LS_CR3.RunData        	= false;        				//real data allowed
 oneTightTau_LS_CR3.RequireTriggers      = false;       					//require at least one of the triggers fired
-oneTightTau_LS_CR3.weight        	= 1.;        					//event weight
+oneTightTau_LS_CR3.weight        	= FakeTausT.weight;        			//event weight
 CutConfiguration(&oneTightTau_LS_CR3, true, LS); 					//selection, VBF, LS
 
 oneTightTau_LS_CR3.select();        							//do selection, fill histograms
@@ -670,9 +670,9 @@ Selection InvertedVBF_oneTightTau_LS_CR4("InvertedVBF_oneTightTau_LS_CR4"); 			/
 InvertedVBF_oneTightTau_LS_CR4.InputCollection 	= &Tau1TightIsoObjectSelectionCollection;       //input collection
 InvertedVBF_oneTightTau_LS_CR4.OutputCollection = &myHistoColl_LS_CR4;        			//output collection
 InvertedVBF_oneTightTau_LS_CR4.RealData        	= eventhelper_isRealData;        		//pass information if event is real data
-InvertedVBF_oneTightTau_LS_CR4.RunData        	= false;        					//real data allowed
+InvertedVBF_oneTightTau_LS_CR4.RunData        	= false;        				//real data allowed
 InvertedVBF_oneTightTau_LS_CR4.RequireTriggers  = false;       					//require at least one of the triggers fired
-InvertedVBF_oneTightTau_LS_CR4.weight        	= 1.;        					//event weight
+InvertedVBF_oneTightTau_LS_CR4.weight        	= FakeTausT.weight;				//event weight
 CutConfiguration(&InvertedVBF_oneTightTau_LS_CR4, false, LS); 					//selection, VBF, LS
 
 InvertedVBF_oneTightTau_LS_CR4.select();        						//do selection, fill histograms
@@ -686,9 +686,9 @@ Selection AntiTightTau_LS_CR5("AntiTightTau_LS_CR5"); 					//label and initialis
 AntiTightTau_LS_CR5.InputCollection 	= &TauMediumIsoObjectSelectionCollection;	//input collection
 AntiTightTau_LS_CR5.OutputCollection 	= &myHistoColl_LS_CR5;        			//output collection
 AntiTightTau_LS_CR5.RealData        	= eventhelper_isRealData;        		//pass information if event is real data
-AntiTightTau_LS_CR5.RunData        	= false;        					//real data allowed
+AntiTightTau_LS_CR5.RunData        	= false;        				//real data allowed
 AntiTightTau_LS_CR5.RequireTriggers     = false;       					//require at least one of the triggers fired
-AntiTightTau_LS_CR5.weight        	= 1.;        					//event weight
+AntiTightTau_LS_CR5.weight        	= FakeTausM.weight;        			//event weight
 CutConfiguration(&AntiTightTau_LS_CR5, true, LS); 					//selection, VBF, LS
 
 AntiTightTau_LS_CR5.select();        							//do selection, fill histograms
@@ -701,9 +701,9 @@ Selection InvertedVBF_AntiTightTau_LS_CR6("InvertedVBF_AntiTightTau_LS_CR6"); 		
 InvertedVBF_AntiTightTau_LS_CR6.InputCollection 	= &TauMediumIsoObjectSelectionCollection;	//input collection
 InvertedVBF_AntiTightTau_LS_CR6.OutputCollection 	= &myHistoColl_LS_CR6;        			//output collection
 InvertedVBF_AntiTightTau_LS_CR6.RealData        	= eventhelper_isRealData;        		//pass information if event is real data
-InvertedVBF_AntiTightTau_LS_CR6.RunData        		= false;        					//real data allowed
+InvertedVBF_AntiTightTau_LS_CR6.RunData        		= false;        				//real data allowed
 InvertedVBF_AntiTightTau_LS_CR6.RequireTriggers         = false;       					//require at least one of the triggers fired
-InvertedVBF_AntiTightTau_LS_CR6.weight        		= 1.;        					//event weight
+InvertedVBF_AntiTightTau_LS_CR6.weight        		= FakeTausM.weight;        			//event weight
 CutConfiguration(&InvertedVBF_AntiTightTau_LS_CR6, false, LS); 						//selection, VBF, LS
 
 InvertedVBF_AntiTightTau_LS_CR6.select();        							//do selection, fill histograms
@@ -717,9 +717,9 @@ Selection AntiMediumTau_LS_CR7("AntiMediumTau_LS_CR7"); 			//label and initialis
 AntiMediumTau_LS_CR7.InputCollection 	= &TauLooseIsoObjectSelectionCollection;//input collection
 AntiMediumTau_LS_CR7.OutputCollection 	= &myHistoColl_LS_CR7;        		//output collection
 AntiMediumTau_LS_CR7.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
-AntiMediumTau_LS_CR7.RunData        	= false;        				//real data allowed
+AntiMediumTau_LS_CR7.RunData        	= false;        			//real data allowed
 AntiMediumTau_LS_CR7.RequireTriggers    = false;       				//require at least one of the triggers fired
-AntiMediumTau_LS_CR7.weight        	= 1.;        				//event weight
+AntiMediumTau_LS_CR7.weight        	= FakeTausL.weight;			//event weight
 CutConfiguration(&AntiMediumTau_LS_CR7, true, LS); 				//selection, VBF, LS
 
 AntiMediumTau_LS_CR7.select();        						//do selection, fill histograms
@@ -732,9 +732,9 @@ Selection InvertedVBF_AntiMediumTau_LS_CR8("InvertedVBF_AntiMediumTauLS_CR8"); 	
 InvertedVBF_AntiMediumTau_LS_CR8.InputCollection 	= &TauLooseIsoObjectSelectionCollection;//input collection
 InvertedVBF_AntiMediumTau_LS_CR8.OutputCollection 	= &myHistoColl_LS_CR8;        		//output collection
 InvertedVBF_AntiMediumTau_LS_CR8.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
-InvertedVBF_AntiMediumTau_LS_CR8.RunData        	= false;        				//real data allowed
+InvertedVBF_AntiMediumTau_LS_CR8.RunData        	= false;        			//real data allowed
 InvertedVBF_AntiMediumTau_LS_CR8.RequireTriggers        = false;       				//require at least one of the triggers fired
-InvertedVBF_AntiMediumTau_LS_CR8.weight        		= 1.;        				//event weight
+InvertedVBF_AntiMediumTau_LS_CR8.weight        		= FakeTausL.weight;			//event weight
 CutConfiguration(&InvertedVBF_AntiMediumTau_LS_CR8, false, LS); 				//selection, VBF, LS
 
 InvertedVBF_AntiMediumTau_LS_CR8.select();        						//do selection, fill histograms
@@ -748,9 +748,9 @@ Selection AntiLooseTau_LS_CR9("AntiLooseTauLS_CR9"); 				//label and initialisat
 AntiLooseTau_LS_CR9.InputCollection 	= &TauNoIsoObjectSelectionCollection;	//input collection
 AntiLooseTau_LS_CR9.OutputCollection 	= &myHistoColl_LS_CR9;        		//output collection
 AntiLooseTau_LS_CR9.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
-AntiLooseTau_LS_CR9.RunData        	= false;        				//real data allowed
+AntiLooseTau_LS_CR9.RunData        	= false;        			//real data allowed
 AntiLooseTau_LS_CR9.RequireTriggers     = false;       				//require at least one of the triggers fired
-AntiLooseTau_LS_CR9.weight        	= 1.;        				//event weight
+AntiLooseTau_LS_CR9.weight        	= FakeTausN.weight;			//event weight
 CutConfiguration(&AntiLooseTau_LS_CR9, true, LS); 				//selection, VBF, LS
 
 AntiLooseTau_LS_CR9.select();        						//do selection, fill histograms
@@ -763,9 +763,9 @@ Selection InvertedVBF_AntiLooseTau_LS_CR10("InvertedVBF_AntiLooseTauLS_CR10"); 	
 InvertedVBF_AntiLooseTau_LS_CR10.InputCollection 	= &TauNoIsoObjectSelectionCollection;   //input collection
 InvertedVBF_AntiLooseTau_LS_CR10.OutputCollection 	= &myHistoColl_LS_CR10;        		//output collection
 InvertedVBF_AntiLooseTau_LS_CR10.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
-InvertedVBF_AntiLooseTau_LS_CR10.RunData        	= false;        				//real data allowed
+InvertedVBF_AntiLooseTau_LS_CR10.RunData        	= false;        			//real data allowed
 InvertedVBF_AntiLooseTau_LS_CR10.RequireTriggers        = false;       				//require at least one of the triggers fired
-InvertedVBF_AntiLooseTau_LS_CR10.weight        		= 1.;        				//event weight
+InvertedVBF_AntiLooseTau_LS_CR10.weight        		= FakeTausN.weight;			//event weight
 CutConfiguration(&InvertedVBF_AntiLooseTau_LS_CR10, false, LS); 				//selection, VBF, LS
 
 InvertedVBF_AntiLooseTau_LS_CR10.select();        						//do selection, fill histograms
@@ -801,7 +801,7 @@ Ztautau_LS_CR1.DiJetInvMassMax        	= -1.;        				//Dijet maximum invaria
 Ztautau_LS_CR1.DiJetSignEta        	= 0;        				//Dijet sign eta_1*eta_2
 Ztautau_LS_CR1.DiJetDetaMin        	= -1.;        				//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 Ztautau_LS_CR1.DiJetDetaMax        	= -1.;        				//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-Ztautau_LS_CR1.weight        		= 1.;        				//event weight
+Ztautau_LS_CR1.weight        		= FakeTausTT.weight;			//event weight
 Ztautau_LS_CR1.invertTauRequirements    = false;        			//invert number of taus requirement
 Ztautau_LS_CR1.invertTauProperties      = false;        			//invert ditau properties (dR, sign)
 Ztautau_LS_CR1.invertBtagRequirement    = false;        			//invert number of b-jets required
@@ -826,7 +826,7 @@ OS_Signal.OutputCollection 		= &myHistoColl_OS_SignalRegion;        	//output co
 OS_Signal.RealData        		= eventhelper_isRealData;        	//pass information if event is real data
 OS_Signal.RunData        		= false;        			//real data allowed
 OS_Signal.RequireTriggers          	= false;       				//require at least one of the triggers fired
-OS_Signal.weight        		= 1.;        				//event weight
+OS_Signal.weight        		= FakeTausTT.weight;        		//event weight
 CutConfiguration(&OS_Signal, true, LS); 					//selection, VBF, LS
 
 OS_Signal.select();        							//do selection, fill histograms
@@ -839,9 +839,9 @@ Selection InvertedVBF_OS_CR2("InvertedVBF_OS_CR2"); 				//label and initialisati
 InvertedVBF_OS_CR2.InputCollection 	= &TauTightIsoObjectSelectionCollection;//input collection
 InvertedVBF_OS_CR2.OutputCollection 	= &myHistoColl_OS_CR2;        		//output collection
 InvertedVBF_OS_CR2.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
-InvertedVBF_OS_CR2.RunData        	= false;        				//real data allowed
+InvertedVBF_OS_CR2.RunData        	= false;        			//real data allowed
 InvertedVBF_OS_CR2.RequireTriggers      = false;       				//require at least one of the triggers fired
-InvertedVBF_OS_CR2.weight        	= 1.;        				//event weight
+InvertedVBF_OS_CR2.weight        	= FakeTausTT.weight;			//event weight
 CutConfiguration(&InvertedVBF_OS_CR2, false, LS); 				//selection, VBF, LS
 
 InvertedVBF_OS_CR2.select();        						//do selection, fill histograms
@@ -855,9 +855,9 @@ Selection oneTightTau_OS_CR3("oneTightTau_OS_CR3"); 					//label and initialisat
 oneTightTau_OS_CR3.InputCollection 	= &Tau1TightIsoObjectSelectionCollection;	//input collection
 oneTightTau_OS_CR3.OutputCollection 	= &myHistoColl_OS_CR3;        			//output collection
 oneTightTau_OS_CR3.RealData        	= eventhelper_isRealData;        		//pass information if event is real data
-oneTightTau_OS_CR3.RunData        	= false;        					//real data allowed
+oneTightTau_OS_CR3.RunData        	= false;        				//real data allowed
 oneTightTau_OS_CR3.RequireTriggers      = false;       					//require at least one of the triggers fired
-oneTightTau_OS_CR3.weight        	= 1.;        					//event weight
+oneTightTau_OS_CR3.weight        	= FakeTausT.weight;        			//event weight
 CutConfiguration(&oneTightTau_OS_CR3, true, LS); 					//selection, VBF, LS
 
 oneTightTau_OS_CR3.select();        							//do selection, fill histograms
@@ -869,9 +869,9 @@ Selection InvertedVBF_oneTightTau_OS_CR4("InvertedVBF_oneTightTau_OS_CR4"); 				
 InvertedVBF_oneTightTau_OS_CR4.InputCollection 		= &Tau1TightIsoObjectSelectionCollection;       //input collection
 InvertedVBF_oneTightTau_OS_CR4.OutputCollection 	= &myHistoColl_OS_CR4;        			//output collection
 InvertedVBF_oneTightTau_OS_CR4.RealData        		= eventhelper_isRealData;        		//pass information if event is real data
-InvertedVBF_oneTightTau_OS_CR4.RunData        		= false;        					//real data allowed
+InvertedVBF_oneTightTau_OS_CR4.RunData        		= false;        				//real data allowed
 InvertedVBF_oneTightTau_OS_CR4.RequireTriggers          = false;       					//require at least one of the triggers fired
-InvertedVBF_oneTightTau_OS_CR4.weight        		= 1.;        					//event weight
+InvertedVBF_oneTightTau_OS_CR4.weight        		= FakeTausT.weight;        			//event weight
 CutConfiguration(&InvertedVBF_oneTightTau_OS_CR4, false, LS); 						//selection, VBF, LS
 
 InvertedVBF_oneTightTau_OS_CR4.select();        							//do selection, fill histograms
@@ -885,9 +885,9 @@ Selection AntiTightTau_OS_CR5("AntiTightTau_OS_CR5"); 						//label and initiali
 AntiTightTau_OS_CR5.InputCollection 		= &TauMediumIsoObjectSelectionCollection;	//input collection
 AntiTightTau_OS_CR5.OutputCollection 		= &myHistoColl_OS_CR5;        			//output collection
 AntiTightTau_OS_CR5.RealData        		= eventhelper_isRealData;        		//pass information if event is real data
-AntiTightTau_OS_CR5.RunData        		= false;        					//real data allowed
+AntiTightTau_OS_CR5.RunData        		= false;        				//real data allowed
 AntiTightTau_OS_CR5.RequireTriggers             = false;       					//require at least one of the triggers fired
-AntiTightTau_OS_CR5.weight        		= 1.;        					//event weight
+AntiTightTau_OS_CR5.weight        		= FakeTausM.weight;        			//event weight
 CutConfiguration(&AntiTightTau_OS_CR5, true, LS); 						//selection, VBF, LS
 
 AntiTightTau_OS_CR5.select();        								//do selection, fill histograms
@@ -900,9 +900,9 @@ Selection InvertedVBF_AntiTightTau_OS_CR6("InvertedVBF_AntiTightTau_OS_CR6"); 		
 InvertedVBF_AntiTightTau_OS_CR6.InputCollection 	= &TauMediumIsoObjectSelectionCollection;	//input collection
 InvertedVBF_AntiTightTau_OS_CR6.OutputCollection 	= &myHistoColl_OS_CR6;        			//output collection
 InvertedVBF_AntiTightTau_OS_CR6.RealData        	= eventhelper_isRealData;        		//pass information if event is real data
-InvertedVBF_AntiTightTau_OS_CR6.RunData        		= false;        					//real data allowed
+InvertedVBF_AntiTightTau_OS_CR6.RunData        		= false;        				//real data allowed
 InvertedVBF_AntiTightTau_OS_CR6.RequireTriggers 	= false;       					//require at least one of the triggers fired
-InvertedVBF_AntiTightTau_OS_CR6.weight        		= 1.;        					//event weight
+InvertedVBF_AntiTightTau_OS_CR6.weight        		= FakeTausM.weight;        			//event weight
 CutConfiguration(&InvertedVBF_AntiTightTau_OS_CR6, false, LS); 						//selection, VBF, LS
 
 InvertedVBF_AntiTightTau_OS_CR6.select();        							//do selection, fill histograms
@@ -916,9 +916,9 @@ Selection AntiMediumTau_OS_CR7("AntiMediumTau_OS_CR7"); 			//label and initialis
 AntiMediumTau_OS_CR7.InputCollection 	= &TauLooseIsoObjectSelectionCollection;//input collection
 AntiMediumTau_OS_CR7.OutputCollection 	= &myHistoColl_OS_CR7;        		//output collection
 AntiMediumTau_OS_CR7.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
-AntiMediumTau_OS_CR7.RunData        	= false;        				//real data allowed
+AntiMediumTau_OS_CR7.RunData        	= false;        			//real data allowed
 AntiMediumTau_OS_CR7.RequireTriggers    = false;       				//require at least one of the triggers fired
-AntiMediumTau_OS_CR7.weight        	= 1.;        				//event weight
+AntiMediumTau_OS_CR7.weight        	= FakeTausL.weight;        		//event weight
 CutConfiguration(&AntiMediumTau_OS_CR7, true, LS); 				//selection, VBF, LS
 
 AntiMediumTau_OS_CR7.select();        						//do selection, fill histograms
@@ -931,9 +931,9 @@ Selection InvertedVBF_AntiMediumTau_OS_CR8("InvertedVBF_AntiMediumTau_OS_CR8"); 
 InvertedVBF_AntiMediumTau_OS_CR8.InputCollection 	= &TauLooseIsoObjectSelectionCollection;//input collection
 InvertedVBF_AntiMediumTau_OS_CR8.OutputCollection 	= &myHistoColl_OS_CR8;        		//output collection
 InvertedVBF_AntiMediumTau_OS_CR8.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
-InvertedVBF_AntiMediumTau_OS_CR8.RunData        	= false;        				//real data allowed
+InvertedVBF_AntiMediumTau_OS_CR8.RunData        	= false;        			//real data allowed
 InvertedVBF_AntiMediumTau_OS_CR8.RequireTriggers        = false;       				//require at least one of the triggers fired
-InvertedVBF_AntiMediumTau_OS_CR8.weight        		= 1.;        				//event weight
+InvertedVBF_AntiMediumTau_OS_CR8.weight        		= FakeTausL.weight;        		//event weight
 CutConfiguration(&InvertedVBF_AntiMediumTau_OS_CR8, false, LS); 				//selection, VBF, LS
 
 InvertedVBF_AntiMediumTau_OS_CR8.select();        						//do selection, fill histograms
@@ -947,9 +947,9 @@ Selection AntiLooseTau_OS_CR9("AntiLooseTau_OS_CR9"); 				//label and initialisa
 AntiLooseTau_OS_CR9.InputCollection 	= &TauNoIsoObjectSelectionCollection;	//input collection
 AntiLooseTau_OS_CR9.OutputCollection 	= &myHistoColl_OS_CR9;        		//output collection
 AntiLooseTau_OS_CR9.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
-AntiLooseTau_OS_CR9.RunData        	= false;        				//real data allowed
+AntiLooseTau_OS_CR9.RunData        	= false;        			//real data allowed
 AntiLooseTau_OS_CR9.RequireTriggers     = false;       				//require at least one of the triggers fired
-AntiLooseTau_OS_CR9.weight        	= 1.;        				//event weight
+AntiLooseTau_OS_CR9.weight        	= FakeTausN.weight;        		//event weight
 CutConfiguration(&AntiLooseTau_OS_CR9, true, LS); 				//selection, VBF, LS
 
 AntiLooseTau_OS_CR9.select();        						//do selection, fill histograms
@@ -962,9 +962,9 @@ Selection InvertedVBF_AntiLooseTau_OS_CR10("InvertedVBF_AntiLooseTau_OS_CR10"); 
 InvertedVBF_AntiLooseTau_OS_CR10.InputCollection 	= &TauNoIsoObjectSelectionCollection;   //input collection
 InvertedVBF_AntiLooseTau_OS_CR10.OutputCollection 	= &myHistoColl_OS_CR10;        		//output collection
 InvertedVBF_AntiLooseTau_OS_CR10.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
-InvertedVBF_AntiLooseTau_OS_CR10.RunData        	= false;        				//real data allowed
+InvertedVBF_AntiLooseTau_OS_CR10.RunData        	= false;        			//real data allowed
 InvertedVBF_AntiLooseTau_OS_CR10.RequireTriggers        = false;       				//require at least one of the triggers fired
-InvertedVBF_AntiLooseTau_OS_CR10.weight        		= 1.;        				//event weight
+InvertedVBF_AntiLooseTau_OS_CR10.weight        		= FakeTausN.weight;        		//event weight
 CutConfiguration(&InvertedVBF_AntiLooseTau_OS_CR10, false, LS); 				//selection, VBF, LS
 
 InvertedVBF_AntiLooseTau_OS_CR10.select();        						//do selection, fill histograms
@@ -978,7 +978,7 @@ Selection Ztautau_OS_CR1("Ztautau_OS_CR1"); 						//label and initialisation
 Ztautau_OS_CR1.InputCollection 		= &TauTightIsoObjectSelectionCollection;	//input collection
 Ztautau_OS_CR1.OutputCollection 	= &myHistoColl_OS_CR1;        			//output collection
 Ztautau_OS_CR1.RealData        		= eventhelper_isRealData;        		//pass information if event is real data
-Ztautau_OS_CR1.RunData        		= false;        					//real data allowed
+Ztautau_OS_CR1.RunData        		= false;        				//real data allowed
 Ztautau_OS_CR1.NumberTauMin        	= 2;        					//require at least N tau
 Ztautau_OS_CR1.NumberTauMax        	= 3;        					//require at less than N taus
 Ztautau_OS_CR1.DiTauDeltaRmin        	= 0.3;        					//minimum delta R for tau pair
@@ -1000,7 +1000,7 @@ Ztautau_OS_CR1.DiJetInvMassMax        	= -1.;        					//Dijet maximum invari
 Ztautau_OS_CR1.DiJetSignEta        	= 0;        					//Dijet sign eta_1*eta_2
 Ztautau_OS_CR1.DiJetDetaMin        	= -1.;        					//Dijet |eta_1-eta_2| minimum, set to -1 for no requirement
 Ztautau_OS_CR1.DiJetDetaMax        	= -1.;        					//Dijet |eta_1-eta_2| maximum, set to -1 for no requirement
-Ztautau_OS_CR1.weight        		= 1.;        					//event weight
+Ztautau_OS_CR1.weight        		= FakeTausTT.weight;        			//event weight
 Ztautau_OS_CR1.invertTauRequirements    = false;        				//invert number of taus requirement
 Ztautau_OS_CR1.invertTauProperties      = false;        				//invert ditau properties (dR, sign)
 Ztautau_OS_CR1.invertBtagRequirement	= false;        				//invert number of b-jets required
