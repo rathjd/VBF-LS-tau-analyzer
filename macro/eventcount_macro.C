@@ -128,18 +128,7 @@ void eventcount(TFile* inputfile, bool isLSchannel){
 	double antiloosebgpred_err = qcdbackgroundprediction_staterr(CR2counts, CR2counts_err, v_nonqcdbg[(2 - 1)] , v_nonqcdbg_err[(2 - 1)], antilooseeff, antilooseeff_err);
 
 	//Efficiency Systematics
-	std::vector<double> v_eff;
-	v_eff.push_back(onetighteff);
-	v_eff.push_back(antitighteff);
-	v_eff.push_back(antimediumeff);
-	v_eff.push_back(antilooseeff);
-
-	std::vector<double> v_eff_err;
-	v_eff_err.push_back(onetighteff_err);
-	v_eff_err.push_back(antitighteff_err);
-	v_eff_err.push_back(antimediumeff_err);
-	v_eff_err.push_back(antilooseeff_err);
-
+	
 	double evenCRcount = (double)CR4counts + (double)CR6counts + (double)CR8counts + (double)CR10counts;
 	double oddCRcount = (double)CR3counts + (double)CR5counts + (double)CR7counts + (double)CR9counts;
 	double evenCRnonQCDbg = v_nonqcdbg[(4 - 1)] + v_nonqcdbg[(6 - 1)] + v_nonqcdbg[(8 - 1)] + v_nonqcdbg[(10 - 1)];
@@ -152,25 +141,59 @@ void eventcount(TFile* inputfile, bool isLSchannel){
 	double weightedmeaneff = vbfefficiency(evenCRcount, oddCRcount, evenCRnonQCDbg, oddCRnonQCDbg);
 	double weightedmeaneff_err = vbfefficiency_staterr(evenCRcount, evenCRcount_err, oddCRcount, oddCRcount_err, evenCRnonQCDbg, evenCRnonQCDbg_err, oddCRnonQCDbg, oddCRnonQCDbg_err);
 
+	double weightedmeaneff_nonqcdmc_upwardvar = vbfefficiency(evenCRcount, oddCRcount, (evenCRnonQCDbg * 0.5), (oddCRnonQCDbg * 0.5));
+	double weightedmeaneff_nonqcdmc_downwardvar = vbfefficiency(evenCRcount, oddCRcount, (evenCRnonQCDbg * 1.5), (oddCRnonQCDbg * 1.5));
+
+	std::vector<double> v_eff;
+	v_eff.push_back(onetighteff);
+	v_eff.push_back(antitighteff);
+	v_eff.push_back(antimediumeff);
+	v_eff.push_back(antilooseeff);
+
+	std::vector<double> v_eff_err;
+	v_eff_err.push_back(onetighteff_err);
+	v_eff_err.push_back(antitighteff_err);
+	v_eff_err.push_back(antimediumeff_err);
+	v_eff_err.push_back(antilooseeff_err);
+
 	//upward variation
-	double upwardvar = weightedmeaneff;
+	double weightedmeaneff_eff_upwardvar = weightedmeaneff;
 	for (unsigned int i = 0; i < v_eff.size(); i++) {
 		double temp = v_eff[i] + v_eff_err[i];
-		if (temp > upwardvar ) upwardvar = temp;
+		if (temp > weightedmeaneff_eff_upwardvar ) weightedmeaneff_eff_upwardvar = temp;
 	}
 
 	//downward variation
-	double downwardvar = weightedmeaneff;
+	double weightedmeaneff_eff_downwardvar = weightedmeaneff;
 	for (unsigned int i = 0; i < v_eff.size(); i++) {
 		double temp = v_eff[i] - v_eff_err[i];
-		if (temp < downwardvar ) downwardvar = temp;
+		if (temp < weightedmeaneff_eff_downwardvar ) weightedmeaneff_eff_downwardvar = temp;
 	}
 	
-	double effupsyst = upwardvar - weightedmeaneff;
-	double efflowsyst = weightedmeaneff - downwardvar;
+
+	double weightedmeaneff_nonqcdmc_upsyst = weightedmeaneff_nonqcdmc_upwardvar - weightedmeaneff;
+	double weightedmeaneff_nonqcdmc_downsyst = weightedmeaneff - weightedmeaneff_nonqcdmc_downwardvar;
+
+	double weightedmeaneff_eff_upsyst = weightedmeaneff_eff_upwardvar - weightedmeaneff;
+	double weightedmeaneff_eff_downsyst = weightedmeaneff - weightedmeaneff_eff_downwardvar;
 
 	//MC Syst Uncertainty
-	double mcsyst = v_nonqcdbg[(2-1)] * 0.5;
+
+	double weightedmeanbgpred = qcdbackgroundprediction(CR2counts, v_nonqcdbg[(2 - 1)], weightedmeaneff);
+	double weightedmeanbgpred_err = qcdbackgroundprediction_staterr(CR2counts, CR2counts_err, v_nonqcdbg[(2 - 1)] , v_nonqcdbg_err[(2 - 1)], weightedmeaneff, weightedmeaneff_err);
+
+	double weightedmeanbgpred_nonqcdmc_upwardvar = qcdbackgroundprediction(CR2counts, (v_nonqcdbg[(2 - 1)] * 0.5), weightedmeaneff_nonqcdmc_upwardvar);
+	double weightedmeanbgpred_nonqcdmc_downwardvar = qcdbackgroundprediction(CR2counts, (v_nonqcdbg[(2 - 1)] * 1.5), weightedmeaneff_nonqcdmc_downwardvar);
+
+	double weightedmeanbgpred_eff_upwardvar = qcdbackgroundprediction(CR2counts, v_nonqcdbg[(2 - 1)], weightedmeaneff_eff_upwardvar);
+	double weightedmeanbgpred_eff_downwardvar = qcdbackgroundprediction(CR2counts, v_nonqcdbg[(2 - 1)], weightedmeaneff_eff_downwardvar);
+
+	double weightedmeanbgpred_nonqcdmc_upsyst = weightedmeanbgpred_nonqcdmc_upwardvar - weightedmeanbgpred;
+	double weightedmeanbgpred_nonqcdmc_downsyst = weightedmeanbgpred - weightedmeanbgpred_nonqcdmc_downwardvar;
+
+	double weightedmeanbgpred_eff_upsyst = weightedmeanbgpred_eff_upwardvar - weightedmeanbgpred;
+	double weightedmeanbgpred_eff_downsyst = weightedmeanbgpred - weightedmeanbgpred_eff_downwardvar;
+
 
 	cout << "//-------------------Study Done using Eventcount as input------------------------//" << endl;
 	cout << endl;
@@ -185,8 +208,6 @@ void eventcount(TFile* inputfile, bool isLSchannel){
 	cout << "CR8: "<< CR8counts  << " +- " << CR8counts_err <<endl;
 	cout << "CR9: "<< CR9counts  << " +- " << CR9counts_err <<endl;
 	cout << "CR10: "<< CR10counts  << " +- " << CR10counts_err<<endl;
-	cout << "#Non QCD Backgroud MC #" << endl;
-	cout << "CR2: " << v_nonqcdbg[1] << " +- " << v_nonqcdbg_err[1] << " +- " << mcsyst;
 	cout << endl;
 	cout << "#VBF Efficency#" << endl;
 	cout <<"One tight region-- "<<"VBF Efficency: "<< onetighteff << " +- "<<onetighteff_err<<endl;
@@ -194,13 +215,14 @@ void eventcount(TFile* inputfile, bool isLSchannel){
 	cout <<"Anti medium region-- "<<"VBF Efficency: "<< antimediumeff << " +- "<<antimediumeff_err<<endl;
 	cout <<"Anti loose region-- "<<"VBF Efficency: "<< antilooseeff << " +- "<<antilooseeff_err<<endl;
 	cout << "#VBF Efficency Systematics#" << endl;
-	cout << "Weighted Mean: " << weightedmeaneff << " +- " << weightedmeaneff_err << " + " << effupsyst << " - " << efflowsyst << endl;
+	cout << "Weighted Mean: " << weightedmeaneff << " +- " << weightedmeaneff_err << " + " << weightedmeaneff_nonqcdmc_upsyst << " + " << weightedmeaneff_eff_upsyst << " - " << weightedmeaneff_nonqcdmc_downsyst << " - " << weightedmeaneff_eff_downsyst << endl;
 	cout << endl;
 	cout << "BG Prediction#" << endl;
 	cout <<"One tight region-- "<< "BG Prediction: " << onetightbgpred<< " +- "<< onetightbgpred_err << endl;
 	cout <<"Anti tight region-- "<<	"BG Prediction: " << antitightbgpred<< " +- "<< antitightbgpred_err << endl;
 	cout <<"Anti medium region-- "<< "BG Prediction: " << antimediumbgpred<< " +- "<< antimediumbgpred_err << endl;
 	cout <<"Anti loose region-- "<<	"BG Prediction: " << antiloosebgpred<< " +- "<< antiloosebgpred_err << endl;
+	cout << "Weighted Mean: " << weightedmeanbgpred << " +- " << weightedmeanbgpred_err << " + " << weightedmeanbgpred_nonqcdmc_upsyst << " + " << weightedmeanbgpred_eff_upsyst << " - " << weightedmeanbgpred_nonqcdmc_downsyst << " - " << weightedmeanbgpred_eff_downsyst << endl;
 	cout << endl;
 	cout << "----------LATEX-----------" << endl;
 
@@ -257,11 +279,12 @@ void eventcount(TFile* inputfile, bool isLSchannel){
 		" $  &$ " << antitighteff << "\\pm" << antitighteff_err << 
 		" $  &$ " << antimediumeff << "\\pm" << antimediumeff_err << 
 		" $  &$ " << antilooseeff << "\\pm" << antilooseeff_err << " $ \\\\" << endl;
-	cout << weightedmeaneff << "\\pm" << weightedmeaneff_err << "^{+"<<effupsyst<<"}_{-"<<efflowsyst<<"}"<< endl;
+	cout << weightedmeaneff << "\\pm" << weightedmeaneff_err << "^{+"<<weightedmeaneff_nonqcdmc_upsyst<<"+"<<weightedmeaneff_eff_upsyst<<"}_{-"<<weightedmeaneff_nonqcdmc_downsyst<<"-"<<weightedmeaneff_eff_downsyst<<"}"<< endl;
 	cout << endl;
 	cout << "BG Prediction#" << endl;
 	cout << "$N^{QCD}_{SR}$    &$ " << onetightbgpred << "\\pm" << onetightbgpred_err << 
 		" $  &$ " << antitightbgpred << "\\pm" << antitightbgpred_err << 
 		" $  &$ " << antimediumbgpred << "\\pm" << antimediumbgpred_err <<
 	        " $  &$ " << antiloosebgpred << "\\pm" << antiloosebgpred_err <<	" $ \\\\" << endl;
+	cout << weightedmeanbgpred << "\\pm" << weightedmeanbgpred_err << "^{+"<<weightedmeanbgpred_nonqcdmc_upsyst<<"+"<<weightedmeanbgpred_eff_upsyst<<"}_{-"<<weightedmeanbgpred_nonqcdmc_downsyst<<"-"<<weightedmeanbgpred_eff_downsyst<<"}"<< endl;
 }
