@@ -131,4 +131,40 @@ struct Fake {
 	}
 };
 
+struct SingleFake{
+	std::string label;
+	int index;
+	double weight;
+	
+	SingleFake (const std::string & inputlabel){
+	  label  = inputlabel;
+	  index  = -1;
+	  weight = 0.;
+	}
+
+	void generateSingle(std::vector<double> jetTauFakerate, double eff_real){
+	  double maxProb=0.;
+	  unsigned int wrongs=0; //counter for jets with P=0 to fake a tau;
+	  for(unsigned int i=0; i<jetTauFakerate.size(); i++){
+	    double permutation=jetTauFakerate[i];
+	    for(unsigned int j=0; j<jetTauFakerate.size(); j++) if(i!=j) permutation*=1-jetTauFakerate[j];
+	      weight+=permutation;
+	      if(jetTauFakerate[i]==0) wrongs++;
+	      else maxProb+=jetTauFakerate[i];
+	    }
+	    weight*=eff_real;
+	    if(wrongs < jetTauFakerate.size()){
+	      std::uniform_real_distribution<double> distribution(0.0, maxProb);
+	      std::random_device rd;
+	      std::mt19937 engine(rd()); // Mersenne twister MT19937
+	      double Toss=distribution(engine);
+	      double temp=0.;
+	      for(unsigned int i=0; i<jetTauFakerate.size(); i++){
+	        temp+=jetTauFakerate[i];
+	        if(jetTauFakerate[i]==0) continue;
+	        if(temp>=Toss) index=i;
+	      }	
+	    }
+	  }
+}; 
 #endif
