@@ -220,7 +220,7 @@ tau_s fakeTau(MyEventCollection JetColl, unsigned int TauIndex, double pTscale, 
     faketau.pt     = JetColl.jet[TauIndex]->pt * pTscale;
     faketau.phi    = JetColl.jet[TauIndex]->phi;
     faketau.eta    = JetColl.jet[TauIndex]->eta;
-    faketau.mass   = 1.72;
+    faketau.mass   = 0.72;
     return faketau;
   }
   
