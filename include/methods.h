@@ -167,8 +167,8 @@ TauProperties Inv2tMassIndex(MyEventCollection collection)
     
     if(tauIndex.first < 99999 && tauIndex.second < 99999)
       {
-        tau1_4v.SetPtEtaPhiE(collection.tau[tauIndex.first]->pt, collection.tau[tauIndex.first]->eta, collection.tau[tauIndex.first]->phi, collection.tau[tauIndex.first]->energy);
-        tau2_4v.SetPtEtaPhiE(collection.tau[tauIndex.second]->pt, collection.tau[tauIndex.second]->eta, collection.tau[tauIndex.second]->phi, collection.tau[tauIndex.second]->energy);
+    	tau1_4v.SetPtEtaPhiM(collection.tau[tauIndex.first]->pt, collection.tau[tauIndex.first]->eta, collection.tau[tauIndex.first]->phi, collection.tau[tauIndex.first]->mass);
+    	tau2_4v.SetPtEtaPhiM(collection.tau[tauIndex.second]->pt, collection.tau[tauIndex.second]->eta, collection.tau[tauIndex.second]->phi, collection.tau[tauIndex.second]->mass);
     
         TLorentzVector ditau_4v = tau1_4v + tau2_4v;
 	
@@ -185,6 +185,21 @@ TauProperties Inv2tMassIndex(MyEventCollection collection)
       }
     return Inv2tMass;
   }
+  
+//--------------------------
+// defining real tau mass
+//__________________________    
+  
+void realTauMass(MyEventCollection collection)
+  {
+    for(unsigned int t=0; t<collection.tau.size(); t++)
+      {
+        TLorentzVector tau_4v;
+	tau_4v.SetPtEtaPhiE(collection.tau[t]->pt, collection.tau[t]->eta, collection.tau[t]->phi, collection.tau[t]->energy);
+	collection.tau[t]->mass = tau_4v.M();
+      }
+    return;
+  }  
   
 //--------------------------
 // defining fake taus
@@ -205,6 +220,7 @@ tau_s fakeTau(MyEventCollection JetColl, unsigned int TauIndex, double pTscale, 
     faketau.pt     = JetColl.jet[TauIndex]->pt * pTscale;
     faketau.phi    = JetColl.jet[TauIndex]->phi;
     faketau.eta    = JetColl.jet[TauIndex]->eta;
+    faketau.mass   = 1.72;
     return faketau;
   }
   
