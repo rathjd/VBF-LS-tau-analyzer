@@ -245,6 +245,12 @@ for(unsigned int m =0;m<muon.size();++m){
 	  else if(looses.size()>=1 && (looses.size()+nones.size())==2) {looses.insert(looses.end(), nones.begin(), nones.end()); for(unsigned int t =0;t<looses.size();++t) {int i=looses[t]; TauLooseIsoObjectSelectionCollection.tau.push_back(&tau[i]);}}
 	  else if(nones.size()==2) for(unsigned int t =0;t<nones.size();++t) {int i=nones[t]; TauNoIsoObjectSelectionCollection.tau.push_back(&tau[i]);}
 	  
+	  realTauMass(TauTightIsoObjectSelectionCollection);
+	  realTauMass(Tau1TightIsoObjectSelectionCollection);
+	  realTauMass(TauMediumIsoObjectSelectionCollection);
+	  realTauMass(TauLooseIsoObjectSelectionCollection);
+	  realTauMass(TauNoIsoObjectSelectionCollection);
+	  
           // jet && bjet selection
 	  // ? id ?
 	  for(unsigned int j = 0;j<jet.size();++j){
