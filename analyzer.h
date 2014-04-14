@@ -1031,6 +1031,7 @@ struct tau_s
   double	vx;
   double	vy;
   double	vz;
+  double        mass;
   float	tauID_againstElectronDeadECAL;
   float	tauID_againstElectronLoose;
   float	tauID_againstElectronLooseMVA5;
