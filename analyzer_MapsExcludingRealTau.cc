@@ -140,41 +140,49 @@ int main(int argc, char** argv)
   TH2F* ChargeMapT_num_C   = (TH2F*) ChargeMapT_num->Clone("ChargeMapT_num_C");
   TH2F* ChargeMapT_num_B   = (TH2F*) ChargeMapT_num->Clone("ChargeMapT_num_B");
   TH2F* ChargeMapT_num_G   = (TH2F*) ChargeMapT_num->Clone("ChargeMapT_num_G");
+  TH2F* ChargeMapT_num_Un  = (TH2F*) ChargeMapT_num->Clone("ChargeMapT_num_Un");  
   
   TH2F* ChargeMapM_num_Uds = (TH2F*) ChargeMapM_num->Clone("ChargeMapM_num_Uds");
   TH2F* ChargeMapM_num_C   = (TH2F*) ChargeMapM_num->Clone("ChargeMapM_num_C");
   TH2F* ChargeMapM_num_B   = (TH2F*) ChargeMapM_num->Clone("ChargeMapM_num_B");
   TH2F* ChargeMapM_num_G   = (TH2F*) ChargeMapM_num->Clone("ChargeMapM_num_G");
+  TH2F* ChargeMapM_num_Un  = (TH2F*) ChargeMapM_num->Clone("ChargeMapM_num_Un");  
   
   TH2F* ChargeMapL_num_Uds = (TH2F*) ChargeMapL_num->Clone("ChargeMapL_num_Uds");
   TH2F* ChargeMapL_num_C   = (TH2F*) ChargeMapL_num->Clone("ChargeMapL_num_C");
   TH2F* ChargeMapL_num_B   = (TH2F*) ChargeMapL_num->Clone("ChargeMapL_num_B");
   TH2F* ChargeMapL_num_G   = (TH2F*) ChargeMapL_num->Clone("ChargeMapL_num_G");
+  TH2F* ChargeMapL_num_Un  = (TH2F*) ChargeMapL_num->Clone("ChargeMapL_num_Un");  
   
   TH2F* ChargeMapN_num_Uds = (TH2F*) ChargeMapN_num->Clone("ChargeMapN_num_Uds");
   TH2F* ChargeMapN_num_C   = (TH2F*) ChargeMapN_num->Clone("ChargeMapN_num_C");
   TH2F* ChargeMapN_num_B   = (TH2F*) ChargeMapN_num->Clone("ChargeMapN_num_B");
   TH2F* ChargeMapN_num_G   = (TH2F*) ChargeMapN_num->Clone("ChargeMapN_num_G");
+  TH2F* ChargeMapN_num_Un  = (TH2F*) ChargeMapN_num->Clone("ChargeMapN_num_Un");  
   
   TH2F* ChargeMapT_den_Uds = (TH2F*) ChargeMapT_den->Clone("ChargeMapT_den_Uds");
   TH2F* ChargeMapT_den_C   = (TH2F*) ChargeMapT_den->Clone("ChargeMapT_den_C");
   TH2F* ChargeMapT_den_B   = (TH2F*) ChargeMapT_den->Clone("ChargeMapT_den_B");
   TH2F* ChargeMapT_den_G   = (TH2F*) ChargeMapT_den->Clone("ChargeMapT_den_G");
+  TH2F* ChargeMapT_den_Un  = (TH2F*) ChargeMapT_den->Clone("ChargeMapT_den_Un");  
   
   TH2F* ChargeMapM_den_Uds = (TH2F*) ChargeMapM_den->Clone("ChargeMapM_den_Uds");
   TH2F* ChargeMapM_den_C   = (TH2F*) ChargeMapM_den->Clone("ChargeMapM_den_C");
   TH2F* ChargeMapM_den_B   = (TH2F*) ChargeMapM_den->Clone("ChargeMapM_den_B");
   TH2F* ChargeMapM_den_G   = (TH2F*) ChargeMapM_den->Clone("ChargeMapM_den_G");
+  TH2F* ChargeMapM_den_Un  = (TH2F*) ChargeMapM_den->Clone("ChargeMapM_den_Un");  
   
   TH2F* ChargeMapL_den_Uds = (TH2F*) ChargeMapL_den->Clone("ChargeMapL_den_Uds");
   TH2F* ChargeMapL_den_C   = (TH2F*) ChargeMapL_den->Clone("ChargeMapL_den_C");
   TH2F* ChargeMapL_den_B   = (TH2F*) ChargeMapL_den->Clone("ChargeMapL_den_B");
   TH2F* ChargeMapL_den_G   = (TH2F*) ChargeMapL_den->Clone("ChargeMapL_den_G");
+  TH2F* ChargeMapL_den_Un  = (TH2F*) ChargeMapL_den->Clone("ChargeMapL_den_Un");  
   
   TH2F* ChargeMapN_den_Uds = (TH2F*) ChargeMapN_den->Clone("ChargeMapN_den_Uds");
   TH2F* ChargeMapN_den_C   = (TH2F*) ChargeMapN_den->Clone("ChargeMapN_den_C");
   TH2F* ChargeMapN_den_B   = (TH2F*) ChargeMapN_den->Clone("ChargeMapN_den_B");
-  TH2F* ChargeMapN_den_G   = (TH2F*) ChargeMapN_den->Clone("ChargeMapN_den_G");        
+  TH2F* ChargeMapN_den_G   = (TH2F*) ChargeMapN_den->Clone("ChargeMapN_den_G");
+  TH2F* ChargeMapN_den_Un  = (TH2F*) ChargeMapN_den->Clone("ChargeMapN_den_Un");          
   
   //---------------------------------------------------------------------------
   // Histogram Collection Init
@@ -269,15 +277,15 @@ int main(int argc, char** argv)
             if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
             //if(!(       tau[t].pt >= 45.                                            				)) continue;
             if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      				)) continue;
-            if(!(       tau[t].tauID_againstElectronTightMVA5 > 0.5                				)) continue;
-            if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        				)) continue;
-            if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
-	    if(!(tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits  <= 0.5))  TauTightIsoObjectSelectionCollection.tau.push_back(&tau[t]);
-	    else if(!(tau[t].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)){
+            if(!(       tau[t].tauID_againstElectronMediumMVA5 > 0.5                				)) continue;
+            if(!(       tau[t].tauID_againstMuonLoose3 > 0.5                        				)) continue;
+            if(!(       (tau[t].tauID_decayModeFindingNewDMs > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
+	    if(!(tau[t].tauID_byTightIsolationMVA3newDMwLT  <= 0.5))  TauTightIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	    else if(!(tau[t].tauID_byMediumIsolationMVA3newDMwLT  <= 0.5)){
 	      TauMediumIsoObjectSelectionCollection.tau.push_back(&tau[t]);
 	      TauMediumInclIsoObjectSelectionCollection.tau.push_back(&tau[t]);
 	    }
-	    else if(!(tau[t].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)){
+	    else if(!(tau[t].tauID_byLooseIsolationMVA3newDMwLT  <= 0.5)){
 	      TauMediumInclIsoObjectSelectionCollection.tau.push_back(&tau[t]);
 	      TauLooseIsoObjectSelectionCollection.tau.push_back(&tau[t]);
 	      TauLooseInclIsoObjectSelectionCollection.tau.push_back(&tau[t]);
@@ -292,7 +300,7 @@ int main(int argc, char** argv)
           // jet baseline selection
 	for(unsigned int j = 0;j<jet.size();++j){
 	    //if(!(      jet[j].pt >= 30.                                                                      )) continue;
-	    if(!(      fabs(jet[j].eta) <= 2.7                                                               )) continue;
+	    if(!(      fabs(jet[j].eta) <= 2.6                                                               )) continue;
 	    JetLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	}
 
@@ -316,6 +324,14 @@ int main(int argc, char** argv)
 		double dR=5.;
 	        if(genTau.size()>0) for(unsigned int i=0; i<genTau.size(); i++){
 		  double dRtemp=deltaR(jet[j].eta, jet[j].phi, genTau[i]->eta, genTau[i]->phi);
+		  if(dRtemp<dR) dR=dRtemp;
+		}
+		if(genMu.size()>0) for(unsigned int i=0; i<genMu.size(); i++){
+		  double dRtemp=deltaR(jet[j].eta, jet[j].phi, genMu[i]->eta, genMu[i]->phi);
+		  if(dRtemp<dR) dR=dRtemp;
+		}
+		if(genE.size()>0) for(unsigned int i=0; i<genE.size(); i++){
+		  double dRtemp=deltaR(jet[j].eta, jet[j].phi, genE[i]->eta, genE[i]->phi);
 		  if(dRtemp<dR) dR=dRtemp;
 		}
 		if(dR<0.3) continue;
@@ -369,6 +385,7 @@ int main(int argc, char** argv)
 		    else if(CulpritCode == 4)	ChargeMapT_num_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		    else if(CulpritCode == 5)	ChargeMapT_num_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		    else if(CulpritCode == 21)	ChargeMapT_num_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		    else if(CulpritCode == 0) 	ChargeMapT_num_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		  }  
 		  if( deltaRm.first < 0.1  ){
 		    ChargeMapM_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
@@ -376,6 +393,7 @@ int main(int argc, char** argv)
 		    else if(CulpritCode == 4)	ChargeMapM_num_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		    else if(CulpritCode == 5)	ChargeMapM_num_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		    else if(CulpritCode == 21)	ChargeMapM_num_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		    else if(CulpritCode == 0) 	ChargeMapM_num_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		  }  
 		  if( deltaRmi.first < 0.1 ) ChargeMapMi_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		  if( deltaRl.first < 0.1  ){
@@ -384,6 +402,7 @@ int main(int argc, char** argv)
 		    else if(CulpritCode == 4)	ChargeMapL_num_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		    else if(CulpritCode == 5)	ChargeMapL_num_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		    else if(CulpritCode == 21)	ChargeMapL_num_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		    else if(CulpritCode == 0) 	ChargeMapL_num_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		  } 
 		  if( deltaRli.first < 0.1 ) ChargeMapLi_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		  if( deltaRn.first < 0.1  ){
@@ -392,6 +411,7 @@ int main(int argc, char** argv)
 		    else if(CulpritCode == 4)	ChargeMapN_num_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		    else if(CulpritCode == 5)	ChargeMapN_num_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		    else if(CulpritCode == 21)	ChargeMapN_num_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		    else if(CulpritCode == 0) 	ChargeMapN_num_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		  } 
 		  if(fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta)<2.1) //only count jets in acceptance in denominator
 		    {
@@ -424,6 +444,12 @@ int main(int argc, char** argv)
 			ChargeMapM_den_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 			ChargeMapL_den_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 			ChargeMapN_den_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		      }
+		      else if(CulpritCode == 0){
+		        ChargeMapT_den_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+			ChargeMapM_den_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+			ChargeMapL_den_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+			ChargeMapN_den_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		      }
 		    }
 		}
