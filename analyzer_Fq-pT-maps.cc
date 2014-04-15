@@ -207,9 +207,9 @@ int main(int argc, char** argv)
           //smart tau selection
 	  for(unsigned int t =0;t<tau.size();++t){
             if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
-            //if(!(       tau[t].pt >= 45.                                            				)) continue;
             if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      				)) continue;
-            if(!(       tau[t].tauID_againstElectronTightMVA5 > 0.5                				)) continue;
+            //our version
+	    /*if(!(       tau[t].tauID_againstElectronTightMVA5 > 0.5                				)) continue;
             if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        				)) continue;
             if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
 	    if(!(tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits  <= 0.5))  TauTightIsoObjectSelectionCollection.tau.push_back(&tau[t]);
@@ -226,13 +226,32 @@ int main(int argc, char** argv)
 	      TauMediumInclIsoObjectSelectionCollection.tau.push_back(&tau[t]);
 	      TauLooseInclIsoObjectSelectionCollection.tau.push_back(&tau[t]);
 	      TauNoIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	    }*/
+	    //Amandeep's version
+	    if(!(       tau[t].tauID_againstElectronMediumMVA5 > 0.5                				)) continue;
+            if(!(       tau[t].tauID_againstMuonLoose3 > 0.5                        				)) continue;
+            if(!(       (tau[t].tauID_decayModeFindingNewDMs > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
+	    if(!(tau[t].tauID_byTightIsolationMVA3newDMwLT  <= 0.5))  TauTightIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	    else if(!(tau[t].tauID_byMediumIsolationMVA3newDMwLT  <= 0.5)){
+	      TauMediumIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	      TauMediumInclIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	    }
+	    else if(!(tau[t].tauID_byLooseIsolationMVA3newDMwLT  <= 0.5)){
+	      TauMediumInclIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	      TauLooseIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	      TauLooseInclIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	    }
+	    else{
+	      TauMediumInclIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	      TauLooseInclIsoObjectSelectionCollection.tau.push_back(&tau[t]);
+	      TauNoIsoObjectSelectionCollection.tau.push_back(&tau[t]);
 	    }
           }
 
           // jet baseline selection
 	for(unsigned int j = 0;j<jet.size();++j){
 	    //if(!(      jet[j].pt >= 30.                                                                      )) continue;
-	    if(!(      fabs(jet[j].eta) <= 2.7                                                               )) continue;
+	    if(!(      fabs(jet[j].eta) <= 2.6                                                               )) continue;
 	    JetLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	}
 
@@ -267,7 +286,7 @@ int main(int argc, char** argv)
 		  if( deltaRl.first < 0.1  ) ChargeMapL_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		  if( deltaRli.first < 0.1 ) ChargeMapLi_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		  if( deltaRn.first < 0.1  ) ChargeMapN_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		  if(fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta)<2.2)
+		  if(fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta)<2.1)
 		    {
 		      ChargeMapN_den->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
 		      ChargeMapL_den->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
