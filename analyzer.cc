@@ -229,13 +229,13 @@ for(unsigned int m =0;m<muon.size();++m){
             if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
             if(!(       tau[t].pt >= 45.                                            				)) continue;
             if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      				)) continue;
-            if(!(       tau[t].tauID_againstElectronTightMVA5 > 0.5                				)) continue;
-            if(!(       tau[t].tauID_againstMuonTight2 > 0.5                        				)) continue;
-            if(!(       (tau[t].tauID_decayModeFinding > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
+            if(!(       tau[t].tauID_againstElectronMediumMVA5 > 0.5                				)) continue;
+            if(!(       tau[t].tauID_againstMuonLoose3 > 0.5                        				)) continue;
+            if(!(       (tau[t].tauID_decayModeFindingNewDMs > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
             baselineObjectSelectionCollection.tau.push_back(&tau[t]);
-	    if(!(tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) tights.push_back(t);
-	    else if(!(tau[t].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) mediums.push_back(t);
-	    else if(!(tau[t].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) looses.push_back(t);
+	    if(!(tau[t].tauID_byTightIsolationMVA3newDMwLT  <= 0.5)) tights.push_back(t);
+	    else if(!(tau[t].tauID_byMediumIsolationMVA3newDMwLT  <= 0.5)) mediums.push_back(t);
+	    else if(!(tau[t].tauID_byLooseIsolationMVA3newDMwLT  <= 0.5)) looses.push_back(t);
 	    else nones.push_back(t);
           }
           
