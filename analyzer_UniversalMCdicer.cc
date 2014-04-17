@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 // File:        analyzer.cc
 // Description: Analyzer for ntuples created by TheNtupleMaker
@@ -166,6 +165,7 @@ ChargeMapN_eff_Uds->Scale(eff_fake_N);
 ChargeMapN_eff_C->Scale(eff_fake_N);
 ChargeMapN_eff_B->Scale(eff_fake_N);
 ChargeMapN_eff_G->Scale(eff_fake_N);
+ChargeMapN_eff_Un->Scale(eff_fake_N);
 
 TH2F *ChargeMapL_eff_Uds = (TH2F*)file_eff.Get("ChargeMapL_eff_Uds");
 TH2F *ChargeMapL_eff_C   = (TH2F*)file_eff.Get("ChargeMapL_eff_C");
@@ -176,6 +176,7 @@ ChargeMapL_eff_Uds->Scale(eff_fake_L);
 ChargeMapL_eff_C->Scale(eff_fake_L);
 ChargeMapL_eff_B->Scale(eff_fake_L);
 ChargeMapL_eff_G->Scale(eff_fake_L);
+ChargeMapL_eff_Un->Scale(eff_fake_L);
 
 TH2F *ChargeMapM_eff_Uds = (TH2F*)file_eff.Get("ChargeMapM_eff_Uds");
 TH2F *ChargeMapM_eff_C   = (TH2F*)file_eff.Get("ChargeMapM_eff_C");
@@ -186,6 +187,7 @@ ChargeMapM_eff_Uds->Scale(eff_fake_M);
 ChargeMapM_eff_C->Scale(eff_fake_M);
 ChargeMapM_eff_B->Scale(eff_fake_M);
 ChargeMapM_eff_G->Scale(eff_fake_M);
+ChargeMapM_eff_Un->Scale(eff_fake_M);
 
 TH2F *ChargeMapT_eff_Uds = (TH2F*)file_eff.Get("ChargeMapT_eff_Uds");
 TH2F *ChargeMapT_eff_C   = (TH2F*)file_eff.Get("ChargeMapT_eff_C");
@@ -196,6 +198,7 @@ ChargeMapT_eff_Uds->Scale(eff_fake_T);
 ChargeMapT_eff_C->Scale(eff_fake_T);
 ChargeMapT_eff_B->Scale(eff_fake_T);
 ChargeMapT_eff_G->Scale(eff_fake_T);
+ChargeMapT_eff_Un->Scale(eff_fake_T);
 
 //load Rescale Weight profiles
 TProfile *RescaleWeightN_Uds = (TProfile*)file_Resp.Get("RescaleWeightN_Uds");
