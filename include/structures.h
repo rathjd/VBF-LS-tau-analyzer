@@ -59,6 +59,8 @@ struct MyEventCollection {
 	vector <jet_s*> jet;
 	vector <jet_s*> bjet;
         vector <met_s*> met;
+	int NVtx;
+	int PUinteractions;
 
 	MyEventCollection(const std::string & inputlabel) {
 		label = inputlabel;
@@ -110,6 +112,9 @@ struct MyHistoCollection {
 
 	TH2F* h2_DiJetInvMass_vs_DiJetDEta;
 	TH2F* h2_tau1pt_vs_tau2pt;
+	
+	TH1F* h_NVtx;
+	TH1F* h_PU_NumInteractions;
 
 	MyHistoCollection(TFile * f, const std::string & inputlabel) {
 
@@ -159,6 +164,9 @@ struct MyHistoCollection {
 		h2_tau1pt_vs_tau2pt = new TH2F("h2_tau1pt_vs_tau2pt","correlation of first and second p_{T}^{#tau}", 50, 0., 500., 50, 0., 500.);
 		h2_tau1pt_vs_tau2pt->GetXaxis()->SetTitle("p_{T}^{#tau 1}");
 		h2_tau1pt_vs_tau2pt->GetYaxis()->SetTitle("p_{T}^{#tau 2}");
+		
+		h_NVtx = new TH1F("h_NVtx","number of reco vertices", 100, -0.5,99.5);
+		h_PU_NumInteractions = new TH1F("h_PU_NumInteractions","number of in-time pileup", 100, -0.5,99.5);
 	}
 };
 
