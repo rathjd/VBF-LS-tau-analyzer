@@ -103,6 +103,11 @@ void fillHistoCollection (MyHistoCollection &inputHistoCollection, MyEventCollec
         //fill DiJetInvMass_vs_DiJetDEta
         inputHistoCollection.h2_DiJetInvMass_vs_DiJetDEta -> Fill(Inv2j.dEta, Inv2j.Mass,weight);
 
+//________________________________________
+
+	//PU	
+	inputHistoCollection.h_NVtx->Fill(inputEventCollection.NVtx, weight);
+	inputHistoCollection.h_PU_NumInteractions->Fill(inputEventCollection.PUinteractions, weight);
 } 
 
 #endif
