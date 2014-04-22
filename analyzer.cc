@@ -166,7 +166,7 @@ int main(int argc, char** argv)
 //PU weights
 if(!eventhelper_isRealData){
  weight=PUweights->GetBinContent(PUweights->FindBin(nrecoVertex));
- std::cout<<"NVtx="<<nrecoVertex<<", weight="<<weight<<std::endl;
+ //std::cout<<"NVtx="<<nrecoVertex<<", weight="<<weight<<std::endl;
 } 
 
 // vertex selection
