@@ -164,6 +164,9 @@ if(!eventhelper_isRealData){
  //std::cout<<"NVtx="<<PileupSummaryInfo_getPU_NumInteractions[0]<<", weight="<<weight<<std::endl;
 } 
 
+baselineObjectSelectionCollection.NVtx = nrecoVertex;
+baselineObjectSelectionCollection.PUinteractions = PileupSummaryInfo_getPU_NumInteractions[0];
+
 // vertex selection
 bool goodVertex = true;
 
@@ -247,7 +250,7 @@ for(unsigned int m =0;m<muon.size();++m){
 	    if(!(tau[t].tauID_byTightIsolationMVA3newDMwLT  <= 0.5)) tights.push_back(t);
 	    else if(!(tau[t].tauID_byMediumIsolationMVA3newDMwLT  <= 0.5)) mediums.push_back(t);
 	    else if(!(tau[t].tauID_byLooseIsolationMVA3newDMwLT  <= 0.5)) looses.push_back(t);
-	    //else nones.push_back(t);
+	    else nones.push_back(t);
           }
           
 	  if(tights.size()==2) for(unsigned int t =0;t<tights.size();++t) {int i=tights[t]; TauTightIsoObjectSelectionCollection.tau.push_back(&tau[i]);}
