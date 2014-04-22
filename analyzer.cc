@@ -164,8 +164,19 @@ if(!eventhelper_isRealData){
  //std::cout<<"NVtx="<<PileupSummaryInfo_getPU_NumInteractions[0]<<", weight="<<weight<<std::endl;
 } 
 
-baselineObjectSelectionCollection.NVtx = nrecoVertex;
-baselineObjectSelectionCollection.PUinteractions = PileupSummaryInfo_getPU_NumInteractions[0];
+baselineObjectSelectionCollection.NVtx 		= nrecoVertex;
+TauTightIsoObjectSelectionCollection.NVtx 	= nrecoVertex;
+Tau1TightIsoObjectSelectionCollection.NVtx 	= nrecoVertex;
+TauMediumIsoObjectSelectionCollection.NVtx 	= nrecoVertex;
+TauLooseIsoObjectSelectionCollection.NVtx 	= nrecoVertex;
+TauNoIsoObjectSelectionCollection.NVtx 		= nrecoVertex;
+
+baselineObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getPU_NumInteractions[0];
+TauTightIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getPU_NumInteractions[0];
+Tau1TightIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getPU_NumInteractions[0];
+TauMediumIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getPU_NumInteractions[0];
+TauLooseIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getPU_NumInteractions[0];
+TauNoIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getPU_NumInteractions[0];
 
 // vertex selection
 bool goodVertex = true;
