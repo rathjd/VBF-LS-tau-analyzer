@@ -96,14 +96,9 @@ int main(int argc, char** argv)
   //---------------------------------------------------------------------------
 	TH1::SetDefaultSumw2();
 	
-	TFile file_PUnum("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/DataPUFile_22Jan2013ReReco_Run2012.root", "read");
-	TFile file_PUden("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/S10MC_PUFile.root", "read");
+	TFile file_PU("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/PUreweightHistogram.root", "read");
 	
-	TH1F *PUweights = (TH1F*)file_PUnum.Get("analyzeHiMassTau/NVertices_0");
-	PUweights->Scale(1/PUweights->Integral(0,-1));
-	TH1F *PUden = (TH1F*)file_PUden.Get("analyzeHiMassTau/NVertices_0");
-	PUden->Scale(1/PUden->Integral(0,-1));
-	PUweights->Divide(PUden);
+	TH1F *PUweights = (TH1F*)file_PU.Get("ratio");
 	
 	double weight = 1.;
 
@@ -165,8 +160,8 @@ int main(int argc, char** argv)
 
 //PU weights
 if(!eventhelper_isRealData){
- weight=PUweights->GetBinContent(PUweights->FindBin(nrecoVertex));
- //std::cout<<"NVtx="<<nrecoVertex<<", weight="<<weight<<std::endl;
+ weight=PUweights->GetBinContent(PUweights->FindBin(PileupSummaryInfo_getPU_NumInteractions[0]));
+ //std::cout<<"NVtx="<<PileupSummaryInfo_getPU_NumInteractions[0]<<", weight="<<weight<<std::endl;
 } 
 
 // vertex selection
