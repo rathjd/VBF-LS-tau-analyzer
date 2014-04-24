@@ -137,8 +137,10 @@ struct Selection {
 	  if(!RunData && RealData)	 					return; //check if sample is real data and whether you want to run on real data
 	  else (*OutputCollection).h_count->Fill("NoCuts",weight);
 	  
-	  if((RequireTriggers || RealData)	&& !(*InputCollection).passedTrigger) 		return; //check on trigger pass, if sample is real data
-	  else if(RealData) (*OutputCollection).h_count->Fill("TriggerRequirement",weight);
+	  if(RequireTriggers || RealData){
+	    if(!(*InputCollection).passedTrigger)) 		return; //check on trigger pass, if sample is real data
+	    else (*OutputCollection).h_count->Fill("TriggerRequirement",weight);
+	  }
 	  
 	  //Tau requirements
 	  
