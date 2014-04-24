@@ -92,12 +92,18 @@ int main(int argc, char** argv)
   //---------------------------------------------------------------------------
   // Histogram Collection Init
   //---------------------------------------------------------------------------
+  	double weight=1.;
+	
+	TFile file_PU("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/PUreweightHistogram.root", "read");
+	
+	TH1F *PUweights = (TH1F*)file_PU.Get("ratio");
+	
 	TH1::SetDefaultSumw2();
 	//TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/V2-FlavouredMaps.root", "read");
 	//TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/V2-ReducedFlavourResponseProfiles_25down.root", "read");
 	
-	TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/AmandeepID_Maps_AllFlavours.root", "read");
-	TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/AmandeepID_ProfiledResponses_AllFlavours.root", "read");
+	TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/AmandeepID_FlavouredMaps_PUw.root", "read");
+	TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/AmandeepID_ProfiledResponses_AllFlavours_PUw.root", "read");
 	
 	MyHistoCollection myHistoColl_Skim 		(ofile.file_, "Skim");
 	
@@ -145,15 +151,15 @@ int main(int argc, char** argv)
   //---------------------------------------------------------------------------
 
 //declare efficiencies
-double eff_real_T=0.834;//1;
-double eff_real_M=0.45*eff_real_T;//0.88;
+double eff_real_T=sqrt(0.701);//0.834;//1;
+double eff_real_M=0.442*eff_real_T;//0.88;
 double eff_real_L=0.405*eff_real_T;//0.7;
-double eff_real_N=0.217*eff_real_T;//0.43;
+double eff_real_N=0.;//0.229*eff_real_T;//0.43;
 
-double eff_fake_N=0.045/eff_real_T;//0.052;
-double eff_fake_L=0.344/eff_real_T;//0.46;
-double eff_fake_M=0.566/eff_real_T;//0.64;
-double eff_fake_T=0.613/eff_real_T;//0.72;
+double eff_fake_N=0.;//0.0451/eff_real_T;//0.052;
+double eff_fake_L=0.3522/eff_real_T;//0.46;
+double eff_fake_M=0.5729/eff_real_T;//0.64;
+double eff_fake_T=0.621/eff_real_T;//0.72;
 
 //scale ChargeMaps with Trigger efficiencies
 TH2F *ChargeMapN_eff_Uds = (TH2F*)file_eff.Get("ChargeMapN_eff_Uds");
@@ -277,13 +283,33 @@ TProfile *ScaleFactorEnergyT_Un  = (TProfile*)file_Resp.Get("ScaleFactorEnergyT_
 
   for(int entry=0; entry < nevents; ++entry)
 	{
-	if(verbose)std::cout<<entry<<std::endl;
-	//initialize event weights
-	double weightTT=0.;
-	double weightTMi=0.;
-	double weightMMi=0.;
-	double weightLLi=0.;
-	double weightNN=0.;
+	  
+	  //PU weights
+	  if(!eventhelper_isRealData){
+ 	    weight=PUweights->GetBinContent(PUweights->FindBin(PileupSummaryInfo_getPU_NumInteractions[0]));
+ 	    //std::cout<<"NVtx="<<PileupSummaryInfo_getPU_NumInteractions[0]<<", weight="<<weight<<std::endl;
+	  }
+	   
+	TauTTIsoObjectSelectionCollection.NVtx 	= nrecoVertex;
+	TauTMiIsoObjectSelectionCollection.NVtx	= nrecoVertex;
+	TauMMiIsoObjectSelectionCollection.NVtx	= nrecoVertex;
+	TauLLiIsoObjectSelectionCollection.NVtx	= nrecoVertex;
+	TauNNIsoObjectSelectionCollection.NVtx	= nrecoVertex;
+	
+	TauTTIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getPU_NumInteractions[0];
+	TauTMiIsoObjectSelectionCollection.PUinteractions	= PileupSummaryInfo_getPU_NumInteractions[0];
+	TauMMiIsoObjectSelectionCollection.PUinteractions	= PileupSummaryInfo_getPU_NumInteractions[0];
+	TauLLiIsoObjectSelectionCollection.PUinteractions	= PileupSummaryInfo_getPU_NumInteractions[0];
+	TauNNIsoObjectSelectionCollection.PUinteractions	= PileupSummaryInfo_getPU_NumInteractions[0];
+	
+	  if(verbose)std::cout<<entry<<std::endl;
+	  
+	  //initialize event weights
+	  double weightTT=0.;
+	  double weightTMi=0.;
+	  double weightMMi=0.;
+	  double weightLLi=0.;
+	  double weightNN=0.;
 	  // Read event into memory
 	  stream.read(entry);
 
@@ -1485,11 +1511,19 @@ TProfile *ScaleFactorEnergyT_Un  = (TProfile*)file_Resp.Get("ScaleFactorEnergyT_
 
 	//Event Count
 	ofile.count("NoCuts");
-if(verbose) std::cout<<"NN: "<<weightNN<<std::endl;
-if(verbose) std::cout<<"_________________________"<<std::endl;
-if(verbose)std::cout<<"selection starts"<<std::endl;
-//set sign	
-bool LS=true; 	
+	if(verbose) std::cout<<"NN: "<<weightNN<<std::endl;
+	if(verbose) std::cout<<"_________________________"<<std::endl;
+	if(verbose)std::cout<<"selection starts"<<std::endl;
+	
+	//set sign	
+	bool LS=true; 	
+	
+	//apply PU weights
+	weightTT *=weight;
+	weightTMi*=weight;
+	weightMMi*=weight;
+	weightLLi*=weight;
+	weightNN *=weight;
 	
 // ---------------------
 // -- Signal Region --
@@ -1503,6 +1537,7 @@ LS_Signal.RunData        	= false;        			//real data allowed
 LS_Signal.RequireTriggers       = false;       				//require at least one of the triggers fired
 LS_Signal.weight        	= weightTT;       			//event weight
 CutConfiguration(&LS_Signal, true, LS); 				//selection, VBF, LS
+LS_Signal.METMin = 30.;
 
 LS_Signal.select();        						//do selection, fill histograms
 
@@ -1518,6 +1553,7 @@ InvertedVBF_LS_CR2.RunData        	= false;        			//real data allowed
 InvertedVBF_LS_CR2.RequireTriggers      = false;       				//require at least one of the triggers fired
 InvertedVBF_LS_CR2.weight        	= weightTT;        			//event weight
 CutConfiguration(&InvertedVBF_LS_CR2, false, LS); 				//selection, VBF, LS
+InvertedVBF_LS_CR2.METMin = 30.;
 
 InvertedVBF_LS_CR2.select();        						//do selection, fill histograms
 }
@@ -1702,6 +1738,7 @@ OS_Signal.RunData        		= false;        			//real data allowed
 OS_Signal.RequireTriggers          	= false;       				//require at least one of the triggers fired
 OS_Signal.weight        		= weightTT;        			//event weight
 CutConfiguration(&OS_Signal, true, LS); 					//selection, VBF, LS
+OS_Signal.METMin = 30.;
 
 OS_Signal.select();        							//do selection, fill histograms
 
@@ -1717,6 +1754,7 @@ InvertedVBF_OS_CR2.RunData        	= false;        			//real data allowed
 InvertedVBF_OS_CR2.RequireTriggers      = false;       				//require at least one of the triggers fired
 InvertedVBF_OS_CR2.weight        	= weightTT;        			//event weight
 CutConfiguration(&InvertedVBF_OS_CR2, false, LS); 				//selection, VBF, LS
+InvertedVBF_OS_CR2.METMin = 30.;
 
 InvertedVBF_OS_CR2.select();        						//do selection, fill histograms
 }
