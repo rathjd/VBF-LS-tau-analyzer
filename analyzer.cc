@@ -160,7 +160,7 @@ int main(int argc, char** argv)
 
 //PU weights
 if(!eventhelper_isRealData){
- //weight=PUweights->GetBinContent(PUweights->FindBin(PileupSummaryInfo_getPU_NumInteractions[0]));
+ weight=PUweights->GetBinContent(PUweights->FindBin(PileupSummaryInfo_getPU_NumInteractions[0]));
  //std::cout<<"NVtx="<<PileupSummaryInfo_getPU_NumInteractions[0]<<", weight="<<weight<<std::endl;
 } 
 
@@ -200,7 +200,7 @@ if( goodVertex ) {
              (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v3 == 1) ||
              (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v4 == 1) ||
              (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v6 == 1)
-	     //(triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1 == 1)
+	     //|| (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1 == 1)
 
             ) { 	baselineObjectSelectionCollection.passedTrigger = true;	
             		TauTightIsoObjectSelectionCollection.passedTrigger = true;
