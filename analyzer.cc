@@ -261,7 +261,7 @@ for(unsigned int m =0;m<muon.size();++m){
 	    if(!(tau[t].tauID_byTightIsolationMVA3newDMwLT  <= 0.5)) tights.push_back(t);
 	    else if(!(tau[t].tauID_byMediumIsolationMVA3newDMwLT  <= 0.5)) mediums.push_back(t);
 	    else if(!(tau[t].tauID_byLooseIsolationMVA3newDMwLT  <= 0.5)) looses.push_back(t);
-	    else nones.push_back(t);
+	    //else nones.push_back(t);
           }
           
 	  if(tights.size()==2) for(unsigned int t =0;t<tights.size();++t) {int i=tights[t]; TauTightIsoObjectSelectionCollection.tau.push_back(&tau[i]);}
@@ -356,6 +356,7 @@ LS_Signal.RunData        	= false;        			//real data allowed
 LS_Signal.RequireTriggers       = true;       				//require at least one of the triggers fired
 LS_Signal.weight        	= weight;      				//event weight
 CutConfiguration(&LS_Signal, true, LS); 				//selection, VBF, LS
+LS_Signal.METMin = 30.;
 
 LS_Signal.select();        						//do selection, fill histograms
 
@@ -373,6 +374,7 @@ InvertedVBF_LS_CR2.RunData        	= true;        				//real data allowed
 InvertedVBF_LS_CR2.RequireTriggers      = true;       				//require at least one of the triggers fired
 InvertedVBF_LS_CR2.weight        	= weight;      				//event weight
 CutConfiguration(&InvertedVBF_LS_CR2, false, LS); 				//selection, VBF, LS
+InvertedVBF_LS_CR2.METMin = 30.;
 
 InvertedVBF_LS_CR2.select();        						//do selection, fill histograms
 
@@ -559,6 +561,7 @@ OS_Signal.RunData        		= false;        			//real data allowed
 OS_Signal.RequireTriggers          	= true;       				//require at least one of the triggers fired
 OS_Signal.weight        		= weight;      				//event weight
 CutConfiguration(&OS_Signal, true, LS); 					//selection, VBF, LS
+OS_Signal.METMin = 30.;
 
 OS_Signal.select();        							//do selection, fill histograms
 
@@ -576,6 +579,7 @@ InvertedVBF_OS_CR2.RunData        	= true;        				//real data allowed
 InvertedVBF_OS_CR2.RequireTriggers      = true;       				//require at least one of the triggers fired
 InvertedVBF_OS_CR2.weight        	= weight;      				//event weight
 CutConfiguration(&InvertedVBF_OS_CR2, false, LS); 				//selection, VBF, LS
+InvertedVBF_OS_CR2.METMin = 30.;
 
 InvertedVBF_OS_CR2.select();        						//do selection, fill histograms
 
