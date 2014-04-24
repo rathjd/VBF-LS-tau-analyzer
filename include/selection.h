@@ -138,7 +138,7 @@ struct Selection {
 	  else (*OutputCollection).h_count->Fill("NoCuts",weight);
 	  
 	  if(RequireTriggers || RealData){
-	    if(!(*InputCollection).passedTrigger)) 		return; //check on trigger pass, if sample is real data
+	    if(!(*InputCollection).passedTrigger) 		return; //check on trigger pass, if sample is real data
 	    else (*OutputCollection).h_count->Fill("TriggerRequirement",weight);
 	  }
 	  
