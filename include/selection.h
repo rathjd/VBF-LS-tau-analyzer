@@ -154,7 +154,7 @@ struct Selection {
 	    }
 	    else if(!invertTauRequirements)(*OutputCollection).h_count->Fill("AtLeastNtaus",weight);
 	  }
-	  
+
 	  if(NumberTauMax >= 0){
 	    if(!((int)(*InputCollection).tau.size()  < NumberTauMax)){	 		//check if there are less than max taus in the event
 	      if(invertTauRequirements) {
