@@ -44,6 +44,7 @@ double	GenRunInfoProduct_filterEfficiency;
 double	GenRunInfoProduct_internalXSec_value;
 std::vector<int>	PileupSummaryInfo_getBunchCrossing(10,0);
 std::vector<int>	PileupSummaryInfo_getPU_NumInteractions(10,0);
+std::vector<float>	PileupSummaryInfo_getTrueNumInteractions(10,0);
 std::vector<int>	ak5GenJets_charge(100,0);
 std::vector<double>	ak5GenJets_eta(100,0);
 std::vector<double>	ak5GenJets_mass(100,0);
@@ -195,6 +196,7 @@ int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v6;
 int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v7;
 int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v8;
 int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v9;
+int	triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1;
 int	triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3;
 int	triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4;
 int	triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2;
@@ -341,6 +343,7 @@ int	triggerresultshelper_value_HLT_DiPFJetAve80_v6;
 int	triggerresultshelper_value_HLT_DiPFJetAve80_v7;
 int	triggerresultshelper_value_HLT_DiPFJetAve80_v8;
 int	triggerresultshelper_value_HLT_DiPFJetAve80_v9;
+int	triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1;
 int	triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3;
 int	triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4;
 int	triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2;
@@ -352,6 +355,7 @@ int	nak5GenJets;
 int	npatElectron;
 int	npatJet;
 int	npatMET;
+int	npatMET2;
 int	npatMuon;
 int	npatTau;
 std::vector<size_t>	patTau_signalPFChargedHadrCands_size(200,0);
@@ -438,6 +442,15 @@ std::vector<double>	patJet_pt(200,0);
 std::vector<double>	patJet_px(200,0);
 std::vector<double>	patJet_py(200,0);
 std::vector<double>	patJet_pz(200,0);
+std::vector<double>	patMET2_energy(200,0);
+std::vector<double>	patMET2_et(200,0);
+std::vector<double>	patMET2_eta(200,0);
+std::vector<double>	patMET2_p(200,0);
+std::vector<double>	patMET2_phi(200,0);
+std::vector<double>	patMET2_pt(200,0);
+std::vector<double>	patMET2_px(200,0);
+std::vector<double>	patMET2_py(200,0);
+std::vector<double>	patMET2_pz(200,0);
 std::vector<double>	patMET_energy(200,0);
 std::vector<double>	patMET_et(200,0);
 std::vector<double>	patMET_eta(200,0);
@@ -690,6 +703,7 @@ struct PileupSummaryInfo_s
 {
   int	getBunchCrossing;
   int	getPU_NumInteractions;
+  float	getTrueNumInteractions;
 };
 std::vector<PileupSummaryInfo_s> PileupSummaryInfo(10);
 
@@ -699,6 +713,7 @@ std::ostream& operator<<(std::ostream& os, const PileupSummaryInfo_s& o)
   os << "PileupSummaryInfo" << std::endl;
   sprintf(r, "  %-32s: %f\n", "getBunchCrossing", (double)o.getBunchCrossing); os << r;
   sprintf(r, "  %-32s: %f\n", "getPU_NumInteractions", (double)o.getPU_NumInteractions); os << r;
+  sprintf(r, "  %-32s: %f\n", "getTrueNumInteractions", (double)o.getTrueNumInteractions); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -920,6 +935,36 @@ std::ostream& operator<<(std::ostream& os, const met_s& o)
 {
   char r[1024];
   os << "met" << std::endl;
+  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
+  return os;
+}
+//-----------------------------------------------------------------------------
+struct patMET2_s
+{
+  double	p;
+  double	energy;
+  double	et;
+  double	px;
+  double	py;
+  double	pz;
+  double	pt;
+  double	phi;
+  double	eta;
+};
+std::vector<patMET2_s> patMET2(200);
+
+std::ostream& operator<<(std::ostream& os, const patMET2_s& o)
+{
+  char r[1024];
+  os << "patMET2" << std::endl;
   sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
   sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
   sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
@@ -1437,6 +1482,7 @@ inline void fillPileupSummaryInfo()
     {
       PileupSummaryInfo[i].getBunchCrossing	= PileupSummaryInfo_getBunchCrossing[i];
       PileupSummaryInfo[i].getPU_NumInteractions	= PileupSummaryInfo_getPU_NumInteractions[i];
+      PileupSummaryInfo[i].getTrueNumInteractions	= PileupSummaryInfo_getTrueNumInteractions[i];
     }
 }
 
@@ -1560,6 +1606,23 @@ inline void fillpatMET()
       met[i].pt	= patMET_pt[i];
       met[i].phi	= patMET_phi[i];
       met[i].eta	= patMET_eta[i];
+    }
+}
+
+inline void fillpatMET2()
+{
+  patMET2.resize(patMET2_p.size());
+  for(unsigned int i=0; i < patMET2.size(); ++i)
+    {
+      patMET2[i].p	= patMET2_p[i];
+      patMET2[i].energy	= patMET2_energy[i];
+      patMET2[i].et	= patMET2_et[i];
+      patMET2[i].px	= patMET2_px[i];
+      patMET2[i].py	= patMET2_py[i];
+      patMET2[i].pz	= patMET2_pz[i];
+      patMET2[i].pt	= patMET2_pt[i];
+      patMET2[i].phi	= patMET2_phi[i];
+      patMET2[i].eta	= patMET2_eta[i];
     }
 }
 
@@ -1835,6 +1898,7 @@ void fillObjects()
   fillpatElectron();
   fillpatJet();
   fillpatMET();
+  fillpatMET2();
   fillpatMuon();
   fillpatTau();
   fillrecoGenParticleHelper();
@@ -1869,6 +1933,7 @@ void saveSelectedObjects()
           int j = index[i];
           PileupSummaryInfo_getBunchCrossing[i]	= PileupSummaryInfo_getBunchCrossing[j];
           PileupSummaryInfo_getPU_NumInteractions[i]	= PileupSummaryInfo_getPU_NumInteractions[j];
+          PileupSummaryInfo_getTrueNumInteractions[i]	= PileupSummaryInfo_getTrueNumInteractions[j];
         }
       nPileupSummaryInfo = n;
     }
@@ -2030,6 +2095,32 @@ void saveSelectedObjects()
           patMET_eta[i]	= patMET_eta[j];
         }
       npatMET = n;
+    }
+
+  n = 0;
+  try
+    {
+       n = indexmap["patMET2"].size();
+    }
+  catch (...)
+    {}
+  if ( n > 0 )
+    {
+      std::vector<int>& index = indexmap["patMET2"];
+      for(int i=0; i < n; ++i)
+        {
+          int j = index[i];
+          patMET2_p[i]	= patMET2_p[j];
+          patMET2_energy[i]	= patMET2_energy[j];
+          patMET2_et[i]	= patMET2_et[j];
+          patMET2_px[i]	= patMET2_px[j];
+          patMET2_py[i]	= patMET2_py[j];
+          patMET2_pz[i]	= patMET2_pz[j];
+          patMET2_pt[i]	= patMET2_pt[j];
+          patMET2_phi[i]	= patMET2_phi[j];
+          patMET2_eta[i]	= patMET2_eta[j];
+        }
+      npatMET2 = n;
     }
 
   n = 0;
@@ -2530,6 +2621,7 @@ void selectVariables(itreestream& stream)
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v7", triggerresultshelper_prescale_HLT_DiPFJetAve80_v7);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v8", triggerresultshelper_prescale_HLT_DiPFJetAve80_v8);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v9", triggerresultshelper_prescale_HLT_DiPFJetAve80_v9);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1", triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3", triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4", triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2", triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2);
@@ -2676,6 +2768,7 @@ void selectVariables(itreestream& stream)
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v7", triggerresultshelper_value_HLT_DiPFJetAve80_v7);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v8", triggerresultshelper_value_HLT_DiPFJetAve80_v8);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v9", triggerresultshelper_value_HLT_DiPFJetAve80_v9);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1", triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3", triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4", triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2", triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2);
@@ -2687,6 +2780,7 @@ void selectVariables(itreestream& stream)
   stream.select("npatElectron_patElectrons", npatElectron);
   stream.select("npatJet_selectedPatJets", npatJet);
   stream.select("npatMET_patMETs", npatMET);
+  stream.select("npatMET_patPfMetT0pcT1Txy", npatMET2);
   stream.select("npatMuon_patMuons", npatMuon);
   stream.select("npatTauHelper_patTaus", npatTau);
   stream.select("patTauHelper_patTaus.signalPFChargedHadrCands_size", patTau_signalPFChargedHadrCands_size);
@@ -2773,6 +2867,15 @@ void selectVariables(itreestream& stream)
   stream.select("patJet_selectedPatJets.px", patJet_px);
   stream.select("patJet_selectedPatJets.py", patJet_py);
   stream.select("patJet_selectedPatJets.pz", patJet_pz);
+  stream.select("patMET_patPfMetT0pcT1Txy.energy", patMET2_energy);
+  stream.select("patMET_patPfMetT0pcT1Txy.et", patMET2_et);
+  stream.select("patMET_patPfMetT0pcT1Txy.eta", patMET2_eta);
+  stream.select("patMET_patPfMetT0pcT1Txy.p", patMET2_p);
+  stream.select("patMET_patPfMetT0pcT1Txy.phi", patMET2_phi);
+  stream.select("patMET_patPfMetT0pcT1Txy.pt", patMET2_pt);
+  stream.select("patMET_patPfMetT0pcT1Txy.px", patMET2_px);
+  stream.select("patMET_patPfMetT0pcT1Txy.py", patMET2_py);
+  stream.select("patMET_patPfMetT0pcT1Txy.pz", patMET2_pz);
   stream.select("patMET_patMETs.energy", patMET_energy);
   stream.select("patMET_patMETs.et", patMET_et);
   stream.select("patMET_patMETs.eta", patMET_eta);
