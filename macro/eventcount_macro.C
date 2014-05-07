@@ -101,7 +101,10 @@ void eventcount(TFile* inputfile, bool isLSchannel){
 	//
 	vector<double> v_nonqcdbg;
 	vector<double> v_nonqcdbg_err;
-	ifstream read("nonqcdmcbg.txt");
+	std::string mccountsinputfile("");
+	if (isLSchannel) mccountsinputfile = "ls_nonqcdmcbg.txt";
+	if (!isLSchannel) mccountsinputfile = "os_nonqcdmcbg.txt";
+	ifstream read(mccountsinputfile.c_str());
 	double readtemp,readtemp_err;
 	while(read>>readtemp>>readtemp_err){
 		v_nonqcdbg.push_back(readtemp);
@@ -116,6 +119,13 @@ void eventcount(TFile* inputfile, bool isLSchannel){
 	double antitighteff_err = vbfefficiency_staterr(CR6counts, CR6counts_err, CR5counts, CR5counts_err, v_nonqcdbg[(6 - 1)], v_nonqcdbg_err[(6 - 1)], v_nonqcdbg[(5 - 1)], v_nonqcdbg_err[(5 - 1)]);
 	double antimediumeff_err = vbfefficiency_staterr(CR8counts, CR8counts_err, CR7counts, CR7counts_err, v_nonqcdbg[(8 - 1)], v_nonqcdbg_err[(8 - 1)], v_nonqcdbg[(7 - 1)], v_nonqcdbg_err[(7 - 1)]);
 	double antilooseeff_err = vbfefficiency_staterr(CR10counts, CR10counts_err, CR9counts, CR9counts_err, v_nonqcdbg[(10 - 1)], v_nonqcdbg_err[(10 - 1)], v_nonqcdbg[(9 - 1)], v_nonqcdbg_err[(9 - 1)]);
+
+	//onetighteff = 0.0295485;
+	//onetighteff_err = 0.0114218;
+	//antitighteff = 0.0832767;
+	//antitighteff_err = 0.0281216;
+	//antimediumeff = 0.055978;
+	//antimediumeff_err = 0.0313339;
 
 	double onetightbgpred = qcdbackgroundprediction(CR2counts, v_nonqcdbg[(2 - 1)], onetighteff);
 	double antitightbgpred = qcdbackgroundprediction(CR2counts, v_nonqcdbg[(2 - 1)], antitighteff);
