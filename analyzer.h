@@ -947,7 +947,7 @@ std::ostream& operator<<(std::ostream& os, const met_s& o)
   return os;
 }
 //-----------------------------------------------------------------------------
-struct patMET2_s
+struct met2_s
 {
   double	p;
   double	energy;
@@ -959,12 +959,12 @@ struct patMET2_s
   double	phi;
   double	eta;
 };
-std::vector<patMET2_s> patMET2(200);
+std::vector<met2_s> met2(200);
 
-std::ostream& operator<<(std::ostream& os, const patMET2_s& o)
+std::ostream& operator<<(std::ostream& os, const met2_s& o)
 {
   char r[1024];
-  os << "patMET2" << std::endl;
+  os << "met2" << std::endl;
   sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
   sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
   sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
@@ -1611,18 +1611,18 @@ inline void fillpatMET()
 
 inline void fillpatMET2()
 {
-  patMET2.resize(patMET2_p.size());
-  for(unsigned int i=0; i < patMET2.size(); ++i)
+  met2.resize(patMET2_p.size());
+  for(unsigned int i=0; i < met2.size(); ++i)
     {
-      patMET2[i].p	= patMET2_p[i];
-      patMET2[i].energy	= patMET2_energy[i];
-      patMET2[i].et	= patMET2_et[i];
-      patMET2[i].px	= patMET2_px[i];
-      patMET2[i].py	= patMET2_py[i];
-      patMET2[i].pz	= patMET2_pz[i];
-      patMET2[i].pt	= patMET2_pt[i];
-      patMET2[i].phi	= patMET2_phi[i];
-      patMET2[i].eta	= patMET2_eta[i];
+      met2[i].p	= patMET2_p[i];
+      met2[i].energy	= patMET2_energy[i];
+      met2[i].et	= patMET2_et[i];
+      met2[i].px	= patMET2_px[i];
+      met2[i].py	= patMET2_py[i];
+      met2[i].pz	= patMET2_pz[i];
+      met2[i].pt	= patMET2_pt[i];
+      met2[i].phi	= patMET2_phi[i];
+      met2[i].eta	= patMET2_eta[i];
     }
 }
 
