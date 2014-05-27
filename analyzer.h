@@ -420,6 +420,7 @@ std::vector<int>	patJet_charge(200,0);
 std::vector<float>	patJet_chargedEmEnergyFraction(200,0);
 std::vector<float>	patJet_chargedHadronEnergyFraction(200,0);
 std::vector<int>	patJet_chargedHadronMultiplicity(200,0);
+std::vector<int>	patJet_chargedMultiplicity(200,0);
 std::vector<float>	patJet_electronEnergy(200,0);
 std::vector<float>	patJet_electronEnergyFraction(200,0);
 std::vector<int>	patJet_electronMultiplicity(200,0);
@@ -823,6 +824,7 @@ struct jet_s
   float	HFEMEnergy;
   float	HFEMEnergyFraction;
   int	chargedHadronMultiplicity;
+  int	chargedMultiplicity;
   int	neutralHadronMultiplicity;
   int	photonMultiplicity;
   int	electronMultiplicity;
@@ -885,6 +887,7 @@ std::ostream& operator<<(std::ostream& os, const jet_s& o)
   sprintf(r, "  %-32s: %f\n", "HFEMEnergy", (double)o.HFEMEnergy); os << r;
   sprintf(r, "  %-32s: %f\n", "HFEMEnergyFraction", (double)o.HFEMEnergyFraction); os << r;
   sprintf(r, "  %-32s: %f\n", "chargedHadronMultiplicity", (double)o.chargedHadronMultiplicity); os << r;
+  sprintf(r, "  %-32s: %f\n", "chargedMultiplicity", (double)o.chargedMultiplicity); os << r;
   sprintf(r, "  %-32s: %f\n", "neutralHadronMultiplicity", (double)o.neutralHadronMultiplicity); os << r;
   sprintf(r, "  %-32s: %f\n", "photonMultiplicity", (double)o.photonMultiplicity); os << r;
   sprintf(r, "  %-32s: %f\n", "electronMultiplicity", (double)o.electronMultiplicity); os << r;
@@ -1560,6 +1563,7 @@ inline void fillpatJet()
       jet[i].HFEMEnergy	= patJet_HFEMEnergy[i];
       jet[i].HFEMEnergyFraction	= patJet_HFEMEnergyFraction[i];
       jet[i].chargedHadronMultiplicity	= patJet_chargedHadronMultiplicity[i];
+      jet[i].chargedMultiplicity	= patJet_chargedMultiplicity[i];
       jet[i].neutralHadronMultiplicity	= patJet_neutralHadronMultiplicity[i];
       jet[i].photonMultiplicity	= patJet_photonMultiplicity[i];
       jet[i].electronMultiplicity	= patJet_electronMultiplicity[i];
@@ -2038,6 +2042,7 @@ void saveSelectedObjects()
           patJet_HFEMEnergy[i]	= patJet_HFEMEnergy[j];
           patJet_HFEMEnergyFraction[i]	= patJet_HFEMEnergyFraction[j];
           patJet_chargedHadronMultiplicity[i]	= patJet_chargedHadronMultiplicity[j];
+          patJet_chargedMultiplicity[i]	= patJet_chargedMultiplicity[j];
           patJet_neutralHadronMultiplicity[i]	= patJet_neutralHadronMultiplicity[j];
           patJet_photonMultiplicity[i]	= patJet_photonMultiplicity[j];
           patJet_electronMultiplicity[i]	= patJet_electronMultiplicity[j];
@@ -2845,6 +2850,7 @@ void selectVariables(itreestream& stream)
   stream.select("patJet_selectedPatJets.chargedEmEnergyFraction", patJet_chargedEmEnergyFraction);
   stream.select("patJet_selectedPatJets.chargedHadronEnergyFraction", patJet_chargedHadronEnergyFraction);
   stream.select("patJet_selectedPatJets.chargedHadronMultiplicity", patJet_chargedHadronMultiplicity);
+  stream.select("patJet_selectedPatJets.chargedMultiplicity", patJet_chargedMultiplicity);
   stream.select("patJet_selectedPatJets.electronEnergy", patJet_electronEnergy);
   stream.select("patJet_selectedPatJets.electronEnergyFraction", patJet_electronEnergyFraction);
   stream.select("patJet_selectedPatJets.electronMultiplicity", patJet_electronMultiplicity);
