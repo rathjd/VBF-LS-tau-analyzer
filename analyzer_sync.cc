@@ -231,6 +231,8 @@ for(unsigned int m =0;m<muon.size();++m){
 	std::vector<int> nones;
 	
           //smart tau selection
+	  bool debug = false;
+	  if (( met2[0].pt > 37.439)&&( met2[0].pt < 37.44) )debug = true;
 	  for(unsigned int t =0;t<tau.size();++t){
             if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
             if(!(       tau[t].pt >= 45.                                            				)) continue;
@@ -244,7 +246,6 @@ for(unsigned int m =0;m<muon.size();++m){
 	    else if(!(tau[t].tauID_byLooseIsolationMVA3newDMwLT  <= 0.5)) looses.push_back(t);
 	    //else nones.push_back(t);
           }
-          
 	  if(tights.size()==2) for(unsigned int t =0;t<tights.size();++t) {int i=tights[t]; TauTightIsoObjectSelectionCollection.tau.push_back(&tau[i]);}
 	  else if(tights.size()==1 && (mediums.size()+looses.size()+nones.size())==1) {tights.insert(tights.end(),mediums.begin(), mediums.end()); tights.insert(tights.end(),looses.begin(), looses.end()); tights.insert(tights.end(),nones.begin(), nones.end()); for(unsigned int t =0;t<tights.size();++t) {int i=tights[t]; Tau1TightIsoObjectSelectionCollection.tau.push_back(&tau[i]);}}
 	  else if(mediums.size()>=1 && (mediums.size()+looses.size()+nones.size())==2) {mediums.insert(mediums.end(), looses.begin(), looses.end()); mediums.insert(mediums.end(), nones.begin(), nones.end()); for(unsigned int t =0;t<mediums.size();++t) {int i=mediums[t]; TauMediumIsoObjectSelectionCollection.tau.push_back(&tau[i]);}}
@@ -257,11 +258,36 @@ for(unsigned int m =0;m<muon.size();++m){
 	  realTauMass(TauLooseIsoObjectSelectionCollection);
 	  realTauMass(TauNoIsoObjectSelectionCollection);
 	  
+	  if ( debug ) {
+		cout << "------- Taus after object selection--------"<<endl;
+		for (unsigned int i = 0; i < TauTightIsoObjectSelectionCollection.tau.size(); i++ ){
+			cout << "Jet#" << i << ": Pt " << TauTightIsoObjectSelectionCollection.tau[i]->pt << 
+						" Eta " << TauTightIsoObjectSelectionCollection.tau[i]->eta <<
+						" Phi " << TauTightIsoObjectSelectionCollection.tau[i]->phi <<
+						" Energy " << TauTightIsoObjectSelectionCollection.tau[i]->energy << endl;
+		}
+		cout << endl;
+	  }
+
           // jet && bjet selection
 	  // ? id ?
+	  if ( debug ) {
+		cout << "-------Jets before object selection--------"<<endl;
+		for (unsigned int i = 0; i < jet.size(); i++ ){
+			cout << "Jet#" << i << ": Pt " << jet[i].pt << 
+						" Eta " << jet[i].eta <<
+						" Phi " << jet[i].phi <<
+						" Energy " << jet[i].energy << endl;
+		}
+		cout << endl;	
+	  } 
 	  for(unsigned int j = 0;j<jet.size();++j){
-	    if(!(      jet[j].pt >= 30.                                                	)) continue;  // Original value 20
-	    if(!(      fabs(jet[j].eta) <= 5.0                                          )) continue;
+	    if (debug) cout << endl;
+	    if (debug) cout << "Object selection Cuts for Jet#" << j << ":" <<endl;
+	    if(!(      jet[j].pt >= 30.                                                	)) {if (debug) cout << "----Pt cut FAILED" <<endl;continue;}  // Original value 20
+	    if (debug) cout << "----Pt cut passed" <<endl;
+	    if(!(      fabs(jet[j].eta) <= 5.0                                          )) {if (debug) cout << "----Eta cut FAILED" <<endl;continue;}
+	    if (debug) cout << "----Eta cut passed" <<endl;
 	    double baseDistance = TauJetMinDistance(baselineObjectSelectionCollection, jet[j].eta, jet[j].phi);
 	    double mainDistance = TauJetMinDistance(TauTightIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
 	    double T1Distance = TauJetMinDistance(Tau1TightIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
@@ -269,17 +295,34 @@ for(unsigned int m =0;m<muon.size();++m){
 	    double looseDistance = TauJetMinDistance(TauLooseIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
 	    double NoDistance = TauJetMinDistance(TauNoIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
             bool jetid=true;
+	    bool failcutnotification = false;
 	    if(!(      (jet[j].neutralHadronEnergy + jet[j].HFHadronEnergy) / jet[j].energy < 0.99      )) jetid=false;
+	    if (debug && jetid) cout << "----(neutralHadE+HFHadE)/energy cut passed" <<endl;
+	    if (debug && !(jetid) ) { cout << "(neutralHadE+HFHadE)/energy = " << ((jet[j].neutralHadronEnergy + jet[j].HFHadronEnergy) / jet[j].energy) <<endl;}
+	    if (debug && !(jetid) && !(failcutnotification)) {failcutnotification = true; cout << "----(neutralHadE+HFHadE)/energy cut FAILED" <<endl;}
 	    if(!(      jet[j].neutralEmEnergyFraction < 0.99                                            )) jetid=false;
+	    if (debug && jetid) cout << "----neutralEmEnergyFraction cut passed" <<endl;
+	    if (debug && !(jetid) && !(failcutnotification)) {failcutnotification = true; cout << "----neutralEmEnergyFraction cut FAILED" <<endl;}
 	    if(!(      jet[j].numberOfDaughters > 1                                                     )) jetid=false;
+	    if (debug && jetid) cout << "----numberOfDaughters cut passed" <<endl;
+	    if (debug && !(jetid) && !(failcutnotification)) {failcutnotification = true; cout << "----numberOfDaughters cut FAILED" <<endl;}
 	    if(fabs(jet[j].eta) < 2.4) {
               if(!(      jet[j].chargedHadronEnergyFraction > 0                        			)) jetid=false;
+	      if (debug && jetid) cout << "----eta < 2.4 + chargedHadronEnergyFraction cut passed" <<endl;
+	    if (debug && !(jetid) && !(failcutnotification)) {failcutnotification = true; cout << "----eta < 2.4 + chargedHadronEnergyFraction cut FAILED" <<endl;}
               if(!(      jet[j].chargedEmEnergyFraction < 0.99                            		)) jetid=false;
+	      if (debug && jetid) cout << "----eta < 2.4 + chargedEmEnergyFraction cut passed" <<endl;
+	    if (debug && !(jetid) && !(failcutnotification)) {failcutnotification = true; cout << "----eta < 2.4 + chargedEmEnergyFraction cut FAILED" <<endl;}
               if(!(      jet[j].chargedMultiplicity > 0                                 		)) jetid=false;
+	      if (debug && jetid) cout << "----eta < 2.4 + chargedMultiplicity cut passed" <<endl;
+	    if (debug && !(jetid) && !(failcutnotification)) {failcutnotification = true; cout << "----eta < 2.4 + chargedMultiplicity cut FAILED" <<endl;}
             }
             if(      /*jet[j].pt >= 50.  &&*/ jetid		){
               if(	baseDistance >= 0.3	) baselineObjectSelectionCollection.jet.push_back(&jet[j]);	
 	      if(	mainDistance >= 0.3	) TauTightIsoObjectSelectionCollection.jet.push_back(&jet[j]);
+	      if (debug && jetid ) cout << "Jet-Tau distance: " << mainDistance << endl;
+	      if (debug && jetid && mainDistance >= 0.3) cout << "----Tau isolation cut passed" <<endl;
+	      if (debug && !(mainDistance >= 0.3) && !(failcutnotification)) {failcutnotification = true; cout << "----Tau isolation cut FAILED" <<endl;}
 	      if(	T1Distance >= 0.3	) Tau1TightIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	      if(	mediumDistance >= 0.3	) TauMediumIsoObjectSelectionCollection.jet.push_back(&jet[j]);
 	      if(	looseDistance >= 0.3	) TauLooseIsoObjectSelectionCollection.jet.push_back(&jet[j]);
@@ -294,7 +337,6 @@ for(unsigned int m =0;m<muon.size();++m){
 	      if(	NoDistance  >= 0.3	) TauNoIsoObjectSelectionCollection.bjet.push_back(&jet[j]);
             }
 	  }
-
 	  //MET selection
 	  baselineObjectSelectionCollection.met2.push_back(&met2[0]);
 	  TauTightIsoObjectSelectionCollection.met2.push_back(&met2[0]);
@@ -382,6 +424,21 @@ while (true) {
 
 	if(!( (double)(TauTightIsoObjectSelectionCollection).met2[0]->pt) > 30.) break;
 		else (myHistoColl_OS_SignalRegion).h_count->Fill("MinMETCut",weight);
+
+	if (( (TauTightIsoObjectSelectionCollection).met2[0]->pt > 37.439)&&( (TauTightIsoObjectSelectionCollection).met2[0]->pt < 37.44) ) {
+		cout << endl;
+		cout << "Jets used after object selection for VB selection" << endl;
+		for (unsigned int i = 0; i < (TauTightIsoObjectSelectionCollection).jet.size(); i++ ){
+		
+			cout << "Jet#" << i << ": Pt " << (double)(TauTightIsoObjectSelectionCollection).jet[i]->pt << 
+						" Eta " << (double)(TauTightIsoObjectSelectionCollection).jet[i]->eta <<
+						" Phi " << (double)(TauTightIsoObjectSelectionCollection).jet[i]->phi <<
+						" Energy " << (double)(TauTightIsoObjectSelectionCollection).jet[i]->energy << endl;
+		
+		}
+	
+	
+	}
 
 	//find index of leading jets
 	pair<unsigned int,unsigned int> jetIndex=LeadingJets((TauTightIsoObjectSelectionCollection));
