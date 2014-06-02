@@ -105,7 +105,7 @@ int main(int argc, char** argv)
 	TH1::SetDefaultSumw2();
 	
 	//TFile file_PU("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/PUreweightHistogram.root", "read");
-	TFile file_PUdata("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/DataPUFile_Full2012.root", "read");
+	TFile file_PUdata("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/DataPUFile_22Jan2013ReReco_Run2012.root", "read");
 	TFile file_PUmc("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/S10MC_PUFile.root", "read");
 	
 	//TH1F *PUweights = (TH1F*)file_PU.Get("ratio");
@@ -314,8 +314,7 @@ for(unsigned int m =0;m<muon.size();++m){
 	    double looseDistance = TauJetMinDistance(TauLooseIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
 	    double NoDistance = TauJetMinDistance(TauNoIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
             bool jetid=true;
-	    if(!(      jet[j].HFHadronEnergyFraction < 0.99                                            )) jetid=false;
-	    if(!(      jet[j].neutralHadronEnergyFraction < 0.99                                            )) jetid=false;
+	    if(!(      jet[j].neutralHadronEnergyFraction < 0.99                                        )) jetid=false;
 	    if(!(      jet[j].neutralEmEnergyFraction < 0.99                                            )) jetid=false;
 	    if(!(      jet[j].numberOfDaughters > 1                                                     )) jetid=false;
 	    if(fabs(jet[j].eta) < 2.4) {
@@ -374,7 +373,7 @@ bool LS=true;
 // ---------------------
 // -- Signal Region --
 // ---------------------
-if(TauTightIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauTightIsoObjectSelectionCollection.jet.size()>=2){
 Selection LS_Signal("LS_Signal"); 					//label and initialisation
 LS_Signal.InputCollection 	= &TauTightIsoObjectSelectionCollection;//input collection
 LS_Signal.OutputCollection 	= &myHistoColl_LS_SignalRegion;        	//output collection
@@ -406,12 +405,12 @@ InvertedVBF_LS_CR2.METMin = 30.;
 InvertedVBF_LS_CR2.select(false);        						//do selection, fill histograms
 
 if(InvertedVBF_LS_CR2.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollection.passedTrigger, 2);
-}
+//}
 
 // -------------------------------
 // -- CENTRAL + 1 Tight Tau CR3 --
 // -------------------------------
-if(Tau1TightIsoObjectSelectionCollection.jet.size()>=2){
+//if(Tau1TightIsoObjectSelectionCollection.jet.size()>=2){
 Selection oneTightTau_LS_CR3("oneTightTau_LS_CR3"); 					//label and initialisation
 oneTightTau_LS_CR3.InputCollection 	= &Tau1TightIsoObjectSelectionCollection;	//input collection
 oneTightTau_LS_CR3.OutputCollection 	= &myHistoColl_LS_CR3;        			//output collection
@@ -436,12 +435,12 @@ InvertedVBF_oneTightTau_LS_CR4.weight        	= weight;      					//event weight
 CutConfiguration(&InvertedVBF_oneTightTau_LS_CR4, false, LS); 					//selection, VBF, LS
 
 InvertedVBF_oneTightTau_LS_CR4.select(false);        						//do selection, fill histograms
-}
+//}
 
 // ----------------------------------
 // -- CENTRAL + Anti Tight Tau CR5 --
 // ----------------------------------
-if(TauMediumIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauMediumIsoObjectSelectionCollection.jet.size()>=2){
 Selection AntiTightTau_LS_CR5("AntiTightTau_LS_CR5"); 					//label and initialisation
 AntiTightTau_LS_CR5.InputCollection 	= &TauMediumIsoObjectSelectionCollection;	//input collection
 AntiTightTau_LS_CR5.OutputCollection 	= &myHistoColl_LS_CR5;        			//output collection
@@ -467,12 +466,12 @@ InvertedVBF_AntiTightTau_LS_CR6.weight        		= weight;      					//event weig
 CutConfiguration(&InvertedVBF_AntiTightTau_LS_CR6, false, LS); 						//selection, VBF, LS
 
 InvertedVBF_AntiTightTau_LS_CR6.select(false);        							//do selection, fill histograms
-}	
+//}	
 
 // -----------------------------------
 // -- CENTRAL + Anti Medium Tau CR7 --
 // -----------------------------------
-if(TauLooseIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauLooseIsoObjectSelectionCollection.jet.size()>=2){
 Selection AntiMediumTau_LS_CR7("AntiMediumTau_LS_CR7"); 			//label and initialisation
 AntiMediumTau_LS_CR7.InputCollection 	= &TauLooseIsoObjectSelectionCollection;//input collection
 AntiMediumTau_LS_CR7.OutputCollection 	= &myHistoColl_LS_CR7;        		//output collection
@@ -498,12 +497,12 @@ InvertedVBF_AntiMediumTau_LS_CR8.weight        		= weight;      				//event weig
 CutConfiguration(&InvertedVBF_AntiMediumTau_LS_CR8, false, LS); 				//selection, VBF, LS
 
 InvertedVBF_AntiMediumTau_LS_CR8.select(false);        						//do selection, fill histograms
-}
+//}
 
 // -----------------------------------
 // -- CENTRAL + Anti Loose Tau CR9 ---
 // -----------------------------------
-if(TauNoIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauNoIsoObjectSelectionCollection.jet.size()>=2){
 Selection AntiLooseTau_LS_CR9("AntiLooseTauLS_CR9"); 				//label and initialisation
 AntiLooseTau_LS_CR9.InputCollection 	= &TauNoIsoObjectSelectionCollection;	//input collection
 AntiLooseTau_LS_CR9.OutputCollection 	= &myHistoColl_LS_CR9;        		//output collection
@@ -529,7 +528,7 @@ InvertedVBF_AntiLooseTau_LS_CR10.weight        		= weight;      				//event weig
 CutConfiguration(&InvertedVBF_AntiLooseTau_LS_CR10, false, LS); 				//selection, VBF, LS
 
 InvertedVBF_AntiLooseTau_LS_CR10.select(false);        						//do selection, fill histograms
-}
+//}
 
 // ---------------------
 // -- Z -> TauTau CR --
@@ -616,7 +615,7 @@ if(InvertedVBF_OS_CR2.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollect
 // -------------------------------
 // -- CENTRAL + 1 Tight Tau CR3 --
 // -------------------------------
-if(Tau1TightIsoObjectSelectionCollection.jet.size()>=2){
+//if(Tau1TightIsoObjectSelectionCollection.jet.size()>=2){
 Selection oneTightTau_OS_CR3("oneTightTau_OS_CR3"); 					//label and initialisation
 oneTightTau_OS_CR3.InputCollection 	= &Tau1TightIsoObjectSelectionCollection;	//input collection
 oneTightTau_OS_CR3.OutputCollection 	= &myHistoColl_OS_CR3;        			//output collection
@@ -641,12 +640,12 @@ InvertedVBF_oneTightTau_OS_CR4.weight        		= weight;      					//event weigh
 CutConfiguration(&InvertedVBF_oneTightTau_OS_CR4, false, LS); 						//selection, VBF, LS
 
 InvertedVBF_oneTightTau_OS_CR4.select(false);        							//do selection, fill histograms
-}
+//}
 
 // ----------------------------------
 // -- CENTRAL + Anti Tight Tau CR5 --
 // ----------------------------------
-if(TauMediumIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauMediumIsoObjectSelectionCollection.jet.size()>=2){
 Selection AntiTightTau_OS_CR5("AntiTightTau_OS_CR5"); 						//label and initialisation
 AntiTightTau_OS_CR5.InputCollection 		= &TauMediumIsoObjectSelectionCollection;	//input collection
 AntiTightTau_OS_CR5.OutputCollection 		= &myHistoColl_OS_CR5;        			//output collection
@@ -672,12 +671,12 @@ InvertedVBF_AntiTightTau_OS_CR6.weight        		= weight;      					//event weig
 CutConfiguration(&InvertedVBF_AntiTightTau_OS_CR6, false, LS); 						//selection, VBF, LS
 
 InvertedVBF_AntiTightTau_OS_CR6.select(false);        							//do selection, fill histograms
-}	
+//}	
 
 // -----------------------------------
 // -- CENTRAL + Anti Medium Tau CR7 --
 // -----------------------------------
-if(TauLooseIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauLooseIsoObjectSelectionCollection.jet.size()>=2){
 Selection AntiMediumTau_OS_CR7("AntiMediumTau_OS_CR7"); 			//label and initialisation
 AntiMediumTau_OS_CR7.InputCollection 	= &TauLooseIsoObjectSelectionCollection;//input collection
 AntiMediumTau_OS_CR7.OutputCollection 	= &myHistoColl_OS_CR7;        		//output collection
@@ -703,12 +702,12 @@ InvertedVBF_AntiMediumTau_OS_CR8.weight        		= weight;      				//event weig
 CutConfiguration(&InvertedVBF_AntiMediumTau_OS_CR8, false, LS); 				//selection, VBF, LS
 
 InvertedVBF_AntiMediumTau_OS_CR8.select(false);        						//do selection, fill histograms
-}
+//}
 
 // -----------------------------------
 // -- CENTRAL + Anti Loose Tau CR9 ---
 // -----------------------------------
-if(TauNoIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauNoIsoObjectSelectionCollection.jet.size()>=2){
 Selection AntiLooseTau_OS_CR9("AntiLooseTau_OS_CR9"); 				//label and initialisation
 AntiLooseTau_OS_CR9.InputCollection 	= &TauNoIsoObjectSelectionCollection;	//input collection
 AntiLooseTau_OS_CR9.OutputCollection 	= &myHistoColl_OS_CR9;        		//output collection
@@ -734,7 +733,7 @@ InvertedVBF_AntiLooseTau_OS_CR10.weight        		= weight;        			//event wei
 CutConfiguration(&InvertedVBF_AntiLooseTau_OS_CR10, false, LS); 				//selection, VBF, LS
 
 InvertedVBF_AntiLooseTau_OS_CR10.select(false);        						//do selection, fill histograms
-}
+//}
 
 // ---------------------
 // -- Z -> TauTau CR --
