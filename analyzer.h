@@ -1,10 +1,10 @@
 #ifndef ANALYZER_H
 #define ANALYZER_H
 //-----------------------------------------------------------------------------
-// File:        analyzer.h
+// File: analyzer.h
 // Description: Analyzer header for ntuples created by TheNtupleMaker
-// Created:     Wed Dec 18 18:04:53 2013 by mkanalyzer.py
-// Author:      Daniele Marconi
+// Created: Wed Dec 18 18:04:53 2013 by mkanalyzer.py
+// Author: Daniele Marconi
 //-----------------------------------------------------------------------------
 // -- System
 
@@ -44,6 +44,7 @@ double	GenRunInfoProduct_filterEfficiency;
 double	GenRunInfoProduct_internalXSec_value;
 std::vector<int>	PileupSummaryInfo_getBunchCrossing(10,0);
 std::vector<int>	PileupSummaryInfo_getPU_NumInteractions(10,0);
+std::vector<float>	PileupSummaryInfo_getTrueNumInteractions(10,0);
 std::vector<int>	ak5GenJets_charge(100,0);
 std::vector<double>	ak5GenJets_eta(100,0);
 std::vector<double>	ak5GenJets_mass(100,0);
@@ -195,6 +196,7 @@ int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v6;
 int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v7;
 int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v8;
 int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v9;
+int	triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1;
 int	triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3;
 int	triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4;
 int	triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2;
@@ -341,6 +343,7 @@ int	triggerresultshelper_value_HLT_DiPFJetAve80_v6;
 int	triggerresultshelper_value_HLT_DiPFJetAve80_v7;
 int	triggerresultshelper_value_HLT_DiPFJetAve80_v8;
 int	triggerresultshelper_value_HLT_DiPFJetAve80_v9;
+int	triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1;
 int	triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3;
 int	triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4;
 int	triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2;
@@ -352,6 +355,7 @@ int	nak5GenJets;
 int	npatElectron;
 int	npatJet;
 int	npatMET;
+int	npatMET2;
 int	npatMuon;
 int	npatTau;
 std::vector<size_t>	patTau_signalPFChargedHadrCands_size(200,0);
@@ -416,6 +420,7 @@ std::vector<int>	patJet_charge(200,0);
 std::vector<float>	patJet_chargedEmEnergyFraction(200,0);
 std::vector<float>	patJet_chargedHadronEnergyFraction(200,0);
 std::vector<int>	patJet_chargedHadronMultiplicity(200,0);
+std::vector<int>	patJet_chargedMultiplicity(200,0);
 std::vector<float>	patJet_electronEnergy(200,0);
 std::vector<float>	patJet_electronEnergyFraction(200,0);
 std::vector<int>	patJet_electronMultiplicity(200,0);
@@ -438,6 +443,15 @@ std::vector<double>	patJet_pt(200,0);
 std::vector<double>	patJet_px(200,0);
 std::vector<double>	patJet_py(200,0);
 std::vector<double>	patJet_pz(200,0);
+std::vector<double>	patMET2_energy(200,0);
+std::vector<double>	patMET2_et(200,0);
+std::vector<double>	patMET2_eta(200,0);
+std::vector<double>	patMET2_p(200,0);
+std::vector<double>	patMET2_phi(200,0);
+std::vector<double>	patMET2_pt(200,0);
+std::vector<double>	patMET2_px(200,0);
+std::vector<double>	patMET2_py(200,0);
+std::vector<double>	patMET2_pz(200,0);
 std::vector<double>	patMET_energy(200,0);
 std::vector<double>	patMET_et(200,0);
 std::vector<double>	patMET_eta(200,0);
@@ -657,10 +671,10 @@ std::map<std::string, std::vector<int> > indexmap;
 void initialize()
 {
   for(std::map<std::string, std::vector<int> >::iterator
-    item=indexmap.begin(); 
+    item=indexmap.begin();
     item != indexmap.end();
-	++item)
-	item->second.clear();
+++item)
+item->second.clear();
 }
 
 void select(std::string objname)
@@ -676,7 +690,7 @@ void select(std::string objname, int index)
     }
   catch (...)
     {
-      std::cout << "*** perhaps you failed to call select for " 
+      std::cout << "*** perhaps you failed to call select for "
                 << objname << std::endl;
       assert(0);
     }
@@ -690,6 +704,7 @@ struct PileupSummaryInfo_s
 {
   int	getBunchCrossing;
   int	getPU_NumInteractions;
+  float	getTrueNumInteractions;
 };
 std::vector<PileupSummaryInfo_s> PileupSummaryInfo(10);
 
@@ -697,8 +712,9 @@ std::ostream& operator<<(std::ostream& os, const PileupSummaryInfo_s& o)
 {
   char r[1024];
   os << "PileupSummaryInfo" << std::endl;
-  sprintf(r, "  %-32s: %f\n", "getBunchCrossing", (double)o.getBunchCrossing); os << r;
-  sprintf(r, "  %-32s: %f\n", "getPU_NumInteractions", (double)o.getPU_NumInteractions); os << r;
+  sprintf(r, " %-32s: %f\n", "getBunchCrossing", (double)o.getBunchCrossing); os << r;
+  sprintf(r, " %-32s: %f\n", "getPU_NumInteractions", (double)o.getPU_NumInteractions); os << r;
+  sprintf(r, " %-32s: %f\n", "getTrueNumInteractions", (double)o.getTrueNumInteractions); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -716,11 +732,11 @@ std::ostream& operator<<(std::ostream& os, const ak5GenJets_s& o)
 {
   char r[1024];
   os << "ak5GenJets" << std::endl;
-  sprintf(r, "  %-32s: %f\n", "charge", (double)o.charge); os << r;
-  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, "  %-32s: %f\n", "mass", (double)o.mass); os << r;
+  sprintf(r, " %-32s: %f\n", "charge", (double)o.charge); os << r;
+  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, " %-32s: %f\n", "mass", (double)o.mass); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -755,28 +771,28 @@ std::ostream& operator<<(std::ostream& os, const electron_s& o)
 {
   char r[1024];
   os << "electron" << std::endl;
-  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, "  %-32s: %f\n", "eSuperClusterOverP", (double)o.eSuperClusterOverP); os << r;
-  sprintf(r, "  %-32s: %f\n", "deltaEtaSuperClusterTrackAtVtx", (double)o.deltaEtaSuperClusterTrackAtVtx); os << r;
-  sprintf(r, "  %-32s: %f\n", "deltaPhiSuperClusterTrackAtVtx", (double)o.deltaPhiSuperClusterTrackAtVtx); os << r;
-  sprintf(r, "  %-32s: %f\n", "sigmaIetaIeta", (double)o.sigmaIetaIeta); os << r;
-  sprintf(r, "  %-32s: %f\n", "scE1x5", (double)o.scE1x5); os << r;
-  sprintf(r, "  %-32s: %f\n", "scE2x5Max", (double)o.scE2x5Max); os << r;
-  sprintf(r, "  %-32s: %f\n", "scE5x5", (double)o.scE5x5); os << r;
-  sprintf(r, "  %-32s: %f\n", "hadronicOverEm", (double)o.hadronicOverEm); os << r;
-  sprintf(r, "  %-32s: %f\n", "dr04TkSumPt", (double)o.dr04TkSumPt); os << r;
-  sprintf(r, "  %-32s: %f\n", "dr04EcalRecHitSumEt", (double)o.dr04EcalRecHitSumEt); os << r;
-  sprintf(r, "  %-32s: %f\n", "gsfTrack_dxy", (double)o.gsfTrack_dxy); os << r;
-  sprintf(r, "  %-32s: %f\n", "gsfTrack_d0", (double)o.gsfTrack_d0); os << r;
-  sprintf(r, "  %-32s: %f\n", "gsfTrack_dz", (double)o.gsfTrack_dz); os << r;
+  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, " %-32s: %f\n", "eSuperClusterOverP", (double)o.eSuperClusterOverP); os << r;
+  sprintf(r, " %-32s: %f\n", "deltaEtaSuperClusterTrackAtVtx", (double)o.deltaEtaSuperClusterTrackAtVtx); os << r;
+  sprintf(r, " %-32s: %f\n", "deltaPhiSuperClusterTrackAtVtx", (double)o.deltaPhiSuperClusterTrackAtVtx); os << r;
+  sprintf(r, " %-32s: %f\n", "sigmaIetaIeta", (double)o.sigmaIetaIeta); os << r;
+  sprintf(r, " %-32s: %f\n", "scE1x5", (double)o.scE1x5); os << r;
+  sprintf(r, " %-32s: %f\n", "scE2x5Max", (double)o.scE2x5Max); os << r;
+  sprintf(r, " %-32s: %f\n", "scE5x5", (double)o.scE5x5); os << r;
+  sprintf(r, " %-32s: %f\n", "hadronicOverEm", (double)o.hadronicOverEm); os << r;
+  sprintf(r, " %-32s: %f\n", "dr04TkSumPt", (double)o.dr04TkSumPt); os << r;
+  sprintf(r, " %-32s: %f\n", "dr04EcalRecHitSumEt", (double)o.dr04EcalRecHitSumEt); os << r;
+  sprintf(r, " %-32s: %f\n", "gsfTrack_dxy", (double)o.gsfTrack_dxy); os << r;
+  sprintf(r, " %-32s: %f\n", "gsfTrack_d0", (double)o.gsfTrack_d0); os << r;
+  sprintf(r, " %-32s: %f\n", "gsfTrack_dz", (double)o.gsfTrack_dz); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -808,6 +824,7 @@ struct jet_s
   float	HFEMEnergy;
   float	HFEMEnergyFraction;
   int	chargedHadronMultiplicity;
+  int	chargedMultiplicity;
   int	neutralHadronMultiplicity;
   int	photonMultiplicity;
   int	electronMultiplicity;
@@ -844,61 +861,62 @@ std::ostream& operator<<(std::ostream& os, const jet_s& o)
 {
   char r[1024];
   os << "jet" << std::endl;
-  sprintf(r, "  %-32s: %f\n", "charge", (double)o.charge); os << r;
-  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, "  %-32s: %f\n", "neutralHadronEnergy", (double)o.neutralHadronEnergy); os << r;
-  sprintf(r, "  %-32s: %f\n", "chargedHadronEnergyFraction", (double)o.chargedHadronEnergyFraction); os << r;
-  sprintf(r, "  %-32s: %f\n", "neutralHadronEnergyFraction", (double)o.neutralHadronEnergyFraction); os << r;
-  sprintf(r, "  %-32s: %f\n", "chargedEmEnergyFraction", (double)o.chargedEmEnergyFraction); os << r;
-  sprintf(r, "  %-32s: %f\n", "neutralEmEnergyFraction", (double)o.neutralEmEnergyFraction); os << r;
-  sprintf(r, "  %-32s: %f\n", "photonEnergy", (double)o.photonEnergy); os << r;
-  sprintf(r, "  %-32s: %f\n", "photonEnergyFraction", (double)o.photonEnergyFraction); os << r;
-  sprintf(r, "  %-32s: %f\n", "electronEnergy", (double)o.electronEnergy); os << r;
-  sprintf(r, "  %-32s: %f\n", "electronEnergyFraction", (double)o.electronEnergyFraction); os << r;
-  sprintf(r, "  %-32s: %f\n", "muonEnergy", (double)o.muonEnergy); os << r;
-  sprintf(r, "  %-32s: %f\n", "muonEnergyFraction", (double)o.muonEnergyFraction); os << r;
-  sprintf(r, "  %-32s: %f\n", "HFHadronEnergy", (double)o.HFHadronEnergy); os << r;
-  sprintf(r, "  %-32s: %f\n", "HFHadronEnergyFraction", (double)o.HFHadronEnergyFraction); os << r;
-  sprintf(r, "  %-32s: %f\n", "HFEMEnergy", (double)o.HFEMEnergy); os << r;
-  sprintf(r, "  %-32s: %f\n", "HFEMEnergyFraction", (double)o.HFEMEnergyFraction); os << r;
-  sprintf(r, "  %-32s: %f\n", "chargedHadronMultiplicity", (double)o.chargedHadronMultiplicity); os << r;
-  sprintf(r, "  %-32s: %f\n", "neutralHadronMultiplicity", (double)o.neutralHadronMultiplicity); os << r;
-  sprintf(r, "  %-32s: %f\n", "photonMultiplicity", (double)o.photonMultiplicity); os << r;
-  sprintf(r, "  %-32s: %f\n", "electronMultiplicity", (double)o.electronMultiplicity); os << r;
-  sprintf(r, "  %-32s: %f\n", "HFHadronMultiplicity", (double)o.HFHadronMultiplicity); os << r;
-  sprintf(r, "  %-32s: %f\n", "HFEMMultiplicity", (double)o.HFEMMultiplicity); os << r;
-  sprintf(r, "  %-32s: %f\n", "numberOfDaughters", (double)o.numberOfDaughters); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_impactParameterTagInfos", (double)o.bDiscriminator_impactParameterTagInfos); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_secondaryVertexTagInfos", (double)o.bDiscriminator_secondaryVertexTagInfos); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_softMuonTagInfos", (double)o.bDiscriminator_softMuonTagInfos); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_secondaryVertexNegativeTagInfos", (double)o.bDiscriminator_secondaryVertexNegativeTagInfos); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_inclusiveSecondaryVertexFinderTagInfos", (double)o.bDiscriminator_inclusiveSecondaryVertexFinderTagInfos); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_softElectronTagInfos", (double)o.bDiscriminator_softElectronTagInfos); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_jetBProbabilityBJetTags", (double)o.bDiscriminator_jetBProbabilityBJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_jetProbabilityBJetTags", (double)o.bDiscriminator_jetProbabilityBJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_trackCountingHighPurBJetTags", (double)o.bDiscriminator_trackCountingHighPurBJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_trackCountingHighEffBJetTags", (double)o.bDiscriminator_trackCountingHighEffBJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexHighEffBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexHighEffBJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexHighPurBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexHighPurBJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_combinedSecondaryVertexBJetTags", (double)o.bDiscriminator_combinedSecondaryVertexBJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_combinedSecondaryVertexMVABJetTags", (double)o.bDiscriminator_combinedSecondaryVertexMVABJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_softMuonBJetTags", (double)o.bDiscriminator_softMuonBJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_softMuonByPtBJetTags", (double)o.bDiscriminator_softMuonByPtBJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_softMuonByIP3dBJetTags", (double)o.bDiscriminator_softMuonByIP3dBJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_negativeTrackCountingHighEffJetTags", (double)o.bDiscriminator_negativeTrackCountingHighEffJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_negativeTrackCountingHighPurJetTags", (double)o.bDiscriminator_negativeTrackCountingHighPurJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_combinedInclusiveSecondaryVertexBJetTags", (double)o.bDiscriminator_combinedInclusiveSecondaryVertexBJetTags); os << r;
-  sprintf(r, "  %-32s: %f\n", "bDiscriminator_combinedMVABJetTags", (double)o.bDiscriminator_combinedMVABJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "charge", (double)o.charge); os << r;
+  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, " %-32s: %f\n", "neutralHadronEnergy", (double)o.neutralHadronEnergy); os << r;
+  sprintf(r, " %-32s: %f\n", "chargedHadronEnergyFraction", (double)o.chargedHadronEnergyFraction); os << r;
+  sprintf(r, " %-32s: %f\n", "neutralHadronEnergyFraction", (double)o.neutralHadronEnergyFraction); os << r;
+  sprintf(r, " %-32s: %f\n", "chargedEmEnergyFraction", (double)o.chargedEmEnergyFraction); os << r;
+  sprintf(r, " %-32s: %f\n", "neutralEmEnergyFraction", (double)o.neutralEmEnergyFraction); os << r;
+  sprintf(r, " %-32s: %f\n", "photonEnergy", (double)o.photonEnergy); os << r;
+  sprintf(r, " %-32s: %f\n", "photonEnergyFraction", (double)o.photonEnergyFraction); os << r;
+  sprintf(r, " %-32s: %f\n", "electronEnergy", (double)o.electronEnergy); os << r;
+  sprintf(r, " %-32s: %f\n", "electronEnergyFraction", (double)o.electronEnergyFraction); os << r;
+  sprintf(r, " %-32s: %f\n", "muonEnergy", (double)o.muonEnergy); os << r;
+  sprintf(r, " %-32s: %f\n", "muonEnergyFraction", (double)o.muonEnergyFraction); os << r;
+  sprintf(r, " %-32s: %f\n", "HFHadronEnergy", (double)o.HFHadronEnergy); os << r;
+  sprintf(r, " %-32s: %f\n", "HFHadronEnergyFraction", (double)o.HFHadronEnergyFraction); os << r;
+  sprintf(r, " %-32s: %f\n", "HFEMEnergy", (double)o.HFEMEnergy); os << r;
+  sprintf(r, " %-32s: %f\n", "HFEMEnergyFraction", (double)o.HFEMEnergyFraction); os << r;
+  sprintf(r, " %-32s: %f\n", "chargedHadronMultiplicity", (double)o.chargedHadronMultiplicity); os << r;
+  sprintf(r, " %-32s: %f\n", "chargedMultiplicity", (double)o.chargedMultiplicity); os << r;
+  sprintf(r, " %-32s: %f\n", "neutralHadronMultiplicity", (double)o.neutralHadronMultiplicity); os << r;
+  sprintf(r, " %-32s: %f\n", "photonMultiplicity", (double)o.photonMultiplicity); os << r;
+  sprintf(r, " %-32s: %f\n", "electronMultiplicity", (double)o.electronMultiplicity); os << r;
+  sprintf(r, " %-32s: %f\n", "HFHadronMultiplicity", (double)o.HFHadronMultiplicity); os << r;
+  sprintf(r, " %-32s: %f\n", "HFEMMultiplicity", (double)o.HFEMMultiplicity); os << r;
+  sprintf(r, " %-32s: %f\n", "numberOfDaughters", (double)o.numberOfDaughters); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_impactParameterTagInfos", (double)o.bDiscriminator_impactParameterTagInfos); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_secondaryVertexTagInfos", (double)o.bDiscriminator_secondaryVertexTagInfos); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_softMuonTagInfos", (double)o.bDiscriminator_softMuonTagInfos); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_secondaryVertexNegativeTagInfos", (double)o.bDiscriminator_secondaryVertexNegativeTagInfos); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_inclusiveSecondaryVertexFinderTagInfos", (double)o.bDiscriminator_inclusiveSecondaryVertexFinderTagInfos); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_softElectronTagInfos", (double)o.bDiscriminator_softElectronTagInfos); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_jetBProbabilityBJetTags", (double)o.bDiscriminator_jetBProbabilityBJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_jetProbabilityBJetTags", (double)o.bDiscriminator_jetProbabilityBJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_trackCountingHighPurBJetTags", (double)o.bDiscriminator_trackCountingHighPurBJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_trackCountingHighEffBJetTags", (double)o.bDiscriminator_trackCountingHighEffBJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexHighEffBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexHighEffBJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexHighPurBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexHighPurBJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_combinedSecondaryVertexBJetTags", (double)o.bDiscriminator_combinedSecondaryVertexBJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_combinedSecondaryVertexMVABJetTags", (double)o.bDiscriminator_combinedSecondaryVertexMVABJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_softMuonBJetTags", (double)o.bDiscriminator_softMuonBJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_softMuonByPtBJetTags", (double)o.bDiscriminator_softMuonByPtBJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_softMuonByIP3dBJetTags", (double)o.bDiscriminator_softMuonByIP3dBJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_negativeTrackCountingHighEffJetTags", (double)o.bDiscriminator_negativeTrackCountingHighEffJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_negativeTrackCountingHighPurJetTags", (double)o.bDiscriminator_negativeTrackCountingHighPurJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_combinedInclusiveSecondaryVertexBJetTags", (double)o.bDiscriminator_combinedInclusiveSecondaryVertexBJetTags); os << r;
+  sprintf(r, " %-32s: %f\n", "bDiscriminator_combinedMVABJetTags", (double)o.bDiscriminator_combinedMVABJetTags); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -920,15 +938,45 @@ std::ostream& operator<<(std::ostream& os, const met_s& o)
 {
   char r[1024];
   os << "met" << std::endl;
-  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
+  return os;
+}
+//-----------------------------------------------------------------------------
+struct met2_s
+{
+  double	p;
+  double	energy;
+  double	et;
+  double	px;
+  double	py;
+  double	pz;
+  double	pt;
+  double	phi;
+  double	eta;
+};
+std::vector<met2_s> met2(200);
+
+std::ostream& operator<<(std::ostream& os, const met2_s& o)
+{
+  char r[1024];
+  os << "met2" << std::endl;
+  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -977,42 +1025,42 @@ std::ostream& operator<<(std::ostream& os, const muon_s& o)
 {
   char r[1024];
   os << "muon" << std::endl;
-  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, "  %-32s: %f\n", "isGlobalMuon", (double)o.isGlobalMuon); os << r;
-  sprintf(r, "  %-32s: %f\n", "isTrackerMuon", (double)o.isTrackerMuon); os << r;
-  sprintf(r, "  %-32s: %f\n", "isPFMuon", (double)o.isPFMuon); os << r;
-  sprintf(r, "  %-32s: %f\n", "pfIsolationR03_sumChargedHadronPt", (double)o.pfIsolationR03_sumChargedHadronPt); os << r;
-  sprintf(r, "  %-32s: %f\n", "pfIsolationR03_sumChargedParticlePt", (double)o.pfIsolationR03_sumChargedParticlePt); os << r;
-  sprintf(r, "  %-32s: %f\n", "pfIsolationR03_sumNeutralHadronEt", (double)o.pfIsolationR03_sumNeutralHadronEt); os << r;
-  sprintf(r, "  %-32s: %f\n", "pfIsolationR03_sumNeutralHadronEtHighThreshold", (double)o.pfIsolationR03_sumNeutralHadronEtHighThreshold); os << r;
-  sprintf(r, "  %-32s: %f\n", "pfIsolationR03_sumPhotonEt", (double)o.pfIsolationR03_sumPhotonEt); os << r;
-  sprintf(r, "  %-32s: %f\n", "pfIsolationR03_sumPhotonEtHighThreshold", (double)o.pfIsolationR03_sumPhotonEtHighThreshold); os << r;
-  sprintf(r, "  %-32s: %f\n", "pfIsolationR03_sumPUPt", (double)o.pfIsolationR03_sumPUPt); os << r;
-  sprintf(r, "  %-32s: %f\n", "pfIsolationR04_sumChargedHadronPt", (double)o.pfIsolationR04_sumChargedHadronPt); os << r;
-  sprintf(r, "  %-32s: %f\n", "pfIsolationR04_sumChargedParticlePt", (double)o.pfIsolationR04_sumChargedParticlePt); os << r;
-  sprintf(r, "  %-32s: %f\n", "pfIsolationR04_sumNeutralHadronEt", (double)o.pfIsolationR04_sumNeutralHadronEt); os << r;
-  sprintf(r, "  %-32s: %f\n", "pfIsolationR04_sumNeutralHadronEtHighThreshold", (double)o.pfIsolationR04_sumNeutralHadronEtHighThreshold); os << r;
-  sprintf(r, "  %-32s: %f\n", "pfIsolationR04_sumPhotonEt", (double)o.pfIsolationR04_sumPhotonEt); os << r;
-  sprintf(r, "  %-32s: %f\n", "pfIsolationR04_sumPhotonEtHighThreshold", (double)o.pfIsolationR04_sumPhotonEtHighThreshold); os << r;
-  sprintf(r, "  %-32s: %f\n", "pfIsolationR04_sumPUPt", (double)o.pfIsolationR04_sumPUPt); os << r;
-  sprintf(r, "  %-32s: %f\n", "numberOfMatchedStations", (double)o.numberOfMatchedStations); os << r;
-  sprintf(r, "  %-32s: %f\n", "innerTrack_normalizedChi2", (double)o.innerTrack_normalizedChi2); os << r;
-  sprintf(r, "  %-32s: %f\n", "innerTrack_dxy", (double)o.innerTrack_dxy); os << r;
-  sprintf(r, "  %-32s: %f\n", "innerTrack_dz", (double)o.innerTrack_dz); os << r;
-  sprintf(r, "  %-32s: %f\n", "innerTrack_hitPattern_numberOfValidPixelHits", (double)o.innerTrack_hitPattern_numberOfValidPixelHits); os << r;
-  sprintf(r, "  %-32s: %f\n", "innerTrack_hitPattern_pixelLayersWithMeasurement", (double)o.innerTrack_hitPattern_pixelLayersWithMeasurement); os << r;
-  sprintf(r, "  %-32s: %f\n", "globalTrack_normalizedChi2", (double)o.globalTrack_normalizedChi2); os << r;
-  sprintf(r, "  %-32s: %f\n", "globalTrack_hitPattern_numberOfValidMuonHits", (double)o.globalTrack_hitPattern_numberOfValidMuonHits); os << r;
-  sprintf(r, "  %-32s: %f\n", "muonBestTrack_dxy", (double)o.muonBestTrack_dxy); os << r;
-  sprintf(r, "  %-32s: %f\n", "muonBestTrack_dz", (double)o.muonBestTrack_dz); os << r;
+  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, " %-32s: %f\n", "isGlobalMuon", (double)o.isGlobalMuon); os << r;
+  sprintf(r, " %-32s: %f\n", "isTrackerMuon", (double)o.isTrackerMuon); os << r;
+  sprintf(r, " %-32s: %f\n", "isPFMuon", (double)o.isPFMuon); os << r;
+  sprintf(r, " %-32s: %f\n", "pfIsolationR03_sumChargedHadronPt", (double)o.pfIsolationR03_sumChargedHadronPt); os << r;
+  sprintf(r, " %-32s: %f\n", "pfIsolationR03_sumChargedParticlePt", (double)o.pfIsolationR03_sumChargedParticlePt); os << r;
+  sprintf(r, " %-32s: %f\n", "pfIsolationR03_sumNeutralHadronEt", (double)o.pfIsolationR03_sumNeutralHadronEt); os << r;
+  sprintf(r, " %-32s: %f\n", "pfIsolationR03_sumNeutralHadronEtHighThreshold", (double)o.pfIsolationR03_sumNeutralHadronEtHighThreshold); os << r;
+  sprintf(r, " %-32s: %f\n", "pfIsolationR03_sumPhotonEt", (double)o.pfIsolationR03_sumPhotonEt); os << r;
+  sprintf(r, " %-32s: %f\n", "pfIsolationR03_sumPhotonEtHighThreshold", (double)o.pfIsolationR03_sumPhotonEtHighThreshold); os << r;
+  sprintf(r, " %-32s: %f\n", "pfIsolationR03_sumPUPt", (double)o.pfIsolationR03_sumPUPt); os << r;
+  sprintf(r, " %-32s: %f\n", "pfIsolationR04_sumChargedHadronPt", (double)o.pfIsolationR04_sumChargedHadronPt); os << r;
+  sprintf(r, " %-32s: %f\n", "pfIsolationR04_sumChargedParticlePt", (double)o.pfIsolationR04_sumChargedParticlePt); os << r;
+  sprintf(r, " %-32s: %f\n", "pfIsolationR04_sumNeutralHadronEt", (double)o.pfIsolationR04_sumNeutralHadronEt); os << r;
+  sprintf(r, " %-32s: %f\n", "pfIsolationR04_sumNeutralHadronEtHighThreshold", (double)o.pfIsolationR04_sumNeutralHadronEtHighThreshold); os << r;
+  sprintf(r, " %-32s: %f\n", "pfIsolationR04_sumPhotonEt", (double)o.pfIsolationR04_sumPhotonEt); os << r;
+  sprintf(r, " %-32s: %f\n", "pfIsolationR04_sumPhotonEtHighThreshold", (double)o.pfIsolationR04_sumPhotonEtHighThreshold); os << r;
+  sprintf(r, " %-32s: %f\n", "pfIsolationR04_sumPUPt", (double)o.pfIsolationR04_sumPUPt); os << r;
+  sprintf(r, " %-32s: %f\n", "numberOfMatchedStations", (double)o.numberOfMatchedStations); os << r;
+  sprintf(r, " %-32s: %f\n", "innerTrack_normalizedChi2", (double)o.innerTrack_normalizedChi2); os << r;
+  sprintf(r, " %-32s: %f\n", "innerTrack_dxy", (double)o.innerTrack_dxy); os << r;
+  sprintf(r, " %-32s: %f\n", "innerTrack_dz", (double)o.innerTrack_dz); os << r;
+  sprintf(r, " %-32s: %f\n", "innerTrack_hitPattern_numberOfValidPixelHits", (double)o.innerTrack_hitPattern_numberOfValidPixelHits); os << r;
+  sprintf(r, " %-32s: %f\n", "innerTrack_hitPattern_pixelLayersWithMeasurement", (double)o.innerTrack_hitPattern_pixelLayersWithMeasurement); os << r;
+  sprintf(r, " %-32s: %f\n", "globalTrack_normalizedChi2", (double)o.globalTrack_normalizedChi2); os << r;
+  sprintf(r, " %-32s: %f\n", "globalTrack_hitPattern_numberOfValidMuonHits", (double)o.globalTrack_hitPattern_numberOfValidMuonHits); os << r;
+  sprintf(r, " %-32s: %f\n", "muonBestTrack_dxy", (double)o.muonBestTrack_dxy); os << r;
+  sprintf(r, " %-32s: %f\n", "muonBestTrack_dz", (double)o.muonBestTrack_dz); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -1031,7 +1079,7 @@ struct tau_s
   double	vx;
   double	vy;
   double	vz;
-  double        mass;
+  double mass;
   float	tauID_againstElectronDeadECAL;
   float	tauID_againstElectronLoose;
   float	tauID_againstElectronLooseMVA5;
@@ -1123,103 +1171,103 @@ std::ostream& operator<<(std::ostream& os, const tau_s& o)
 {
   char r[1024];
   os << "tau" << std::endl;
-  sprintf(r, "  %-32s: %f\n", "charge", (double)o.charge); os << r;
-  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, "  %-32s: %f\n", "vx", (double)o.vx); os << r;
-  sprintf(r, "  %-32s: %f\n", "vy", (double)o.vy); os << r;
-  sprintf(r, "  %-32s: %f\n", "vz", (double)o.vz); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronDeadECAL", (double)o.tauID_againstElectronDeadECAL); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronLoose", (double)o.tauID_againstElectronLoose); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronLooseMVA5", (double)o.tauID_againstElectronLooseMVA5); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronMVA5category", (double)o.tauID_againstElectronMVA5category); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronMVA5raw", (double)o.tauID_againstElectronMVA5raw); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronMedium", (double)o.tauID_againstElectronMedium); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronMediumMVA5", (double)o.tauID_againstElectronMediumMVA5); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronTight", (double)o.tauID_againstElectronTight); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronTightMVA5", (double)o.tauID_againstElectronTightMVA5); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronVLooseMVA5", (double)o.tauID_againstElectronVLooseMVA5); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronVTightMVA5", (double)o.tauID_againstElectronVTightMVA5); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonLoose", (double)o.tauID_againstMuonLoose); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonLoose2", (double)o.tauID_againstMuonLoose2); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonLoose3", (double)o.tauID_againstMuonLoose3); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonLooseMVA", (double)o.tauID_againstMuonLooseMVA); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonMVAraw", (double)o.tauID_againstMuonMVAraw); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonMedium", (double)o.tauID_againstMuonMedium); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonMedium2", (double)o.tauID_againstMuonMedium2); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonMediumMVA", (double)o.tauID_againstMuonMediumMVA); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonTight", (double)o.tauID_againstMuonTight); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonTight2", (double)o.tauID_againstMuonTight2); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonTight3", (double)o.tauID_againstMuonTight3); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonTightMVA", (double)o.tauID_againstMuonTightMVA); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byCombinedIsolationDeltaBetaCorrRaw", (double)o.tauID_byCombinedIsolationDeltaBetaCorrRaw); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits", (double)o.tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byIsolationMVA3newDMwLTraw", (double)o.tauID_byIsolationMVA3newDMwLTraw); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byIsolationMVA3newDMwoLTraw", (double)o.tauID_byIsolationMVA3newDMwoLTraw); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byIsolationMVA3oldDMwLTraw", (double)o.tauID_byIsolationMVA3oldDMwLTraw); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byIsolationMVA3oldDMwoLTraw", (double)o.tauID_byIsolationMVA3oldDMwoLTraw); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byLooseCombinedIsolationDeltaBetaCorr", (double)o.tauID_byLooseCombinedIsolationDeltaBetaCorr); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits", (double)o.tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byLooseIsolation", (double)o.tauID_byLooseIsolation); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byLooseIsolationMVA3newDMwLT", (double)o.tauID_byLooseIsolationMVA3newDMwLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byLooseIsolationMVA3newDMwoLT", (double)o.tauID_byLooseIsolationMVA3newDMwoLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byLooseIsolationMVA3oldDMwLT", (double)o.tauID_byLooseIsolationMVA3oldDMwLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byLooseIsolationMVA3oldDMwoLT", (double)o.tauID_byLooseIsolationMVA3oldDMwoLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byMediumCombinedIsolationDeltaBetaCorr", (double)o.tauID_byMediumCombinedIsolationDeltaBetaCorr); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits", (double)o.tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byMediumIsolationMVA3newDMwLT", (double)o.tauID_byMediumIsolationMVA3newDMwLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byMediumIsolationMVA3newDMwoLT", (double)o.tauID_byMediumIsolationMVA3newDMwoLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byMediumIsolationMVA3oldDMwLT", (double)o.tauID_byMediumIsolationMVA3oldDMwLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byMediumIsolationMVA3oldDMwoLT", (double)o.tauID_byMediumIsolationMVA3oldDMwoLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byTightCombinedIsolationDeltaBetaCorr", (double)o.tauID_byTightCombinedIsolationDeltaBetaCorr); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byTightCombinedIsolationDeltaBetaCorr3Hits", (double)o.tauID_byTightCombinedIsolationDeltaBetaCorr3Hits); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byTightIsolationMVA3newDMwLT", (double)o.tauID_byTightIsolationMVA3newDMwLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byTightIsolationMVA3newDMwoLT", (double)o.tauID_byTightIsolationMVA3newDMwoLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byTightIsolationMVA3oldDMwLT", (double)o.tauID_byTightIsolationMVA3oldDMwLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byTightIsolationMVA3oldDMwoLT", (double)o.tauID_byTightIsolationMVA3oldDMwoLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byVLooseCombinedIsolationDeltaBetaCorr", (double)o.tauID_byVLooseCombinedIsolationDeltaBetaCorr); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byVLooseIsolationMVA3newDMwLT", (double)o.tauID_byVLooseIsolationMVA3newDMwLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byVLooseIsolationMVA3newDMwoLT", (double)o.tauID_byVLooseIsolationMVA3newDMwoLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byVLooseIsolationMVA3oldDMwLT", (double)o.tauID_byVLooseIsolationMVA3oldDMwLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byVLooseIsolationMVA3oldDMwoLT", (double)o.tauID_byVLooseIsolationMVA3oldDMwoLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byVTightIsolationMVA3newDMwLT", (double)o.tauID_byVTightIsolationMVA3newDMwLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byVTightIsolationMVA3newDMwoLT", (double)o.tauID_byVTightIsolationMVA3newDMwoLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byVTightIsolationMVA3oldDMwLT", (double)o.tauID_byVTightIsolationMVA3oldDMwLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byVTightIsolationMVA3oldDMwoLT", (double)o.tauID_byVTightIsolationMVA3oldDMwoLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byVVTightIsolationMVA3newDMwLT", (double)o.tauID_byVVTightIsolationMVA3newDMwLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byVVTightIsolationMVA3newDMwoLT", (double)o.tauID_byVVTightIsolationMVA3newDMwoLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byVVTightIsolationMVA3oldDMwLT", (double)o.tauID_byVVTightIsolationMVA3oldDMwLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_byVVTightIsolationMVA3oldDMwoLT", (double)o.tauID_byVVTightIsolationMVA3oldDMwoLT); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_chargedIsoPtSum", (double)o.tauID_chargedIsoPtSum); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_decayModeFinding", (double)o.tauID_decayModeFinding); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_decayModeFindingNewDMs", (double)o.tauID_decayModeFindingNewDMs); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_decayModeFindingOldDMs", (double)o.tauID_decayModeFindingOldDMs); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_neutralIsoPtSum", (double)o.tauID_neutralIsoPtSum); os << r;
-  sprintf(r, "  %-32s: %f\n", "tauID_puCorrPtSum", (double)o.tauID_puCorrPtSum); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_p", (double)o.leadPFChargedHadrCand_p); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_energy", (double)o.leadPFChargedHadrCand_energy); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_et", (double)o.leadPFChargedHadrCand_et); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_mass", (double)o.leadPFChargedHadrCand_mass); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_massSqr", (double)o.leadPFChargedHadrCand_massSqr); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_mt", (double)o.leadPFChargedHadrCand_mt); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_mtSqr", (double)o.leadPFChargedHadrCand_mtSqr); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_px", (double)o.leadPFChargedHadrCand_px); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_py", (double)o.leadPFChargedHadrCand_py); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_pz", (double)o.leadPFChargedHadrCand_pz); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_pt", (double)o.leadPFChargedHadrCand_pt); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_phi", (double)o.leadPFChargedHadrCand_phi); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_theta", (double)o.leadPFChargedHadrCand_theta); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_eta", (double)o.leadPFChargedHadrCand_eta); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_rapidity", (double)o.leadPFChargedHadrCand_rapidity); os << r;
-  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_y", (double)o.leadPFChargedHadrCand_y); os << r;
-  sprintf(r, "  %-32s: %f\n", "signalPFChargedHadrCands_size", (double)o.signalPFChargedHadrCands_size); os << r;
+  sprintf(r, " %-32s: %f\n", "charge", (double)o.charge); os << r;
+  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, " %-32s: %f\n", "vx", (double)o.vx); os << r;
+  sprintf(r, " %-32s: %f\n", "vy", (double)o.vy); os << r;
+  sprintf(r, " %-32s: %f\n", "vz", (double)o.vz); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstElectronDeadECAL", (double)o.tauID_againstElectronDeadECAL); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstElectronLoose", (double)o.tauID_againstElectronLoose); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstElectronLooseMVA5", (double)o.tauID_againstElectronLooseMVA5); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstElectronMVA5category", (double)o.tauID_againstElectronMVA5category); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstElectronMVA5raw", (double)o.tauID_againstElectronMVA5raw); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstElectronMedium", (double)o.tauID_againstElectronMedium); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstElectronMediumMVA5", (double)o.tauID_againstElectronMediumMVA5); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstElectronTight", (double)o.tauID_againstElectronTight); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstElectronTightMVA5", (double)o.tauID_againstElectronTightMVA5); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstElectronVLooseMVA5", (double)o.tauID_againstElectronVLooseMVA5); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstElectronVTightMVA5", (double)o.tauID_againstElectronVTightMVA5); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstMuonLoose", (double)o.tauID_againstMuonLoose); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstMuonLoose2", (double)o.tauID_againstMuonLoose2); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstMuonLoose3", (double)o.tauID_againstMuonLoose3); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstMuonLooseMVA", (double)o.tauID_againstMuonLooseMVA); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstMuonMVAraw", (double)o.tauID_againstMuonMVAraw); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstMuonMedium", (double)o.tauID_againstMuonMedium); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstMuonMedium2", (double)o.tauID_againstMuonMedium2); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstMuonMediumMVA", (double)o.tauID_againstMuonMediumMVA); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstMuonTight", (double)o.tauID_againstMuonTight); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstMuonTight2", (double)o.tauID_againstMuonTight2); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstMuonTight3", (double)o.tauID_againstMuonTight3); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_againstMuonTightMVA", (double)o.tauID_againstMuonTightMVA); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byCombinedIsolationDeltaBetaCorrRaw", (double)o.tauID_byCombinedIsolationDeltaBetaCorrRaw); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits", (double)o.tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byIsolationMVA3newDMwLTraw", (double)o.tauID_byIsolationMVA3newDMwLTraw); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byIsolationMVA3newDMwoLTraw", (double)o.tauID_byIsolationMVA3newDMwoLTraw); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byIsolationMVA3oldDMwLTraw", (double)o.tauID_byIsolationMVA3oldDMwLTraw); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byIsolationMVA3oldDMwoLTraw", (double)o.tauID_byIsolationMVA3oldDMwoLTraw); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byLooseCombinedIsolationDeltaBetaCorr", (double)o.tauID_byLooseCombinedIsolationDeltaBetaCorr); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits", (double)o.tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byLooseIsolation", (double)o.tauID_byLooseIsolation); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byLooseIsolationMVA3newDMwLT", (double)o.tauID_byLooseIsolationMVA3newDMwLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byLooseIsolationMVA3newDMwoLT", (double)o.tauID_byLooseIsolationMVA3newDMwoLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byLooseIsolationMVA3oldDMwLT", (double)o.tauID_byLooseIsolationMVA3oldDMwLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byLooseIsolationMVA3oldDMwoLT", (double)o.tauID_byLooseIsolationMVA3oldDMwoLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byMediumCombinedIsolationDeltaBetaCorr", (double)o.tauID_byMediumCombinedIsolationDeltaBetaCorr); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits", (double)o.tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byMediumIsolationMVA3newDMwLT", (double)o.tauID_byMediumIsolationMVA3newDMwLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byMediumIsolationMVA3newDMwoLT", (double)o.tauID_byMediumIsolationMVA3newDMwoLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byMediumIsolationMVA3oldDMwLT", (double)o.tauID_byMediumIsolationMVA3oldDMwLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byMediumIsolationMVA3oldDMwoLT", (double)o.tauID_byMediumIsolationMVA3oldDMwoLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byTightCombinedIsolationDeltaBetaCorr", (double)o.tauID_byTightCombinedIsolationDeltaBetaCorr); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byTightCombinedIsolationDeltaBetaCorr3Hits", (double)o.tauID_byTightCombinedIsolationDeltaBetaCorr3Hits); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byTightIsolationMVA3newDMwLT", (double)o.tauID_byTightIsolationMVA3newDMwLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byTightIsolationMVA3newDMwoLT", (double)o.tauID_byTightIsolationMVA3newDMwoLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byTightIsolationMVA3oldDMwLT", (double)o.tauID_byTightIsolationMVA3oldDMwLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byTightIsolationMVA3oldDMwoLT", (double)o.tauID_byTightIsolationMVA3oldDMwoLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byVLooseCombinedIsolationDeltaBetaCorr", (double)o.tauID_byVLooseCombinedIsolationDeltaBetaCorr); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byVLooseIsolationMVA3newDMwLT", (double)o.tauID_byVLooseIsolationMVA3newDMwLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byVLooseIsolationMVA3newDMwoLT", (double)o.tauID_byVLooseIsolationMVA3newDMwoLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byVLooseIsolationMVA3oldDMwLT", (double)o.tauID_byVLooseIsolationMVA3oldDMwLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byVLooseIsolationMVA3oldDMwoLT", (double)o.tauID_byVLooseIsolationMVA3oldDMwoLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byVTightIsolationMVA3newDMwLT", (double)o.tauID_byVTightIsolationMVA3newDMwLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byVTightIsolationMVA3newDMwoLT", (double)o.tauID_byVTightIsolationMVA3newDMwoLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byVTightIsolationMVA3oldDMwLT", (double)o.tauID_byVTightIsolationMVA3oldDMwLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byVTightIsolationMVA3oldDMwoLT", (double)o.tauID_byVTightIsolationMVA3oldDMwoLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byVVTightIsolationMVA3newDMwLT", (double)o.tauID_byVVTightIsolationMVA3newDMwLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byVVTightIsolationMVA3newDMwoLT", (double)o.tauID_byVVTightIsolationMVA3newDMwoLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byVVTightIsolationMVA3oldDMwLT", (double)o.tauID_byVVTightIsolationMVA3oldDMwLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_byVVTightIsolationMVA3oldDMwoLT", (double)o.tauID_byVVTightIsolationMVA3oldDMwoLT); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_chargedIsoPtSum", (double)o.tauID_chargedIsoPtSum); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_decayModeFinding", (double)o.tauID_decayModeFinding); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_decayModeFindingNewDMs", (double)o.tauID_decayModeFindingNewDMs); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_decayModeFindingOldDMs", (double)o.tauID_decayModeFindingOldDMs); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_neutralIsoPtSum", (double)o.tauID_neutralIsoPtSum); os << r;
+  sprintf(r, " %-32s: %f\n", "tauID_puCorrPtSum", (double)o.tauID_puCorrPtSum); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_p", (double)o.leadPFChargedHadrCand_p); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_energy", (double)o.leadPFChargedHadrCand_energy); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_et", (double)o.leadPFChargedHadrCand_et); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_mass", (double)o.leadPFChargedHadrCand_mass); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_massSqr", (double)o.leadPFChargedHadrCand_massSqr); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_mt", (double)o.leadPFChargedHadrCand_mt); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_mtSqr", (double)o.leadPFChargedHadrCand_mtSqr); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_px", (double)o.leadPFChargedHadrCand_px); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_py", (double)o.leadPFChargedHadrCand_py); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_pz", (double)o.leadPFChargedHadrCand_pz); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_pt", (double)o.leadPFChargedHadrCand_pt); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_phi", (double)o.leadPFChargedHadrCand_phi); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_theta", (double)o.leadPFChargedHadrCand_theta); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_eta", (double)o.leadPFChargedHadrCand_eta); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_rapidity", (double)o.leadPFChargedHadrCand_rapidity); os << r;
+  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_y", (double)o.leadPFChargedHadrCand_y); os << r;
+  sprintf(r, " %-32s: %f\n", "signalPFChargedHadrCands_size", (double)o.signalPFChargedHadrCands_size); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -1243,17 +1291,17 @@ std::ostream& operator<<(std::ostream& os, const genparticlehelper_s& o)
 {
   char r[1024];
   os << "genparticlehelper" << std::endl;
-  sprintf(r, "  %-32s: %f\n", "firstMother", (double)o.firstMother); os << r;
-  sprintf(r, "  %-32s: %f\n", "lastMother", (double)o.lastMother); os << r;
-  sprintf(r, "  %-32s: %f\n", "firstDaughter", (double)o.firstDaughter); os << r;
-  sprintf(r, "  %-32s: %f\n", "lastDaughter", (double)o.lastDaughter); os << r;
-  sprintf(r, "  %-32s: %f\n", "charge", (double)o.charge); os << r;
-  sprintf(r, "  %-32s: %f\n", "pdgId", (double)o.pdgId); os << r;
-  sprintf(r, "  %-32s: %f\n", "status", (double)o.status); os << r;
-  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, "  %-32s: %f\n", "mass", (double)o.mass); os << r;
+  sprintf(r, " %-32s: %f\n", "firstMother", (double)o.firstMother); os << r;
+  sprintf(r, " %-32s: %f\n", "lastMother", (double)o.lastMother); os << r;
+  sprintf(r, " %-32s: %f\n", "firstDaughter", (double)o.firstDaughter); os << r;
+  sprintf(r, " %-32s: %f\n", "lastDaughter", (double)o.lastDaughter); os << r;
+  sprintf(r, " %-32s: %f\n", "charge", (double)o.charge); os << r;
+  sprintf(r, " %-32s: %f\n", "pdgId", (double)o.pdgId); os << r;
+  sprintf(r, " %-32s: %f\n", "status", (double)o.status); os << r;
+  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, " %-32s: %f\n", "mass", (double)o.mass); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -1277,17 +1325,17 @@ std::ostream& operator<<(std::ostream& os, const genparticlehelperplus_s& o)
 {
   char r[1024];
   os << "genparticlehelperplus" << std::endl;
-  sprintf(r, "  %-32s: %f\n", "firstMother", (double)o.firstMother); os << r;
-  sprintf(r, "  %-32s: %f\n", "lastMother", (double)o.lastMother); os << r;
-  sprintf(r, "  %-32s: %f\n", "firstDaughter", (double)o.firstDaughter); os << r;
-  sprintf(r, "  %-32s: %f\n", "lastDaughter", (double)o.lastDaughter); os << r;
-  sprintf(r, "  %-32s: %f\n", "charge", (double)o.charge); os << r;
-  sprintf(r, "  %-32s: %f\n", "pdgId", (double)o.pdgId); os << r;
-  sprintf(r, "  %-32s: %f\n", "status", (double)o.status); os << r;
-  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, "  %-32s: %f\n", "mass", (double)o.mass); os << r;
+  sprintf(r, " %-32s: %f\n", "firstMother", (double)o.firstMother); os << r;
+  sprintf(r, " %-32s: %f\n", "lastMother", (double)o.lastMother); os << r;
+  sprintf(r, " %-32s: %f\n", "firstDaughter", (double)o.firstDaughter); os << r;
+  sprintf(r, " %-32s: %f\n", "lastDaughter", (double)o.lastDaughter); os << r;
+  sprintf(r, " %-32s: %f\n", "charge", (double)o.charge); os << r;
+  sprintf(r, " %-32s: %f\n", "pdgId", (double)o.pdgId); os << r;
+  sprintf(r, " %-32s: %f\n", "status", (double)o.status); os << r;
+  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, " %-32s: %f\n", "mass", (double)o.mass); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -1322,28 +1370,28 @@ std::ostream& operator<<(std::ostream& os, const recoGsfElectron_s& o)
 {
   char r[1024];
   os << "recoGsfElectron" << std::endl;
-  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, "  %-32s: %f\n", "eSuperClusterOverP", (double)o.eSuperClusterOverP); os << r;
-  sprintf(r, "  %-32s: %f\n", "deltaEtaSuperClusterTrackAtVtx", (double)o.deltaEtaSuperClusterTrackAtVtx); os << r;
-  sprintf(r, "  %-32s: %f\n", "deltaPhiSuperClusterTrackAtVtx", (double)o.deltaPhiSuperClusterTrackAtVtx); os << r;
-  sprintf(r, "  %-32s: %f\n", "sigmaIetaIeta", (double)o.sigmaIetaIeta); os << r;
-  sprintf(r, "  %-32s: %f\n", "scE1x5", (double)o.scE1x5); os << r;
-  sprintf(r, "  %-32s: %f\n", "scE2x5Max", (double)o.scE2x5Max); os << r;
-  sprintf(r, "  %-32s: %f\n", "scE5x5", (double)o.scE5x5); os << r;
-  sprintf(r, "  %-32s: %f\n", "hadronicOverEm", (double)o.hadronicOverEm); os << r;
-  sprintf(r, "  %-32s: %f\n", "dr04TkSumPt", (double)o.dr04TkSumPt); os << r;
-  sprintf(r, "  %-32s: %f\n", "dr04EcalRecHitSumEt", (double)o.dr04EcalRecHitSumEt); os << r;
-  sprintf(r, "  %-32s: %f\n", "gsfTrack_dxy", (double)o.gsfTrack_dxy); os << r;
-  sprintf(r, "  %-32s: %f\n", "gsfTrack_d0", (double)o.gsfTrack_d0); os << r;
-  sprintf(r, "  %-32s: %f\n", "gsfTrack_dz", (double)o.gsfTrack_dz); os << r;
+  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, " %-32s: %f\n", "eSuperClusterOverP", (double)o.eSuperClusterOverP); os << r;
+  sprintf(r, " %-32s: %f\n", "deltaEtaSuperClusterTrackAtVtx", (double)o.deltaEtaSuperClusterTrackAtVtx); os << r;
+  sprintf(r, " %-32s: %f\n", "deltaPhiSuperClusterTrackAtVtx", (double)o.deltaPhiSuperClusterTrackAtVtx); os << r;
+  sprintf(r, " %-32s: %f\n", "sigmaIetaIeta", (double)o.sigmaIetaIeta); os << r;
+  sprintf(r, " %-32s: %f\n", "scE1x5", (double)o.scE1x5); os << r;
+  sprintf(r, " %-32s: %f\n", "scE2x5Max", (double)o.scE2x5Max); os << r;
+  sprintf(r, " %-32s: %f\n", "scE5x5", (double)o.scE5x5); os << r;
+  sprintf(r, " %-32s: %f\n", "hadronicOverEm", (double)o.hadronicOverEm); os << r;
+  sprintf(r, " %-32s: %f\n", "dr04TkSumPt", (double)o.dr04TkSumPt); os << r;
+  sprintf(r, " %-32s: %f\n", "dr04EcalRecHitSumEt", (double)o.dr04EcalRecHitSumEt); os << r;
+  sprintf(r, " %-32s: %f\n", "gsfTrack_dxy", (double)o.gsfTrack_dxy); os << r;
+  sprintf(r, " %-32s: %f\n", "gsfTrack_d0", (double)o.gsfTrack_d0); os << r;
+  sprintf(r, " %-32s: %f\n", "gsfTrack_dz", (double)o.gsfTrack_dz); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -1365,15 +1413,15 @@ std::ostream& operator<<(std::ostream& os, const recoPFMET_s& o)
 {
   char r[1024];
   os << "recoPFMET" << std::endl;
-  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -1395,15 +1443,15 @@ std::ostream& operator<<(std::ostream& os, const recoPFMET1_s& o)
 {
   char r[1024];
   os << "recoPFMET1" << std::endl;
-  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -1421,11 +1469,11 @@ std::ostream& operator<<(std::ostream& os, const vertex_s& o)
 {
   char r[1024];
   os << "vertex" << std::endl;
-  sprintf(r, "  %-32s: %f\n", "isFake", (double)o.isFake); os << r;
-  sprintf(r, "  %-32s: %f\n", "ndof", (double)o.ndof); os << r;
-  sprintf(r, "  %-32s: %f\n", "x", (double)o.x); os << r;
-  sprintf(r, "  %-32s: %f\n", "y", (double)o.y); os << r;
-  sprintf(r, "  %-32s: %f\n", "z", (double)o.z); os << r;
+  sprintf(r, " %-32s: %f\n", "isFake", (double)o.isFake); os << r;
+  sprintf(r, " %-32s: %f\n", "ndof", (double)o.ndof); os << r;
+  sprintf(r, " %-32s: %f\n", "x", (double)o.x); os << r;
+  sprintf(r, " %-32s: %f\n", "y", (double)o.y); os << r;
+  sprintf(r, " %-32s: %f\n", "z", (double)o.z); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -1437,6 +1485,7 @@ inline void fillPileupSummaryInfo()
     {
       PileupSummaryInfo[i].getBunchCrossing	= PileupSummaryInfo_getBunchCrossing[i];
       PileupSummaryInfo[i].getPU_NumInteractions	= PileupSummaryInfo_getPU_NumInteractions[i];
+      PileupSummaryInfo[i].getTrueNumInteractions	= PileupSummaryInfo_getTrueNumInteractions[i];
     }
 }
 
@@ -1514,6 +1563,7 @@ inline void fillpatJet()
       jet[i].HFEMEnergy	= patJet_HFEMEnergy[i];
       jet[i].HFEMEnergyFraction	= patJet_HFEMEnergyFraction[i];
       jet[i].chargedHadronMultiplicity	= patJet_chargedHadronMultiplicity[i];
+      jet[i].chargedMultiplicity	= patJet_chargedMultiplicity[i];
       jet[i].neutralHadronMultiplicity	= patJet_neutralHadronMultiplicity[i];
       jet[i].photonMultiplicity	= patJet_photonMultiplicity[i];
       jet[i].electronMultiplicity	= patJet_electronMultiplicity[i];
@@ -1560,6 +1610,23 @@ inline void fillpatMET()
       met[i].pt	= patMET_pt[i];
       met[i].phi	= patMET_phi[i];
       met[i].eta	= patMET_eta[i];
+    }
+}
+
+inline void fillpatMET2()
+{
+  met2.resize(patMET2_p.size());
+  for(unsigned int i=0; i < met2.size(); ++i)
+    {
+      met2[i].p	= patMET2_p[i];
+      met2[i].energy	= patMET2_energy[i];
+      met2[i].et	= patMET2_et[i];
+      met2[i].px	= patMET2_px[i];
+      met2[i].py	= patMET2_py[i];
+      met2[i].pz	= patMET2_pz[i];
+      met2[i].pt	= patMET2_pt[i];
+      met2[i].phi	= patMET2_phi[i];
+      met2[i].eta	= patMET2_eta[i];
     }
 }
 
@@ -1835,6 +1902,7 @@ void fillObjects()
   fillpatElectron();
   fillpatJet();
   fillpatMET();
+  fillpatMET2();
   fillpatMuon();
   fillpatTau();
   fillrecoGenParticleHelper();
@@ -1869,6 +1937,7 @@ void saveSelectedObjects()
           int j = index[i];
           PileupSummaryInfo_getBunchCrossing[i]	= PileupSummaryInfo_getBunchCrossing[j];
           PileupSummaryInfo_getPU_NumInteractions[i]	= PileupSummaryInfo_getPU_NumInteractions[j];
+          PileupSummaryInfo_getTrueNumInteractions[i]	= PileupSummaryInfo_getTrueNumInteractions[j];
         }
       nPileupSummaryInfo = n;
     }
@@ -1973,6 +2042,7 @@ void saveSelectedObjects()
           patJet_HFEMEnergy[i]	= patJet_HFEMEnergy[j];
           patJet_HFEMEnergyFraction[i]	= patJet_HFEMEnergyFraction[j];
           patJet_chargedHadronMultiplicity[i]	= patJet_chargedHadronMultiplicity[j];
+          patJet_chargedMultiplicity[i]	= patJet_chargedMultiplicity[j];
           patJet_neutralHadronMultiplicity[i]	= patJet_neutralHadronMultiplicity[j];
           patJet_photonMultiplicity[i]	= patJet_photonMultiplicity[j];
           patJet_electronMultiplicity[i]	= patJet_electronMultiplicity[j];
@@ -2030,6 +2100,32 @@ void saveSelectedObjects()
           patMET_eta[i]	= patMET_eta[j];
         }
       npatMET = n;
+    }
+
+  n = 0;
+  try
+    {
+       n = indexmap["patMET2"].size();
+    }
+  catch (...)
+    {}
+  if ( n > 0 )
+    {
+      std::vector<int>& index = indexmap["patMET2"];
+      for(int i=0; i < n; ++i)
+        {
+          int j = index[i];
+          patMET2_p[i]	= patMET2_p[j];
+          patMET2_energy[i]	= patMET2_energy[j];
+          patMET2_et[i]	= patMET2_et[j];
+          patMET2_px[i]	= patMET2_px[j];
+          patMET2_py[i]	= patMET2_py[j];
+          patMET2_pz[i]	= patMET2_pz[j];
+          patMET2_pt[i]	= patMET2_pt[j];
+          patMET2_phi[i]	= patMET2_phi[j];
+          patMET2_eta[i]	= patMET2_eta[j];
+        }
+      npatMET2 = n;
     }
 
   n = 0;
@@ -2194,7 +2290,7 @@ void saveSelectedObjects()
           patTau_leadPFChargedHadrCand_eta[i]	= patTau_leadPFChargedHadrCand_eta[j];
           patTau_leadPFChargedHadrCand_rapidity[i]	= patTau_leadPFChargedHadrCand_rapidity[j];
           patTau_leadPFChargedHadrCand_y[i]	= patTau_leadPFChargedHadrCand_y[j];
-	  patTau_signalPFChargedHadrCands_size[i]	= patTau_signalPFChargedHadrCands_size[j];
+patTau_signalPFChargedHadrCands_size[i]	= patTau_signalPFChargedHadrCands_size[j];
         }
       npatTau = n;
     }
@@ -2530,6 +2626,7 @@ void selectVariables(itreestream& stream)
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v7", triggerresultshelper_prescale_HLT_DiPFJetAve80_v7);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v8", triggerresultshelper_prescale_HLT_DiPFJetAve80_v8);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v9", triggerresultshelper_prescale_HLT_DiPFJetAve80_v9);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1", triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3", triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4", triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2", triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2);
@@ -2676,6 +2773,7 @@ void selectVariables(itreestream& stream)
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v7", triggerresultshelper_value_HLT_DiPFJetAve80_v7);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v8", triggerresultshelper_value_HLT_DiPFJetAve80_v8);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v9", triggerresultshelper_value_HLT_DiPFJetAve80_v9);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1", triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3", triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4", triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2", triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2);
@@ -2687,6 +2785,7 @@ void selectVariables(itreestream& stream)
   stream.select("npatElectron_patElectrons", npatElectron);
   stream.select("npatJet_selectedPatJets", npatJet);
   stream.select("npatMET_patMETs", npatMET);
+  stream.select("npatMET_patPfMetT0pcT1Txy", npatMET2);
   stream.select("npatMuon_patMuons", npatMuon);
   stream.select("npatTauHelper_patTaus", npatTau);
   stream.select("patTauHelper_patTaus.signalPFChargedHadrCands_size", patTau_signalPFChargedHadrCands_size);
@@ -2751,6 +2850,7 @@ void selectVariables(itreestream& stream)
   stream.select("patJet_selectedPatJets.chargedEmEnergyFraction", patJet_chargedEmEnergyFraction);
   stream.select("patJet_selectedPatJets.chargedHadronEnergyFraction", patJet_chargedHadronEnergyFraction);
   stream.select("patJet_selectedPatJets.chargedHadronMultiplicity", patJet_chargedHadronMultiplicity);
+  stream.select("patJet_selectedPatJets.chargedMultiplicity", patJet_chargedMultiplicity);
   stream.select("patJet_selectedPatJets.electronEnergy", patJet_electronEnergy);
   stream.select("patJet_selectedPatJets.electronEnergyFraction", patJet_electronEnergyFraction);
   stream.select("patJet_selectedPatJets.electronMultiplicity", patJet_electronMultiplicity);
@@ -2773,6 +2873,15 @@ void selectVariables(itreestream& stream)
   stream.select("patJet_selectedPatJets.px", patJet_px);
   stream.select("patJet_selectedPatJets.py", patJet_py);
   stream.select("patJet_selectedPatJets.pz", patJet_pz);
+  stream.select("patMET_patPfMetT0pcT1Txy.energy", patMET2_energy);
+  stream.select("patMET_patPfMetT0pcT1Txy.et", patMET2_et);
+  stream.select("patMET_patPfMetT0pcT1Txy.eta", patMET2_eta);
+  stream.select("patMET_patPfMetT0pcT1Txy.p", patMET2_p);
+  stream.select("patMET_patPfMetT0pcT1Txy.phi", patMET2_phi);
+  stream.select("patMET_patPfMetT0pcT1Txy.pt", patMET2_pt);
+  stream.select("patMET_patPfMetT0pcT1Txy.px", patMET2_px);
+  stream.select("patMET_patPfMetT0pcT1Txy.py", patMET2_py);
+  stream.select("patMET_patPfMetT0pcT1Txy.pz", patMET2_pz);
   stream.select("patMET_patMETs.energy", patMET_energy);
   stream.select("patMET_patMETs.et", patMET_et);
   stream.select("patMET_patMETs.eta", patMET_eta);
@@ -2988,3 +3097,4 @@ void selectVariables(itreestream& stream)
 }
 }; // end namespace evt
 #endif
+
