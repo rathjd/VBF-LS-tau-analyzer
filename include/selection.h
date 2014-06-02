@@ -78,7 +78,7 @@ struct Selection {
 	  passed = false;
 	}
 	
-	void select() {
+	void select(bool verbose) {
 	  (*OutputCollection).h_count->Fill("NoCuts",0);
 	  (*OutputCollection).h_count->Fill("TriggerRequirement",0);
 	  if(invertTauRequirements){
@@ -133,6 +133,9 @@ struct Selection {
 	    if(DiJetDetaMin > 0 || DiJetDetaMax > 0)(*OutputCollection).h_count->Fill("DiJetDetaCut",0);	  
 	  }
 
+	  if(verbose) std::cout<<"----------start selection---------"<<std::endl;
+	  if(verbose) std::cout<<"is data(1) or MC(0): "<<RealData<<std::endl;
+	  if(verbose) std::cout<<"passes trigger: "<<(*InputCollection).passedTrigger<<std::endl;
 	  
 	  if(!RunData && RealData)	 					return; //check if sample is real data and whether you want to run on real data
 	  else (*OutputCollection).h_count->Fill("NoCuts",weight);
@@ -143,7 +146,7 @@ struct Selection {
 	  }
 	  
 	  //Tau requirements
-	  
+	  if(verbose) std::cout<<"N_taus="<<(*InputCollection).tau.size()<<std::endl;
 	  if(NumberTauMin >= 0){
 	    if(!((int)(*InputCollection).tau.size() >= NumberTauMin)){			//check if there is at least min taus in the event
 	      if(invertTauRequirements) {
@@ -172,7 +175,9 @@ struct Selection {
 	  
 	  //find ditau properties
 	  TauProperties Inv2t = Inv2tMassIndex((*InputCollection));
-
+	  
+	  if(verbose) std::cout<<"DiTauDeltaR="<<Inv2t.dR<<std::endl;
+	  
 	  if(DiTauDeltaRmin > 0){
 	    if(!(Inv2t.dR 	> 	DiTauDeltaRmin)){ 			 	//check minimal distance between two taus
 	      if(invertTauProperties) {
@@ -185,6 +190,8 @@ struct Selection {
 	    }
 	    else if(!invertTauProperties) (*OutputCollection).h_count->Fill("DiTauDeltaRCut", weight);
 	  }
+	  
+	  if(verbose) std::cout<<"M(tau,tau)="<<Inv2t.Mass<<std::endl;
 	  
 	  if(DiTauInvMassMin > 0){
 	    if(!(Inv2t.Mass >= DiTauInvMassMin)){					//check minimal ditau mass
@@ -211,6 +218,8 @@ struct Selection {
 	    else if(!invertTauProperties) (*OutputCollection).h_count->Fill("DiTauInvMassMaxCut", weight);
 	  }	  
 	  
+	  if(verbose) std::cout<<"sign(tau x tau)="<<Inv2t.charge<<std::endl;
+	  
 	  if(DiTauSign !=0){
 	    if(!(Inv2t.charge 	== 	DiTauSign)){ 					//check ditau sign
 	      if(invertTauProperties) {
@@ -224,6 +233,8 @@ struct Selection {
 	    else if(!invertTauProperties) (*OutputCollection).h_count->Fill("DiTauSignCut",weight);
 	  }
 	  
+	  if(verbose) std::cout<<"b-tags="<<(*InputCollection).bjet.size()<<std::endl;
+	  
 	  if(Btag >= 0){
 	    if(!(Btag 		==	(int)(*InputCollection).bjet.size())){		//check number of btagged jets
 	      if(invertBtagRequirement){
@@ -236,6 +247,8 @@ struct Selection {
 	    }
 	    else if(!invertBtagRequirement) (*OutputCollection).h_count->Fill("NoBTag",weight);
 	  }
+	 
+	 if(verbose) std::cout<<"MET="<<(*InputCollection).met[0]->pt<<std::endl;
 	 
 	  if(METMin >= 0){
 	    if(!(METMin 	<	(double)(*InputCollection).met[0]->pt)){		//check minumum MET cut
@@ -263,8 +276,17 @@ struct Selection {
 	    else if(!invertMETRequirement) (*OutputCollection).h_count->Fill("MaxMETCut",weight);
 	  }
 	 
+	  //dump everything
+	  /*std::cout<<"----------MET cut passed----------"<<std::endl;
+	  std::cout<<"MET="<<(*InputCollection).met[0]->pt<<std::endl;
+	  for(unsigned int t=0; t<(*InputCollection).tau.size(); t++) std::cout<<"tau "<<t<<": pT="<<(*InputCollection).tau[t]->pt<<", eta="<<(*InputCollection).tau[t]->eta<<", phi="<<(*InputCollection).tau[t]->phi<<", E="<<(*InputCollection).tau[t]->energy<<std::endl;
+	  for(unsigned int j=0; j<(*InputCollection).jet.size(); j++) std::cout<<"jet "<<j<<":
+	  pT="<<(*InputCollection).jet[j]->pt<<", eta="<<(*InputCollection).jet[j]->eta<<",
+	  phi="<<(*InputCollection).jet[j]->phi<<", E="<<(*InputCollection).jet[j]->energy<<std::endl;*/
 	  
 	  //find index of leading jets
+	  if(verbose) std::cout<<"Njets(pT>30,IDloose,|eta|<5,dR(jet,tau)>0.3)="<<(*InputCollection).jet.size()<<std::endl;
+	  
 	  pair<unsigned int,unsigned int> jetIndex=LeadingJets((*InputCollection));
 	  
 	  if(jetIndex.first==99999 || jetIndex.second==99999){
@@ -290,12 +312,19 @@ struct Selection {
 	  //find properties of dijet-system
           MassAndIndex Inv2j = Inv2jMassIndex((*InputCollection));
 	  
+	  //if(jetIndex.first+jetIndex.second != Inv2j.first + Inv2j.second) std::cout<<"!!!!! DISPARATE JETS !!!!!"<<std::endl;
+	  
 	  //LeadJet
-	  double leadJetPt = (*InputCollection).jet[Inv2j.first]->pt;
-	  double leadJetEta = (*InputCollection).jet[Inv2j.first]->eta;
+	  double leadJetPt = (*InputCollection).jet[jetIndex.first]->pt;//.jet[Inv2j.first]->pt;
+	  double leadJetEta = (*InputCollection).jet[jetIndex.first]->eta;//.jet[Inv2j.first]->eta;
+	  
+	  if(verbose) std::cout<<"leading jet: pT="<<leadJetPt<<", eta="<<leadJetEta<<std::endl;
+	  
 	  //SubLeadJet
-	  double subLeadJetPt = (*InputCollection).jet[Inv2j.second]->pt;
-	  double subLeadJetEta = (*InputCollection).jet[Inv2j.second]->eta;	  	  
+	  double subLeadJetPt = (*InputCollection).jet[jetIndex.second]->pt;//.jet[Inv2j.second]->pt;
+	  double subLeadJetEta = (*InputCollection).jet[jetIndex.second]->eta;//.jet[Inv2j.second]->eta;
+	  
+	  if(verbose) std::cout<<"subleading jet: pT="<<subLeadJetPt<<", eta="<<subLeadJetEta<<std::endl;	  	  
 	  
 	  bool leadJet = true;
 	  bool subLeadJet = true;
@@ -344,6 +373,8 @@ struct Selection {
 	  }
 	  else if(!invertJetRequirements) (*OutputCollection).h_count->Fill("SecondJetCut",weight);
 	  
+	  std::cout<<"passed jet selections, stating dijet-system found"<<std::endl;
+	  std::cout<<"first jet index: "<<jetIndex.first<<", second jet index: "<<jetIndex.second<<std::endl;
 
 	  //check for different first and 2nd high pt jet and inv mass max jet
 	  //if(jetIndex.first+jetIndex.second!=Inv2j.first+Inv2j.second) std::cout<<"pT1="<<jetIndex.first<<", pT2="<<jetIndex.second<<", M1="<<Inv2j.first<<", M2="<<Inv2j.second<<std::endl;
@@ -356,6 +387,8 @@ struct Selection {
 	    if(!(Inv2j.dR		<	DiJetDrMax)) 			DiJetDr = false; //check dijet separation
 	  }	  
 	  
+	  if(verbose) std::cout<<"Dijet dR="<<Inv2j.dR<<std::endl;
+	  
 	  if(!DiJetDr){
 	    if(invertDijetProperties){
 	      (*OutputCollection).h_count->Fill("InverseDiJetDeltaRCut",weight);
@@ -366,6 +399,8 @@ struct Selection {
 	    else return;
 	  }
 	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetDeltaRCut",weight);
+	  
+	  if(verbose) std::cout<<"Dijet mass="<<Inv2j.Mass<<std::endl;
 	  
 	  bool DiJetMass = true;
 	  if(DiJetInvMassMin > 0){
@@ -387,6 +422,8 @@ struct Selection {
 	  }
 	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetInvMassCut",weight);
 	  
+	  if(verbose) std::cout<<"sign(jet x jet)="<<Inv2j.signEta<<std::endl;
+	  
 	  if(DiJetSignEta != Inv2j.signEta){					//check whether jets go in opposite directions in the detector
 	    if(invertDijetProperties) {
 	      (*OutputCollection).h_count->Fill("InverseDiJetEtaSignCut",weight);
@@ -397,6 +434,8 @@ struct Selection {
 	    else return; 
 	  }
 	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetEtaSignCut",weight);
+	  
+	  if(verbose) std::cout<<"DeltaEta(jet,jet)="<<Inv2j.dEta<<std::endl;
 	  
 	  bool DiJetDeta = true;
 	  if(DiJetDetaMin > 0){
@@ -417,6 +456,8 @@ struct Selection {
 	    else return;
 	  }  
 	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetDetaCut",weight);
+	  
+	  if(verbose) std::cout<<"__________passed all cuts__________"<<std::endl;
 	  
 	  if(!invertJetRequirements && !invertTauRequirements && !invertTauProperties && !invertDijetProperties && !invertBtagRequirement){
 	    fillHistoCollection((*OutputCollection), (*InputCollection), weight);
