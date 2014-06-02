@@ -90,15 +90,31 @@ int main(int argc, char** argv)
   h2_Trigger->GetXaxis()->SetTitle("triggered");
   h2_Trigger->GetYaxis()->SetTitle("CR");
   h2_Trigger->Sumw2();
+  
+  /*TH1F* pTchargedHad = new TH1F("pTchargedHad", "leading charged hadron candidate momentum", 100, 0., 100.);
+  TH1F* eVeto = new TH1F("eVeto", "electron veto discriminator", 2, -0.5, 1.5);
+  TH1F* MuVeto = new TH1F("MuVeto", "muon veto discriminator", 2, -0.5, 1.5);
+  TH2F* DMFandProng = new TH2F("DMFandProng", "DecayModeFinding and prongsize", 2, -0.5, 1.5, 10, 0., 10.);
+  DMFandProng->GetXaxis()->SetTitle("DecayModeFinding");
+  DMFandProng->GetYaxis()->SetTitle("prongs.size()");
+  TH1F* TightIso = new TH1F("TightIso", "TightIsolation discriminator", 2, -0.5, 1.5);*/
 
   //---------------------------------------------------------------------------
   // Histogram Collection Init
   //---------------------------------------------------------------------------
 	TH1::SetDefaultSumw2();
 	
-	TFile file_PU("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/PUreweightHistogram.root", "read");
+	//TFile file_PU("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/PUreweightHistogram.root", "read");
+	TFile file_PUdata("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/DataPUFile_Full2012.root", "read");
+	TFile file_PUmc("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/S10MC_PUFile.root", "read");
 	
-	TH1F *PUweights = (TH1F*)file_PU.Get("ratio");
+	//TH1F *PUweights = (TH1F*)file_PU.Get("ratio");
+	TH1F *PUweights = (TH1F*)file_PUmc.Get("analyzeHiMassTau/NVertices_0");
+	PUweights->Scale(1/PUweights->Integral());
+	TH1F *PUdata = (TH1F*)file_PUdata.Get("analyzeHiMassTau/NVertices_0");
+	PUdata->Scale(1/PUdata->Integral());
+	
+	PUweights->Divide(PUdata);
 	
 	double weight = 1.;
 
@@ -160,7 +176,10 @@ int main(int argc, char** argv)
 
 //PU weights
 if(!eventhelper_isRealData){
- weight=PUweights->GetBinContent(PUweights->FindBin(PileupSummaryInfo_getPU_NumInteractions[0]));
+
+ weight=PUweights->GetBinContent(PUweights->FindBin(PileupSummaryInfo_getTrueNumInteractions[0]));
+ std::cout<<"NVtx="<<PileupSummaryInfo_getTrueNumInteractions[0]<<", weight="<<weight<<std::endl;
+ //weight=PUweights->GetBinContent(PUweights->FindBin(PileupSummaryInfo_getPU_NumInteractions[0]));
  //std::cout<<"NVtx="<<PileupSummaryInfo_getPU_NumInteractions[0]<<", weight="<<weight<<std::endl;
 } 
 
@@ -254,11 +273,18 @@ for(unsigned int m =0;m<muon.size();++m){
 	  for(unsigned int t =0;t<tau.size();++t){
             if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
             if(!(       tau[t].pt >= 45.                                            				)) continue;
-            if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      				)) continue;
             if(!(       tau[t].tauID_againstElectronMediumMVA5 > 0.5                				)) continue;
             if(!(       tau[t].tauID_againstMuonLoose3 > 0.5                        				)) continue;
+	    if(!(       tau[t].leadPFChargedHadrCand_pt >= 5.0                      				)) continue;
             if(!(       (tau[t].tauID_decayModeFindingNewDMs > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
+	  
             baselineObjectSelectionCollection.tau.push_back(&tau[t]);
+	    /*pTchargedHad->Fill(tau[t].leadPFChargedHadrCand_pt);
+	  eVeto->Fill(tau[t].tauID_againstElectronMediumMVA5);
+	  MuVeto->Fill(tau[t].tauID_againstMuonLoose3);
+	  DMFandProng->Fill(tau[t].tauID_decayModeFindingNewDMs,tau[t].signalPFChargedHadrCands_size);
+	  TightIso->Fill(tau[t].tauID_byTightIsolationMVA3newDMwLT);*/
+	    
 	    if(!(tau[t].tauID_byTightIsolationMVA3newDMwLT  <= 0.5)) tights.push_back(t);
 	    else if(!(tau[t].tauID_byMediumIsolationMVA3newDMwLT  <= 0.5)) mediums.push_back(t);
 	    else if(!(tau[t].tauID_byLooseIsolationMVA3newDMwLT  <= 0.5)) looses.push_back(t);
@@ -295,7 +321,7 @@ for(unsigned int m =0;m<muon.size();++m){
 	    if(fabs(jet[j].eta) < 2.4) {
               if(!(      jet[j].chargedHadronEnergyFraction > 0                        			)) jetid=false;
               if(!(      jet[j].chargedEmEnergyFraction < 0.99                            		)) jetid=false;
-              if(!(      jet[j].chargedHadronMultiplicity > 0                             		)) jetid=false;
+              if(!(      jet[j].chargedMultiplicity > 0							)) jetid=false;
             }
             if(      /*jet[j].pt >= 50.  &&*/ jetid		){
               if(	baseDistance >= 0.3	) baselineObjectSelectionCollection.jet.push_back(&jet[j]);	
@@ -316,12 +342,12 @@ for(unsigned int m =0;m<muon.size();++m){
 	  }
 
 	  //MET selection
-	  baselineObjectSelectionCollection.met.push_back(&met[0]);
-	  TauTightIsoObjectSelectionCollection.met.push_back(&met[0]);
-	  Tau1TightIsoObjectSelectionCollection.met.push_back(&met[0]);
-	  TauMediumIsoObjectSelectionCollection.met.push_back(&met[0]);
-	  TauLooseIsoObjectSelectionCollection.met.push_back(&met[0]);
-	  TauNoIsoObjectSelectionCollection.met.push_back(&met[0]);
+	  baselineObjectSelectionCollection.met.push_back(&met2[0]);
+	  TauTightIsoObjectSelectionCollection.met.push_back(&met2[0]);
+	  Tau1TightIsoObjectSelectionCollection.met.push_back(&met2[0]);
+	  TauMediumIsoObjectSelectionCollection.met.push_back(&met2[0]);
+	  TauLooseIsoObjectSelectionCollection.met.push_back(&met2[0]);
+	  TauNoIsoObjectSelectionCollection.met.push_back(&met2[0]);
 
 	  //Event Count
 	  ofile.count("NoCuts");
@@ -359,7 +385,7 @@ LS_Signal.weight        	= weight;      				//event weight
 CutConfiguration(&LS_Signal, true, LS); 				//selection, VBF, LS
 LS_Signal.METMin = 30.;
 
-LS_Signal.select();        						//do selection, fill histograms
+LS_Signal.select(false);        						//do selection, fill histograms
 
 if(LS_Signal.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollection.passedTrigger, 1);
 
@@ -377,7 +403,7 @@ InvertedVBF_LS_CR2.weight        	= weight;      				//event weight
 CutConfiguration(&InvertedVBF_LS_CR2, false, LS); 				//selection, VBF, LS
 InvertedVBF_LS_CR2.METMin = 30.;
 
-InvertedVBF_LS_CR2.select();        						//do selection, fill histograms
+InvertedVBF_LS_CR2.select(false);        						//do selection, fill histograms
 
 if(InvertedVBF_LS_CR2.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollection.passedTrigger, 2);
 }
@@ -395,7 +421,7 @@ oneTightTau_LS_CR3.RequireTriggers      = true;       					//require at least on
 oneTightTau_LS_CR3.weight        	= weight;      					//event weight
 CutConfiguration(&oneTightTau_LS_CR3, true, LS); 					//selection, VBF, LS
 
-oneTightTau_LS_CR3.select();        							//do selection, fill histograms
+oneTightTau_LS_CR3.select(false);        							//do selection, fill histograms
 
 // ---------------------------------------------
 // -- CENTRAL + InvertedVBF + 1 Tight Tau CR4 --
@@ -409,7 +435,7 @@ InvertedVBF_oneTightTau_LS_CR4.RequireTriggers  = true;       					//require at 
 InvertedVBF_oneTightTau_LS_CR4.weight        	= weight;      					//event weight
 CutConfiguration(&InvertedVBF_oneTightTau_LS_CR4, false, LS); 					//selection, VBF, LS
 
-InvertedVBF_oneTightTau_LS_CR4.select();        						//do selection, fill histograms
+InvertedVBF_oneTightTau_LS_CR4.select(false);        						//do selection, fill histograms
 }
 
 // ----------------------------------
@@ -425,7 +451,7 @@ AntiTightTau_LS_CR5.RequireTriggers     = true;       					//require at least on
 AntiTightTau_LS_CR5.weight        	= weight;      					//event weight
 CutConfiguration(&AntiTightTau_LS_CR5, true, LS); 					//selection, VBF, LS
 
-AntiTightTau_LS_CR5.select();        							//do selection, fill histograms
+AntiTightTau_LS_CR5.select(false);        							//do selection, fill histograms
 
 // ------------------------------------------------
 // -- CENTRAL + InvertedVBF + Anti Tight Tau CR6 --
@@ -440,7 +466,7 @@ InvertedVBF_AntiTightTau_LS_CR6.RequireTriggers         = true;       					//req
 InvertedVBF_AntiTightTau_LS_CR6.weight        		= weight;      					//event weight
 CutConfiguration(&InvertedVBF_AntiTightTau_LS_CR6, false, LS); 						//selection, VBF, LS
 
-InvertedVBF_AntiTightTau_LS_CR6.select();        							//do selection, fill histograms
+InvertedVBF_AntiTightTau_LS_CR6.select(false);        							//do selection, fill histograms
 }	
 
 // -----------------------------------
@@ -456,7 +482,7 @@ AntiMediumTau_LS_CR7.RequireTriggers    = true;       				//require at least one
 AntiMediumTau_LS_CR7.weight        	= weight;      				//event weight
 CutConfiguration(&AntiMediumTau_LS_CR7, true, LS); 				//selection, VBF, LS
 
-AntiMediumTau_LS_CR7.select();        						//do selection, fill histograms
+AntiMediumTau_LS_CR7.select(false);        						//do selection, fill histograms
 
 // -------------------------------------------------
 // -- CENTRAL + InvertedVBF + Anti Medium Tau CR8 --
@@ -471,7 +497,7 @@ InvertedVBF_AntiMediumTau_LS_CR8.RequireTriggers        = true;       				//requ
 InvertedVBF_AntiMediumTau_LS_CR8.weight        		= weight;      				//event weight
 CutConfiguration(&InvertedVBF_AntiMediumTau_LS_CR8, false, LS); 				//selection, VBF, LS
 
-InvertedVBF_AntiMediumTau_LS_CR8.select();        						//do selection, fill histograms
+InvertedVBF_AntiMediumTau_LS_CR8.select(false);        						//do selection, fill histograms
 }
 
 // -----------------------------------
@@ -487,7 +513,7 @@ AntiLooseTau_LS_CR9.RequireTriggers     = true;       				//require at least one
 AntiLooseTau_LS_CR9.weight        	= weight;      				//event weight
 CutConfiguration(&AntiLooseTau_LS_CR9, true, LS); 				//selection, VBF, LS
 
-AntiLooseTau_LS_CR9.select();        						//do selection, fill histograms
+AntiLooseTau_LS_CR9.select(false);        						//do selection, fill histograms
 
 // -------------------------------------------------
 // -- CENTRAL + InvertedVBF + Anti Loose Tau CR10 --
@@ -502,7 +528,7 @@ InvertedVBF_AntiLooseTau_LS_CR10.RequireTriggers        = true;       				//requ
 InvertedVBF_AntiLooseTau_LS_CR10.weight        		= weight;      				//event weight
 CutConfiguration(&InvertedVBF_AntiLooseTau_LS_CR10, false, LS); 				//selection, VBF, LS
 
-InvertedVBF_AntiLooseTau_LS_CR10.select();        						//do selection, fill histograms
+InvertedVBF_AntiLooseTau_LS_CR10.select(false);        						//do selection, fill histograms
 }
 
 // ---------------------
@@ -542,7 +568,7 @@ Ztautau_LS_CR1.invertBtagRequirement    = false;        			//invert number of b-
 Ztautau_LS_CR1.invertJetRequirements    = false;        			//invert jet pt requirements
 Ztautau_LS_CR1.invertDijetProperties    = false;        			//invert dijet system properties (dR, inv mass, sign eta, dEta)
 
-Ztautau_LS_CR1.select();        						//do selection, fill histograms
+Ztautau_LS_CR1.select(false);        						//do selection, fill histograms
 
 //_____________________________________________
 //-------------------OS SECTION----------------
@@ -553,7 +579,7 @@ LS=false;
 // ---------------------
 // -- Signal Region --
 // ---------------------
-if(TauTightIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauTightIsoObjectSelectionCollection.jet.size()>=2){
 Selection OS_Signal("OS_Signal"); //label and initialisation
 OS_Signal.InputCollection 		= &TauTightIsoObjectSelectionCollection;//input collection
 OS_Signal.OutputCollection 		= &myHistoColl_OS_SignalRegion;        	//output collection
@@ -564,7 +590,7 @@ OS_Signal.weight        		= weight;      				//event weight
 CutConfiguration(&OS_Signal, true, LS); 					//selection, VBF, LS
 OS_Signal.METMin = 30.;
 
-OS_Signal.select();        							//do selection, fill histograms
+OS_Signal.select(false);        							//do selection, fill histograms
 
 if(OS_Signal.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollection.passedTrigger, 1);
 
@@ -582,10 +608,10 @@ InvertedVBF_OS_CR2.weight        	= weight;      				//event weight
 CutConfiguration(&InvertedVBF_OS_CR2, false, LS); 				//selection, VBF, LS
 InvertedVBF_OS_CR2.METMin = 30.;
 
-InvertedVBF_OS_CR2.select();        						//do selection, fill histograms
+InvertedVBF_OS_CR2.select(false);        						//do selection, fill histograms
 
 if(InvertedVBF_OS_CR2.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollection.passedTrigger, 2);
-}
+//}
 
 // -------------------------------
 // -- CENTRAL + 1 Tight Tau CR3 --
@@ -600,7 +626,7 @@ oneTightTau_OS_CR3.RequireTriggers      = true;       					//require at least on
 oneTightTau_OS_CR3.weight        	= weight;      					//event weight
 CutConfiguration(&oneTightTau_OS_CR3, true, LS); 					//selection, VBF, LS
 
-oneTightTau_OS_CR3.select();        							//do selection, fill histograms
+oneTightTau_OS_CR3.select(false);        							//do selection, fill histograms
 
 // ---------------------------------------------
 // -- CENTRAL + InvertedVBF + 1 Tight Tau CR4 --
@@ -614,7 +640,7 @@ InvertedVBF_oneTightTau_OS_CR4.RequireTriggers          = true;       					//req
 InvertedVBF_oneTightTau_OS_CR4.weight        		= weight;      					//event weight
 CutConfiguration(&InvertedVBF_oneTightTau_OS_CR4, false, LS); 						//selection, VBF, LS
 
-InvertedVBF_oneTightTau_OS_CR4.select();        							//do selection, fill histograms
+InvertedVBF_oneTightTau_OS_CR4.select(false);        							//do selection, fill histograms
 }
 
 // ----------------------------------
@@ -630,7 +656,7 @@ AntiTightTau_OS_CR5.RequireTriggers             = true;       					//require at 
 AntiTightTau_OS_CR5.weight        		= weight;      					//event weight
 CutConfiguration(&AntiTightTau_OS_CR5, true, LS); 						//selection, VBF, LS
 
-AntiTightTau_OS_CR5.select();        								//do selection, fill histograms
+AntiTightTau_OS_CR5.select(false);        								//do selection, fill histograms
 
 // ------------------------------------------------
 // -- CENTRAL + InvertedVBF + Anti Tight Tau CR6 --
@@ -645,7 +671,7 @@ InvertedVBF_AntiTightTau_OS_CR6.RequireTriggers 	= true;       					//require at
 InvertedVBF_AntiTightTau_OS_CR6.weight        		= weight;      					//event weight
 CutConfiguration(&InvertedVBF_AntiTightTau_OS_CR6, false, LS); 						//selection, VBF, LS
 
-InvertedVBF_AntiTightTau_OS_CR6.select();        							//do selection, fill histograms
+InvertedVBF_AntiTightTau_OS_CR6.select(false);        							//do selection, fill histograms
 }	
 
 // -----------------------------------
@@ -661,7 +687,7 @@ AntiMediumTau_OS_CR7.RequireTriggers    = true;       				//require at least one
 AntiMediumTau_OS_CR7.weight        	= weight;      				//event weight
 CutConfiguration(&AntiMediumTau_OS_CR7, true, LS); 				//selection, VBF, LS
 
-AntiMediumTau_OS_CR7.select();        						//do selection, fill histograms
+AntiMediumTau_OS_CR7.select(false);        						//do selection, fill histograms
 
 // -------------------------------------------------
 // -- CENTRAL + InvertedVBF + Anti Medium Tau CR8 --
@@ -676,7 +702,7 @@ InvertedVBF_AntiMediumTau_OS_CR8.RequireTriggers        = true;       				//requ
 InvertedVBF_AntiMediumTau_OS_CR8.weight        		= weight;      				//event weight
 CutConfiguration(&InvertedVBF_AntiMediumTau_OS_CR8, false, LS); 				//selection, VBF, LS
 
-InvertedVBF_AntiMediumTau_OS_CR8.select();        						//do selection, fill histograms
+InvertedVBF_AntiMediumTau_OS_CR8.select(false);        						//do selection, fill histograms
 }
 
 // -----------------------------------
@@ -692,7 +718,7 @@ AntiLooseTau_OS_CR9.RequireTriggers     = true;       				//require at least one
 AntiLooseTau_OS_CR9.weight        	= weight;      				//event weight
 CutConfiguration(&AntiLooseTau_OS_CR9, true, LS); 				//selection, VBF, LS
 
-AntiLooseTau_OS_CR9.select();        						//do selection, fill histograms
+AntiLooseTau_OS_CR9.select(false);        						//do selection, fill histograms
 
 // -------------------------------------------------
 // -- CENTRAL + InvertedVBF + Anti Loose Tau CR10 --
@@ -707,7 +733,7 @@ InvertedVBF_AntiLooseTau_OS_CR10.RequireTriggers        = true;       				//requ
 InvertedVBF_AntiLooseTau_OS_CR10.weight        		= weight;        			//event weight
 CutConfiguration(&InvertedVBF_AntiLooseTau_OS_CR10, false, LS); 				//selection, VBF, LS
 
-InvertedVBF_AntiLooseTau_OS_CR10.select();        						//do selection, fill histograms
+InvertedVBF_AntiLooseTau_OS_CR10.select(false);        						//do selection, fill histograms
 }
 
 // ---------------------
@@ -747,7 +773,7 @@ Ztautau_OS_CR1.invertBtagRequirement	= false;        				//invert number of b-je
 Ztautau_OS_CR1.invertJetRequirements    = false;        				//invert jet pt requirements
 Ztautau_OS_CR1.invertDijetProperties    = false;        				//invert dijet system properties (dR, inv mass, sign eta, dEta)
 
-Ztautau_OS_CR1.select();        							//do selection, fill histograms
+Ztautau_OS_CR1.select(false);        							//do selection, fill histograms
 
 //Clearing Object Collections
 TauTightIsoObjectSelectionCollection.clear();
