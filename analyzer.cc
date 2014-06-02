@@ -314,7 +314,8 @@ for(unsigned int m =0;m<muon.size();++m){
 	    double looseDistance = TauJetMinDistance(TauLooseIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
 	    double NoDistance = TauJetMinDistance(TauNoIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
             bool jetid=true;
-	    if(!(      (jet[j].neutralHadronEnergy + jet[j].HFHadronEnergy) / jet[j].energy < 0.99      )) jetid=false;
+	    if(!(      jet[j].HFHadronEnergyFraction < 0.99                                            )) jetid=false;
+	    if(!(      jet[j].neutralHadronEnergyFraction < 0.99                                            )) jetid=false;
 	    if(!(      jet[j].neutralEmEnergyFraction < 0.99                                            )) jetid=false;
 	    if(!(      jet[j].numberOfDaughters > 1                                                     )) jetid=false;
 	    if(fabs(jet[j].eta) < 2.4) {
