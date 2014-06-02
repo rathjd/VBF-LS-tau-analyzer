@@ -2475,6 +2475,7 @@ void selectVariables(itreestream& stream)
   stream.select("GenRunInfoProduct_generator.internalXSec_value", GenRunInfoProduct_internalXSec_value);
   stream.select("PileupSummaryInfo_addPileupInfo.getBunchCrossing", PileupSummaryInfo_getBunchCrossing);
   stream.select("PileupSummaryInfo_addPileupInfo.getPU_NumInteractions", PileupSummaryInfo_getPU_NumInteractions);
+  stream.select("PileupSummaryInfo_addPileupInfo.getTrueNumInteractions", PileupSummaryInfo_getTrueNumInteractions);
   stream.select("recoGenJet_ak5GenJets.charge", ak5GenJets_charge);
   stream.select("recoGenJet_ak5GenJets.eta", ak5GenJets_eta);
   stream.select("recoGenJet_ak5GenJets.mass", ak5GenJets_mass);
