@@ -131,9 +131,11 @@ MassAndIndex Inv2jMassIndex(MyEventCollection collection)
 	    
 	    TLorentzVector dijet_4v = jet1_4v + jet2_4v;
 	    
-	    if(!signpass && sign<0) { Mass = dijet_4v.M(); first = j1; second = j2; signpass=true; dEtaCheck=dEta;}
+	    /*if(!signpass && sign<0) { Mass = dijet_4v.M(); first = j1; second = j2; signpass=true; dEtaCheck=dEta;}
 	    else if(!signpass && Mass < dijet_4v.M()) { Mass = dijet_4v.M(); first = j1; second = j2; }
-	    else if(signpass && Mass*0.8 < dijet_4v.M() && dEtaCheck < dEta) { Mass = dijet_4v.M(); first = j1; second = j2; dEtaCheck=dEta;}
+	    else if(signpass && Mass*0.8 < dijet_4v.M() && dEtaCheck < dEta) { Mass = dijet_4v.M(); first = j1; second = j2; dEtaCheck=dEta;}*/
+	    if(dEta>=4.2 && sign<0 && dijet_4v.M()>=250) {Mass = dijet_4v.M(); first = j1; second = j2; signpass=true; dEtaCheck=dEta;}
+	    else if(!signpass && Mass < dijet_4v.M())    {Mass = dijet_4v.M(); first = j1; second = j2; }
 	  }
       }
     if(first < 99999 && second < 99999)
@@ -147,6 +149,7 @@ MassAndIndex Inv2jMassIndex(MyEventCollection collection)
         Inv2jMass.dR=dR;
         Inv2jMass.signEta=sign;
         Inv2jMass.dEta=dEta;
+	//std::cout<<"chose jets "<<first<<" and "<<second<<std::endl;
       }    
     return Inv2jMass;
   }
