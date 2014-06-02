@@ -373,8 +373,8 @@ struct Selection {
 	  }
 	  else if(!invertJetRequirements) (*OutputCollection).h_count->Fill("SecondJetCut",weight);
 	  
-	  std::cout<<"passed jet selections, stating dijet-system found"<<std::endl;
-	  std::cout<<"first jet index: "<<jetIndex.first<<", second jet index: "<<jetIndex.second<<std::endl;
+	  //std::cout<<"passed jet selections, stating dijet-system found"<<std::endl;
+	  //std::cout<<"first jet index: "<<jetIndex.first<<", second jet index: "<<jetIndex.second<<std::endl;
 
 	  //check for different first and 2nd high pt jet and inv mass max jet
 	  //if(jetIndex.first+jetIndex.second!=Inv2j.first+Inv2j.second) std::cout<<"pT1="<<jetIndex.first<<", pT2="<<jetIndex.second<<", M1="<<Inv2j.first<<", M2="<<Inv2j.second<<std::endl;
