@@ -76,7 +76,6 @@ struct MyEventCollection {
 		jet.clear();
 		bjet.clear();
 		met.clear();
-		met.clear();
 	}
 };
 
