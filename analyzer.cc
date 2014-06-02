@@ -109,12 +109,12 @@ int main(int argc, char** argv)
 	TFile file_PUmc("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/S10MC_PUFile.root", "read");
 	
 	//TH1F *PUweights = (TH1F*)file_PU.Get("ratio");
-	TH1F *PUweights = (TH1F*)file_PUmc.Get("analyzeHiMassTau/NVertices_0");
+	TH1F *PUweights = (TH1F*)file_PUdata.Get("analyzeHiMassTau/NVertices_0");
 	PUweights->Scale(1/PUweights->Integral());
-	TH1F *PUdata = (TH1F*)file_PUdata.Get("analyzeHiMassTau/NVertices_0");
-	PUdata->Scale(1/PUdata->Integral());
+	TH1F *PUmc = (TH1F*)file_PUmc.Get("analyzeHiMassTau/NVertices_0");
+	PUmc->Scale(1/PUmc->Integral());
 	
-	PUweights->Divide(PUdata);
+	PUweights->Divide(PUmc);
 	
 	double weight = 1.;
 
