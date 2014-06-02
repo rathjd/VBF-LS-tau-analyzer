@@ -296,10 +296,12 @@ for(unsigned int m =0;m<muon.size();++m){
 	    double NoDistance = TauJetMinDistance(TauNoIsoObjectSelectionCollection, jet[j].eta, jet[j].phi);
             bool jetid=true;
 	    bool failcutnotification = false;
-	    if(!(      (jet[j].neutralHadronEnergy + jet[j].HFHadronEnergy) / jet[j].energy < 0.99      )) jetid=false;
-	    if (debug && jetid) cout << "----(neutralHadE+HFHadE)/energy cut passed" <<endl;
-	    if (debug && !(jetid) ) { cout << "(neutralHadE+HFHadE)/energy = " << ((jet[j].neutralHadronEnergy + jet[j].HFHadronEnergy) / jet[j].energy) <<endl;}
-	    if (debug && !(jetid) && !(failcutnotification)) {failcutnotification = true; cout << "----(neutralHadE+HFHadE)/energy cut FAILED" <<endl;}
+	    if(!(      jet[j].neutralHadronEnergyFraction < 0.99      )) jetid=false;
+	    if (debug && jetid) cout << "----neutralHadronEnergyFraction cut passed" <<endl;
+	    if (debug && !(jetid) && !(failcutnotification)) {failcutnotification = true; cout << "----neutralHadronEnergyFraction cut FAILED" <<endl;}
+	    if(!(      jet[j].HFHadronEnergyFraction < 0.99     )) jetid=false;
+	    if (debug && jetid) cout << "----HFHadronEnergyFraction cut passed" <<endl;
+	    if (debug && !(jetid) && !(failcutnotification)) {failcutnotification = true; cout << "----HFHadronEnergyFraction cut FAILED" <<endl;}
 	    if(!(      jet[j].neutralEmEnergyFraction < 0.99                                            )) jetid=false;
 	    if (debug && jetid) cout << "----neutralEmEnergyFraction cut passed" <<endl;
 	    if (debug && !(jetid) && !(failcutnotification)) {failcutnotification = true; cout << "----neutralEmEnergyFraction cut FAILED" <<endl;}
@@ -338,16 +340,15 @@ for(unsigned int m =0;m<muon.size();++m){
             }
 	  }
 	  //MET selection
-	  baselineObjectSelectionCollection.met2.push_back(&met2[0]);
-	  TauTightIsoObjectSelectionCollection.met2.push_back(&met2[0]);
-	  Tau1TightIsoObjectSelectionCollection.met2.push_back(&met2[0]);
-	  TauMediumIsoObjectSelectionCollection.met2.push_back(&met2[0]);
-	  TauLooseIsoObjectSelectionCollection.met2.push_back(&met2[0]);
-	  TauNoIsoObjectSelectionCollection.met2.push_back(&met2[0]);
+	  baselineObjectSelectionCollection.met.push_back(&met2[0]);
+	  TauTightIsoObjectSelectionCollection.met.push_back(&met2[0]);
+	  Tau1TightIsoObjectSelectionCollection.met.push_back(&met2[0]);
+	  TauMediumIsoObjectSelectionCollection.met.push_back(&met2[0]);
+	  TauLooseIsoObjectSelectionCollection.met.push_back(&met2[0]);
+	  TauNoIsoObjectSelectionCollection.met.push_back(&met2[0]);
 
 	  //Event Count
 	  ofile.count("NoCuts");
-
 	  // ------------------------
 	  // -- Skimming Studies   --
 	  // ------------------------
@@ -422,10 +423,10 @@ while (true) {
 	if(((int)(TauTightIsoObjectSelectionCollection).bjet.size() > 0 )) break;
 		else (myHistoColl_OS_SignalRegion).h_count->Fill("NoBTag",weight);
 
-	if(!( (double)(TauTightIsoObjectSelectionCollection).met2[0]->pt) > 30.) break;
+	if(!( (double)(TauTightIsoObjectSelectionCollection).met[0]->pt) > 30.) break;
 		else (myHistoColl_OS_SignalRegion).h_count->Fill("MinMETCut",weight);
 
-	if (( (TauTightIsoObjectSelectionCollection).met2[0]->pt > 37.439)&&( (TauTightIsoObjectSelectionCollection).met2[0]->pt < 37.44) ) {
+	if (( (TauTightIsoObjectSelectionCollection).met[0]->pt > 37.439)&&( (TauTightIsoObjectSelectionCollection).met[0]->pt < 37.44) ) {
 		cout << endl;
 		cout << "Jets used after object selection for VB selection" << endl;
 		for (unsigned int i = 0; i < (TauTightIsoObjectSelectionCollection).jet.size(); i++ ){
