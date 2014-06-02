@@ -58,7 +58,7 @@ struct MyEventCollection {
 	vector <tau_s*> tau;
 	vector <jet_s*> jet;
 	vector <jet_s*> bjet;
-        vector <met2_s*> met;
+        vector <met2_s*> met2;
 	int NVtx;
 	int PUinteractions;
 
@@ -76,6 +76,7 @@ struct MyEventCollection {
 		jet.clear();
 		bjet.clear();
 		met.clear();
+		met2.clear();
 	}
 };
 

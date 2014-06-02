@@ -980,6 +980,36 @@ std::ostream& operator<<(std::ostream& os, const met2_s& o)
   return os;
 }
 //-----------------------------------------------------------------------------
+struct met2_s
+{
+  double	p;
+  double	energy;
+  double	et;
+  double	px;
+  double	py;
+  double	pz;
+  double	pt;
+  double	phi;
+  double	eta;
+};
+std::vector<met2_s> met2(200);
+
+std::ostream& operator<<(std::ostream& os, const met2_s& o)
+{
+  char r[1024];
+  os << "met2" << std::endl;
+  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
+  return os;
+}
+//-----------------------------------------------------------------------------
 struct muon_s
 {
   double	p;
