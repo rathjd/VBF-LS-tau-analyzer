@@ -176,7 +176,6 @@ int main(int argc, char** argv)
 
 //PU weights
 if(!eventhelper_isRealData){
-
  weight=PUweights->GetBinContent(PUweights->FindBin(PileupSummaryInfo_getTrueNumInteractions[0]));
  //std::cout<<"NVtx="<<PileupSummaryInfo_getTrueNumInteractions[0]<<", weight="<<weight<<std::endl;
  //weight=PUweights->GetBinContent(PUweights->FindBin(PileupSummaryInfo_getPU_NumInteractions[0]));
@@ -190,12 +189,12 @@ TauMediumIsoObjectSelectionCollection.NVtx 	= nrecoVertex;
 TauLooseIsoObjectSelectionCollection.NVtx 	= nrecoVertex;
 TauNoIsoObjectSelectionCollection.NVtx 		= nrecoVertex;
 
-baselineObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getPU_NumInteractions[0];
-TauTightIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getPU_NumInteractions[0];
-Tau1TightIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getPU_NumInteractions[0];
-TauMediumIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getPU_NumInteractions[0];
-TauLooseIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getPU_NumInteractions[0];
-TauNoIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getPU_NumInteractions[0];
+baselineObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getTrueNumInteractions[0];
+TauTightIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getTrueNumInteractions[0];
+Tau1TightIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getTrueNumInteractions[0];
+TauMediumIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getTrueNumInteractions[0];
+TauLooseIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getTrueNumInteractions[0];
+TauNoIsoObjectSelectionCollection.PUinteractions 	= PileupSummaryInfo_getTrueNumInteractions[0];
 
 // vertex selection
 bool goodVertex = true;
