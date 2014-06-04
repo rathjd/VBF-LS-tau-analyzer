@@ -182,11 +182,30 @@ int main(int argc, char** argv)
   TH2F* ChargeMapN_den_C   = (TH2F*) ChargeMapN_den->Clone("ChargeMapN_den_C");
   TH2F* ChargeMapN_den_B   = (TH2F*) ChargeMapN_den->Clone("ChargeMapN_den_B");
   TH2F* ChargeMapN_den_G   = (TH2F*) ChargeMapN_den->Clone("ChargeMapN_den_G");
-  TH2F* ChargeMapN_den_Un  = (TH2F*) ChargeMapN_den->Clone("ChargeMapN_den_Un");          
+  TH2F* ChargeMapN_den_Un  = (TH2F*) ChargeMapN_den->Clone("ChargeMapN_den_Un");    
+  
+  TH2F* ChargeMapT_num_pos = (TH2F*) ChargeMapT_num->Clone("ChargeMapT_num_pos");
+  TH2F* ChargeMapT_num_neg = (TH2F*) ChargeMapT_num->Clone("ChargeMapT_num_neg");
+  TH2F* ChargeMapT_num_neu = (TH2F*) ChargeMapT_num->Clone("ChargeMapT_num_neu"); 
+  TH2F* ChargeMapT_den_pos = (TH2F*) ChargeMapT_den->Clone("ChargeMapT_den_pos");
+  TH2F* ChargeMapT_den_neg = (TH2F*) ChargeMapT_den->Clone("ChargeMapT_den_neg");
+  TH2F* ChargeMapT_den_neu = (TH2F*) ChargeMapT_den->Clone("ChargeMapT_den_neu");            
   
   //---------------------------------------------------------------------------
   // Histogram Collection Init
   //---------------------------------------------------------------------------
+
+  TFile file_PUdata("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/DataPUFile_22Jan2013ReReco_Run2012.root", "read");
+  TFile file_PUmc("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/S10MC_PUFile.root", "read");
+	
+  TH1F *PUweights = (TH1F*)file_PUdata.Get("analyzeHiMassTau/NVertices_0");
+  PUweights->Scale(1/PUweights->Integral());
+  TH1F *PUmc = (TH1F*)file_PUmc.Get("analyzeHiMassTau/NVertices_0");
+  PUmc->Scale(1/PUmc->Integral());
+	
+  PUweights->Divide(PUmc);
+  
+  double weight=1.;
 
   MyEventCollection TauTightIsoObjectSelectionCollection ("TauTightIsoObjectSelection");
   MyEventCollection TauMediumIsoObjectSelectionCollection ("TauMediumIsoObjectSelection");
@@ -218,6 +237,12 @@ int main(int argc, char** argv)
 	  // ----------------------
 	  // -- object selection --
 	  // ----------------------
+
+	//PU weights
+	if(!eventhelper_isRealData){
+ 	  weight=PUweights->GetBinContent(PUweights->FindBin(PileupSummaryInfo_getTrueNumInteractions[0]));
+ 	  //std::cout<<"NVtx="<<PileupSummaryInfo_getTrueNumInteractions[0]<<", weight="<<weight<<std::endl;
+	} 
 
           // vertex selection
 	  bool goodVertex = true;
@@ -305,12 +330,12 @@ int main(int argc, char** argv)
 	}
 
 	  //MET selection
-	  TauTightIsoObjectSelectionCollection.met.push_back(&met[0]);
-	  TauMediumIsoObjectSelectionCollection.met.push_back(&met[0]);
-	  TauMediumInclIsoObjectSelectionCollection.met.push_back(&met[0]);
-	  TauLooseIsoObjectSelectionCollection.met.push_back(&met[0]);
-	  TauLooseInclIsoObjectSelectionCollection.met.push_back(&met[0]);
-	  TauNoIsoObjectSelectionCollection.met.push_back(&met[0]);
+	  TauTightIsoObjectSelectionCollection.met.push_back(&met2[0]);
+	  TauMediumIsoObjectSelectionCollection.met.push_back(&met2[0]);
+	  TauMediumInclIsoObjectSelectionCollection.met.push_back(&met2[0]);
+	  TauLooseIsoObjectSelectionCollection.met.push_back(&met2[0]);
+	  TauLooseInclIsoObjectSelectionCollection.met.push_back(&met2[0]);
+	  TauNoIsoObjectSelectionCollection.met.push_back(&met2[0]);
 
 	//Event Count
 	ofile.count("NoCuts");
@@ -380,76 +405,82 @@ int main(int argc, char** argv)
 		double Fq=JetLooseIsoObjectSelectionCollection.jet[j]->chargedEmEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->muonEnergyFraction+JetLooseIsoObjectSelectionCollection.jet[j]->chargedHadronEnergyFraction;		
 		if(jetMindR > 0.5){ //only count isolated jets
 		  if( deltaRt.first < 0.1  ){
-		    ChargeMapT_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    if(CulpritCode == 1) 	ChargeMapT_num_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 4)	ChargeMapT_num_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 5)	ChargeMapT_num_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 21)	ChargeMapT_num_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 0) 	ChargeMapT_num_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		    ChargeMapT_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    if(JetLooseIsoObjectSelectionCollection.jet[j]->charge>0) ChargeMapT_num_pos->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(JetLooseIsoObjectSelectionCollection.jet[j]->charge<0) ChargeMapT_num_neg->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(JetLooseIsoObjectSelectionCollection.jet[j]->charge==0) ChargeMapT_num_neu->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    if(CulpritCode == 1) 	ChargeMapT_num_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 4)	ChargeMapT_num_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 5)	ChargeMapT_num_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 21)	ChargeMapT_num_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 0) 	ChargeMapT_num_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 		  }  
 		  if( deltaRm.first < 0.1  ){
-		    ChargeMapM_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    if(CulpritCode == 1) 	ChargeMapM_num_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 4)	ChargeMapM_num_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 5)	ChargeMapM_num_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 21)	ChargeMapM_num_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 0) 	ChargeMapM_num_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		    ChargeMapM_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    if(CulpritCode == 1) 	ChargeMapM_num_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 4)	ChargeMapM_num_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 5)	ChargeMapM_num_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 21)	ChargeMapM_num_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 0) 	ChargeMapM_num_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 		  }  
-		  if( deltaRmi.first < 0.1 ) ChargeMapMi_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		  if( deltaRmi.first < 0.1 ) ChargeMapMi_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 		  if( deltaRl.first < 0.1  ){
-		    ChargeMapL_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    if(CulpritCode == 1) 	ChargeMapL_num_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 4)	ChargeMapL_num_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 5)	ChargeMapL_num_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 21)	ChargeMapL_num_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 0) 	ChargeMapL_num_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		    ChargeMapL_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    if(CulpritCode == 1) 	ChargeMapL_num_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 4)	ChargeMapL_num_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 5)	ChargeMapL_num_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 21)	ChargeMapL_num_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 0) 	ChargeMapL_num_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 		  } 
-		  if( deltaRli.first < 0.1 ) ChargeMapLi_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		  if( deltaRli.first < 0.1 ) ChargeMapLi_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 		  if( deltaRn.first < 0.1  ){
-		    ChargeMapN_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    if(CulpritCode == 1) 	ChargeMapN_num_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 4)	ChargeMapN_num_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 5)	ChargeMapN_num_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 21)	ChargeMapN_num_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		    else if(CulpritCode == 0) 	ChargeMapN_num_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		    ChargeMapN_num->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    if(CulpritCode == 1) 	ChargeMapN_num_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 4)	ChargeMapN_num_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 5)	ChargeMapN_num_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 21)	ChargeMapN_num_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		    else if(CulpritCode == 0) 	ChargeMapN_num_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 		  } 
 		  if(fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta)<2.1) //only count jets in acceptance in denominator
 		    {
-		      ChargeMapN_den->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		      ChargeMapL_den->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		      ChargeMapLi_den->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		      ChargeMapM_den->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		      ChargeMapMi_den->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		      ChargeMapT_den->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		      if(JetLooseIsoObjectSelectionCollection.jet[j]->charge>0) ChargeMapT_den_pos->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      else if(JetLooseIsoObjectSelectionCollection.jet[j]->charge<0) ChargeMapT_den_neg->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      else if(JetLooseIsoObjectSelectionCollection.jet[j]->charge==0) ChargeMapT_den_neu->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      ChargeMapN_den->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      ChargeMapL_den->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      ChargeMapLi_den->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      ChargeMapM_den->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      ChargeMapMi_den->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      ChargeMapT_den->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 		      if(CulpritCode == 1){
-		        ChargeMapT_den_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			ChargeMapM_den_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			ChargeMapL_den_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			ChargeMapN_den_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		        ChargeMapT_den_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+			ChargeMapM_den_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+			ChargeMapL_den_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+			ChargeMapN_den_Uds->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 		      }
 		      else if(CulpritCode == 4){
-		        ChargeMapT_den_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			ChargeMapM_den_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			ChargeMapL_den_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			ChargeMapN_den_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		        ChargeMapT_den_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+			ChargeMapM_den_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+			ChargeMapL_den_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+			ChargeMapN_den_C->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 		      }
 		      else if(CulpritCode == 5){
-		        ChargeMapT_den_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			ChargeMapM_den_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			ChargeMapL_den_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			ChargeMapN_den_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		        ChargeMapT_den_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+			ChargeMapM_den_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+			ChargeMapL_den_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+			ChargeMapN_den_B->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 		      }
 		      else if(CulpritCode == 21){
-		        ChargeMapT_den_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			ChargeMapM_den_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			ChargeMapL_den_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			ChargeMapN_den_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		        ChargeMapT_den_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+			ChargeMapM_den_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+			ChargeMapL_den_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+			ChargeMapN_den_G->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 		      }
 		      else if(CulpritCode == 0){
-		        ChargeMapT_den_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			ChargeMapM_den_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			ChargeMapL_den_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-			ChargeMapN_den_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt);
+		        ChargeMapT_den_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+			ChargeMapM_den_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+			ChargeMapL_den_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+			ChargeMapN_den_Un->Fill(Fq, JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
 		      }
 		    }
 		}

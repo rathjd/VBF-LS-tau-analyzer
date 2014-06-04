@@ -102,6 +102,16 @@ int main(int argc, char** argv)
 	TH1::SetDefaultSumw2();
 	double weight = 1.;
 
+	TFile file_PUdata("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/DataPUFile_22Jan2013ReReco_Run2012.root", "read");
+	TFile file_PUmc("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/S10MC_PUFile.root", "read");
+	
+	TH1F *PUweights = (TH1F*)file_PUdata.Get("analyzeHiMassTau/NVertices_0");
+	PUweights->Scale(1/PUweights->Integral());
+	TH1F *PUmc = (TH1F*)file_PUmc.Get("analyzeHiMassTau/NVertices_0");
+	PUmc->Scale(1/PUmc->Integral());
+	
+	PUweights->Divide(PUmc);
+
 	MyEventCollection baselineObjectSelectionCollection ("baselineObjectSelection");
 	MyEventCollection TauTightIsoObjectSelectionCollection ("TauTightIsoObjectSelection");
 	MyEventCollection Tau1TightIsoObjectSelectionCollection ("Tau1TightIsoObjectSelection");
@@ -132,6 +142,12 @@ int main(int argc, char** argv)
 	  // -- object selection --
 	  // ----------------------
 	  
+	  
+	//PU weights
+	if(!eventhelper_isRealData){
+ 	  weight=PUweights->GetBinContent(PUweights->FindBin(PileupSummaryInfo_getTrueNumInteractions[0]));
+ 	  //std::cout<<"NVtx="<<PileupSummaryInfo_getTrueNumInteractions[0]<<", weight="<<weight<<std::endl;
+	} 
 	  
 	//search for gentaus
 	std::vector<genparticlehelper_s*> genTau;  
@@ -217,8 +233,8 @@ int main(int argc, char** argv)
 	else if(looses.size()==1) fakeTau=2;
 	else if(nones.size()==1) fakeTau=3;
 	  
-	if(baselineObjectSelectionCollection.passedTrigger) h2_Trigger->Fill(realTau, fakeTau);
-	else h2_NoTrigger->Fill(realTau, fakeTau);
+	if(baselineObjectSelectionCollection.passedTrigger) h2_Trigger->Fill(realTau, fakeTau, weight);
+	else h2_NoTrigger->Fill(realTau, fakeTau, weight);
     }
 	  //Event Count
 	  ofile.count("NoCuts");

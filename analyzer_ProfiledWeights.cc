@@ -241,6 +241,18 @@ int main(int argc, char** argv)
   // Histogram Collection Init
   //---------------------------------------------------------------------------
   
+  TFile file_PUdata("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/DataPUFile_22Jan2013ReReco_Run2012.root", "read");
+  TFile file_PUmc("/nfs/dust/cms/user/rathjd/VBF-LS-tau/PU/S10MC_PUFile.root", "read");
+	
+  TH1F *PUweights = (TH1F*)file_PUdata.Get("analyzeHiMassTau/NVertices_0");
+  PUweights->Scale(1/PUweights->Integral());
+  TH1F *PUmc = (TH1F*)file_PUmc.Get("analyzeHiMassTau/NVertices_0");
+  PUmc->Scale(1/PUmc->Integral());
+	
+  PUweights->Divide(PUmc);
+	
+  double weight = 1.;
+  
   MyEventCollection TauTightIsoObjectSelectionCollection ("TauTightIsoObjectSelection");
   MyEventCollection TauMediumIsoObjectSelectionCollection ("TauMediumIsoObjectSelection");
   MyEventCollection TauLooseIsoObjectSelectionCollection ("TauLooseIsoObjectSelection");
@@ -269,6 +281,12 @@ int main(int argc, char** argv)
 	  // ----------------------
 	  // -- object selection --
 	  // ----------------------
+
+	//PU weights
+	if(!eventhelper_isRealData){
+ 	  weight=PUweights->GetBinContent(PUweights->FindBin(PileupSummaryInfo_getTrueNumInteractions[0]));
+ 	  //std::cout<<"NVtx="<<PileupSummaryInfo_getTrueNumInteractions[0]<<", weight="<<weight<<std::endl;
+	} 
 
           // vertex selection
 	  bool goodVertex = true;
@@ -417,182 +435,182 @@ int main(int argc, char** argv)
 		if(jetMindR > 0.5 && fabs(JetLooseIsoObjectSelectionCollection.jet[j]->eta) <=2.1){ //only count isolated jets
 		  if( deltaRt.first < 0.3 ){
 		    if(TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt*var>=45){
-		      RescaleWeightT->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		      ScaleFactorT->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		      ScaleFactorEnergyT->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		      RescaleWeightT->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		      ScaleFactorT->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      ScaleFactorEnergyT->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      if(CulpritCode == 1){
-		        RescaleWeightT_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorT_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyT_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightT_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorT_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyT_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		      else if(CulpritCode == 4){
-		        RescaleWeightT_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorT_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyT_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightT_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorT_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyT_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		      else if(CulpritCode == 5){
-		        RescaleWeightT_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorT_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyT_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightT_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorT_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyT_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		      else if(CulpritCode == 21){
-		        RescaleWeightT_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorT_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyT_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightT_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorT_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyT_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		      else if(CulpritCode == 0){
-		        RescaleWeightT_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorT_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyT_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightT_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorT_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyT_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauTightIsoObjectSelectionCollection.tau[deltaRt.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		    }
 		    else{
-		      RescaleWeightT->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      if(CulpritCode == 1) 	 RescaleWeightT_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 4)  RescaleWeightT_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 5)  RescaleWeightT_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 21) RescaleWeightT_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 0)  RescaleWeightT_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
+		      RescaleWeightT->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      if(CulpritCode == 1) 	 RescaleWeightT_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 4)  RescaleWeightT_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 5)  RescaleWeightT_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 21) RescaleWeightT_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 0)  RescaleWeightT_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
 		    }
 		  }	
 		  if( deltaRm.first < 0.3 ){
 		    if(TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt*var>=45){
-		      RescaleWeightM->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		      ScaleFactorM->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		      ScaleFactorEnergyM->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
-		      RescaleWeightMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		      ScaleFactorMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		      ScaleFactorEnergyMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);		      
+		      RescaleWeightM->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		      ScaleFactorM->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      ScaleFactorEnergyM->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
+		      RescaleWeightMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		      ScaleFactorMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      ScaleFactorEnergyMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);		      
 		      if(CulpritCode == 1){
-		        RescaleWeightM_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorM_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyM_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightM_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorM_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyM_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		      else if(CulpritCode == 4){
-		        RescaleWeightM_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorM_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyM_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightM_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorM_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyM_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		      else if(CulpritCode == 5){
-		        RescaleWeightM_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorM_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyM_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightM_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorM_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyM_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		      else if(CulpritCode == 21){
-		        RescaleWeightM_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorM_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyM_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightM_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorM_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyM_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		      else if(CulpritCode == 0){
-		        RescaleWeightM_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorM_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyM_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightM_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorM_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyM_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauMediumIsoObjectSelectionCollection.tau[deltaRm.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		    }
 		    else{
-		      RescaleWeightM->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      RescaleWeightMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      if(CulpritCode == 1) 	 RescaleWeightM_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 4)  RescaleWeightM_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 5)  RescaleWeightM_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 21) RescaleWeightM_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 0)  RescaleWeightM_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0); 
+		      RescaleWeightM->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      RescaleWeightMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      if(CulpritCode == 1) 	 RescaleWeightM_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 4)  RescaleWeightM_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 5)  RescaleWeightM_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 21) RescaleWeightM_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 0)  RescaleWeightM_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight); 
 		    }
 		  }		  
 		  if( deltaRl.first < 0.3 ){
 		    if(TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var>=45){
-		      RescaleWeightL->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		      ScaleFactorL->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		      ScaleFactorEnergyL->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
-		      RescaleWeightMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		      ScaleFactorMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		      ScaleFactorEnergyMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);		      
-		      RescaleWeightLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		      ScaleFactorLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		      ScaleFactorEnergyLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);	
+		      RescaleWeightL->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		      ScaleFactorL->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      ScaleFactorEnergyL->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
+		      RescaleWeightMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		      ScaleFactorMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      ScaleFactorEnergyMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);		      
+		      RescaleWeightLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		      ScaleFactorLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      ScaleFactorEnergyLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);	
 		      if(CulpritCode == 1){
-		        RescaleWeightL_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorL_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyL_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightL_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorL_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyL_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		      else if(CulpritCode == 4){
-		        RescaleWeightL_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorL_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyL_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightL_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorL_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyL_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		      else if(CulpritCode == 5){
-		        RescaleWeightL_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorL_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyL_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightL_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorL_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyL_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		      else if(CulpritCode == 21){
-		        RescaleWeightL_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorL_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyL_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightL_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorL_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyL_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }	      	
 		      else if(CulpritCode == 0){
-		        RescaleWeightL_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorL_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyL_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightL_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorL_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyL_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauLooseIsoObjectSelectionCollection.tau[deltaRl.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }	      
 		    }
 		    else{
-		      RescaleWeightL->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      RescaleWeightLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      RescaleWeightMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      if(CulpritCode == 1) 	 RescaleWeightL_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 4)  RescaleWeightL_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 5)  RescaleWeightL_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 21) RescaleWeightL_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 0)  RescaleWeightL_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
+		      RescaleWeightL->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      RescaleWeightLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      RescaleWeightMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      if(CulpritCode == 1) 	 RescaleWeightL_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 4)  RescaleWeightL_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 5)  RescaleWeightL_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 21) RescaleWeightL_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 0)  RescaleWeightL_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
 		    }
 		  }
 		  if( deltaRn.first < 0.3 ){
 		    if(TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var>=45){
-		      RescaleWeightN->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		      ScaleFactorN->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		      ScaleFactorEnergyN->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
-		      RescaleWeightMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		      ScaleFactorMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		      ScaleFactorEnergyMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);		      
-		      RescaleWeightLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		      ScaleFactorLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		      ScaleFactorEnergyLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);	
+		      RescaleWeightN->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		      ScaleFactorN->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      ScaleFactorEnergyN->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
+		      RescaleWeightMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		      ScaleFactorMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      ScaleFactorEnergyMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);		      
+		      RescaleWeightLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		      ScaleFactorLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		      ScaleFactorEnergyLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);	
 		      if(CulpritCode == 1){
-		        RescaleWeightN_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorN_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyN_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightN_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorN_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyN_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		      else if(CulpritCode == 4){
-		        RescaleWeightN_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorN_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyN_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightN_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorN_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyN_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		      else if(CulpritCode == 5){
-		        RescaleWeightN_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorN_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyN_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightN_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorN_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyN_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }
 		      else if(CulpritCode == 21){
-		        RescaleWeightN_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorN_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyN_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightN_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorN_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyN_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }	    
 		      else if(CulpritCode == 0){
-		        RescaleWeightN_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1);
-		        ScaleFactorN_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt);
-		        ScaleFactorEnergyN_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy);
+		        RescaleWeightN_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,1,weight);
+		        ScaleFactorN_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->pt*var/JetLooseIsoObjectSelectionCollection.jet[j]->pt,weight);
+		        ScaleFactorEnergyN_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->energy,TauNoIsoObjectSelectionCollection.tau[deltaRn.second]->energy*var/JetLooseIsoObjectSelectionCollection.jet[j]->energy,weight);
 		      }  		      
 		    }
 		    else{
-		      RescaleWeightN->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      RescaleWeightLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      RescaleWeightMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      if(CulpritCode == 1) 	 RescaleWeightN_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 4)  RescaleWeightN_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 5)  RescaleWeightN_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 21) RescaleWeightN_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
-		      else if(CulpritCode == 0)  RescaleWeightN_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0);
+		      RescaleWeightN->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      RescaleWeightLi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      RescaleWeightMi->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      if(CulpritCode == 1) 	 RescaleWeightN_Uds->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 4)  RescaleWeightN_C->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 5)  RescaleWeightN_B->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 21) RescaleWeightN_G->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
+		      else if(CulpritCode == 0)  RescaleWeightN_Un->Fill(JetLooseIsoObjectSelectionCollection.jet[j]->pt,0,weight);
 		    }
 		  }		  
 		}
