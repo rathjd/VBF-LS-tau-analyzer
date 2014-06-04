@@ -290,13 +290,13 @@ struct Selection {
 	  pair<unsigned int,unsigned int> jetIndex=LeadingJets((*InputCollection));
 	  
 	  if(jetIndex.first==99999 || jetIndex.second==99999){
-	    if(invertJetRequirements){
+	    /*if(invertJetRequirements){
 	      (*OutputCollection).h_count->Fill("InverseNumberOfJetsCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
 	      passed=true;
 	      return;
 	    }
-	    else return;
+	    else*/ return;
 	  }
 	  
 	  //old leading jet cuts version
