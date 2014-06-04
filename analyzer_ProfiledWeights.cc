@@ -301,22 +301,6 @@ int main(int argc, char** argv)
 	    }
 	  }
 
-          //trigger selection
-   
-          if (
-                (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3 == 1) ||
-                (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4 == 1) ||
-                (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2 == 1) ||
-                (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v3 == 1) ||
-                (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v4 == 1) ||
-                (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v6 == 1)
-
-             ) { TauTightIsoObjectSelectionCollection.passedTrigger = true;
-	         TauMediumIsoObjectSelectionCollection.passedTrigger = true;
-	         TauLooseIsoObjectSelectionCollection.passedTrigger = true;
-	         TauNoIsoObjectSelectionCollection.passedTrigger = true;
-               }
-
 	//search for gentaus
 	std::vector<genparticlehelper_s*> genTau; 
 	std::vector<genparticlehelper_s*> genMu;
