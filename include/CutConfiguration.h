@@ -12,7 +12,7 @@ void CutConfiguration(Selection *Region, bool VBF, bool LS){
   if(LS) Region->DiTauSign = +1; //1 for LS and -1 for OS, 0 for no requirement
   else   Region->DiTauSign = -1; //1 for LS and -1 for OS, 0 for no requirement
   Region->Btag = 0; //number of btags required (exact -> 0 = none)
-  Region->METMin = 30.; // minimum MET requirement
+  Region->METMin = 0.; // minimum MET requirement
   Region->METMax = -1; // maximum MET requirement
   Region->JetEtaMax = 5.; //maximum eta for jets, set to -1 for no requirement
   Region->LeadJetPtMin = 30.; //minimum pt of lead jet, set to -1 for no requirement
