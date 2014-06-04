@@ -113,11 +113,13 @@ MassAndIndex Inv2jMassIndex(MyEventCollection collection)
     TLorentzVector jet2_4v; 
     
     double Mass=0.;
+    double dEtaCheck=0.;
     unsigned int first=99999;
     unsigned int second=99999;
     
-    bool signpass=false;
-    double dEtaCheck=0.;
+    bool pass=false; 	//passing all selection cuts for the dijet system
+    bool failOne=false;	//failing dijet eta cut
+    bool failTwo=false;	//failing dijet eta sign cut
     
     for(unsigned int j1=1; j1<collection.jet.size(); j1++)
       {
@@ -131,11 +133,16 @@ MassAndIndex Inv2jMassIndex(MyEventCollection collection)
 	    
 	    TLorentzVector dijet_4v = jet1_4v + jet2_4v;
 	    
-	    /*if(!signpass && sign<0) { Mass = dijet_4v.M(); first = j1; second = j2; signpass=true; dEtaCheck=dEta;}
-	    else if(!signpass && Mass < dijet_4v.M()) { Mass = dijet_4v.M(); first = j1; second = j2; }
-	    else if(signpass && Mass*0.8 < dijet_4v.M() && dEtaCheck < dEta) { Mass = dijet_4v.M(); first = j1; second = j2; dEtaCheck=dEta;}*/
-	    if(dEta>=4.2 && sign<0 && dijet_4v.M()>=250) {Mass = dijet_4v.M(); first = j1; second = j2; signpass=true; dEtaCheck=dEta;}
-	    else if(!signpass && Mass < dijet_4v.M())    {Mass = dijet_4v.M(); first = j1; second = j2; }
+	    //select the pair of dijets with highest invariant mass passing all cuts
+	    if(dEta>=4.2 && sign<0 && dijet_4v.M()>=250+Mass) {Mass = dijet_4v.M(); first = j1; second = j2; pass=true;}
+	    else if(!pass){
+	       if(dEta>dEtaCheck && sign<0 && dijet_4v.M()>250) {Mass = dijet_4v.M(); first = j1; second = j2; dEtaCheck=dEta; failOne=true;} //search for pair failing only the dijet delta eta cut
+	       else if(!failOne)
+	       {
+	         if(dEta>dEtaCheck && dijet_4v.M()>250) {Mass = dijet_4v.M(); first = j1; second = j2; dEtaCheck=dEta; failTwo=true;} //search for a pair failing dijet delta eta and eta sign cuts
+		 else if(!failTwo && dijet_4v.M()>Mass && dEta>dEtaCheck) {Mass = dijet_4v.M(); first = j1; second = j2; dEtaCheck=dEta;}  //failing all cuts
+	       }
+	    }
 	  }
       }
     if(first < 99999 && second < 99999)
