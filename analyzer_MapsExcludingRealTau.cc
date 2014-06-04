@@ -279,24 +279,6 @@ int main(int argc, char** argv)
 		  if (fabs(genparticlehelper[g].pdgId) == 21) 						genG.push_back(&genparticlehelper[g]);		  
 		}
 
-          //trigger selection
-   
-          if (
-                (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3 == 1) ||
-                (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4 == 1) ||
-                (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2 == 1) ||
-                (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v3 == 1) ||
-                (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v4 == 1) ||
-                (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v6 == 1)
-
-             ) { TauTightIsoObjectSelectionCollection.passedTrigger = true;
-	         TauMediumIsoObjectSelectionCollection.passedTrigger = true;
-		 TauMediumInclIsoObjectSelectionCollection.goodVertex = true;
-	         TauLooseIsoObjectSelectionCollection.passedTrigger = true;
-		 TauLooseInclIsoObjectSelectionCollection.goodVertex = true;
-	         TauNoIsoObjectSelectionCollection.passedTrigger = true;
-               }
-
           //smart tau selection
 	  for(unsigned int t =0;t<tau.size();++t){
             if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
