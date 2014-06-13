@@ -1,19 +1,15 @@
-Created: Thu May 30 15:41:56 2013
+Created: Fri Jun 13 07:34:29 2014
 
-    o To build the default program (analyzer) do
+	o To build all programs do
 
 	  make
 
-    o To build another program in this directory do
-
-	  make program=<program-name>
-
-    example:
-
-	  make program=findSUSYalready
+	  This will first build lib/libanalyzer.so from the codes in src, then
+	  build all the programs in the current directory, linked against the
+	  shared library.
 
 
-    o To run the program, first create a text file (default name=filelist.txt)
+	o To run the program, first create a text file (default name=filelist.txt)
 	containing a list of the ntuples to be analyzed, one filename per line.
 	Then do
 
@@ -32,4 +28,4 @@ Created: Thu May 30 15:41:56 2013
 For details, please refer to the documentation at:
 
 	https://twiki.cern.ch/twiki/bin/viewauth/CMS/TheNtupleMaker
-	
+

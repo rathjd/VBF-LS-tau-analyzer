@@ -1,10 +1,10 @@
 #ifndef ANALYZER_H
 #define ANALYZER_H
 //-----------------------------------------------------------------------------
-// File: analyzer.h
+// File:        analyzer.h
 // Description: Analyzer header for ntuples created by TheNtupleMaker
-// Created: Wed Dec 18 18:04:53 2013 by mkanalyzer.py
-// Author: Daniele Marconi
+// Created:     Fri Jun 13 07:34:29 2014 by mkanalyzer.py
+// Author:      Shakepeare's ghost
 //-----------------------------------------------------------------------------
 // -- System
 
@@ -33,7 +33,6 @@
 #include "TKey.h"
 #include "TH1F.h"
 #include "TH2F.h"
-#include "TLorentzVector.h"
 
 namespace evt {
 //-----------------------------------------------------------------------------
@@ -45,320 +44,93 @@ double	GenRunInfoProduct_internalXSec_value;
 std::vector<int>	PileupSummaryInfo_getBunchCrossing(10,0);
 std::vector<int>	PileupSummaryInfo_getPU_NumInteractions(10,0);
 std::vector<float>	PileupSummaryInfo_getTrueNumInteractions(10,0);
-std::vector<int>	ak5GenJets_charge(100,0);
-std::vector<double>	ak5GenJets_eta(100,0);
-std::vector<double>	ak5GenJets_mass(100,0);
-std::vector<double>	ak5GenJets_phi(100,0);
-std::vector<double>	ak5GenJets_pt(100,0);
-int	eventhelper_bunchCrossing;
-int	eventhelper_event;
-int	eventhelper_isRealData;
-int	eventhelper_luminosityBlock;
-int	eventhelper_orbitNumber;
-int	eventhelper_run;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v1;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v10;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v11;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v12;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v13;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v14;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v15;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v16;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v17;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v18;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v19;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v2;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v20;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v3;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v4;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v5;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v6;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v7;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v8;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v9;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v1;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v10;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v11;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v12;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v13;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v14;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v15;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v16;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v17;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v18;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v19;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v2;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v20;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v3;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v4;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v5;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v6;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v7;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v8;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve200_v9;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v1;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v10;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v11;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v12;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v13;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v14;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v15;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v16;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v17;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v18;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v19;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v2;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v20;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v3;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v4;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v5;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v6;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v7;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v8;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve260_v9;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v1;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v10;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v11;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v12;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v13;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v14;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v15;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v16;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v17;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v18;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v19;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v2;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v20;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v3;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v4;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v5;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v6;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v7;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v8;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve320_v9;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v1;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v10;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v11;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v12;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v13;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v14;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v15;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v16;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v17;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v18;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v19;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v2;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v20;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v3;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v4;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v5;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v6;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v7;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v8;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve400_v9;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v1;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v10;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v11;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v12;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v13;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v14;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v15;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v16;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v17;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v18;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v19;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v2;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v20;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v3;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v4;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v5;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v6;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v7;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v8;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve40_v9;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v1;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v10;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v11;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v12;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v13;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v14;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v15;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v16;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v17;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v18;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v19;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v2;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v20;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v3;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v4;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v5;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v6;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v7;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v8;
-int	triggerresultshelper_prescale_HLT_DiPFJetAve80_v9;
-int	triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1;
-int	triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3;
-int	triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4;
-int	triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2;
-int	triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v3;
-int	triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v4;
-int	triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v6;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v1;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v10;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v11;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v12;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v13;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v14;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v15;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v16;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v17;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v18;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v19;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v2;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v20;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v3;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v4;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v5;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v6;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v7;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v8;
-int	triggerresultshelper_value_HLT_DiPFJetAve140_v9;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v1;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v10;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v11;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v12;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v13;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v14;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v15;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v16;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v17;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v18;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v19;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v2;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v20;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v3;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v4;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v5;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v6;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v7;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v8;
-int	triggerresultshelper_value_HLT_DiPFJetAve200_v9;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v1;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v10;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v11;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v12;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v13;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v14;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v15;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v16;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v17;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v18;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v19;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v2;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v20;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v3;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v4;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v5;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v6;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v7;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v8;
-int	triggerresultshelper_value_HLT_DiPFJetAve260_v9;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v1;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v10;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v11;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v12;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v13;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v14;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v15;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v16;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v17;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v18;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v19;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v2;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v20;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v3;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v4;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v5;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v6;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v7;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v8;
-int	triggerresultshelper_value_HLT_DiPFJetAve320_v9;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v1;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v10;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v11;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v12;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v13;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v14;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v15;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v16;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v17;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v18;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v19;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v2;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v20;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v3;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v4;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v5;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v6;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v7;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v8;
-int	triggerresultshelper_value_HLT_DiPFJetAve400_v9;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v1;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v10;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v11;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v12;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v13;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v14;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v15;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v16;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v17;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v18;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v19;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v2;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v20;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v3;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v4;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v5;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v6;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v7;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v8;
-int	triggerresultshelper_value_HLT_DiPFJetAve40_v9;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v1;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v10;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v11;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v12;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v13;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v14;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v15;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v16;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v17;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v18;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v19;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v2;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v20;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v3;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v4;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v5;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v6;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v7;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v8;
-int	triggerresultshelper_value_HLT_DiPFJetAve80_v9;
-int	triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1;
-int	triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3;
-int	triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4;
-int	triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2;
-int	triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v3;
-int	triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v4;
-int	triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v6;
+int	edmEventHelper_bunchCrossing;
+int	edmEventHelper_event;
+int	edmEventHelper_isRealData;
+int	edmEventHelper_luminosityBlock;
+int	edmEventHelper_orbitNumber;
+int	edmEventHelper_run;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v1;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v10;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v11;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v12;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v13;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v14;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v15;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v16;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v2;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v3;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v4;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v5;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v6;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v7;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v8;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v9;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v1;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v10;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v11;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v12;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v13;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v14;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v15;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v16;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v2;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v3;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v4;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v5;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v6;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v7;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v8;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v9;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v1;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v10;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v11;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v12;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v13;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v14;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v2;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v3;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v4;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v5;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v6;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v7;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v8;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v9;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v1;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v10;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v11;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v2;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v3;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v4;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v5;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v6;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v7;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v8;
+int	edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v9;
+int	edmTriggerResultsHelper_prescale_HLT_PFHT350_PFMET100_v1;
+int	edmTriggerResultsHelper_prescale_HLT_PFHT350_PFMET100_v2;
+int	edmTriggerResultsHelper_prescale_HLT_PFHT350_PFMET100_v3;
+int	edmTriggerResultsHelper_prescale_HLT_PFNoPUHT350_PFMET100_v1;
+int	edmTriggerResultsHelper_prescale_HLT_PFNoPUHT350_PFMET100_v2;
+int	edmTriggerResultsHelper_prescale_HLT_PFNoPUHT350_PFMET100_v3;
+int	edmTriggerResultsHelper_prescale_HLT_PFNoPUHT350_PFMET100_v4;
+int	edmTriggerResultsHelper_prescale_HLT_PFNoPUHT350_PFMET100_v5;
+int	edmTriggerResultsHelper_value_HLT_PFHT350_PFMET100_v1;
+int	edmTriggerResultsHelper_value_HLT_PFHT350_PFMET100_v2;
+int	edmTriggerResultsHelper_value_HLT_PFHT350_PFMET100_v3;
+int	edmTriggerResultsHelper_value_HLT_PFNoPUHT350_PFMET100_v1;
+int	edmTriggerResultsHelper_value_HLT_PFNoPUHT350_PFMET100_v2;
+int	edmTriggerResultsHelper_value_HLT_PFNoPUHT350_PFMET100_v3;
+int	edmTriggerResultsHelper_value_HLT_PFNoPUHT350_PFMET100_v4;
+int	edmTriggerResultsHelper_value_HLT_PFNoPUHT350_PFMET100_v5;
 int	nPileupSummaryInfo;
-int	nak5GenJets;
 int	npatElectron;
 int	npatJet;
 int	npatMET;
 int	npatMET2;
 int	npatMuon;
 int	npatTau;
-std::vector<size_t>	patTau_signalPFChargedHadrCands_size(200,0);
+std::vector<size_t>	npatTau_signalPFChargedHadrCands(200,0);
 int	nrecoGenParticleHelper;
 int	nrecoGenParticleHelperPlus;
 int	nrecoGsfElectron;
@@ -671,10 +443,10 @@ std::map<std::string, std::vector<int> > indexmap;
 void initialize()
 {
   for(std::map<std::string, std::vector<int> >::iterator
-    item=indexmap.begin();
+    item=indexmap.begin(); 
     item != indexmap.end();
-++item)
-item->second.clear();
+	++item)
+	item->second.clear();
 }
 
 void select(std::string objname)
@@ -690,7 +462,7 @@ void select(std::string objname, int index)
     }
   catch (...)
     {
-      std::cout << "*** perhaps you failed to call select for "
+      std::cout << "*** perhaps you failed to call select for " 
                 << objname << std::endl;
       assert(0);
     }
@@ -712,35 +484,13 @@ std::ostream& operator<<(std::ostream& os, const PileupSummaryInfo_s& o)
 {
   char r[1024];
   os << "PileupSummaryInfo" << std::endl;
-  sprintf(r, " %-32s: %f\n", "getBunchCrossing", (double)o.getBunchCrossing); os << r;
-  sprintf(r, " %-32s: %f\n", "getPU_NumInteractions", (double)o.getPU_NumInteractions); os << r;
-  sprintf(r, " %-32s: %f\n", "getTrueNumInteractions", (double)o.getTrueNumInteractions); os << r;
+  sprintf(r, "  %-32s: %f\n", "getBunchCrossing", (double)o.getBunchCrossing); os << r;
+  sprintf(r, "  %-32s: %f\n", "getPU_NumInteractions", (double)o.getPU_NumInteractions); os << r;
+  sprintf(r, "  %-32s: %f\n", "getTrueNumInteractions", (double)o.getTrueNumInteractions); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
-struct ak5GenJets_s
-{
-  int	charge;
-  double	pt;
-  double	eta;
-  double	phi;
-  double	mass;
-};
-std::vector<ak5GenJets_s> ak5GenJets(100);
-
-std::ostream& operator<<(std::ostream& os, const ak5GenJets_s& o)
-{
-  char r[1024];
-  os << "ak5GenJets" << std::endl;
-  sprintf(r, " %-32s: %f\n", "charge", (double)o.charge); os << r;
-  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, " %-32s: %f\n", "mass", (double)o.mass); os << r;
-  return os;
-}
-//-----------------------------------------------------------------------------
-struct electron_s
+struct patElectron_s
 {
   double	p;
   double	energy;
@@ -765,38 +515,38 @@ struct electron_s
   double	gsfTrack_d0;
   double	gsfTrack_dz;
 };
-std::vector<electron_s> electron(200);
+std::vector<patElectron_s> patElectron(200);
 
-std::ostream& operator<<(std::ostream& os, const electron_s& o)
+std::ostream& operator<<(std::ostream& os, const patElectron_s& o)
 {
   char r[1024];
-  os << "electron" << std::endl;
-  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, " %-32s: %f\n", "eSuperClusterOverP", (double)o.eSuperClusterOverP); os << r;
-  sprintf(r, " %-32s: %f\n", "deltaEtaSuperClusterTrackAtVtx", (double)o.deltaEtaSuperClusterTrackAtVtx); os << r;
-  sprintf(r, " %-32s: %f\n", "deltaPhiSuperClusterTrackAtVtx", (double)o.deltaPhiSuperClusterTrackAtVtx); os << r;
-  sprintf(r, " %-32s: %f\n", "sigmaIetaIeta", (double)o.sigmaIetaIeta); os << r;
-  sprintf(r, " %-32s: %f\n", "scE1x5", (double)o.scE1x5); os << r;
-  sprintf(r, " %-32s: %f\n", "scE2x5Max", (double)o.scE2x5Max); os << r;
-  sprintf(r, " %-32s: %f\n", "scE5x5", (double)o.scE5x5); os << r;
-  sprintf(r, " %-32s: %f\n", "hadronicOverEm", (double)o.hadronicOverEm); os << r;
-  sprintf(r, " %-32s: %f\n", "dr04TkSumPt", (double)o.dr04TkSumPt); os << r;
-  sprintf(r, " %-32s: %f\n", "dr04EcalRecHitSumEt", (double)o.dr04EcalRecHitSumEt); os << r;
-  sprintf(r, " %-32s: %f\n", "gsfTrack_dxy", (double)o.gsfTrack_dxy); os << r;
-  sprintf(r, " %-32s: %f\n", "gsfTrack_d0", (double)o.gsfTrack_d0); os << r;
-  sprintf(r, " %-32s: %f\n", "gsfTrack_dz", (double)o.gsfTrack_dz); os << r;
+  os << "patElectron" << std::endl;
+  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, "  %-32s: %f\n", "eSuperClusterOverP", (double)o.eSuperClusterOverP); os << r;
+  sprintf(r, "  %-32s: %f\n", "deltaEtaSuperClusterTrackAtVtx", (double)o.deltaEtaSuperClusterTrackAtVtx); os << r;
+  sprintf(r, "  %-32s: %f\n", "deltaPhiSuperClusterTrackAtVtx", (double)o.deltaPhiSuperClusterTrackAtVtx); os << r;
+  sprintf(r, "  %-32s: %f\n", "sigmaIetaIeta", (double)o.sigmaIetaIeta); os << r;
+  sprintf(r, "  %-32s: %f\n", "scE1x5", (double)o.scE1x5); os << r;
+  sprintf(r, "  %-32s: %f\n", "scE2x5Max", (double)o.scE2x5Max); os << r;
+  sprintf(r, "  %-32s: %f\n", "scE5x5", (double)o.scE5x5); os << r;
+  sprintf(r, "  %-32s: %f\n", "hadronicOverEm", (double)o.hadronicOverEm); os << r;
+  sprintf(r, "  %-32s: %f\n", "dr04TkSumPt", (double)o.dr04TkSumPt); os << r;
+  sprintf(r, "  %-32s: %f\n", "dr04EcalRecHitSumEt", (double)o.dr04EcalRecHitSumEt); os << r;
+  sprintf(r, "  %-32s: %f\n", "gsfTrack_dxy", (double)o.gsfTrack_dxy); os << r;
+  sprintf(r, "  %-32s: %f\n", "gsfTrack_d0", (double)o.gsfTrack_d0); os << r;
+  sprintf(r, "  %-32s: %f\n", "gsfTrack_dz", (double)o.gsfTrack_dz); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
-struct jet_s
+struct patJet_s
 {
   int	charge;
   double	p;
@@ -855,72 +605,72 @@ struct jet_s
   float	bDiscriminator_combinedInclusiveSecondaryVertexBJetTags;
   float	bDiscriminator_combinedMVABJetTags;
 };
-std::vector<jet_s> jet(200);
+std::vector<patJet_s> patJet(200);
 
-std::ostream& operator<<(std::ostream& os, const jet_s& o)
+std::ostream& operator<<(std::ostream& os, const patJet_s& o)
 {
   char r[1024];
-  os << "jet" << std::endl;
-  sprintf(r, " %-32s: %f\n", "charge", (double)o.charge); os << r;
-  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, " %-32s: %f\n", "neutralHadronEnergy", (double)o.neutralHadronEnergy); os << r;
-  sprintf(r, " %-32s: %f\n", "chargedHadronEnergyFraction", (double)o.chargedHadronEnergyFraction); os << r;
-  sprintf(r, " %-32s: %f\n", "neutralHadronEnergyFraction", (double)o.neutralHadronEnergyFraction); os << r;
-  sprintf(r, " %-32s: %f\n", "chargedEmEnergyFraction", (double)o.chargedEmEnergyFraction); os << r;
-  sprintf(r, " %-32s: %f\n", "neutralEmEnergyFraction", (double)o.neutralEmEnergyFraction); os << r;
-  sprintf(r, " %-32s: %f\n", "photonEnergy", (double)o.photonEnergy); os << r;
-  sprintf(r, " %-32s: %f\n", "photonEnergyFraction", (double)o.photonEnergyFraction); os << r;
-  sprintf(r, " %-32s: %f\n", "electronEnergy", (double)o.electronEnergy); os << r;
-  sprintf(r, " %-32s: %f\n", "electronEnergyFraction", (double)o.electronEnergyFraction); os << r;
-  sprintf(r, " %-32s: %f\n", "muonEnergy", (double)o.muonEnergy); os << r;
-  sprintf(r, " %-32s: %f\n", "muonEnergyFraction", (double)o.muonEnergyFraction); os << r;
-  sprintf(r, " %-32s: %f\n", "HFHadronEnergy", (double)o.HFHadronEnergy); os << r;
-  sprintf(r, " %-32s: %f\n", "HFHadronEnergyFraction", (double)o.HFHadronEnergyFraction); os << r;
-  sprintf(r, " %-32s: %f\n", "HFEMEnergy", (double)o.HFEMEnergy); os << r;
-  sprintf(r, " %-32s: %f\n", "HFEMEnergyFraction", (double)o.HFEMEnergyFraction); os << r;
-  sprintf(r, " %-32s: %f\n", "chargedHadronMultiplicity", (double)o.chargedHadronMultiplicity); os << r;
-  sprintf(r, " %-32s: %f\n", "chargedMultiplicity", (double)o.chargedMultiplicity); os << r;
-  sprintf(r, " %-32s: %f\n", "neutralHadronMultiplicity", (double)o.neutralHadronMultiplicity); os << r;
-  sprintf(r, " %-32s: %f\n", "photonMultiplicity", (double)o.photonMultiplicity); os << r;
-  sprintf(r, " %-32s: %f\n", "electronMultiplicity", (double)o.electronMultiplicity); os << r;
-  sprintf(r, " %-32s: %f\n", "HFHadronMultiplicity", (double)o.HFHadronMultiplicity); os << r;
-  sprintf(r, " %-32s: %f\n", "HFEMMultiplicity", (double)o.HFEMMultiplicity); os << r;
-  sprintf(r, " %-32s: %f\n", "numberOfDaughters", (double)o.numberOfDaughters); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_impactParameterTagInfos", (double)o.bDiscriminator_impactParameterTagInfos); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_secondaryVertexTagInfos", (double)o.bDiscriminator_secondaryVertexTagInfos); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_softMuonTagInfos", (double)o.bDiscriminator_softMuonTagInfos); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_secondaryVertexNegativeTagInfos", (double)o.bDiscriminator_secondaryVertexNegativeTagInfos); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_inclusiveSecondaryVertexFinderTagInfos", (double)o.bDiscriminator_inclusiveSecondaryVertexFinderTagInfos); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_softElectronTagInfos", (double)o.bDiscriminator_softElectronTagInfos); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_jetBProbabilityBJetTags", (double)o.bDiscriminator_jetBProbabilityBJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_jetProbabilityBJetTags", (double)o.bDiscriminator_jetProbabilityBJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_trackCountingHighPurBJetTags", (double)o.bDiscriminator_trackCountingHighPurBJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_trackCountingHighEffBJetTags", (double)o.bDiscriminator_trackCountingHighEffBJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexHighEffBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexHighEffBJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexHighPurBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexHighPurBJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_combinedSecondaryVertexBJetTags", (double)o.bDiscriminator_combinedSecondaryVertexBJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_combinedSecondaryVertexMVABJetTags", (double)o.bDiscriminator_combinedSecondaryVertexMVABJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_softMuonBJetTags", (double)o.bDiscriminator_softMuonBJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_softMuonByPtBJetTags", (double)o.bDiscriminator_softMuonByPtBJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_softMuonByIP3dBJetTags", (double)o.bDiscriminator_softMuonByIP3dBJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_negativeTrackCountingHighEffJetTags", (double)o.bDiscriminator_negativeTrackCountingHighEffJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_negativeTrackCountingHighPurJetTags", (double)o.bDiscriminator_negativeTrackCountingHighPurJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_combinedInclusiveSecondaryVertexBJetTags", (double)o.bDiscriminator_combinedInclusiveSecondaryVertexBJetTags); os << r;
-  sprintf(r, " %-32s: %f\n", "bDiscriminator_combinedMVABJetTags", (double)o.bDiscriminator_combinedMVABJetTags); os << r;
+  os << "patJet" << std::endl;
+  sprintf(r, "  %-32s: %f\n", "charge", (double)o.charge); os << r;
+  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, "  %-32s: %f\n", "neutralHadronEnergy", (double)o.neutralHadronEnergy); os << r;
+  sprintf(r, "  %-32s: %f\n", "chargedHadronEnergyFraction", (double)o.chargedHadronEnergyFraction); os << r;
+  sprintf(r, "  %-32s: %f\n", "neutralHadronEnergyFraction", (double)o.neutralHadronEnergyFraction); os << r;
+  sprintf(r, "  %-32s: %f\n", "chargedEmEnergyFraction", (double)o.chargedEmEnergyFraction); os << r;
+  sprintf(r, "  %-32s: %f\n", "neutralEmEnergyFraction", (double)o.neutralEmEnergyFraction); os << r;
+  sprintf(r, "  %-32s: %f\n", "photonEnergy", (double)o.photonEnergy); os << r;
+  sprintf(r, "  %-32s: %f\n", "photonEnergyFraction", (double)o.photonEnergyFraction); os << r;
+  sprintf(r, "  %-32s: %f\n", "electronEnergy", (double)o.electronEnergy); os << r;
+  sprintf(r, "  %-32s: %f\n", "electronEnergyFraction", (double)o.electronEnergyFraction); os << r;
+  sprintf(r, "  %-32s: %f\n", "muonEnergy", (double)o.muonEnergy); os << r;
+  sprintf(r, "  %-32s: %f\n", "muonEnergyFraction", (double)o.muonEnergyFraction); os << r;
+  sprintf(r, "  %-32s: %f\n", "HFHadronEnergy", (double)o.HFHadronEnergy); os << r;
+  sprintf(r, "  %-32s: %f\n", "HFHadronEnergyFraction", (double)o.HFHadronEnergyFraction); os << r;
+  sprintf(r, "  %-32s: %f\n", "HFEMEnergy", (double)o.HFEMEnergy); os << r;
+  sprintf(r, "  %-32s: %f\n", "HFEMEnergyFraction", (double)o.HFEMEnergyFraction); os << r;
+  sprintf(r, "  %-32s: %f\n", "chargedHadronMultiplicity", (double)o.chargedHadronMultiplicity); os << r;
+  sprintf(r, "  %-32s: %f\n", "chargedMultiplicity", (double)o.chargedMultiplicity); os << r;
+  sprintf(r, "  %-32s: %f\n", "neutralHadronMultiplicity", (double)o.neutralHadronMultiplicity); os << r;
+  sprintf(r, "  %-32s: %f\n", "photonMultiplicity", (double)o.photonMultiplicity); os << r;
+  sprintf(r, "  %-32s: %f\n", "electronMultiplicity", (double)o.electronMultiplicity); os << r;
+  sprintf(r, "  %-32s: %f\n", "HFHadronMultiplicity", (double)o.HFHadronMultiplicity); os << r;
+  sprintf(r, "  %-32s: %f\n", "HFEMMultiplicity", (double)o.HFEMMultiplicity); os << r;
+  sprintf(r, "  %-32s: %f\n", "numberOfDaughters", (double)o.numberOfDaughters); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_impactParameterTagInfos", (double)o.bDiscriminator_impactParameterTagInfos); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_secondaryVertexTagInfos", (double)o.bDiscriminator_secondaryVertexTagInfos); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_softMuonTagInfos", (double)o.bDiscriminator_softMuonTagInfos); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_secondaryVertexNegativeTagInfos", (double)o.bDiscriminator_secondaryVertexNegativeTagInfos); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_inclusiveSecondaryVertexFinderTagInfos", (double)o.bDiscriminator_inclusiveSecondaryVertexFinderTagInfos); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_softElectronTagInfos", (double)o.bDiscriminator_softElectronTagInfos); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_jetBProbabilityBJetTags", (double)o.bDiscriminator_jetBProbabilityBJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_jetProbabilityBJetTags", (double)o.bDiscriminator_jetProbabilityBJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_trackCountingHighPurBJetTags", (double)o.bDiscriminator_trackCountingHighPurBJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_trackCountingHighEffBJetTags", (double)o.bDiscriminator_trackCountingHighEffBJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexHighEffBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexHighEffBJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexHighPurBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexHighPurBJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_combinedSecondaryVertexBJetTags", (double)o.bDiscriminator_combinedSecondaryVertexBJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_combinedSecondaryVertexMVABJetTags", (double)o.bDiscriminator_combinedSecondaryVertexMVABJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_softMuonBJetTags", (double)o.bDiscriminator_softMuonBJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_softMuonByPtBJetTags", (double)o.bDiscriminator_softMuonByPtBJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_softMuonByIP3dBJetTags", (double)o.bDiscriminator_softMuonByIP3dBJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags", (double)o.bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_negativeTrackCountingHighEffJetTags", (double)o.bDiscriminator_negativeTrackCountingHighEffJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_negativeTrackCountingHighPurJetTags", (double)o.bDiscriminator_negativeTrackCountingHighPurJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_combinedInclusiveSecondaryVertexBJetTags", (double)o.bDiscriminator_combinedInclusiveSecondaryVertexBJetTags); os << r;
+  sprintf(r, "  %-32s: %f\n", "bDiscriminator_combinedMVABJetTags", (double)o.bDiscriminator_combinedMVABJetTags); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
-struct met_s
+struct patMET_s
 {
   double	p;
   double	energy;
@@ -932,42 +682,12 @@ struct met_s
   double	phi;
   double	eta;
 };
-std::vector<met_s> met(200);
+std::vector<patMET_s> patMET(200);
 
-std::ostream& operator<<(std::ostream& os, const met_s& o)
+std::ostream& operator<<(std::ostream& os, const patMET_s& o)
 {
   char r[1024];
-  os << "met" << std::endl;
-  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
-  return os;
-}
-//-----------------------------------------------------------------------------
-struct met2_s
-{
-  double	p;
-  double	energy;
-  double	et;
-  double	px;
-  double	py;
-  double	pz;
-  double	pt;
-  double	phi;
-  double	eta;
-};
-std::vector<met2_s> met2(200);
-
-std::ostream& operator<<(std::ostream& os, const met2_s& o)
-{
-  char r[1024];
-  os << "met2" << std::endl;
+  os << "patMET" << std::endl;
   sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
   sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
   sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
@@ -980,7 +700,37 @@ std::ostream& operator<<(std::ostream& os, const met2_s& o)
   return os;
 }
 //-----------------------------------------------------------------------------
-struct muon_s
+struct patMET2_s
+{
+  double	p;
+  double	energy;
+  double	et;
+  double	px;
+  double	py;
+  double	pz;
+  double	pt;
+  double	phi;
+  double	eta;
+};
+std::vector<patMET2_s> patMET2(200);
+
+std::ostream& operator<<(std::ostream& os, const patMET2_s& o)
+{
+  char r[1024];
+  os << "patMET2" << std::endl;
+  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
+  return os;
+}
+//-----------------------------------------------------------------------------
+struct patMuon_s
 {
   double	p;
   double	energy;
@@ -1019,52 +769,52 @@ struct muon_s
   double	muonBestTrack_dxy;
   double	muonBestTrack_dz;
 };
-std::vector<muon_s> muon(200);
+std::vector<patMuon_s> patMuon(200);
 
-std::ostream& operator<<(std::ostream& os, const muon_s& o)
+std::ostream& operator<<(std::ostream& os, const patMuon_s& o)
 {
   char r[1024];
-  os << "muon" << std::endl;
-  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, " %-32s: %f\n", "isGlobalMuon", (double)o.isGlobalMuon); os << r;
-  sprintf(r, " %-32s: %f\n", "isTrackerMuon", (double)o.isTrackerMuon); os << r;
-  sprintf(r, " %-32s: %f\n", "isPFMuon", (double)o.isPFMuon); os << r;
-  sprintf(r, " %-32s: %f\n", "pfIsolationR03_sumChargedHadronPt", (double)o.pfIsolationR03_sumChargedHadronPt); os << r;
-  sprintf(r, " %-32s: %f\n", "pfIsolationR03_sumChargedParticlePt", (double)o.pfIsolationR03_sumChargedParticlePt); os << r;
-  sprintf(r, " %-32s: %f\n", "pfIsolationR03_sumNeutralHadronEt", (double)o.pfIsolationR03_sumNeutralHadronEt); os << r;
-  sprintf(r, " %-32s: %f\n", "pfIsolationR03_sumNeutralHadronEtHighThreshold", (double)o.pfIsolationR03_sumNeutralHadronEtHighThreshold); os << r;
-  sprintf(r, " %-32s: %f\n", "pfIsolationR03_sumPhotonEt", (double)o.pfIsolationR03_sumPhotonEt); os << r;
-  sprintf(r, " %-32s: %f\n", "pfIsolationR03_sumPhotonEtHighThreshold", (double)o.pfIsolationR03_sumPhotonEtHighThreshold); os << r;
-  sprintf(r, " %-32s: %f\n", "pfIsolationR03_sumPUPt", (double)o.pfIsolationR03_sumPUPt); os << r;
-  sprintf(r, " %-32s: %f\n", "pfIsolationR04_sumChargedHadronPt", (double)o.pfIsolationR04_sumChargedHadronPt); os << r;
-  sprintf(r, " %-32s: %f\n", "pfIsolationR04_sumChargedParticlePt", (double)o.pfIsolationR04_sumChargedParticlePt); os << r;
-  sprintf(r, " %-32s: %f\n", "pfIsolationR04_sumNeutralHadronEt", (double)o.pfIsolationR04_sumNeutralHadronEt); os << r;
-  sprintf(r, " %-32s: %f\n", "pfIsolationR04_sumNeutralHadronEtHighThreshold", (double)o.pfIsolationR04_sumNeutralHadronEtHighThreshold); os << r;
-  sprintf(r, " %-32s: %f\n", "pfIsolationR04_sumPhotonEt", (double)o.pfIsolationR04_sumPhotonEt); os << r;
-  sprintf(r, " %-32s: %f\n", "pfIsolationR04_sumPhotonEtHighThreshold", (double)o.pfIsolationR04_sumPhotonEtHighThreshold); os << r;
-  sprintf(r, " %-32s: %f\n", "pfIsolationR04_sumPUPt", (double)o.pfIsolationR04_sumPUPt); os << r;
-  sprintf(r, " %-32s: %f\n", "numberOfMatchedStations", (double)o.numberOfMatchedStations); os << r;
-  sprintf(r, " %-32s: %f\n", "innerTrack_normalizedChi2", (double)o.innerTrack_normalizedChi2); os << r;
-  sprintf(r, " %-32s: %f\n", "innerTrack_dxy", (double)o.innerTrack_dxy); os << r;
-  sprintf(r, " %-32s: %f\n", "innerTrack_dz", (double)o.innerTrack_dz); os << r;
-  sprintf(r, " %-32s: %f\n", "innerTrack_hitPattern_numberOfValidPixelHits", (double)o.innerTrack_hitPattern_numberOfValidPixelHits); os << r;
-  sprintf(r, " %-32s: %f\n", "innerTrack_hitPattern_pixelLayersWithMeasurement", (double)o.innerTrack_hitPattern_pixelLayersWithMeasurement); os << r;
-  sprintf(r, " %-32s: %f\n", "globalTrack_normalizedChi2", (double)o.globalTrack_normalizedChi2); os << r;
-  sprintf(r, " %-32s: %f\n", "globalTrack_hitPattern_numberOfValidMuonHits", (double)o.globalTrack_hitPattern_numberOfValidMuonHits); os << r;
-  sprintf(r, " %-32s: %f\n", "muonBestTrack_dxy", (double)o.muonBestTrack_dxy); os << r;
-  sprintf(r, " %-32s: %f\n", "muonBestTrack_dz", (double)o.muonBestTrack_dz); os << r;
+  os << "patMuon" << std::endl;
+  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, "  %-32s: %f\n", "isGlobalMuon", (double)o.isGlobalMuon); os << r;
+  sprintf(r, "  %-32s: %f\n", "isTrackerMuon", (double)o.isTrackerMuon); os << r;
+  sprintf(r, "  %-32s: %f\n", "isPFMuon", (double)o.isPFMuon); os << r;
+  sprintf(r, "  %-32s: %f\n", "pfIsolationR03_sumChargedHadronPt", (double)o.pfIsolationR03_sumChargedHadronPt); os << r;
+  sprintf(r, "  %-32s: %f\n", "pfIsolationR03_sumChargedParticlePt", (double)o.pfIsolationR03_sumChargedParticlePt); os << r;
+  sprintf(r, "  %-32s: %f\n", "pfIsolationR03_sumNeutralHadronEt", (double)o.pfIsolationR03_sumNeutralHadronEt); os << r;
+  sprintf(r, "  %-32s: %f\n", "pfIsolationR03_sumNeutralHadronEtHighThreshold", (double)o.pfIsolationR03_sumNeutralHadronEtHighThreshold); os << r;
+  sprintf(r, "  %-32s: %f\n", "pfIsolationR03_sumPhotonEt", (double)o.pfIsolationR03_sumPhotonEt); os << r;
+  sprintf(r, "  %-32s: %f\n", "pfIsolationR03_sumPhotonEtHighThreshold", (double)o.pfIsolationR03_sumPhotonEtHighThreshold); os << r;
+  sprintf(r, "  %-32s: %f\n", "pfIsolationR03_sumPUPt", (double)o.pfIsolationR03_sumPUPt); os << r;
+  sprintf(r, "  %-32s: %f\n", "pfIsolationR04_sumChargedHadronPt", (double)o.pfIsolationR04_sumChargedHadronPt); os << r;
+  sprintf(r, "  %-32s: %f\n", "pfIsolationR04_sumChargedParticlePt", (double)o.pfIsolationR04_sumChargedParticlePt); os << r;
+  sprintf(r, "  %-32s: %f\n", "pfIsolationR04_sumNeutralHadronEt", (double)o.pfIsolationR04_sumNeutralHadronEt); os << r;
+  sprintf(r, "  %-32s: %f\n", "pfIsolationR04_sumNeutralHadronEtHighThreshold", (double)o.pfIsolationR04_sumNeutralHadronEtHighThreshold); os << r;
+  sprintf(r, "  %-32s: %f\n", "pfIsolationR04_sumPhotonEt", (double)o.pfIsolationR04_sumPhotonEt); os << r;
+  sprintf(r, "  %-32s: %f\n", "pfIsolationR04_sumPhotonEtHighThreshold", (double)o.pfIsolationR04_sumPhotonEtHighThreshold); os << r;
+  sprintf(r, "  %-32s: %f\n", "pfIsolationR04_sumPUPt", (double)o.pfIsolationR04_sumPUPt); os << r;
+  sprintf(r, "  %-32s: %f\n", "numberOfMatchedStations", (double)o.numberOfMatchedStations); os << r;
+  sprintf(r, "  %-32s: %f\n", "innerTrack_normalizedChi2", (double)o.innerTrack_normalizedChi2); os << r;
+  sprintf(r, "  %-32s: %f\n", "innerTrack_dxy", (double)o.innerTrack_dxy); os << r;
+  sprintf(r, "  %-32s: %f\n", "innerTrack_dz", (double)o.innerTrack_dz); os << r;
+  sprintf(r, "  %-32s: %f\n", "innerTrack_hitPattern_numberOfValidPixelHits", (double)o.innerTrack_hitPattern_numberOfValidPixelHits); os << r;
+  sprintf(r, "  %-32s: %f\n", "innerTrack_hitPattern_pixelLayersWithMeasurement", (double)o.innerTrack_hitPattern_pixelLayersWithMeasurement); os << r;
+  sprintf(r, "  %-32s: %f\n", "globalTrack_normalizedChi2", (double)o.globalTrack_normalizedChi2); os << r;
+  sprintf(r, "  %-32s: %f\n", "globalTrack_hitPattern_numberOfValidMuonHits", (double)o.globalTrack_hitPattern_numberOfValidMuonHits); os << r;
+  sprintf(r, "  %-32s: %f\n", "muonBestTrack_dxy", (double)o.muonBestTrack_dxy); os << r;
+  sprintf(r, "  %-32s: %f\n", "muonBestTrack_dz", (double)o.muonBestTrack_dz); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
-struct tau_s
+struct patTau_s
 {
   int	charge;
   double	p;
@@ -1079,7 +829,6 @@ struct tau_s
   double	vx;
   double	vy;
   double	vz;
-  double mass;
   float	tauID_againstElectronDeadECAL;
   float	tauID_againstElectronLoose;
   float	tauID_againstElectronLooseMVA5;
@@ -1163,115 +912,113 @@ struct tau_s
   double	leadPFChargedHadrCand_eta;
   double	leadPFChargedHadrCand_rapidity;
   double	leadPFChargedHadrCand_y;
-  size_t	signalPFChargedHadrCands_size;
 };
-std::vector<tau_s> tau(200);
+std::vector<patTau_s> patTau(200);
 
-std::ostream& operator<<(std::ostream& os, const tau_s& o)
+std::ostream& operator<<(std::ostream& os, const patTau_s& o)
 {
   char r[1024];
-  os << "tau" << std::endl;
-  sprintf(r, " %-32s: %f\n", "charge", (double)o.charge); os << r;
-  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, " %-32s: %f\n", "vx", (double)o.vx); os << r;
-  sprintf(r, " %-32s: %f\n", "vy", (double)o.vy); os << r;
-  sprintf(r, " %-32s: %f\n", "vz", (double)o.vz); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstElectronDeadECAL", (double)o.tauID_againstElectronDeadECAL); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstElectronLoose", (double)o.tauID_againstElectronLoose); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstElectronLooseMVA5", (double)o.tauID_againstElectronLooseMVA5); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstElectronMVA5category", (double)o.tauID_againstElectronMVA5category); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstElectronMVA5raw", (double)o.tauID_againstElectronMVA5raw); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstElectronMedium", (double)o.tauID_againstElectronMedium); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstElectronMediumMVA5", (double)o.tauID_againstElectronMediumMVA5); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstElectronTight", (double)o.tauID_againstElectronTight); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstElectronTightMVA5", (double)o.tauID_againstElectronTightMVA5); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstElectronVLooseMVA5", (double)o.tauID_againstElectronVLooseMVA5); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstElectronVTightMVA5", (double)o.tauID_againstElectronVTightMVA5); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstMuonLoose", (double)o.tauID_againstMuonLoose); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstMuonLoose2", (double)o.tauID_againstMuonLoose2); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstMuonLoose3", (double)o.tauID_againstMuonLoose3); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstMuonLooseMVA", (double)o.tauID_againstMuonLooseMVA); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstMuonMVAraw", (double)o.tauID_againstMuonMVAraw); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstMuonMedium", (double)o.tauID_againstMuonMedium); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstMuonMedium2", (double)o.tauID_againstMuonMedium2); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstMuonMediumMVA", (double)o.tauID_againstMuonMediumMVA); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstMuonTight", (double)o.tauID_againstMuonTight); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstMuonTight2", (double)o.tauID_againstMuonTight2); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstMuonTight3", (double)o.tauID_againstMuonTight3); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_againstMuonTightMVA", (double)o.tauID_againstMuonTightMVA); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byCombinedIsolationDeltaBetaCorrRaw", (double)o.tauID_byCombinedIsolationDeltaBetaCorrRaw); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits", (double)o.tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byIsolationMVA3newDMwLTraw", (double)o.tauID_byIsolationMVA3newDMwLTraw); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byIsolationMVA3newDMwoLTraw", (double)o.tauID_byIsolationMVA3newDMwoLTraw); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byIsolationMVA3oldDMwLTraw", (double)o.tauID_byIsolationMVA3oldDMwLTraw); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byIsolationMVA3oldDMwoLTraw", (double)o.tauID_byIsolationMVA3oldDMwoLTraw); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byLooseCombinedIsolationDeltaBetaCorr", (double)o.tauID_byLooseCombinedIsolationDeltaBetaCorr); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits", (double)o.tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byLooseIsolation", (double)o.tauID_byLooseIsolation); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byLooseIsolationMVA3newDMwLT", (double)o.tauID_byLooseIsolationMVA3newDMwLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byLooseIsolationMVA3newDMwoLT", (double)o.tauID_byLooseIsolationMVA3newDMwoLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byLooseIsolationMVA3oldDMwLT", (double)o.tauID_byLooseIsolationMVA3oldDMwLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byLooseIsolationMVA3oldDMwoLT", (double)o.tauID_byLooseIsolationMVA3oldDMwoLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byMediumCombinedIsolationDeltaBetaCorr", (double)o.tauID_byMediumCombinedIsolationDeltaBetaCorr); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits", (double)o.tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byMediumIsolationMVA3newDMwLT", (double)o.tauID_byMediumIsolationMVA3newDMwLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byMediumIsolationMVA3newDMwoLT", (double)o.tauID_byMediumIsolationMVA3newDMwoLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byMediumIsolationMVA3oldDMwLT", (double)o.tauID_byMediumIsolationMVA3oldDMwLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byMediumIsolationMVA3oldDMwoLT", (double)o.tauID_byMediumIsolationMVA3oldDMwoLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byTightCombinedIsolationDeltaBetaCorr", (double)o.tauID_byTightCombinedIsolationDeltaBetaCorr); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byTightCombinedIsolationDeltaBetaCorr3Hits", (double)o.tauID_byTightCombinedIsolationDeltaBetaCorr3Hits); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byTightIsolationMVA3newDMwLT", (double)o.tauID_byTightIsolationMVA3newDMwLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byTightIsolationMVA3newDMwoLT", (double)o.tauID_byTightIsolationMVA3newDMwoLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byTightIsolationMVA3oldDMwLT", (double)o.tauID_byTightIsolationMVA3oldDMwLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byTightIsolationMVA3oldDMwoLT", (double)o.tauID_byTightIsolationMVA3oldDMwoLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byVLooseCombinedIsolationDeltaBetaCorr", (double)o.tauID_byVLooseCombinedIsolationDeltaBetaCorr); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byVLooseIsolationMVA3newDMwLT", (double)o.tauID_byVLooseIsolationMVA3newDMwLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byVLooseIsolationMVA3newDMwoLT", (double)o.tauID_byVLooseIsolationMVA3newDMwoLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byVLooseIsolationMVA3oldDMwLT", (double)o.tauID_byVLooseIsolationMVA3oldDMwLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byVLooseIsolationMVA3oldDMwoLT", (double)o.tauID_byVLooseIsolationMVA3oldDMwoLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byVTightIsolationMVA3newDMwLT", (double)o.tauID_byVTightIsolationMVA3newDMwLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byVTightIsolationMVA3newDMwoLT", (double)o.tauID_byVTightIsolationMVA3newDMwoLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byVTightIsolationMVA3oldDMwLT", (double)o.tauID_byVTightIsolationMVA3oldDMwLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byVTightIsolationMVA3oldDMwoLT", (double)o.tauID_byVTightIsolationMVA3oldDMwoLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byVVTightIsolationMVA3newDMwLT", (double)o.tauID_byVVTightIsolationMVA3newDMwLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byVVTightIsolationMVA3newDMwoLT", (double)o.tauID_byVVTightIsolationMVA3newDMwoLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byVVTightIsolationMVA3oldDMwLT", (double)o.tauID_byVVTightIsolationMVA3oldDMwLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_byVVTightIsolationMVA3oldDMwoLT", (double)o.tauID_byVVTightIsolationMVA3oldDMwoLT); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_chargedIsoPtSum", (double)o.tauID_chargedIsoPtSum); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_decayModeFinding", (double)o.tauID_decayModeFinding); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_decayModeFindingNewDMs", (double)o.tauID_decayModeFindingNewDMs); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_decayModeFindingOldDMs", (double)o.tauID_decayModeFindingOldDMs); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_neutralIsoPtSum", (double)o.tauID_neutralIsoPtSum); os << r;
-  sprintf(r, " %-32s: %f\n", "tauID_puCorrPtSum", (double)o.tauID_puCorrPtSum); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_p", (double)o.leadPFChargedHadrCand_p); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_energy", (double)o.leadPFChargedHadrCand_energy); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_et", (double)o.leadPFChargedHadrCand_et); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_mass", (double)o.leadPFChargedHadrCand_mass); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_massSqr", (double)o.leadPFChargedHadrCand_massSqr); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_mt", (double)o.leadPFChargedHadrCand_mt); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_mtSqr", (double)o.leadPFChargedHadrCand_mtSqr); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_px", (double)o.leadPFChargedHadrCand_px); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_py", (double)o.leadPFChargedHadrCand_py); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_pz", (double)o.leadPFChargedHadrCand_pz); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_pt", (double)o.leadPFChargedHadrCand_pt); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_phi", (double)o.leadPFChargedHadrCand_phi); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_theta", (double)o.leadPFChargedHadrCand_theta); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_eta", (double)o.leadPFChargedHadrCand_eta); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_rapidity", (double)o.leadPFChargedHadrCand_rapidity); os << r;
-  sprintf(r, " %-32s: %f\n", "leadPFChargedHadrCand_y", (double)o.leadPFChargedHadrCand_y); os << r;
-  sprintf(r, " %-32s: %f\n", "signalPFChargedHadrCands_size", (double)o.signalPFChargedHadrCands_size); os << r;
+  os << "patTau" << std::endl;
+  sprintf(r, "  %-32s: %f\n", "charge", (double)o.charge); os << r;
+  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, "  %-32s: %f\n", "vx", (double)o.vx); os << r;
+  sprintf(r, "  %-32s: %f\n", "vy", (double)o.vy); os << r;
+  sprintf(r, "  %-32s: %f\n", "vz", (double)o.vz); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronDeadECAL", (double)o.tauID_againstElectronDeadECAL); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronLoose", (double)o.tauID_againstElectronLoose); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronLooseMVA5", (double)o.tauID_againstElectronLooseMVA5); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronMVA5category", (double)o.tauID_againstElectronMVA5category); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronMVA5raw", (double)o.tauID_againstElectronMVA5raw); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronMedium", (double)o.tauID_againstElectronMedium); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronMediumMVA5", (double)o.tauID_againstElectronMediumMVA5); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronTight", (double)o.tauID_againstElectronTight); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronTightMVA5", (double)o.tauID_againstElectronTightMVA5); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronVLooseMVA5", (double)o.tauID_againstElectronVLooseMVA5); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstElectronVTightMVA5", (double)o.tauID_againstElectronVTightMVA5); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonLoose", (double)o.tauID_againstMuonLoose); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonLoose2", (double)o.tauID_againstMuonLoose2); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonLoose3", (double)o.tauID_againstMuonLoose3); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonLooseMVA", (double)o.tauID_againstMuonLooseMVA); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonMVAraw", (double)o.tauID_againstMuonMVAraw); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonMedium", (double)o.tauID_againstMuonMedium); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonMedium2", (double)o.tauID_againstMuonMedium2); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonMediumMVA", (double)o.tauID_againstMuonMediumMVA); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonTight", (double)o.tauID_againstMuonTight); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonTight2", (double)o.tauID_againstMuonTight2); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonTight3", (double)o.tauID_againstMuonTight3); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_againstMuonTightMVA", (double)o.tauID_againstMuonTightMVA); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byCombinedIsolationDeltaBetaCorrRaw", (double)o.tauID_byCombinedIsolationDeltaBetaCorrRaw); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits", (double)o.tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byIsolationMVA3newDMwLTraw", (double)o.tauID_byIsolationMVA3newDMwLTraw); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byIsolationMVA3newDMwoLTraw", (double)o.tauID_byIsolationMVA3newDMwoLTraw); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byIsolationMVA3oldDMwLTraw", (double)o.tauID_byIsolationMVA3oldDMwLTraw); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byIsolationMVA3oldDMwoLTraw", (double)o.tauID_byIsolationMVA3oldDMwoLTraw); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byLooseCombinedIsolationDeltaBetaCorr", (double)o.tauID_byLooseCombinedIsolationDeltaBetaCorr); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits", (double)o.tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byLooseIsolation", (double)o.tauID_byLooseIsolation); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byLooseIsolationMVA3newDMwLT", (double)o.tauID_byLooseIsolationMVA3newDMwLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byLooseIsolationMVA3newDMwoLT", (double)o.tauID_byLooseIsolationMVA3newDMwoLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byLooseIsolationMVA3oldDMwLT", (double)o.tauID_byLooseIsolationMVA3oldDMwLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byLooseIsolationMVA3oldDMwoLT", (double)o.tauID_byLooseIsolationMVA3oldDMwoLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byMediumCombinedIsolationDeltaBetaCorr", (double)o.tauID_byMediumCombinedIsolationDeltaBetaCorr); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits", (double)o.tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byMediumIsolationMVA3newDMwLT", (double)o.tauID_byMediumIsolationMVA3newDMwLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byMediumIsolationMVA3newDMwoLT", (double)o.tauID_byMediumIsolationMVA3newDMwoLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byMediumIsolationMVA3oldDMwLT", (double)o.tauID_byMediumIsolationMVA3oldDMwLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byMediumIsolationMVA3oldDMwoLT", (double)o.tauID_byMediumIsolationMVA3oldDMwoLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byTightCombinedIsolationDeltaBetaCorr", (double)o.tauID_byTightCombinedIsolationDeltaBetaCorr); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byTightCombinedIsolationDeltaBetaCorr3Hits", (double)o.tauID_byTightCombinedIsolationDeltaBetaCorr3Hits); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byTightIsolationMVA3newDMwLT", (double)o.tauID_byTightIsolationMVA3newDMwLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byTightIsolationMVA3newDMwoLT", (double)o.tauID_byTightIsolationMVA3newDMwoLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byTightIsolationMVA3oldDMwLT", (double)o.tauID_byTightIsolationMVA3oldDMwLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byTightIsolationMVA3oldDMwoLT", (double)o.tauID_byTightIsolationMVA3oldDMwoLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byVLooseCombinedIsolationDeltaBetaCorr", (double)o.tauID_byVLooseCombinedIsolationDeltaBetaCorr); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byVLooseIsolationMVA3newDMwLT", (double)o.tauID_byVLooseIsolationMVA3newDMwLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byVLooseIsolationMVA3newDMwoLT", (double)o.tauID_byVLooseIsolationMVA3newDMwoLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byVLooseIsolationMVA3oldDMwLT", (double)o.tauID_byVLooseIsolationMVA3oldDMwLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byVLooseIsolationMVA3oldDMwoLT", (double)o.tauID_byVLooseIsolationMVA3oldDMwoLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byVTightIsolationMVA3newDMwLT", (double)o.tauID_byVTightIsolationMVA3newDMwLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byVTightIsolationMVA3newDMwoLT", (double)o.tauID_byVTightIsolationMVA3newDMwoLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byVTightIsolationMVA3oldDMwLT", (double)o.tauID_byVTightIsolationMVA3oldDMwLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byVTightIsolationMVA3oldDMwoLT", (double)o.tauID_byVTightIsolationMVA3oldDMwoLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byVVTightIsolationMVA3newDMwLT", (double)o.tauID_byVVTightIsolationMVA3newDMwLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byVVTightIsolationMVA3newDMwoLT", (double)o.tauID_byVVTightIsolationMVA3newDMwoLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byVVTightIsolationMVA3oldDMwLT", (double)o.tauID_byVVTightIsolationMVA3oldDMwLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_byVVTightIsolationMVA3oldDMwoLT", (double)o.tauID_byVVTightIsolationMVA3oldDMwoLT); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_chargedIsoPtSum", (double)o.tauID_chargedIsoPtSum); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_decayModeFinding", (double)o.tauID_decayModeFinding); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_decayModeFindingNewDMs", (double)o.tauID_decayModeFindingNewDMs); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_decayModeFindingOldDMs", (double)o.tauID_decayModeFindingOldDMs); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_neutralIsoPtSum", (double)o.tauID_neutralIsoPtSum); os << r;
+  sprintf(r, "  %-32s: %f\n", "tauID_puCorrPtSum", (double)o.tauID_puCorrPtSum); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_p", (double)o.leadPFChargedHadrCand_p); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_energy", (double)o.leadPFChargedHadrCand_energy); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_et", (double)o.leadPFChargedHadrCand_et); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_mass", (double)o.leadPFChargedHadrCand_mass); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_massSqr", (double)o.leadPFChargedHadrCand_massSqr); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_mt", (double)o.leadPFChargedHadrCand_mt); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_mtSqr", (double)o.leadPFChargedHadrCand_mtSqr); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_px", (double)o.leadPFChargedHadrCand_px); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_py", (double)o.leadPFChargedHadrCand_py); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_pz", (double)o.leadPFChargedHadrCand_pz); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_pt", (double)o.leadPFChargedHadrCand_pt); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_phi", (double)o.leadPFChargedHadrCand_phi); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_theta", (double)o.leadPFChargedHadrCand_theta); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_eta", (double)o.leadPFChargedHadrCand_eta); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_rapidity", (double)o.leadPFChargedHadrCand_rapidity); os << r;
+  sprintf(r, "  %-32s: %f\n", "leadPFChargedHadrCand_y", (double)o.leadPFChargedHadrCand_y); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
-struct genparticlehelper_s
+struct recoGenParticleHelper_s
 {
   int	firstMother;
   int	lastMother;
@@ -1285,27 +1032,27 @@ struct genparticlehelper_s
   double	phi;
   double	mass;
 };
-std::vector<genparticlehelper_s> genparticlehelper(100);
+std::vector<recoGenParticleHelper_s> recoGenParticleHelper(100);
 
-std::ostream& operator<<(std::ostream& os, const genparticlehelper_s& o)
+std::ostream& operator<<(std::ostream& os, const recoGenParticleHelper_s& o)
 {
   char r[1024];
-  os << "genparticlehelper" << std::endl;
-  sprintf(r, " %-32s: %f\n", "firstMother", (double)o.firstMother); os << r;
-  sprintf(r, " %-32s: %f\n", "lastMother", (double)o.lastMother); os << r;
-  sprintf(r, " %-32s: %f\n", "firstDaughter", (double)o.firstDaughter); os << r;
-  sprintf(r, " %-32s: %f\n", "lastDaughter", (double)o.lastDaughter); os << r;
-  sprintf(r, " %-32s: %f\n", "charge", (double)o.charge); os << r;
-  sprintf(r, " %-32s: %f\n", "pdgId", (double)o.pdgId); os << r;
-  sprintf(r, " %-32s: %f\n", "status", (double)o.status); os << r;
-  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, " %-32s: %f\n", "mass", (double)o.mass); os << r;
+  os << "recoGenParticleHelper" << std::endl;
+  sprintf(r, "  %-32s: %f\n", "firstMother", (double)o.firstMother); os << r;
+  sprintf(r, "  %-32s: %f\n", "lastMother", (double)o.lastMother); os << r;
+  sprintf(r, "  %-32s: %f\n", "firstDaughter", (double)o.firstDaughter); os << r;
+  sprintf(r, "  %-32s: %f\n", "lastDaughter", (double)o.lastDaughter); os << r;
+  sprintf(r, "  %-32s: %f\n", "charge", (double)o.charge); os << r;
+  sprintf(r, "  %-32s: %f\n", "pdgId", (double)o.pdgId); os << r;
+  sprintf(r, "  %-32s: %f\n", "status", (double)o.status); os << r;
+  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, "  %-32s: %f\n", "mass", (double)o.mass); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
-struct genparticlehelperplus_s
+struct recoGenParticleHelperPlus_s
 {
   int	firstMother;
   int	lastMother;
@@ -1319,23 +1066,23 @@ struct genparticlehelperplus_s
   double	phi;
   double	mass;
 };
-std::vector<genparticlehelperplus_s> genparticlehelperplus(100);
+std::vector<recoGenParticleHelperPlus_s> recoGenParticleHelperPlus(100);
 
-std::ostream& operator<<(std::ostream& os, const genparticlehelperplus_s& o)
+std::ostream& operator<<(std::ostream& os, const recoGenParticleHelperPlus_s& o)
 {
   char r[1024];
-  os << "genparticlehelperplus" << std::endl;
-  sprintf(r, " %-32s: %f\n", "firstMother", (double)o.firstMother); os << r;
-  sprintf(r, " %-32s: %f\n", "lastMother", (double)o.lastMother); os << r;
-  sprintf(r, " %-32s: %f\n", "firstDaughter", (double)o.firstDaughter); os << r;
-  sprintf(r, " %-32s: %f\n", "lastDaughter", (double)o.lastDaughter); os << r;
-  sprintf(r, " %-32s: %f\n", "charge", (double)o.charge); os << r;
-  sprintf(r, " %-32s: %f\n", "pdgId", (double)o.pdgId); os << r;
-  sprintf(r, " %-32s: %f\n", "status", (double)o.status); os << r;
-  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, " %-32s: %f\n", "mass", (double)o.mass); os << r;
+  os << "recoGenParticleHelperPlus" << std::endl;
+  sprintf(r, "  %-32s: %f\n", "firstMother", (double)o.firstMother); os << r;
+  sprintf(r, "  %-32s: %f\n", "lastMother", (double)o.lastMother); os << r;
+  sprintf(r, "  %-32s: %f\n", "firstDaughter", (double)o.firstDaughter); os << r;
+  sprintf(r, "  %-32s: %f\n", "lastDaughter", (double)o.lastDaughter); os << r;
+  sprintf(r, "  %-32s: %f\n", "charge", (double)o.charge); os << r;
+  sprintf(r, "  %-32s: %f\n", "pdgId", (double)o.pdgId); os << r;
+  sprintf(r, "  %-32s: %f\n", "status", (double)o.status); os << r;
+  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, "  %-32s: %f\n", "mass", (double)o.mass); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -1370,28 +1117,28 @@ std::ostream& operator<<(std::ostream& os, const recoGsfElectron_s& o)
 {
   char r[1024];
   os << "recoGsfElectron" << std::endl;
-  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
-  sprintf(r, " %-32s: %f\n", "eSuperClusterOverP", (double)o.eSuperClusterOverP); os << r;
-  sprintf(r, " %-32s: %f\n", "deltaEtaSuperClusterTrackAtVtx", (double)o.deltaEtaSuperClusterTrackAtVtx); os << r;
-  sprintf(r, " %-32s: %f\n", "deltaPhiSuperClusterTrackAtVtx", (double)o.deltaPhiSuperClusterTrackAtVtx); os << r;
-  sprintf(r, " %-32s: %f\n", "sigmaIetaIeta", (double)o.sigmaIetaIeta); os << r;
-  sprintf(r, " %-32s: %f\n", "scE1x5", (double)o.scE1x5); os << r;
-  sprintf(r, " %-32s: %f\n", "scE2x5Max", (double)o.scE2x5Max); os << r;
-  sprintf(r, " %-32s: %f\n", "scE5x5", (double)o.scE5x5); os << r;
-  sprintf(r, " %-32s: %f\n", "hadronicOverEm", (double)o.hadronicOverEm); os << r;
-  sprintf(r, " %-32s: %f\n", "dr04TkSumPt", (double)o.dr04TkSumPt); os << r;
-  sprintf(r, " %-32s: %f\n", "dr04EcalRecHitSumEt", (double)o.dr04EcalRecHitSumEt); os << r;
-  sprintf(r, " %-32s: %f\n", "gsfTrack_dxy", (double)o.gsfTrack_dxy); os << r;
-  sprintf(r, " %-32s: %f\n", "gsfTrack_d0", (double)o.gsfTrack_d0); os << r;
-  sprintf(r, " %-32s: %f\n", "gsfTrack_dz", (double)o.gsfTrack_dz); os << r;
+  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, "  %-32s: %f\n", "eSuperClusterOverP", (double)o.eSuperClusterOverP); os << r;
+  sprintf(r, "  %-32s: %f\n", "deltaEtaSuperClusterTrackAtVtx", (double)o.deltaEtaSuperClusterTrackAtVtx); os << r;
+  sprintf(r, "  %-32s: %f\n", "deltaPhiSuperClusterTrackAtVtx", (double)o.deltaPhiSuperClusterTrackAtVtx); os << r;
+  sprintf(r, "  %-32s: %f\n", "sigmaIetaIeta", (double)o.sigmaIetaIeta); os << r;
+  sprintf(r, "  %-32s: %f\n", "scE1x5", (double)o.scE1x5); os << r;
+  sprintf(r, "  %-32s: %f\n", "scE2x5Max", (double)o.scE2x5Max); os << r;
+  sprintf(r, "  %-32s: %f\n", "scE5x5", (double)o.scE5x5); os << r;
+  sprintf(r, "  %-32s: %f\n", "hadronicOverEm", (double)o.hadronicOverEm); os << r;
+  sprintf(r, "  %-32s: %f\n", "dr04TkSumPt", (double)o.dr04TkSumPt); os << r;
+  sprintf(r, "  %-32s: %f\n", "dr04EcalRecHitSumEt", (double)o.dr04EcalRecHitSumEt); os << r;
+  sprintf(r, "  %-32s: %f\n", "gsfTrack_dxy", (double)o.gsfTrack_dxy); os << r;
+  sprintf(r, "  %-32s: %f\n", "gsfTrack_d0", (double)o.gsfTrack_d0); os << r;
+  sprintf(r, "  %-32s: %f\n", "gsfTrack_dz", (double)o.gsfTrack_dz); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -1413,15 +1160,15 @@ std::ostream& operator<<(std::ostream& os, const recoPFMET_s& o)
 {
   char r[1024];
   os << "recoPFMET" << std::endl;
-  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -1443,19 +1190,19 @@ std::ostream& operator<<(std::ostream& os, const recoPFMET1_s& o)
 {
   char r[1024];
   os << "recoPFMET1" << std::endl;
-  sprintf(r, " %-32s: %f\n", "p", (double)o.p); os << r;
-  sprintf(r, " %-32s: %f\n", "energy", (double)o.energy); os << r;
-  sprintf(r, " %-32s: %f\n", "et", (double)o.et); os << r;
-  sprintf(r, " %-32s: %f\n", "px", (double)o.px); os << r;
-  sprintf(r, " %-32s: %f\n", "py", (double)o.py); os << r;
-  sprintf(r, " %-32s: %f\n", "pz", (double)o.pz); os << r;
-  sprintf(r, " %-32s: %f\n", "pt", (double)o.pt); os << r;
-  sprintf(r, " %-32s: %f\n", "phi", (double)o.phi); os << r;
-  sprintf(r, " %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, "  %-32s: %f\n", "p", (double)o.p); os << r;
+  sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
+  sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
+  sprintf(r, "  %-32s: %f\n", "px", (double)o.px); os << r;
+  sprintf(r, "  %-32s: %f\n", "py", (double)o.py); os << r;
+  sprintf(r, "  %-32s: %f\n", "pz", (double)o.pz); os << r;
+  sprintf(r, "  %-32s: %f\n", "pt", (double)o.pt); os << r;
+  sprintf(r, "  %-32s: %f\n", "phi", (double)o.phi); os << r;
+  sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
-struct vertex_s
+struct recoVertex_s
 {
   int	isFake;
   double	ndof;
@@ -1463,17 +1210,17 @@ struct vertex_s
   double	y;
   double	z;
 };
-std::vector<vertex_s> vertex(200);
+std::vector<recoVertex_s> recoVertex(200);
 
-std::ostream& operator<<(std::ostream& os, const vertex_s& o)
+std::ostream& operator<<(std::ostream& os, const recoVertex_s& o)
 {
   char r[1024];
-  os << "vertex" << std::endl;
-  sprintf(r, " %-32s: %f\n", "isFake", (double)o.isFake); os << r;
-  sprintf(r, " %-32s: %f\n", "ndof", (double)o.ndof); os << r;
-  sprintf(r, " %-32s: %f\n", "x", (double)o.x); os << r;
-  sprintf(r, " %-32s: %f\n", "y", (double)o.y); os << r;
-  sprintf(r, " %-32s: %f\n", "z", (double)o.z); os << r;
+  os << "recoVertex" << std::endl;
+  sprintf(r, "  %-32s: %f\n", "isFake", (double)o.isFake); os << r;
+  sprintf(r, "  %-32s: %f\n", "ndof", (double)o.ndof); os << r;
+  sprintf(r, "  %-32s: %f\n", "x", (double)o.x); os << r;
+  sprintf(r, "  %-32s: %f\n", "y", (double)o.y); os << r;
+  sprintf(r, "  %-32s: %f\n", "z", (double)o.z); os << r;
   return os;
 }
 //-----------------------------------------------------------------------------
@@ -1489,331 +1236,317 @@ inline void fillPileupSummaryInfo()
     }
 }
 
-inline void fillak5GenJets()
-{
-  ak5GenJets.resize(ak5GenJets_charge.size());
-  for(unsigned int i=0; i < ak5GenJets.size(); ++i)
-    {
-      ak5GenJets[i].charge	= ak5GenJets_charge[i];
-      ak5GenJets[i].pt	= ak5GenJets_pt[i];
-      ak5GenJets[i].eta	= ak5GenJets_eta[i];
-      ak5GenJets[i].phi	= ak5GenJets_phi[i];
-      ak5GenJets[i].mass	= ak5GenJets_mass[i];
-    }
-}
-
 inline void fillpatElectron()
 {
-  electron.resize(patElectron_p.size());
-  for(unsigned int i=0; i < electron.size(); ++i)
+  patElectron.resize(patElectron_p.size());
+  for(unsigned int i=0; i < patElectron.size(); ++i)
     {
-      electron[i].p	= patElectron_p[i];
-      electron[i].energy	= patElectron_energy[i];
-      electron[i].et	= patElectron_et[i];
-      electron[i].px	= patElectron_px[i];
-      electron[i].py	= patElectron_py[i];
-      electron[i].pz	= patElectron_pz[i];
-      electron[i].pt	= patElectron_pt[i];
-      electron[i].phi	= patElectron_phi[i];
-      electron[i].eta	= patElectron_eta[i];
-      electron[i].eSuperClusterOverP	= patElectron_eSuperClusterOverP[i];
-      electron[i].deltaEtaSuperClusterTrackAtVtx	= patElectron_deltaEtaSuperClusterTrackAtVtx[i];
-      electron[i].deltaPhiSuperClusterTrackAtVtx	= patElectron_deltaPhiSuperClusterTrackAtVtx[i];
-      electron[i].sigmaIetaIeta	= patElectron_sigmaIetaIeta[i];
-      electron[i].scE1x5	= patElectron_scE1x5[i];
-      electron[i].scE2x5Max	= patElectron_scE2x5Max[i];
-      electron[i].scE5x5	= patElectron_scE5x5[i];
-      electron[i].hadronicOverEm	= patElectron_hadronicOverEm[i];
-      electron[i].dr04TkSumPt	= patElectron_dr04TkSumPt[i];
-      electron[i].dr04EcalRecHitSumEt	= patElectron_dr04EcalRecHitSumEt[i];
-      electron[i].gsfTrack_dxy	= patElectron_gsfTrack_dxy[i];
-      electron[i].gsfTrack_d0	= patElectron_gsfTrack_d0[i];
-      electron[i].gsfTrack_dz	= patElectron_gsfTrack_dz[i];
+      patElectron[i].p	= patElectron_p[i];
+      patElectron[i].energy	= patElectron_energy[i];
+      patElectron[i].et	= patElectron_et[i];
+      patElectron[i].px	= patElectron_px[i];
+      patElectron[i].py	= patElectron_py[i];
+      patElectron[i].pz	= patElectron_pz[i];
+      patElectron[i].pt	= patElectron_pt[i];
+      patElectron[i].phi	= patElectron_phi[i];
+      patElectron[i].eta	= patElectron_eta[i];
+      patElectron[i].eSuperClusterOverP	= patElectron_eSuperClusterOverP[i];
+      patElectron[i].deltaEtaSuperClusterTrackAtVtx	= patElectron_deltaEtaSuperClusterTrackAtVtx[i];
+      patElectron[i].deltaPhiSuperClusterTrackAtVtx	= patElectron_deltaPhiSuperClusterTrackAtVtx[i];
+      patElectron[i].sigmaIetaIeta	= patElectron_sigmaIetaIeta[i];
+      patElectron[i].scE1x5	= patElectron_scE1x5[i];
+      patElectron[i].scE2x5Max	= patElectron_scE2x5Max[i];
+      patElectron[i].scE5x5	= patElectron_scE5x5[i];
+      patElectron[i].hadronicOverEm	= patElectron_hadronicOverEm[i];
+      patElectron[i].dr04TkSumPt	= patElectron_dr04TkSumPt[i];
+      patElectron[i].dr04EcalRecHitSumEt	= patElectron_dr04EcalRecHitSumEt[i];
+      patElectron[i].gsfTrack_dxy	= patElectron_gsfTrack_dxy[i];
+      patElectron[i].gsfTrack_d0	= patElectron_gsfTrack_d0[i];
+      patElectron[i].gsfTrack_dz	= patElectron_gsfTrack_dz[i];
     }
 }
 
 inline void fillpatJet()
 {
-  jet.resize(patJet_charge.size());
-  for(unsigned int i=0; i < jet.size(); ++i)
+  patJet.resize(patJet_charge.size());
+  for(unsigned int i=0; i < patJet.size(); ++i)
     {
-      jet[i].charge	= patJet_charge[i];
-      jet[i].p	= patJet_p[i];
-      jet[i].energy	= patJet_energy[i];
-      jet[i].et	= patJet_et[i];
-      jet[i].px	= patJet_px[i];
-      jet[i].py	= patJet_py[i];
-      jet[i].pz	= patJet_pz[i];
-      jet[i].pt	= patJet_pt[i];
-      jet[i].phi	= patJet_phi[i];
-      jet[i].eta	= patJet_eta[i];
-      jet[i].neutralHadronEnergy	= patJet_neutralHadronEnergy[i];
-      jet[i].chargedHadronEnergyFraction	= patJet_chargedHadronEnergyFraction[i];
-      jet[i].neutralHadronEnergyFraction	= patJet_neutralHadronEnergyFraction[i];
-      jet[i].chargedEmEnergyFraction	= patJet_chargedEmEnergyFraction[i];
-      jet[i].neutralEmEnergyFraction	= patJet_neutralEmEnergyFraction[i];
-      jet[i].photonEnergy	= patJet_photonEnergy[i];
-      jet[i].photonEnergyFraction	= patJet_photonEnergyFraction[i];
-      jet[i].electronEnergy	= patJet_electronEnergy[i];
-      jet[i].electronEnergyFraction	= patJet_electronEnergyFraction[i];
-      jet[i].muonEnergy	= patJet_muonEnergy[i];
-      jet[i].muonEnergyFraction	= patJet_muonEnergyFraction[i];
-      jet[i].HFHadronEnergy	= patJet_HFHadronEnergy[i];
-      jet[i].HFHadronEnergyFraction	= patJet_HFHadronEnergyFraction[i];
-      jet[i].HFEMEnergy	= patJet_HFEMEnergy[i];
-      jet[i].HFEMEnergyFraction	= patJet_HFEMEnergyFraction[i];
-      jet[i].chargedHadronMultiplicity	= patJet_chargedHadronMultiplicity[i];
-      jet[i].chargedMultiplicity	= patJet_chargedMultiplicity[i];
-      jet[i].neutralHadronMultiplicity	= patJet_neutralHadronMultiplicity[i];
-      jet[i].photonMultiplicity	= patJet_photonMultiplicity[i];
-      jet[i].electronMultiplicity	= patJet_electronMultiplicity[i];
-      jet[i].HFHadronMultiplicity	= patJet_HFHadronMultiplicity[i];
-      jet[i].HFEMMultiplicity	= patJet_HFEMMultiplicity[i];
-      jet[i].numberOfDaughters	= patJet_numberOfDaughters[i];
-      jet[i].bDiscriminator_impactParameterTagInfos	= patJet_bDiscriminator_impactParameterTagInfos[i];
-      jet[i].bDiscriminator_secondaryVertexTagInfos	= patJet_bDiscriminator_secondaryVertexTagInfos[i];
-      jet[i].bDiscriminator_softMuonTagInfos	= patJet_bDiscriminator_softMuonTagInfos[i];
-      jet[i].bDiscriminator_secondaryVertexNegativeTagInfos	= patJet_bDiscriminator_secondaryVertexNegativeTagInfos[i];
-      jet[i].bDiscriminator_inclusiveSecondaryVertexFinderTagInfos	= patJet_bDiscriminator_inclusiveSecondaryVertexFinderTagInfos[i];
-      jet[i].bDiscriminator_softElectronTagInfos	= patJet_bDiscriminator_softElectronTagInfos[i];
-      jet[i].bDiscriminator_jetBProbabilityBJetTags	= patJet_bDiscriminator_jetBProbabilityBJetTags[i];
-      jet[i].bDiscriminator_jetProbabilityBJetTags	= patJet_bDiscriminator_jetProbabilityBJetTags[i];
-      jet[i].bDiscriminator_trackCountingHighPurBJetTags	= patJet_bDiscriminator_trackCountingHighPurBJetTags[i];
-      jet[i].bDiscriminator_trackCountingHighEffBJetTags	= patJet_bDiscriminator_trackCountingHighEffBJetTags[i];
-      jet[i].bDiscriminator_simpleSecondaryVertexHighEffBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexHighEffBJetTags[i];
-      jet[i].bDiscriminator_simpleSecondaryVertexHighPurBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexHighPurBJetTags[i];
-      jet[i].bDiscriminator_combinedSecondaryVertexBJetTags	= patJet_bDiscriminator_combinedSecondaryVertexBJetTags[i];
-      jet[i].bDiscriminator_combinedSecondaryVertexMVABJetTags	= patJet_bDiscriminator_combinedSecondaryVertexMVABJetTags[i];
-      jet[i].bDiscriminator_softMuonBJetTags	= patJet_bDiscriminator_softMuonBJetTags[i];
-      jet[i].bDiscriminator_softMuonByPtBJetTags	= patJet_bDiscriminator_softMuonByPtBJetTags[i];
-      jet[i].bDiscriminator_softMuonByIP3dBJetTags	= patJet_bDiscriminator_softMuonByIP3dBJetTags[i];
-      jet[i].bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags[i];
-      jet[i].bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags[i];
-      jet[i].bDiscriminator_negativeTrackCountingHighEffJetTags	= patJet_bDiscriminator_negativeTrackCountingHighEffJetTags[i];
-      jet[i].bDiscriminator_negativeTrackCountingHighPurJetTags	= patJet_bDiscriminator_negativeTrackCountingHighPurJetTags[i];
-      jet[i].bDiscriminator_combinedInclusiveSecondaryVertexBJetTags	= patJet_bDiscriminator_combinedInclusiveSecondaryVertexBJetTags[i];
-      jet[i].bDiscriminator_combinedMVABJetTags	= patJet_bDiscriminator_combinedMVABJetTags[i];
+      patJet[i].charge	= patJet_charge[i];
+      patJet[i].p	= patJet_p[i];
+      patJet[i].energy	= patJet_energy[i];
+      patJet[i].et	= patJet_et[i];
+      patJet[i].px	= patJet_px[i];
+      patJet[i].py	= patJet_py[i];
+      patJet[i].pz	= patJet_pz[i];
+      patJet[i].pt	= patJet_pt[i];
+      patJet[i].phi	= patJet_phi[i];
+      patJet[i].eta	= patJet_eta[i];
+      patJet[i].neutralHadronEnergy	= patJet_neutralHadronEnergy[i];
+      patJet[i].chargedHadronEnergyFraction	= patJet_chargedHadronEnergyFraction[i];
+      patJet[i].neutralHadronEnergyFraction	= patJet_neutralHadronEnergyFraction[i];
+      patJet[i].chargedEmEnergyFraction	= patJet_chargedEmEnergyFraction[i];
+      patJet[i].neutralEmEnergyFraction	= patJet_neutralEmEnergyFraction[i];
+      patJet[i].photonEnergy	= patJet_photonEnergy[i];
+      patJet[i].photonEnergyFraction	= patJet_photonEnergyFraction[i];
+      patJet[i].electronEnergy	= patJet_electronEnergy[i];
+      patJet[i].electronEnergyFraction	= patJet_electronEnergyFraction[i];
+      patJet[i].muonEnergy	= patJet_muonEnergy[i];
+      patJet[i].muonEnergyFraction	= patJet_muonEnergyFraction[i];
+      patJet[i].HFHadronEnergy	= patJet_HFHadronEnergy[i];
+      patJet[i].HFHadronEnergyFraction	= patJet_HFHadronEnergyFraction[i];
+      patJet[i].HFEMEnergy	= patJet_HFEMEnergy[i];
+      patJet[i].HFEMEnergyFraction	= patJet_HFEMEnergyFraction[i];
+      patJet[i].chargedHadronMultiplicity	= patJet_chargedHadronMultiplicity[i];
+      patJet[i].chargedMultiplicity	= patJet_chargedMultiplicity[i];
+      patJet[i].neutralHadronMultiplicity	= patJet_neutralHadronMultiplicity[i];
+      patJet[i].photonMultiplicity	= patJet_photonMultiplicity[i];
+      patJet[i].electronMultiplicity	= patJet_electronMultiplicity[i];
+      patJet[i].HFHadronMultiplicity	= patJet_HFHadronMultiplicity[i];
+      patJet[i].HFEMMultiplicity	= patJet_HFEMMultiplicity[i];
+      patJet[i].numberOfDaughters	= patJet_numberOfDaughters[i];
+      patJet[i].bDiscriminator_impactParameterTagInfos	= patJet_bDiscriminator_impactParameterTagInfos[i];
+      patJet[i].bDiscriminator_secondaryVertexTagInfos	= patJet_bDiscriminator_secondaryVertexTagInfos[i];
+      patJet[i].bDiscriminator_softMuonTagInfos	= patJet_bDiscriminator_softMuonTagInfos[i];
+      patJet[i].bDiscriminator_secondaryVertexNegativeTagInfos	= patJet_bDiscriminator_secondaryVertexNegativeTagInfos[i];
+      patJet[i].bDiscriminator_inclusiveSecondaryVertexFinderTagInfos	= patJet_bDiscriminator_inclusiveSecondaryVertexFinderTagInfos[i];
+      patJet[i].bDiscriminator_softElectronTagInfos	= patJet_bDiscriminator_softElectronTagInfos[i];
+      patJet[i].bDiscriminator_jetBProbabilityBJetTags	= patJet_bDiscriminator_jetBProbabilityBJetTags[i];
+      patJet[i].bDiscriminator_jetProbabilityBJetTags	= patJet_bDiscriminator_jetProbabilityBJetTags[i];
+      patJet[i].bDiscriminator_trackCountingHighPurBJetTags	= patJet_bDiscriminator_trackCountingHighPurBJetTags[i];
+      patJet[i].bDiscriminator_trackCountingHighEffBJetTags	= patJet_bDiscriminator_trackCountingHighEffBJetTags[i];
+      patJet[i].bDiscriminator_simpleSecondaryVertexHighEffBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexHighEffBJetTags[i];
+      patJet[i].bDiscriminator_simpleSecondaryVertexHighPurBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexHighPurBJetTags[i];
+      patJet[i].bDiscriminator_combinedSecondaryVertexBJetTags	= patJet_bDiscriminator_combinedSecondaryVertexBJetTags[i];
+      patJet[i].bDiscriminator_combinedSecondaryVertexMVABJetTags	= patJet_bDiscriminator_combinedSecondaryVertexMVABJetTags[i];
+      patJet[i].bDiscriminator_softMuonBJetTags	= patJet_bDiscriminator_softMuonBJetTags[i];
+      patJet[i].bDiscriminator_softMuonByPtBJetTags	= patJet_bDiscriminator_softMuonByPtBJetTags[i];
+      patJet[i].bDiscriminator_softMuonByIP3dBJetTags	= patJet_bDiscriminator_softMuonByIP3dBJetTags[i];
+      patJet[i].bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexNegativeHighEffBJetTags[i];
+      patJet[i].bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags	= patJet_bDiscriminator_simpleSecondaryVertexNegativeHighPurBJetTags[i];
+      patJet[i].bDiscriminator_negativeTrackCountingHighEffJetTags	= patJet_bDiscriminator_negativeTrackCountingHighEffJetTags[i];
+      patJet[i].bDiscriminator_negativeTrackCountingHighPurJetTags	= patJet_bDiscriminator_negativeTrackCountingHighPurJetTags[i];
+      patJet[i].bDiscriminator_combinedInclusiveSecondaryVertexBJetTags	= patJet_bDiscriminator_combinedInclusiveSecondaryVertexBJetTags[i];
+      patJet[i].bDiscriminator_combinedMVABJetTags	= patJet_bDiscriminator_combinedMVABJetTags[i];
     }
 }
 
 inline void fillpatMET()
 {
-  met.resize(patMET_p.size());
-  for(unsigned int i=0; i < met.size(); ++i)
+  patMET.resize(patMET_p.size());
+  for(unsigned int i=0; i < patMET.size(); ++i)
     {
-      met[i].p	= patMET_p[i];
-      met[i].energy	= patMET_energy[i];
-      met[i].et	= patMET_et[i];
-      met[i].px	= patMET_px[i];
-      met[i].py	= patMET_py[i];
-      met[i].pz	= patMET_pz[i];
-      met[i].pt	= patMET_pt[i];
-      met[i].phi	= patMET_phi[i];
-      met[i].eta	= patMET_eta[i];
+      patMET[i].p	= patMET_p[i];
+      patMET[i].energy	= patMET_energy[i];
+      patMET[i].et	= patMET_et[i];
+      patMET[i].px	= patMET_px[i];
+      patMET[i].py	= patMET_py[i];
+      patMET[i].pz	= patMET_pz[i];
+      patMET[i].pt	= patMET_pt[i];
+      patMET[i].phi	= patMET_phi[i];
+      patMET[i].eta	= patMET_eta[i];
     }
 }
 
 inline void fillpatMET2()
 {
-  met2.resize(patMET2_p.size());
-  for(unsigned int i=0; i < met2.size(); ++i)
+  patMET2.resize(patMET2_p.size());
+  for(unsigned int i=0; i < patMET2.size(); ++i)
     {
-      met2[i].p	= patMET2_p[i];
-      met2[i].energy	= patMET2_energy[i];
-      met2[i].et	= patMET2_et[i];
-      met2[i].px	= patMET2_px[i];
-      met2[i].py	= patMET2_py[i];
-      met2[i].pz	= patMET2_pz[i];
-      met2[i].pt	= patMET2_pt[i];
-      met2[i].phi	= patMET2_phi[i];
-      met2[i].eta	= patMET2_eta[i];
+      patMET2[i].p	= patMET2_p[i];
+      patMET2[i].energy	= patMET2_energy[i];
+      patMET2[i].et	= patMET2_et[i];
+      patMET2[i].px	= patMET2_px[i];
+      patMET2[i].py	= patMET2_py[i];
+      patMET2[i].pz	= patMET2_pz[i];
+      patMET2[i].pt	= patMET2_pt[i];
+      patMET2[i].phi	= patMET2_phi[i];
+      patMET2[i].eta	= patMET2_eta[i];
     }
 }
 
 inline void fillpatMuon()
 {
-  muon.resize(patMuon_p.size());
-  for(unsigned int i=0; i < muon.size(); ++i)
+  patMuon.resize(patMuon_p.size());
+  for(unsigned int i=0; i < patMuon.size(); ++i)
     {
-      muon[i].p	= patMuon_p[i];
-      muon[i].energy	= patMuon_energy[i];
-      muon[i].et	= patMuon_et[i];
-      muon[i].px	= patMuon_px[i];
-      muon[i].py	= patMuon_py[i];
-      muon[i].pz	= patMuon_pz[i];
-      muon[i].pt	= patMuon_pt[i];
-      muon[i].phi	= patMuon_phi[i];
-      muon[i].eta	= patMuon_eta[i];
-      muon[i].isGlobalMuon	= patMuon_isGlobalMuon[i];
-      muon[i].isTrackerMuon	= patMuon_isTrackerMuon[i];
-      muon[i].isPFMuon	= patMuon_isPFMuon[i];
-      muon[i].pfIsolationR03_sumChargedHadronPt	= patMuon_pfIsolationR03_sumChargedHadronPt[i];
-      muon[i].pfIsolationR03_sumChargedParticlePt	= patMuon_pfIsolationR03_sumChargedParticlePt[i];
-      muon[i].pfIsolationR03_sumNeutralHadronEt	= patMuon_pfIsolationR03_sumNeutralHadronEt[i];
-      muon[i].pfIsolationR03_sumNeutralHadronEtHighThreshold	= patMuon_pfIsolationR03_sumNeutralHadronEtHighThreshold[i];
-      muon[i].pfIsolationR03_sumPhotonEt	= patMuon_pfIsolationR03_sumPhotonEt[i];
-      muon[i].pfIsolationR03_sumPhotonEtHighThreshold	= patMuon_pfIsolationR03_sumPhotonEtHighThreshold[i];
-      muon[i].pfIsolationR03_sumPUPt	= patMuon_pfIsolationR03_sumPUPt[i];
-      muon[i].pfIsolationR04_sumChargedHadronPt	= patMuon_pfIsolationR04_sumChargedHadronPt[i];
-      muon[i].pfIsolationR04_sumChargedParticlePt	= patMuon_pfIsolationR04_sumChargedParticlePt[i];
-      muon[i].pfIsolationR04_sumNeutralHadronEt	= patMuon_pfIsolationR04_sumNeutralHadronEt[i];
-      muon[i].pfIsolationR04_sumNeutralHadronEtHighThreshold	= patMuon_pfIsolationR04_sumNeutralHadronEtHighThreshold[i];
-      muon[i].pfIsolationR04_sumPhotonEt	= patMuon_pfIsolationR04_sumPhotonEt[i];
-      muon[i].pfIsolationR04_sumPhotonEtHighThreshold	= patMuon_pfIsolationR04_sumPhotonEtHighThreshold[i];
-      muon[i].pfIsolationR04_sumPUPt	= patMuon_pfIsolationR04_sumPUPt[i];
-      muon[i].numberOfMatchedStations	= patMuon_numberOfMatchedStations[i];
-      muon[i].innerTrack_normalizedChi2	= patMuon_innerTrack_normalizedChi2[i];
-      muon[i].innerTrack_dxy	= patMuon_innerTrack_dxy[i];
-      muon[i].innerTrack_dz	= patMuon_innerTrack_dz[i];
-      muon[i].innerTrack_hitPattern_numberOfValidPixelHits	= patMuon_innerTrack_hitPattern_numberOfValidPixelHits[i];
-      muon[i].innerTrack_hitPattern_pixelLayersWithMeasurement	= patMuon_innerTrack_hitPattern_pixelLayersWithMeasurement[i];
-      muon[i].globalTrack_normalizedChi2	= patMuon_globalTrack_normalizedChi2[i];
-      muon[i].globalTrack_hitPattern_numberOfValidMuonHits	= patMuon_globalTrack_hitPattern_numberOfValidMuonHits[i];
-      muon[i].muonBestTrack_dxy	= patMuon_muonBestTrack_dxy[i];
-      muon[i].muonBestTrack_dz	= patMuon_muonBestTrack_dz[i];
+      patMuon[i].p	= patMuon_p[i];
+      patMuon[i].energy	= patMuon_energy[i];
+      patMuon[i].et	= patMuon_et[i];
+      patMuon[i].px	= patMuon_px[i];
+      patMuon[i].py	= patMuon_py[i];
+      patMuon[i].pz	= patMuon_pz[i];
+      patMuon[i].pt	= patMuon_pt[i];
+      patMuon[i].phi	= patMuon_phi[i];
+      patMuon[i].eta	= patMuon_eta[i];
+      patMuon[i].isGlobalMuon	= patMuon_isGlobalMuon[i];
+      patMuon[i].isTrackerMuon	= patMuon_isTrackerMuon[i];
+      patMuon[i].isPFMuon	= patMuon_isPFMuon[i];
+      patMuon[i].pfIsolationR03_sumChargedHadronPt	= patMuon_pfIsolationR03_sumChargedHadronPt[i];
+      patMuon[i].pfIsolationR03_sumChargedParticlePt	= patMuon_pfIsolationR03_sumChargedParticlePt[i];
+      patMuon[i].pfIsolationR03_sumNeutralHadronEt	= patMuon_pfIsolationR03_sumNeutralHadronEt[i];
+      patMuon[i].pfIsolationR03_sumNeutralHadronEtHighThreshold	= patMuon_pfIsolationR03_sumNeutralHadronEtHighThreshold[i];
+      patMuon[i].pfIsolationR03_sumPhotonEt	= patMuon_pfIsolationR03_sumPhotonEt[i];
+      patMuon[i].pfIsolationR03_sumPhotonEtHighThreshold	= patMuon_pfIsolationR03_sumPhotonEtHighThreshold[i];
+      patMuon[i].pfIsolationR03_sumPUPt	= patMuon_pfIsolationR03_sumPUPt[i];
+      patMuon[i].pfIsolationR04_sumChargedHadronPt	= patMuon_pfIsolationR04_sumChargedHadronPt[i];
+      patMuon[i].pfIsolationR04_sumChargedParticlePt	= patMuon_pfIsolationR04_sumChargedParticlePt[i];
+      patMuon[i].pfIsolationR04_sumNeutralHadronEt	= patMuon_pfIsolationR04_sumNeutralHadronEt[i];
+      patMuon[i].pfIsolationR04_sumNeutralHadronEtHighThreshold	= patMuon_pfIsolationR04_sumNeutralHadronEtHighThreshold[i];
+      patMuon[i].pfIsolationR04_sumPhotonEt	= patMuon_pfIsolationR04_sumPhotonEt[i];
+      patMuon[i].pfIsolationR04_sumPhotonEtHighThreshold	= patMuon_pfIsolationR04_sumPhotonEtHighThreshold[i];
+      patMuon[i].pfIsolationR04_sumPUPt	= patMuon_pfIsolationR04_sumPUPt[i];
+      patMuon[i].numberOfMatchedStations	= patMuon_numberOfMatchedStations[i];
+      patMuon[i].innerTrack_normalizedChi2	= patMuon_innerTrack_normalizedChi2[i];
+      patMuon[i].innerTrack_dxy	= patMuon_innerTrack_dxy[i];
+      patMuon[i].innerTrack_dz	= patMuon_innerTrack_dz[i];
+      patMuon[i].innerTrack_hitPattern_numberOfValidPixelHits	= patMuon_innerTrack_hitPattern_numberOfValidPixelHits[i];
+      patMuon[i].innerTrack_hitPattern_pixelLayersWithMeasurement	= patMuon_innerTrack_hitPattern_pixelLayersWithMeasurement[i];
+      patMuon[i].globalTrack_normalizedChi2	= patMuon_globalTrack_normalizedChi2[i];
+      patMuon[i].globalTrack_hitPattern_numberOfValidMuonHits	= patMuon_globalTrack_hitPattern_numberOfValidMuonHits[i];
+      patMuon[i].muonBestTrack_dxy	= patMuon_muonBestTrack_dxy[i];
+      patMuon[i].muonBestTrack_dz	= patMuon_muonBestTrack_dz[i];
     }
 }
 
 inline void fillpatTau()
 {
-  tau.resize(patTau_charge.size());
-  for(unsigned int i=0; i < tau.size(); ++i)
+  patTau.resize(patTau_charge.size());
+  for(unsigned int i=0; i < patTau.size(); ++i)
     {
-      tau[i].charge	= patTau_charge[i];
-      tau[i].p	= patTau_p[i];
-      tau[i].energy	= patTau_energy[i];
-      tau[i].et	= patTau_et[i];
-      tau[i].px	= patTau_px[i];
-      tau[i].py	= patTau_py[i];
-      tau[i].pz	= patTau_pz[i];
-      tau[i].pt	= patTau_pt[i];
-      tau[i].phi	= patTau_phi[i];
-      tau[i].eta	= patTau_eta[i];
-      tau[i].vx	= patTau_vx[i];
-      tau[i].vy	= patTau_vy[i];
-      tau[i].vz	= patTau_vz[i];
-      tau[i].tauID_againstElectronDeadECAL	= patTau_tauID_againstElectronDeadECAL[i];
-      tau[i].tauID_againstElectronLoose	= patTau_tauID_againstElectronLoose[i];
-      tau[i].tauID_againstElectronLooseMVA5	= patTau_tauID_againstElectronLooseMVA5[i];
-      tau[i].tauID_againstElectronMVA5category	= patTau_tauID_againstElectronMVA5category[i];
-      tau[i].tauID_againstElectronMVA5raw	= patTau_tauID_againstElectronMVA5raw[i];
-      tau[i].tauID_againstElectronMedium	= patTau_tauID_againstElectronMedium[i];
-      tau[i].tauID_againstElectronMediumMVA5	= patTau_tauID_againstElectronMediumMVA5[i];
-      tau[i].tauID_againstElectronTight	= patTau_tauID_againstElectronTight[i];
-      tau[i].tauID_againstElectronTightMVA5	= patTau_tauID_againstElectronTightMVA5[i];
-      tau[i].tauID_againstElectronVLooseMVA5	= patTau_tauID_againstElectronVLooseMVA5[i];
-      tau[i].tauID_againstElectronVTightMVA5	= patTau_tauID_againstElectronVTightMVA5[i];
-      tau[i].tauID_againstMuonLoose	= patTau_tauID_againstMuonLoose[i];
-      tau[i].tauID_againstMuonLoose2	= patTau_tauID_againstMuonLoose2[i];
-      tau[i].tauID_againstMuonLoose3	= patTau_tauID_againstMuonLoose3[i];
-      tau[i].tauID_againstMuonLooseMVA	= patTau_tauID_againstMuonLooseMVA[i];
-      tau[i].tauID_againstMuonMVAraw	= patTau_tauID_againstMuonMVAraw[i];
-      tau[i].tauID_againstMuonMedium	= patTau_tauID_againstMuonMedium[i];
-      tau[i].tauID_againstMuonMedium2	= patTau_tauID_againstMuonMedium2[i];
-      tau[i].tauID_againstMuonMediumMVA	= patTau_tauID_againstMuonMediumMVA[i];
-      tau[i].tauID_againstMuonTight	= patTau_tauID_againstMuonTight[i];
-      tau[i].tauID_againstMuonTight2	= patTau_tauID_againstMuonTight2[i];
-      tau[i].tauID_againstMuonTight3	= patTau_tauID_againstMuonTight3[i];
-      tau[i].tauID_againstMuonTightMVA	= patTau_tauID_againstMuonTightMVA[i];
-      tau[i].tauID_byCombinedIsolationDeltaBetaCorrRaw	= patTau_tauID_byCombinedIsolationDeltaBetaCorrRaw[i];
-      tau[i].tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits	= patTau_tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits[i];
-      tau[i].tauID_byIsolationMVA3newDMwLTraw	= patTau_tauID_byIsolationMVA3newDMwLTraw[i];
-      tau[i].tauID_byIsolationMVA3newDMwoLTraw	= patTau_tauID_byIsolationMVA3newDMwoLTraw[i];
-      tau[i].tauID_byIsolationMVA3oldDMwLTraw	= patTau_tauID_byIsolationMVA3oldDMwLTraw[i];
-      tau[i].tauID_byIsolationMVA3oldDMwoLTraw	= patTau_tauID_byIsolationMVA3oldDMwoLTraw[i];
-      tau[i].tauID_byLooseCombinedIsolationDeltaBetaCorr	= patTau_tauID_byLooseCombinedIsolationDeltaBetaCorr[i];
-      tau[i].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits	= patTau_tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits[i];
-      tau[i].tauID_byLooseIsolation	= patTau_tauID_byLooseIsolation[i];
-      tau[i].tauID_byLooseIsolationMVA3newDMwLT	= patTau_tauID_byLooseIsolationMVA3newDMwLT[i];
-      tau[i].tauID_byLooseIsolationMVA3newDMwoLT	= patTau_tauID_byLooseIsolationMVA3newDMwoLT[i];
-      tau[i].tauID_byLooseIsolationMVA3oldDMwLT	= patTau_tauID_byLooseIsolationMVA3oldDMwLT[i];
-      tau[i].tauID_byLooseIsolationMVA3oldDMwoLT	= patTau_tauID_byLooseIsolationMVA3oldDMwoLT[i];
-      tau[i].tauID_byMediumCombinedIsolationDeltaBetaCorr	= patTau_tauID_byMediumCombinedIsolationDeltaBetaCorr[i];
-      tau[i].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits	= patTau_tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits[i];
-      tau[i].tauID_byMediumIsolationMVA3newDMwLT	= patTau_tauID_byMediumIsolationMVA3newDMwLT[i];
-      tau[i].tauID_byMediumIsolationMVA3newDMwoLT	= patTau_tauID_byMediumIsolationMVA3newDMwoLT[i];
-      tau[i].tauID_byMediumIsolationMVA3oldDMwLT	= patTau_tauID_byMediumIsolationMVA3oldDMwLT[i];
-      tau[i].tauID_byMediumIsolationMVA3oldDMwoLT	= patTau_tauID_byMediumIsolationMVA3oldDMwoLT[i];
-      tau[i].tauID_byTightCombinedIsolationDeltaBetaCorr	= patTau_tauID_byTightCombinedIsolationDeltaBetaCorr[i];
-      tau[i].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits	= patTau_tauID_byTightCombinedIsolationDeltaBetaCorr3Hits[i];
-      tau[i].tauID_byTightIsolationMVA3newDMwLT	= patTau_tauID_byTightIsolationMVA3newDMwLT[i];
-      tau[i].tauID_byTightIsolationMVA3newDMwoLT	= patTau_tauID_byTightIsolationMVA3newDMwoLT[i];
-      tau[i].tauID_byTightIsolationMVA3oldDMwLT	= patTau_tauID_byTightIsolationMVA3oldDMwLT[i];
-      tau[i].tauID_byTightIsolationMVA3oldDMwoLT	= patTau_tauID_byTightIsolationMVA3oldDMwoLT[i];
-      tau[i].tauID_byVLooseCombinedIsolationDeltaBetaCorr	= patTau_tauID_byVLooseCombinedIsolationDeltaBetaCorr[i];
-      tau[i].tauID_byVLooseIsolationMVA3newDMwLT	= patTau_tauID_byVLooseIsolationMVA3newDMwLT[i];
-      tau[i].tauID_byVLooseIsolationMVA3newDMwoLT	= patTau_tauID_byVLooseIsolationMVA3newDMwoLT[i];
-      tau[i].tauID_byVLooseIsolationMVA3oldDMwLT	= patTau_tauID_byVLooseIsolationMVA3oldDMwLT[i];
-      tau[i].tauID_byVLooseIsolationMVA3oldDMwoLT	= patTau_tauID_byVLooseIsolationMVA3oldDMwoLT[i];
-      tau[i].tauID_byVTightIsolationMVA3newDMwLT	= patTau_tauID_byVTightIsolationMVA3newDMwLT[i];
-      tau[i].tauID_byVTightIsolationMVA3newDMwoLT	= patTau_tauID_byVTightIsolationMVA3newDMwoLT[i];
-      tau[i].tauID_byVTightIsolationMVA3oldDMwLT	= patTau_tauID_byVTightIsolationMVA3oldDMwLT[i];
-      tau[i].tauID_byVTightIsolationMVA3oldDMwoLT	= patTau_tauID_byVTightIsolationMVA3oldDMwoLT[i];
-      tau[i].tauID_byVVTightIsolationMVA3newDMwLT	= patTau_tauID_byVVTightIsolationMVA3newDMwLT[i];
-      tau[i].tauID_byVVTightIsolationMVA3newDMwoLT	= patTau_tauID_byVVTightIsolationMVA3newDMwoLT[i];
-      tau[i].tauID_byVVTightIsolationMVA3oldDMwLT	= patTau_tauID_byVVTightIsolationMVA3oldDMwLT[i];
-      tau[i].tauID_byVVTightIsolationMVA3oldDMwoLT	= patTau_tauID_byVVTightIsolationMVA3oldDMwoLT[i];
-      tau[i].tauID_chargedIsoPtSum	= patTau_tauID_chargedIsoPtSum[i];
-      tau[i].tauID_decayModeFinding	= patTau_tauID_decayModeFinding[i];
-      tau[i].tauID_decayModeFindingNewDMs	= patTau_tauID_decayModeFindingNewDMs[i];
-      tau[i].tauID_decayModeFindingOldDMs	= patTau_tauID_decayModeFindingOldDMs[i];
-      tau[i].tauID_neutralIsoPtSum	= patTau_tauID_neutralIsoPtSum[i];
-      tau[i].tauID_puCorrPtSum	= patTau_tauID_puCorrPtSum[i];
-      tau[i].leadPFChargedHadrCand_p	= patTau_leadPFChargedHadrCand_p[i];
-      tau[i].leadPFChargedHadrCand_energy	= patTau_leadPFChargedHadrCand_energy[i];
-      tau[i].leadPFChargedHadrCand_et	= patTau_leadPFChargedHadrCand_et[i];
-      tau[i].leadPFChargedHadrCand_mass	= patTau_leadPFChargedHadrCand_mass[i];
-      tau[i].leadPFChargedHadrCand_massSqr	= patTau_leadPFChargedHadrCand_massSqr[i];
-      tau[i].leadPFChargedHadrCand_mt	= patTau_leadPFChargedHadrCand_mt[i];
-      tau[i].leadPFChargedHadrCand_mtSqr	= patTau_leadPFChargedHadrCand_mtSqr[i];
-      tau[i].leadPFChargedHadrCand_px	= patTau_leadPFChargedHadrCand_px[i];
-      tau[i].leadPFChargedHadrCand_py	= patTau_leadPFChargedHadrCand_py[i];
-      tau[i].leadPFChargedHadrCand_pz	= patTau_leadPFChargedHadrCand_pz[i];
-      tau[i].leadPFChargedHadrCand_pt	= patTau_leadPFChargedHadrCand_pt[i];
-      tau[i].leadPFChargedHadrCand_phi	= patTau_leadPFChargedHadrCand_phi[i];
-      tau[i].leadPFChargedHadrCand_theta	= patTau_leadPFChargedHadrCand_theta[i];
-      tau[i].leadPFChargedHadrCand_eta	= patTau_leadPFChargedHadrCand_eta[i];
-      tau[i].leadPFChargedHadrCand_rapidity	= patTau_leadPFChargedHadrCand_rapidity[i];
-      tau[i].leadPFChargedHadrCand_y	= patTau_leadPFChargedHadrCand_y[i];
-      tau[i].signalPFChargedHadrCands_size	= patTau_signalPFChargedHadrCands_size[i];
+      patTau[i].charge	= patTau_charge[i];
+      patTau[i].p	= patTau_p[i];
+      patTau[i].energy	= patTau_energy[i];
+      patTau[i].et	= patTau_et[i];
+      patTau[i].px	= patTau_px[i];
+      patTau[i].py	= patTau_py[i];
+      patTau[i].pz	= patTau_pz[i];
+      patTau[i].pt	= patTau_pt[i];
+      patTau[i].phi	= patTau_phi[i];
+      patTau[i].eta	= patTau_eta[i];
+      patTau[i].vx	= patTau_vx[i];
+      patTau[i].vy	= patTau_vy[i];
+      patTau[i].vz	= patTau_vz[i];
+      patTau[i].tauID_againstElectronDeadECAL	= patTau_tauID_againstElectronDeadECAL[i];
+      patTau[i].tauID_againstElectronLoose	= patTau_tauID_againstElectronLoose[i];
+      patTau[i].tauID_againstElectronLooseMVA5	= patTau_tauID_againstElectronLooseMVA5[i];
+      patTau[i].tauID_againstElectronMVA5category	= patTau_tauID_againstElectronMVA5category[i];
+      patTau[i].tauID_againstElectronMVA5raw	= patTau_tauID_againstElectronMVA5raw[i];
+      patTau[i].tauID_againstElectronMedium	= patTau_tauID_againstElectronMedium[i];
+      patTau[i].tauID_againstElectronMediumMVA5	= patTau_tauID_againstElectronMediumMVA5[i];
+      patTau[i].tauID_againstElectronTight	= patTau_tauID_againstElectronTight[i];
+      patTau[i].tauID_againstElectronTightMVA5	= patTau_tauID_againstElectronTightMVA5[i];
+      patTau[i].tauID_againstElectronVLooseMVA5	= patTau_tauID_againstElectronVLooseMVA5[i];
+      patTau[i].tauID_againstElectronVTightMVA5	= patTau_tauID_againstElectronVTightMVA5[i];
+      patTau[i].tauID_againstMuonLoose	= patTau_tauID_againstMuonLoose[i];
+      patTau[i].tauID_againstMuonLoose2	= patTau_tauID_againstMuonLoose2[i];
+      patTau[i].tauID_againstMuonLoose3	= patTau_tauID_againstMuonLoose3[i];
+      patTau[i].tauID_againstMuonLooseMVA	= patTau_tauID_againstMuonLooseMVA[i];
+      patTau[i].tauID_againstMuonMVAraw	= patTau_tauID_againstMuonMVAraw[i];
+      patTau[i].tauID_againstMuonMedium	= patTau_tauID_againstMuonMedium[i];
+      patTau[i].tauID_againstMuonMedium2	= patTau_tauID_againstMuonMedium2[i];
+      patTau[i].tauID_againstMuonMediumMVA	= patTau_tauID_againstMuonMediumMVA[i];
+      patTau[i].tauID_againstMuonTight	= patTau_tauID_againstMuonTight[i];
+      patTau[i].tauID_againstMuonTight2	= patTau_tauID_againstMuonTight2[i];
+      patTau[i].tauID_againstMuonTight3	= patTau_tauID_againstMuonTight3[i];
+      patTau[i].tauID_againstMuonTightMVA	= patTau_tauID_againstMuonTightMVA[i];
+      patTau[i].tauID_byCombinedIsolationDeltaBetaCorrRaw	= patTau_tauID_byCombinedIsolationDeltaBetaCorrRaw[i];
+      patTau[i].tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits	= patTau_tauID_byCombinedIsolationDeltaBetaCorrRaw3Hits[i];
+      patTau[i].tauID_byIsolationMVA3newDMwLTraw	= patTau_tauID_byIsolationMVA3newDMwLTraw[i];
+      patTau[i].tauID_byIsolationMVA3newDMwoLTraw	= patTau_tauID_byIsolationMVA3newDMwoLTraw[i];
+      patTau[i].tauID_byIsolationMVA3oldDMwLTraw	= patTau_tauID_byIsolationMVA3oldDMwLTraw[i];
+      patTau[i].tauID_byIsolationMVA3oldDMwoLTraw	= patTau_tauID_byIsolationMVA3oldDMwoLTraw[i];
+      patTau[i].tauID_byLooseCombinedIsolationDeltaBetaCorr	= patTau_tauID_byLooseCombinedIsolationDeltaBetaCorr[i];
+      patTau[i].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits	= patTau_tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits[i];
+      patTau[i].tauID_byLooseIsolation	= patTau_tauID_byLooseIsolation[i];
+      patTau[i].tauID_byLooseIsolationMVA3newDMwLT	= patTau_tauID_byLooseIsolationMVA3newDMwLT[i];
+      patTau[i].tauID_byLooseIsolationMVA3newDMwoLT	= patTau_tauID_byLooseIsolationMVA3newDMwoLT[i];
+      patTau[i].tauID_byLooseIsolationMVA3oldDMwLT	= patTau_tauID_byLooseIsolationMVA3oldDMwLT[i];
+      patTau[i].tauID_byLooseIsolationMVA3oldDMwoLT	= patTau_tauID_byLooseIsolationMVA3oldDMwoLT[i];
+      patTau[i].tauID_byMediumCombinedIsolationDeltaBetaCorr	= patTau_tauID_byMediumCombinedIsolationDeltaBetaCorr[i];
+      patTau[i].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits	= patTau_tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits[i];
+      patTau[i].tauID_byMediumIsolationMVA3newDMwLT	= patTau_tauID_byMediumIsolationMVA3newDMwLT[i];
+      patTau[i].tauID_byMediumIsolationMVA3newDMwoLT	= patTau_tauID_byMediumIsolationMVA3newDMwoLT[i];
+      patTau[i].tauID_byMediumIsolationMVA3oldDMwLT	= patTau_tauID_byMediumIsolationMVA3oldDMwLT[i];
+      patTau[i].tauID_byMediumIsolationMVA3oldDMwoLT	= patTau_tauID_byMediumIsolationMVA3oldDMwoLT[i];
+      patTau[i].tauID_byTightCombinedIsolationDeltaBetaCorr	= patTau_tauID_byTightCombinedIsolationDeltaBetaCorr[i];
+      patTau[i].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits	= patTau_tauID_byTightCombinedIsolationDeltaBetaCorr3Hits[i];
+      patTau[i].tauID_byTightIsolationMVA3newDMwLT	= patTau_tauID_byTightIsolationMVA3newDMwLT[i];
+      patTau[i].tauID_byTightIsolationMVA3newDMwoLT	= patTau_tauID_byTightIsolationMVA3newDMwoLT[i];
+      patTau[i].tauID_byTightIsolationMVA3oldDMwLT	= patTau_tauID_byTightIsolationMVA3oldDMwLT[i];
+      patTau[i].tauID_byTightIsolationMVA3oldDMwoLT	= patTau_tauID_byTightIsolationMVA3oldDMwoLT[i];
+      patTau[i].tauID_byVLooseCombinedIsolationDeltaBetaCorr	= patTau_tauID_byVLooseCombinedIsolationDeltaBetaCorr[i];
+      patTau[i].tauID_byVLooseIsolationMVA3newDMwLT	= patTau_tauID_byVLooseIsolationMVA3newDMwLT[i];
+      patTau[i].tauID_byVLooseIsolationMVA3newDMwoLT	= patTau_tauID_byVLooseIsolationMVA3newDMwoLT[i];
+      patTau[i].tauID_byVLooseIsolationMVA3oldDMwLT	= patTau_tauID_byVLooseIsolationMVA3oldDMwLT[i];
+      patTau[i].tauID_byVLooseIsolationMVA3oldDMwoLT	= patTau_tauID_byVLooseIsolationMVA3oldDMwoLT[i];
+      patTau[i].tauID_byVTightIsolationMVA3newDMwLT	= patTau_tauID_byVTightIsolationMVA3newDMwLT[i];
+      patTau[i].tauID_byVTightIsolationMVA3newDMwoLT	= patTau_tauID_byVTightIsolationMVA3newDMwoLT[i];
+      patTau[i].tauID_byVTightIsolationMVA3oldDMwLT	= patTau_tauID_byVTightIsolationMVA3oldDMwLT[i];
+      patTau[i].tauID_byVTightIsolationMVA3oldDMwoLT	= patTau_tauID_byVTightIsolationMVA3oldDMwoLT[i];
+      patTau[i].tauID_byVVTightIsolationMVA3newDMwLT	= patTau_tauID_byVVTightIsolationMVA3newDMwLT[i];
+      patTau[i].tauID_byVVTightIsolationMVA3newDMwoLT	= patTau_tauID_byVVTightIsolationMVA3newDMwoLT[i];
+      patTau[i].tauID_byVVTightIsolationMVA3oldDMwLT	= patTau_tauID_byVVTightIsolationMVA3oldDMwLT[i];
+      patTau[i].tauID_byVVTightIsolationMVA3oldDMwoLT	= patTau_tauID_byVVTightIsolationMVA3oldDMwoLT[i];
+      patTau[i].tauID_chargedIsoPtSum	= patTau_tauID_chargedIsoPtSum[i];
+      patTau[i].tauID_decayModeFinding	= patTau_tauID_decayModeFinding[i];
+      patTau[i].tauID_decayModeFindingNewDMs	= patTau_tauID_decayModeFindingNewDMs[i];
+      patTau[i].tauID_decayModeFindingOldDMs	= patTau_tauID_decayModeFindingOldDMs[i];
+      patTau[i].tauID_neutralIsoPtSum	= patTau_tauID_neutralIsoPtSum[i];
+      patTau[i].tauID_puCorrPtSum	= patTau_tauID_puCorrPtSum[i];
+      patTau[i].leadPFChargedHadrCand_p	= patTau_leadPFChargedHadrCand_p[i];
+      patTau[i].leadPFChargedHadrCand_energy	= patTau_leadPFChargedHadrCand_energy[i];
+      patTau[i].leadPFChargedHadrCand_et	= patTau_leadPFChargedHadrCand_et[i];
+      patTau[i].leadPFChargedHadrCand_mass	= patTau_leadPFChargedHadrCand_mass[i];
+      patTau[i].leadPFChargedHadrCand_massSqr	= patTau_leadPFChargedHadrCand_massSqr[i];
+      patTau[i].leadPFChargedHadrCand_mt	= patTau_leadPFChargedHadrCand_mt[i];
+      patTau[i].leadPFChargedHadrCand_mtSqr	= patTau_leadPFChargedHadrCand_mtSqr[i];
+      patTau[i].leadPFChargedHadrCand_px	= patTau_leadPFChargedHadrCand_px[i];
+      patTau[i].leadPFChargedHadrCand_py	= patTau_leadPFChargedHadrCand_py[i];
+      patTau[i].leadPFChargedHadrCand_pz	= patTau_leadPFChargedHadrCand_pz[i];
+      patTau[i].leadPFChargedHadrCand_pt	= patTau_leadPFChargedHadrCand_pt[i];
+      patTau[i].leadPFChargedHadrCand_phi	= patTau_leadPFChargedHadrCand_phi[i];
+      patTau[i].leadPFChargedHadrCand_theta	= patTau_leadPFChargedHadrCand_theta[i];
+      patTau[i].leadPFChargedHadrCand_eta	= patTau_leadPFChargedHadrCand_eta[i];
+      patTau[i].leadPFChargedHadrCand_rapidity	= patTau_leadPFChargedHadrCand_rapidity[i];
+      patTau[i].leadPFChargedHadrCand_y	= patTau_leadPFChargedHadrCand_y[i];
     }
 }
 
 inline void fillrecoGenParticleHelper()
 {
-  genparticlehelper.resize(recoGenParticleHelper_firstMother.size());
-  for(unsigned int i=0; i < genparticlehelper.size(); ++i)
+  recoGenParticleHelper.resize(recoGenParticleHelper_firstMother.size());
+  for(unsigned int i=0; i < recoGenParticleHelper.size(); ++i)
     {
-      genparticlehelper[i].firstMother	= recoGenParticleHelper_firstMother[i];
-      genparticlehelper[i].lastMother	= recoGenParticleHelper_lastMother[i];
-      genparticlehelper[i].firstDaughter	= recoGenParticleHelper_firstDaughter[i];
-      genparticlehelper[i].lastDaughter	= recoGenParticleHelper_lastDaughter[i];
-      genparticlehelper[i].charge	= recoGenParticleHelper_charge[i];
-      genparticlehelper[i].pdgId	= recoGenParticleHelper_pdgId[i];
-      genparticlehelper[i].status	= recoGenParticleHelper_status[i];
-      genparticlehelper[i].pt	= recoGenParticleHelper_pt[i];
-      genparticlehelper[i].eta	= recoGenParticleHelper_eta[i];
-      genparticlehelper[i].phi	= recoGenParticleHelper_phi[i];
-      genparticlehelper[i].mass	= recoGenParticleHelper_mass[i];
+      recoGenParticleHelper[i].firstMother	= recoGenParticleHelper_firstMother[i];
+      recoGenParticleHelper[i].lastMother	= recoGenParticleHelper_lastMother[i];
+      recoGenParticleHelper[i].firstDaughter	= recoGenParticleHelper_firstDaughter[i];
+      recoGenParticleHelper[i].lastDaughter	= recoGenParticleHelper_lastDaughter[i];
+      recoGenParticleHelper[i].charge	= recoGenParticleHelper_charge[i];
+      recoGenParticleHelper[i].pdgId	= recoGenParticleHelper_pdgId[i];
+      recoGenParticleHelper[i].status	= recoGenParticleHelper_status[i];
+      recoGenParticleHelper[i].pt	= recoGenParticleHelper_pt[i];
+      recoGenParticleHelper[i].eta	= recoGenParticleHelper_eta[i];
+      recoGenParticleHelper[i].phi	= recoGenParticleHelper_phi[i];
+      recoGenParticleHelper[i].mass	= recoGenParticleHelper_mass[i];
     }
 }
 
 inline void fillrecoGenParticleHelperPlus()
 {
-  genparticlehelperplus.resize(recoGenParticleHelperPlus_firstMother.size());
-  for(unsigned int i=0; i < genparticlehelperplus.size(); ++i)
+  recoGenParticleHelperPlus.resize(recoGenParticleHelperPlus_firstMother.size());
+  for(unsigned int i=0; i < recoGenParticleHelperPlus.size(); ++i)
     {
-      genparticlehelperplus[i].firstMother	= recoGenParticleHelperPlus_firstMother[i];
-      genparticlehelperplus[i].lastMother	= recoGenParticleHelperPlus_lastMother[i];
-      genparticlehelperplus[i].firstDaughter	= recoGenParticleHelperPlus_firstDaughter[i];
-      genparticlehelperplus[i].lastDaughter	= recoGenParticleHelperPlus_lastDaughter[i];
-      genparticlehelperplus[i].charge	= recoGenParticleHelperPlus_charge[i];
-      genparticlehelperplus[i].pdgId	= recoGenParticleHelperPlus_pdgId[i];
-      genparticlehelperplus[i].status	= recoGenParticleHelperPlus_status[i];
-      genparticlehelperplus[i].pt	= recoGenParticleHelperPlus_pt[i];
-      genparticlehelperplus[i].eta	= recoGenParticleHelperPlus_eta[i];
-      genparticlehelperplus[i].phi	= recoGenParticleHelperPlus_phi[i];
-      genparticlehelperplus[i].mass	= recoGenParticleHelperPlus_mass[i];
+      recoGenParticleHelperPlus[i].firstMother	= recoGenParticleHelperPlus_firstMother[i];
+      recoGenParticleHelperPlus[i].lastMother	= recoGenParticleHelperPlus_lastMother[i];
+      recoGenParticleHelperPlus[i].firstDaughter	= recoGenParticleHelperPlus_firstDaughter[i];
+      recoGenParticleHelperPlus[i].lastDaughter	= recoGenParticleHelperPlus_lastDaughter[i];
+      recoGenParticleHelperPlus[i].charge	= recoGenParticleHelperPlus_charge[i];
+      recoGenParticleHelperPlus[i].pdgId	= recoGenParticleHelperPlus_pdgId[i];
+      recoGenParticleHelperPlus[i].status	= recoGenParticleHelperPlus_status[i];
+      recoGenParticleHelperPlus[i].pt	= recoGenParticleHelperPlus_pt[i];
+      recoGenParticleHelperPlus[i].eta	= recoGenParticleHelperPlus_eta[i];
+      recoGenParticleHelperPlus[i].phi	= recoGenParticleHelperPlus_phi[i];
+      recoGenParticleHelperPlus[i].mass	= recoGenParticleHelperPlus_mass[i];
     }
 }
 
@@ -1883,14 +1616,14 @@ inline void fillrecoPFMET1()
 
 inline void fillrecoVertex()
 {
-  vertex.resize(recoVertex_isFake.size());
-  for(unsigned int i=0; i < vertex.size(); ++i)
+  recoVertex.resize(recoVertex_isFake.size());
+  for(unsigned int i=0; i < recoVertex.size(); ++i)
     {
-      vertex[i].isFake	= recoVertex_isFake[i];
-      vertex[i].ndof	= recoVertex_ndof[i];
-      vertex[i].x	= recoVertex_x[i];
-      vertex[i].y	= recoVertex_y[i];
-      vertex[i].z	= recoVertex_z[i];
+      recoVertex[i].isFake	= recoVertex_isFake[i];
+      recoVertex[i].ndof	= recoVertex_ndof[i];
+      recoVertex[i].x	= recoVertex_x[i];
+      recoVertex[i].y	= recoVertex_y[i];
+      recoVertex[i].z	= recoVertex_z[i];
     }
 }
 
@@ -1898,7 +1631,6 @@ inline void fillrecoVertex()
 void fillObjects()
 {
   fillPileupSummaryInfo();
-  fillak5GenJets();
   fillpatElectron();
   fillpatJet();
   fillpatMET();
@@ -1940,28 +1672,6 @@ void saveSelectedObjects()
           PileupSummaryInfo_getTrueNumInteractions[i]	= PileupSummaryInfo_getTrueNumInteractions[j];
         }
       nPileupSummaryInfo = n;
-    }
-
-  n = 0;
-  try
-    {
-       n = indexmap["ak5GenJets"].size();
-    }
-  catch (...)
-    {}
-  if ( n > 0 )
-    {
-      std::vector<int>& index = indexmap["ak5GenJets"];
-      for(int i=0; i < n; ++i)
-        {
-          int j = index[i];
-          ak5GenJets_charge[i]	= ak5GenJets_charge[j];
-          ak5GenJets_pt[i]	= ak5GenJets_pt[j];
-          ak5GenJets_eta[i]	= ak5GenJets_eta[j];
-          ak5GenJets_phi[i]	= ak5GenJets_phi[j];
-          ak5GenJets_mass[i]	= ak5GenJets_mass[j];
-        }
-      nak5GenJets = n;
     }
 
   n = 0;
@@ -2290,7 +2000,6 @@ void saveSelectedObjects()
           patTau_leadPFChargedHadrCand_eta[i]	= patTau_leadPFChargedHadrCand_eta[j];
           patTau_leadPFChargedHadrCand_rapidity[i]	= patTau_leadPFChargedHadrCand_rapidity[j];
           patTau_leadPFChargedHadrCand_y[i]	= patTau_leadPFChargedHadrCand_y[j];
-patTau_signalPFChargedHadrCands_size[i]	= patTau_signalPFChargedHadrCands_size[j];
         }
       npatTau = n;
     }
@@ -2476,320 +2185,93 @@ void selectVariables(itreestream& stream)
   stream.select("PileupSummaryInfo_addPileupInfo.getBunchCrossing", PileupSummaryInfo_getBunchCrossing);
   stream.select("PileupSummaryInfo_addPileupInfo.getPU_NumInteractions", PileupSummaryInfo_getPU_NumInteractions);
   stream.select("PileupSummaryInfo_addPileupInfo.getTrueNumInteractions", PileupSummaryInfo_getTrueNumInteractions);
-  stream.select("recoGenJet_ak5GenJets.charge", ak5GenJets_charge);
-  stream.select("recoGenJet_ak5GenJets.eta", ak5GenJets_eta);
-  stream.select("recoGenJet_ak5GenJets.mass", ak5GenJets_mass);
-  stream.select("recoGenJet_ak5GenJets.phi", ak5GenJets_phi);
-  stream.select("recoGenJet_ak5GenJets.pt", ak5GenJets_pt);
-  stream.select("edmEventHelper_info.bunchCrossing", eventhelper_bunchCrossing);
-  stream.select("edmEventHelper_info.event", eventhelper_event);
-  stream.select("edmEventHelper_info.isRealData", eventhelper_isRealData);
-  stream.select("edmEventHelper_info.luminosityBlock", eventhelper_luminosityBlock);
-  stream.select("edmEventHelper_info.orbitNumber", eventhelper_orbitNumber);
-  stream.select("edmEventHelper_info.run", eventhelper_run);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v1", triggerresultshelper_prescale_HLT_DiPFJetAve140_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v10", triggerresultshelper_prescale_HLT_DiPFJetAve140_v10);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v11", triggerresultshelper_prescale_HLT_DiPFJetAve140_v11);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v12", triggerresultshelper_prescale_HLT_DiPFJetAve140_v12);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v13", triggerresultshelper_prescale_HLT_DiPFJetAve140_v13);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v14", triggerresultshelper_prescale_HLT_DiPFJetAve140_v14);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v15", triggerresultshelper_prescale_HLT_DiPFJetAve140_v15);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v16", triggerresultshelper_prescale_HLT_DiPFJetAve140_v16);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v17", triggerresultshelper_prescale_HLT_DiPFJetAve140_v17);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v18", triggerresultshelper_prescale_HLT_DiPFJetAve140_v18);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v19", triggerresultshelper_prescale_HLT_DiPFJetAve140_v19);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v2", triggerresultshelper_prescale_HLT_DiPFJetAve140_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v20", triggerresultshelper_prescale_HLT_DiPFJetAve140_v20);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v3", triggerresultshelper_prescale_HLT_DiPFJetAve140_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v4", triggerresultshelper_prescale_HLT_DiPFJetAve140_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v5", triggerresultshelper_prescale_HLT_DiPFJetAve140_v5);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v6", triggerresultshelper_prescale_HLT_DiPFJetAve140_v6);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v7", triggerresultshelper_prescale_HLT_DiPFJetAve140_v7);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v8", triggerresultshelper_prescale_HLT_DiPFJetAve140_v8);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v9", triggerresultshelper_prescale_HLT_DiPFJetAve140_v9);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v1", triggerresultshelper_prescale_HLT_DiPFJetAve200_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v10", triggerresultshelper_prescale_HLT_DiPFJetAve200_v10);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v11", triggerresultshelper_prescale_HLT_DiPFJetAve200_v11);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v12", triggerresultshelper_prescale_HLT_DiPFJetAve200_v12);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v13", triggerresultshelper_prescale_HLT_DiPFJetAve200_v13);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v14", triggerresultshelper_prescale_HLT_DiPFJetAve200_v14);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v15", triggerresultshelper_prescale_HLT_DiPFJetAve200_v15);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v16", triggerresultshelper_prescale_HLT_DiPFJetAve200_v16);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v17", triggerresultshelper_prescale_HLT_DiPFJetAve200_v17);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v18", triggerresultshelper_prescale_HLT_DiPFJetAve200_v18);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v19", triggerresultshelper_prescale_HLT_DiPFJetAve200_v19);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v2", triggerresultshelper_prescale_HLT_DiPFJetAve200_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v20", triggerresultshelper_prescale_HLT_DiPFJetAve200_v20);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v3", triggerresultshelper_prescale_HLT_DiPFJetAve200_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v4", triggerresultshelper_prescale_HLT_DiPFJetAve200_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v5", triggerresultshelper_prescale_HLT_DiPFJetAve200_v5);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v6", triggerresultshelper_prescale_HLT_DiPFJetAve200_v6);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v7", triggerresultshelper_prescale_HLT_DiPFJetAve200_v7);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v8", triggerresultshelper_prescale_HLT_DiPFJetAve200_v8);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve200_v9", triggerresultshelper_prescale_HLT_DiPFJetAve200_v9);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v1", triggerresultshelper_prescale_HLT_DiPFJetAve260_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v10", triggerresultshelper_prescale_HLT_DiPFJetAve260_v10);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v11", triggerresultshelper_prescale_HLT_DiPFJetAve260_v11);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v12", triggerresultshelper_prescale_HLT_DiPFJetAve260_v12);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v13", triggerresultshelper_prescale_HLT_DiPFJetAve260_v13);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v14", triggerresultshelper_prescale_HLT_DiPFJetAve260_v14);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v15", triggerresultshelper_prescale_HLT_DiPFJetAve260_v15);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v16", triggerresultshelper_prescale_HLT_DiPFJetAve260_v16);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v17", triggerresultshelper_prescale_HLT_DiPFJetAve260_v17);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v18", triggerresultshelper_prescale_HLT_DiPFJetAve260_v18);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v19", triggerresultshelper_prescale_HLT_DiPFJetAve260_v19);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v2", triggerresultshelper_prescale_HLT_DiPFJetAve260_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v20", triggerresultshelper_prescale_HLT_DiPFJetAve260_v20);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v3", triggerresultshelper_prescale_HLT_DiPFJetAve260_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v4", triggerresultshelper_prescale_HLT_DiPFJetAve260_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v5", triggerresultshelper_prescale_HLT_DiPFJetAve260_v5);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v6", triggerresultshelper_prescale_HLT_DiPFJetAve260_v6);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v7", triggerresultshelper_prescale_HLT_DiPFJetAve260_v7);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v8", triggerresultshelper_prescale_HLT_DiPFJetAve260_v8);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve260_v9", triggerresultshelper_prescale_HLT_DiPFJetAve260_v9);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v1", triggerresultshelper_prescale_HLT_DiPFJetAve320_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v10", triggerresultshelper_prescale_HLT_DiPFJetAve320_v10);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v11", triggerresultshelper_prescale_HLT_DiPFJetAve320_v11);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v12", triggerresultshelper_prescale_HLT_DiPFJetAve320_v12);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v13", triggerresultshelper_prescale_HLT_DiPFJetAve320_v13);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v14", triggerresultshelper_prescale_HLT_DiPFJetAve320_v14);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v15", triggerresultshelper_prescale_HLT_DiPFJetAve320_v15);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v16", triggerresultshelper_prescale_HLT_DiPFJetAve320_v16);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v17", triggerresultshelper_prescale_HLT_DiPFJetAve320_v17);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v18", triggerresultshelper_prescale_HLT_DiPFJetAve320_v18);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v19", triggerresultshelper_prescale_HLT_DiPFJetAve320_v19);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v2", triggerresultshelper_prescale_HLT_DiPFJetAve320_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v20", triggerresultshelper_prescale_HLT_DiPFJetAve320_v20);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v3", triggerresultshelper_prescale_HLT_DiPFJetAve320_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v4", triggerresultshelper_prescale_HLT_DiPFJetAve320_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v5", triggerresultshelper_prescale_HLT_DiPFJetAve320_v5);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v6", triggerresultshelper_prescale_HLT_DiPFJetAve320_v6);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v7", triggerresultshelper_prescale_HLT_DiPFJetAve320_v7);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v8", triggerresultshelper_prescale_HLT_DiPFJetAve320_v8);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve320_v9", triggerresultshelper_prescale_HLT_DiPFJetAve320_v9);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v1", triggerresultshelper_prescale_HLT_DiPFJetAve400_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v10", triggerresultshelper_prescale_HLT_DiPFJetAve400_v10);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v11", triggerresultshelper_prescale_HLT_DiPFJetAve400_v11);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v12", triggerresultshelper_prescale_HLT_DiPFJetAve400_v12);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v13", triggerresultshelper_prescale_HLT_DiPFJetAve400_v13);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v14", triggerresultshelper_prescale_HLT_DiPFJetAve400_v14);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v15", triggerresultshelper_prescale_HLT_DiPFJetAve400_v15);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v16", triggerresultshelper_prescale_HLT_DiPFJetAve400_v16);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v17", triggerresultshelper_prescale_HLT_DiPFJetAve400_v17);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v18", triggerresultshelper_prescale_HLT_DiPFJetAve400_v18);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v19", triggerresultshelper_prescale_HLT_DiPFJetAve400_v19);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v2", triggerresultshelper_prescale_HLT_DiPFJetAve400_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v20", triggerresultshelper_prescale_HLT_DiPFJetAve400_v20);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v3", triggerresultshelper_prescale_HLT_DiPFJetAve400_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v4", triggerresultshelper_prescale_HLT_DiPFJetAve400_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v5", triggerresultshelper_prescale_HLT_DiPFJetAve400_v5);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v6", triggerresultshelper_prescale_HLT_DiPFJetAve400_v6);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v7", triggerresultshelper_prescale_HLT_DiPFJetAve400_v7);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v8", triggerresultshelper_prescale_HLT_DiPFJetAve400_v8);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve400_v9", triggerresultshelper_prescale_HLT_DiPFJetAve400_v9);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v1", triggerresultshelper_prescale_HLT_DiPFJetAve40_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v10", triggerresultshelper_prescale_HLT_DiPFJetAve40_v10);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v11", triggerresultshelper_prescale_HLT_DiPFJetAve40_v11);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v12", triggerresultshelper_prescale_HLT_DiPFJetAve40_v12);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v13", triggerresultshelper_prescale_HLT_DiPFJetAve40_v13);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v14", triggerresultshelper_prescale_HLT_DiPFJetAve40_v14);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v15", triggerresultshelper_prescale_HLT_DiPFJetAve40_v15);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v16", triggerresultshelper_prescale_HLT_DiPFJetAve40_v16);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v17", triggerresultshelper_prescale_HLT_DiPFJetAve40_v17);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v18", triggerresultshelper_prescale_HLT_DiPFJetAve40_v18);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v19", triggerresultshelper_prescale_HLT_DiPFJetAve40_v19);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v2", triggerresultshelper_prescale_HLT_DiPFJetAve40_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v20", triggerresultshelper_prescale_HLT_DiPFJetAve40_v20);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v3", triggerresultshelper_prescale_HLT_DiPFJetAve40_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v4", triggerresultshelper_prescale_HLT_DiPFJetAve40_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v5", triggerresultshelper_prescale_HLT_DiPFJetAve40_v5);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v6", triggerresultshelper_prescale_HLT_DiPFJetAve40_v6);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v7", triggerresultshelper_prescale_HLT_DiPFJetAve40_v7);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v8", triggerresultshelper_prescale_HLT_DiPFJetAve40_v8);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve40_v9", triggerresultshelper_prescale_HLT_DiPFJetAve40_v9);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v1", triggerresultshelper_prescale_HLT_DiPFJetAve80_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v10", triggerresultshelper_prescale_HLT_DiPFJetAve80_v10);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v11", triggerresultshelper_prescale_HLT_DiPFJetAve80_v11);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v12", triggerresultshelper_prescale_HLT_DiPFJetAve80_v12);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v13", triggerresultshelper_prescale_HLT_DiPFJetAve80_v13);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v14", triggerresultshelper_prescale_HLT_DiPFJetAve80_v14);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v15", triggerresultshelper_prescale_HLT_DiPFJetAve80_v15);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v16", triggerresultshelper_prescale_HLT_DiPFJetAve80_v16);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v17", triggerresultshelper_prescale_HLT_DiPFJetAve80_v17);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v18", triggerresultshelper_prescale_HLT_DiPFJetAve80_v18);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v19", triggerresultshelper_prescale_HLT_DiPFJetAve80_v19);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v2", triggerresultshelper_prescale_HLT_DiPFJetAve80_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v20", triggerresultshelper_prescale_HLT_DiPFJetAve80_v20);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v3", triggerresultshelper_prescale_HLT_DiPFJetAve80_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v4", triggerresultshelper_prescale_HLT_DiPFJetAve80_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v5", triggerresultshelper_prescale_HLT_DiPFJetAve80_v5);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v6", triggerresultshelper_prescale_HLT_DiPFJetAve80_v6);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v7", triggerresultshelper_prescale_HLT_DiPFJetAve80_v7);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v8", triggerresultshelper_prescale_HLT_DiPFJetAve80_v8);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve80_v9", triggerresultshelper_prescale_HLT_DiPFJetAve80_v9);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1", triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3", triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4", triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2", triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v3", triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v4", triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v6", triggerresultshelper_prescale_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v6);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v1", triggerresultshelper_value_HLT_DiPFJetAve140_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v10", triggerresultshelper_value_HLT_DiPFJetAve140_v10);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v11", triggerresultshelper_value_HLT_DiPFJetAve140_v11);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v12", triggerresultshelper_value_HLT_DiPFJetAve140_v12);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v13", triggerresultshelper_value_HLT_DiPFJetAve140_v13);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v14", triggerresultshelper_value_HLT_DiPFJetAve140_v14);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v15", triggerresultshelper_value_HLT_DiPFJetAve140_v15);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v16", triggerresultshelper_value_HLT_DiPFJetAve140_v16);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v17", triggerresultshelper_value_HLT_DiPFJetAve140_v17);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v18", triggerresultshelper_value_HLT_DiPFJetAve140_v18);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v19", triggerresultshelper_value_HLT_DiPFJetAve140_v19);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v2", triggerresultshelper_value_HLT_DiPFJetAve140_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v20", triggerresultshelper_value_HLT_DiPFJetAve140_v20);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v3", triggerresultshelper_value_HLT_DiPFJetAve140_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v4", triggerresultshelper_value_HLT_DiPFJetAve140_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v5", triggerresultshelper_value_HLT_DiPFJetAve140_v5);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v6", triggerresultshelper_value_HLT_DiPFJetAve140_v6);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v7", triggerresultshelper_value_HLT_DiPFJetAve140_v7);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v8", triggerresultshelper_value_HLT_DiPFJetAve140_v8);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve140_v9", triggerresultshelper_value_HLT_DiPFJetAve140_v9);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v1", triggerresultshelper_value_HLT_DiPFJetAve200_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v10", triggerresultshelper_value_HLT_DiPFJetAve200_v10);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v11", triggerresultshelper_value_HLT_DiPFJetAve200_v11);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v12", triggerresultshelper_value_HLT_DiPFJetAve200_v12);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v13", triggerresultshelper_value_HLT_DiPFJetAve200_v13);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v14", triggerresultshelper_value_HLT_DiPFJetAve200_v14);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v15", triggerresultshelper_value_HLT_DiPFJetAve200_v15);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v16", triggerresultshelper_value_HLT_DiPFJetAve200_v16);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v17", triggerresultshelper_value_HLT_DiPFJetAve200_v17);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v18", triggerresultshelper_value_HLT_DiPFJetAve200_v18);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v19", triggerresultshelper_value_HLT_DiPFJetAve200_v19);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v2", triggerresultshelper_value_HLT_DiPFJetAve200_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v20", triggerresultshelper_value_HLT_DiPFJetAve200_v20);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v3", triggerresultshelper_value_HLT_DiPFJetAve200_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v4", triggerresultshelper_value_HLT_DiPFJetAve200_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v5", triggerresultshelper_value_HLT_DiPFJetAve200_v5);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v6", triggerresultshelper_value_HLT_DiPFJetAve200_v6);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v7", triggerresultshelper_value_HLT_DiPFJetAve200_v7);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v8", triggerresultshelper_value_HLT_DiPFJetAve200_v8);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve200_v9", triggerresultshelper_value_HLT_DiPFJetAve200_v9);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v1", triggerresultshelper_value_HLT_DiPFJetAve260_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v10", triggerresultshelper_value_HLT_DiPFJetAve260_v10);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v11", triggerresultshelper_value_HLT_DiPFJetAve260_v11);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v12", triggerresultshelper_value_HLT_DiPFJetAve260_v12);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v13", triggerresultshelper_value_HLT_DiPFJetAve260_v13);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v14", triggerresultshelper_value_HLT_DiPFJetAve260_v14);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v15", triggerresultshelper_value_HLT_DiPFJetAve260_v15);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v16", triggerresultshelper_value_HLT_DiPFJetAve260_v16);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v17", triggerresultshelper_value_HLT_DiPFJetAve260_v17);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v18", triggerresultshelper_value_HLT_DiPFJetAve260_v18);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v19", triggerresultshelper_value_HLT_DiPFJetAve260_v19);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v2", triggerresultshelper_value_HLT_DiPFJetAve260_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v20", triggerresultshelper_value_HLT_DiPFJetAve260_v20);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v3", triggerresultshelper_value_HLT_DiPFJetAve260_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v4", triggerresultshelper_value_HLT_DiPFJetAve260_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v5", triggerresultshelper_value_HLT_DiPFJetAve260_v5);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v6", triggerresultshelper_value_HLT_DiPFJetAve260_v6);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v7", triggerresultshelper_value_HLT_DiPFJetAve260_v7);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v8", triggerresultshelper_value_HLT_DiPFJetAve260_v8);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve260_v9", triggerresultshelper_value_HLT_DiPFJetAve260_v9);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v1", triggerresultshelper_value_HLT_DiPFJetAve320_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v10", triggerresultshelper_value_HLT_DiPFJetAve320_v10);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v11", triggerresultshelper_value_HLT_DiPFJetAve320_v11);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v12", triggerresultshelper_value_HLT_DiPFJetAve320_v12);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v13", triggerresultshelper_value_HLT_DiPFJetAve320_v13);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v14", triggerresultshelper_value_HLT_DiPFJetAve320_v14);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v15", triggerresultshelper_value_HLT_DiPFJetAve320_v15);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v16", triggerresultshelper_value_HLT_DiPFJetAve320_v16);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v17", triggerresultshelper_value_HLT_DiPFJetAve320_v17);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v18", triggerresultshelper_value_HLT_DiPFJetAve320_v18);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v19", triggerresultshelper_value_HLT_DiPFJetAve320_v19);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v2", triggerresultshelper_value_HLT_DiPFJetAve320_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v20", triggerresultshelper_value_HLT_DiPFJetAve320_v20);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v3", triggerresultshelper_value_HLT_DiPFJetAve320_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v4", triggerresultshelper_value_HLT_DiPFJetAve320_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v5", triggerresultshelper_value_HLT_DiPFJetAve320_v5);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v6", triggerresultshelper_value_HLT_DiPFJetAve320_v6);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v7", triggerresultshelper_value_HLT_DiPFJetAve320_v7);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v8", triggerresultshelper_value_HLT_DiPFJetAve320_v8);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve320_v9", triggerresultshelper_value_HLT_DiPFJetAve320_v9);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v1", triggerresultshelper_value_HLT_DiPFJetAve400_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v10", triggerresultshelper_value_HLT_DiPFJetAve400_v10);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v11", triggerresultshelper_value_HLT_DiPFJetAve400_v11);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v12", triggerresultshelper_value_HLT_DiPFJetAve400_v12);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v13", triggerresultshelper_value_HLT_DiPFJetAve400_v13);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v14", triggerresultshelper_value_HLT_DiPFJetAve400_v14);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v15", triggerresultshelper_value_HLT_DiPFJetAve400_v15);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v16", triggerresultshelper_value_HLT_DiPFJetAve400_v16);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v17", triggerresultshelper_value_HLT_DiPFJetAve400_v17);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v18", triggerresultshelper_value_HLT_DiPFJetAve400_v18);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v19", triggerresultshelper_value_HLT_DiPFJetAve400_v19);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v2", triggerresultshelper_value_HLT_DiPFJetAve400_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v20", triggerresultshelper_value_HLT_DiPFJetAve400_v20);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v3", triggerresultshelper_value_HLT_DiPFJetAve400_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v4", triggerresultshelper_value_HLT_DiPFJetAve400_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v5", triggerresultshelper_value_HLT_DiPFJetAve400_v5);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v6", triggerresultshelper_value_HLT_DiPFJetAve400_v6);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v7", triggerresultshelper_value_HLT_DiPFJetAve400_v7);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v8", triggerresultshelper_value_HLT_DiPFJetAve400_v8);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve400_v9", triggerresultshelper_value_HLT_DiPFJetAve400_v9);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v1", triggerresultshelper_value_HLT_DiPFJetAve40_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v10", triggerresultshelper_value_HLT_DiPFJetAve40_v10);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v11", triggerresultshelper_value_HLT_DiPFJetAve40_v11);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v12", triggerresultshelper_value_HLT_DiPFJetAve40_v12);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v13", triggerresultshelper_value_HLT_DiPFJetAve40_v13);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v14", triggerresultshelper_value_HLT_DiPFJetAve40_v14);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v15", triggerresultshelper_value_HLT_DiPFJetAve40_v15);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v16", triggerresultshelper_value_HLT_DiPFJetAve40_v16);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v17", triggerresultshelper_value_HLT_DiPFJetAve40_v17);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v18", triggerresultshelper_value_HLT_DiPFJetAve40_v18);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v19", triggerresultshelper_value_HLT_DiPFJetAve40_v19);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v2", triggerresultshelper_value_HLT_DiPFJetAve40_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v20", triggerresultshelper_value_HLT_DiPFJetAve40_v20);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v3", triggerresultshelper_value_HLT_DiPFJetAve40_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v4", triggerresultshelper_value_HLT_DiPFJetAve40_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v5", triggerresultshelper_value_HLT_DiPFJetAve40_v5);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v6", triggerresultshelper_value_HLT_DiPFJetAve40_v6);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v7", triggerresultshelper_value_HLT_DiPFJetAve40_v7);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v8", triggerresultshelper_value_HLT_DiPFJetAve40_v8);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve40_v9", triggerresultshelper_value_HLT_DiPFJetAve40_v9);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v1", triggerresultshelper_value_HLT_DiPFJetAve80_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v10", triggerresultshelper_value_HLT_DiPFJetAve80_v10);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v11", triggerresultshelper_value_HLT_DiPFJetAve80_v11);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v12", triggerresultshelper_value_HLT_DiPFJetAve80_v12);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v13", triggerresultshelper_value_HLT_DiPFJetAve80_v13);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v14", triggerresultshelper_value_HLT_DiPFJetAve80_v14);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v15", triggerresultshelper_value_HLT_DiPFJetAve80_v15);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v16", triggerresultshelper_value_HLT_DiPFJetAve80_v16);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v17", triggerresultshelper_value_HLT_DiPFJetAve80_v17);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v18", triggerresultshelper_value_HLT_DiPFJetAve80_v18);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v19", triggerresultshelper_value_HLT_DiPFJetAve80_v19);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v2", triggerresultshelper_value_HLT_DiPFJetAve80_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v20", triggerresultshelper_value_HLT_DiPFJetAve80_v20);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v3", triggerresultshelper_value_HLT_DiPFJetAve80_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v4", triggerresultshelper_value_HLT_DiPFJetAve80_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v5", triggerresultshelper_value_HLT_DiPFJetAve80_v5);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v6", triggerresultshelper_value_HLT_DiPFJetAve80_v6);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v7", triggerresultshelper_value_HLT_DiPFJetAve80_v7);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v8", triggerresultshelper_value_HLT_DiPFJetAve80_v8);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DiPFJetAve80_v9", triggerresultshelper_value_HLT_DiPFJetAve80_v9);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1", triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3", triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4", triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2", triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v3", triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v3);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v4", triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v4);
-  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v6", triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v6);
+  stream.select("edmEventHelper_info.bunchCrossing", edmEventHelper_bunchCrossing);
+  stream.select("edmEventHelper_info.event", edmEventHelper_event);
+  stream.select("edmEventHelper_info.isRealData", edmEventHelper_isRealData);
+  stream.select("edmEventHelper_info.luminosityBlock", edmEventHelper_luminosityBlock);
+  stream.select("edmEventHelper_info.orbitNumber", edmEventHelper_orbitNumber);
+  stream.select("edmEventHelper_info.run", edmEventHelper_run);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v1", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v1);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v10", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v10);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v11", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v11);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v12", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v12);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v13", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v13);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v14", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v14);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v15", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v15);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v16", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v16);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v2", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v2);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v3", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v3);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v4", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v4);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v5", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v5);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v6", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v6);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v7", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v7);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v8", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v8);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu24_eta2p1_v9", edmTriggerResultsHelper_prescale_HLT_IsoMu24_eta2p1_v9);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v1", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v1);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v10", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v10);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v11", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v11);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v12", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v12);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v13", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v13);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v14", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v14);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v15", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v15);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v16", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v16);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v2", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v2);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v3", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v3);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v4", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v4);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v5", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v5);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v6", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v6);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v7", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v7);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v8", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v8);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu30_eta2p1_v9", edmTriggerResultsHelper_prescale_HLT_IsoMu30_eta2p1_v9);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu34_eta2p1_v1", edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v1);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu34_eta2p1_v10", edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v10);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu34_eta2p1_v11", edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v11);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu34_eta2p1_v12", edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v12);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu34_eta2p1_v13", edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v13);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu34_eta2p1_v14", edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v14);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu34_eta2p1_v2", edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v2);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu34_eta2p1_v3", edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v3);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu34_eta2p1_v4", edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v4);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu34_eta2p1_v5", edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v5);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu34_eta2p1_v6", edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v6);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu34_eta2p1_v7", edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v7);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu34_eta2p1_v8", edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v8);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu34_eta2p1_v9", edmTriggerResultsHelper_prescale_HLT_IsoMu34_eta2p1_v9);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu40_eta2p1_v1", edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v1);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu40_eta2p1_v10", edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v10);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu40_eta2p1_v11", edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v11);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu40_eta2p1_v2", edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v2);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu40_eta2p1_v3", edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v3);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu40_eta2p1_v4", edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v4);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu40_eta2p1_v5", edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v5);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu40_eta2p1_v6", edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v6);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu40_eta2p1_v7", edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v7);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu40_eta2p1_v8", edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v8);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_IsoMu40_eta2p1_v9", edmTriggerResultsHelper_prescale_HLT_IsoMu40_eta2p1_v9);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_PFHT350_PFMET100_v1", edmTriggerResultsHelper_prescale_HLT_PFHT350_PFMET100_v1);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_PFHT350_PFMET100_v2", edmTriggerResultsHelper_prescale_HLT_PFHT350_PFMET100_v2);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_PFHT350_PFMET100_v3", edmTriggerResultsHelper_prescale_HLT_PFHT350_PFMET100_v3);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_PFNoPUHT350_PFMET100_v1", edmTriggerResultsHelper_prescale_HLT_PFNoPUHT350_PFMET100_v1);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_PFNoPUHT350_PFMET100_v2", edmTriggerResultsHelper_prescale_HLT_PFNoPUHT350_PFMET100_v2);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_PFNoPUHT350_PFMET100_v3", edmTriggerResultsHelper_prescale_HLT_PFNoPUHT350_PFMET100_v3);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_PFNoPUHT350_PFMET100_v4", edmTriggerResultsHelper_prescale_HLT_PFNoPUHT350_PFMET100_v4);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_PFNoPUHT350_PFMET100_v5", edmTriggerResultsHelper_prescale_HLT_PFNoPUHT350_PFMET100_v5);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_PFHT350_PFMET100_v1", edmTriggerResultsHelper_value_HLT_PFHT350_PFMET100_v1);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_PFHT350_PFMET100_v2", edmTriggerResultsHelper_value_HLT_PFHT350_PFMET100_v2);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_PFHT350_PFMET100_v3", edmTriggerResultsHelper_value_HLT_PFHT350_PFMET100_v3);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_PFNoPUHT350_PFMET100_v1", edmTriggerResultsHelper_value_HLT_PFNoPUHT350_PFMET100_v1);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_PFNoPUHT350_PFMET100_v2", edmTriggerResultsHelper_value_HLT_PFNoPUHT350_PFMET100_v2);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_PFNoPUHT350_PFMET100_v3", edmTriggerResultsHelper_value_HLT_PFNoPUHT350_PFMET100_v3);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_PFNoPUHT350_PFMET100_v4", edmTriggerResultsHelper_value_HLT_PFNoPUHT350_PFMET100_v4);
+  stream.select("edmTriggerResultsHelper_TriggerResults_HLT.value_HLT_PFNoPUHT350_PFMET100_v5", edmTriggerResultsHelper_value_HLT_PFNoPUHT350_PFMET100_v5);
   stream.select("nPileupSummaryInfo_addPileupInfo", nPileupSummaryInfo);
-  stream.select("nrecoGenJet_ak5GenJets", nak5GenJets);
   stream.select("npatElectron_patElectrons", npatElectron);
   stream.select("npatJet_selectedPatJets", npatJet);
   stream.select("npatMET_patMETs", npatMET);
   stream.select("npatMET_patPfMetT0pcT1Txy", npatMET2);
   stream.select("npatMuon_patMuons", npatMuon);
   stream.select("npatTauHelper_patTaus", npatTau);
-  stream.select("patTauHelper_patTaus.signalPFChargedHadrCands_size", patTau_signalPFChargedHadrCands_size);
+  stream.select("patTauHelper_patTaus.signalPFChargedHadrCands_size", npatTau_signalPFChargedHadrCands);
   stream.select("nrecoGenParticleHelper_genParticles", nrecoGenParticleHelper);
   stream.select("nrecoGenParticleHelperPlus_genParticles", nrecoGenParticleHelperPlus);
   stream.select("nrecoGsfElectron_gsfElectrons", nrecoGsfElectron);
@@ -3098,4 +2580,3 @@ void selectVariables(itreestream& stream)
 }
 }; // end namespace evt
 #endif
-

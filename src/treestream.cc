@@ -76,7 +76,7 @@
 #ifdef PROJECT_NAME
 #include "PhysicsTools/TheNtupleMaker/interface/treestream.h"
 #else
-#include "include/treestream.h"
+#include "treestream.h"
 #endif
 //----------------------------------------------------------------------------
 using namespace std;

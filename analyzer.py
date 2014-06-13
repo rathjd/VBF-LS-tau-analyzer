@@ -2,13 +2,10 @@
 # -----------------------------------------------------------------------------
 #  File:        analyzer.py
 #  Description: Analyzer for ntuples created by TheNtupleMaker
-#  Created:     Thu May 30 14:27:18 2013 by mkntanalyzer.py
-#  Author:      Lukas Vanelderen
+#  Created:     Wed Feb  5 13:47:37 2014 by mkanalyzer.py
+#  Author:      Shakepeare's ghost
 # -----------------------------------------------------------------------------
-from ROOT import *
-from string import *
 from analyzerlib import *
-import os, sys, re
 # -----------------------------------------------------------------------------
 # -- Procedures and functions
 # -----------------------------------------------------------------------------
@@ -17,10 +14,17 @@ import os, sys, re
 # -----------------------------------------------------------------------------
 def main():
 
+	cmdline = decodeCommandLine()
+
+	#  Get names of ntuple files to be processed and open chain of ntuples
+
+	filenames = getFilenames(cmdline.filelist)
+	stream = itreestream(filenames, "Events")
+	if not stream.good(): error("unable to open ntuple file(s)")
+
 	# Get number of events
 	nevents = stream.size()
 	print "Number of events:", nevents
-
 
 	# Notes:
 	#
@@ -47,7 +51,7 @@ def main():
 	#	ofile.count("GoodEvent", 0)
 	#	ofile.count("Vertex", 0)
 	#	ofile.count("MET", 0)
-	
+
 	ofile = outputFile(cmdline.outputfilename)
 
 	# -------------------------------------------------------------------------
@@ -63,7 +67,6 @@ def main():
 	for entry in xrange(nevents):
 		stream.read(entry)
 
-		# -- Event selection
 
 	stream.close()
 	ofile.close()
