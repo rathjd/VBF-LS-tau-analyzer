@@ -120,6 +120,7 @@ void eventcount(TFile* inputfile, eventcount_str *sample_evtcount, bool isLSchan
 
 void printtableentry(eventcount_str *sample_evtcount) {
 
+	cout.precision(2);
 	cout << sample_evtcount->samplename << " &$ " << sample_evtcount->SRcounts << "\\pm" << sample_evtcount->SRcounts_err  <<
 	       "$    &$ " << sample_evtcount->CR2counts << "\\pm" << sample_evtcount->CR2counts_err  <<	
 	       "$    &$ " << sample_evtcount->CR3counts << "\\pm" << sample_evtcount->CR3counts_err  <<	
@@ -132,16 +133,17 @@ void printtableentry(eventcount_str *sample_evtcount) {
 
 void qcdbgprediction(bool isLSchannel, string plotname, double minMET, double maxMET) {
 
-	TFile *_alldata = TFile::Open("alldata.root");
+	TFile *_allData = TFile::Open("allData.root");
 	TFile *_allDY = TFile::Open("allDY.root");
 	TFile *_allVV = TFile::Open("allVV.root");
 	TFile *_allW = TFile::Open("allW.root");
 	TFile *_allT = TFile::Open("allT.root");
 	TFile *_allTTbar = TFile::Open("allTTbar.root");
 	TFile *_allHiggs = TFile::Open("allHiggs.root");
+	TFile *_allQCD = TFile::Open("allQCD.root");
 
-	eventcount_str data_evtcount;
-	data_evtcount.samplename = "Data";
+	eventcount_str Data_evtcount;
+	Data_evtcount.samplename = "Data";
 
 	eventcount_str DY_evtcount;
 	DY_evtcount.samplename = "Drell-Yan";
@@ -161,6 +163,8 @@ void qcdbgprediction(bool isLSchannel, string plotname, double minMET, double ma
 	eventcount_str Higgs_evtcount;
 	Higgs_evtcount.samplename = "Higgs";
 
+	eventcount_str QCD_evtcount;
+	QCD_evtcount.samplename = "QCD";
 
 	eventcount(_allDY, &DY_evtcount, isLSchannel, plotname, minMET, maxMET);
 	eventcount(_allVV, &VV_evtcount, isLSchannel, plotname, minMET, maxMET);
@@ -168,9 +172,9 @@ void qcdbgprediction(bool isLSchannel, string plotname, double minMET, double ma
 	eventcount(_allT, &T_evtcount, isLSchannel, plotname, minMET, maxMET);
 	eventcount(_allTTbar, &TTbar_evtcount, isLSchannel, plotname, minMET, maxMET);
 	eventcount(_allHiggs, &Higgs_evtcount, isLSchannel, plotname, minMET, maxMET);
-	eventcount(_alldata, &data_evtcount, isLSchannel, plotname, minMET, maxMET);
+	eventcount(_allQCD, &QCD_evtcount, isLSchannel, plotname, minMET, maxMET);
+	eventcount(_allData, &Data_evtcount, isLSchannel, plotname, minMET, maxMET);
 	//printtableentry(&DY_evtcount);
-
 	
 	//loading nonQCD MC Background
 	eventcount_str nonQCDmc_evtcount;
@@ -192,30 +196,30 @@ void qcdbgprediction(bool isLSchannel, string plotname, double minMET, double ma
 	nonQCDmc_evtcount.CR7counts_err = sqrt(pow(DY_evtcount.CR7counts_err,2.) + pow(VV_evtcount.CR7counts_err,2.) + pow(W_evtcount.CR7counts_err,2.) + pow(T_evtcount.CR7counts_err,2.) + pow(TTbar_evtcount.CR7counts_err,2.) + pow(Higgs_evtcount.CR7counts_err,2.));
 	nonQCDmc_evtcount.CR8counts_err = sqrt(pow(DY_evtcount.CR8counts_err,2.) + pow(VV_evtcount.CR8counts_err,2.) + pow(W_evtcount.CR8counts_err,2.) + pow(T_evtcount.CR8counts_err,2.) + pow(TTbar_evtcount.CR8counts_err,2.) + pow(Higgs_evtcount.CR8counts_err,2.));
 
-	double onetighteff = vbfefficiency(data_evtcount.CR4counts, data_evtcount.CR3counts, nonQCDmc_evtcount.CR4counts, nonQCDmc_evtcount.CR3counts);
-	double antitighteff = vbfefficiency(data_evtcount.CR6counts, data_evtcount.CR5counts, nonQCDmc_evtcount.CR8counts, nonQCDmc_evtcount.CR5counts);
-	double antimediumeff = vbfefficiency(data_evtcount.CR8counts, data_evtcount.CR7counts, nonQCDmc_evtcount.CR8counts, nonQCDmc_evtcount.CR7counts);
+	double onetighteff = vbfefficiency(Data_evtcount.CR4counts, Data_evtcount.CR3counts, nonQCDmc_evtcount.CR4counts, nonQCDmc_evtcount.CR3counts);
+	double antitighteff = vbfefficiency(Data_evtcount.CR6counts, Data_evtcount.CR5counts, nonQCDmc_evtcount.CR8counts, nonQCDmc_evtcount.CR5counts);
+	double antimediumeff = vbfefficiency(Data_evtcount.CR8counts, Data_evtcount.CR7counts, nonQCDmc_evtcount.CR8counts, nonQCDmc_evtcount.CR7counts);
 
-	double onetighteff_err = vbfefficiency_staterr(data_evtcount.CR4counts, data_evtcount.CR4counts_err, data_evtcount.CR3counts, data_evtcount.CR3counts_err, nonQCDmc_evtcount.CR4counts, nonQCDmc_evtcount.CR4counts_err, nonQCDmc_evtcount.CR3counts, nonQCDmc_evtcount.CR3counts_err);
-	double antitighteff_err = vbfefficiency_staterr(data_evtcount.CR6counts, data_evtcount.CR6counts_err, data_evtcount.CR5counts, data_evtcount.CR5counts_err, nonQCDmc_evtcount.CR6counts, nonQCDmc_evtcount.CR6counts_err, nonQCDmc_evtcount.CR5counts, nonQCDmc_evtcount.CR5counts_err);
-	double antimediumeff_err = vbfefficiency_staterr(data_evtcount.CR8counts, data_evtcount.CR8counts_err, data_evtcount.CR7counts, data_evtcount.CR7counts_err, nonQCDmc_evtcount.CR8counts, nonQCDmc_evtcount.CR8counts_err, nonQCDmc_evtcount.CR7counts, nonQCDmc_evtcount.CR7counts_err);
+	double onetighteff_err = vbfefficiency_staterr(Data_evtcount.CR4counts, Data_evtcount.CR4counts_err, Data_evtcount.CR3counts, Data_evtcount.CR3counts_err, nonQCDmc_evtcount.CR4counts, nonQCDmc_evtcount.CR4counts_err, nonQCDmc_evtcount.CR3counts, nonQCDmc_evtcount.CR3counts_err);
+	double antitighteff_err = vbfefficiency_staterr(Data_evtcount.CR6counts, Data_evtcount.CR6counts_err, Data_evtcount.CR5counts, Data_evtcount.CR5counts_err, nonQCDmc_evtcount.CR6counts, nonQCDmc_evtcount.CR6counts_err, nonQCDmc_evtcount.CR5counts, nonQCDmc_evtcount.CR5counts_err);
+	double antimediumeff_err = vbfefficiency_staterr(Data_evtcount.CR8counts, Data_evtcount.CR8counts_err, Data_evtcount.CR7counts, Data_evtcount.CR7counts_err, nonQCDmc_evtcount.CR8counts, nonQCDmc_evtcount.CR8counts_err, nonQCDmc_evtcount.CR7counts, nonQCDmc_evtcount.CR7counts_err);
 
-	double onetightbgpred = qcdbackgroundprediction(data_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts, onetighteff);
-	double antitightbgpred = qcdbackgroundprediction(data_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts, antitighteff);
-	double antimediumbgpred = qcdbackgroundprediction(data_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts, antimediumeff);
+	double onetightbgpred = qcdbackgroundprediction(Data_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts, onetighteff);
+	double antitightbgpred = qcdbackgroundprediction(Data_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts, antitighteff);
+	double antimediumbgpred = qcdbackgroundprediction(Data_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts, antimediumeff);
 
-	double onetightbgpred_err = qcdbackgroundprediction_staterr(data_evtcount.CR2counts, data_evtcount.CR2counts_err, nonQCDmc_evtcount.CR2counts , nonQCDmc_evtcount.CR2counts_err, onetighteff, onetighteff_err);
-	double antitightbgpred_err = qcdbackgroundprediction_staterr(data_evtcount.CR2counts, data_evtcount.CR2counts_err, nonQCDmc_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts_err, antitighteff, antitighteff_err);
-	double antimediumbgpred_err = qcdbackgroundprediction_staterr(data_evtcount.CR2counts, data_evtcount.CR2counts_err, nonQCDmc_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts_err, antimediumeff, antimediumeff_err);
+	double onetightbgpred_err = qcdbackgroundprediction_staterr(Data_evtcount.CR2counts, Data_evtcount.CR2counts_err, nonQCDmc_evtcount.CR2counts , nonQCDmc_evtcount.CR2counts_err, onetighteff, onetighteff_err);
+	double antitightbgpred_err = qcdbackgroundprediction_staterr(Data_evtcount.CR2counts, Data_evtcount.CR2counts_err, nonQCDmc_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts_err, antitighteff, antitighteff_err);
+	double antimediumbgpred_err = qcdbackgroundprediction_staterr(Data_evtcount.CR2counts, Data_evtcount.CR2counts_err, nonQCDmc_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts_err, antimediumeff, antimediumeff_err);
 
 	//Efficiency Systematics
 	
-	double evenCRcount = (double)data_evtcount.CR4counts + (double)data_evtcount.CR6counts + (double)data_evtcount.CR8counts;
-	double oddCRcount = (double)data_evtcount.CR3counts + (double)data_evtcount.CR5counts + (double)data_evtcount.CR7counts;
+	double evenCRcount = (double)Data_evtcount.CR4counts + (double)Data_evtcount.CR6counts + (double)Data_evtcount.CR8counts;
+	double oddCRcount = (double)Data_evtcount.CR3counts + (double)Data_evtcount.CR5counts + (double)Data_evtcount.CR7counts;
 	double evenCRnonQCDbg = nonQCDmc_evtcount.CR4counts + nonQCDmc_evtcount.CR6counts + nonQCDmc_evtcount.CR8counts;
 	double oddCRnonQCDbg = nonQCDmc_evtcount.CR3counts + nonQCDmc_evtcount.CR5counts + nonQCDmc_evtcount.CR7counts;
-	double evenCRcount_err = sqrt( pow(data_evtcount.CR4counts_err, 2.) + pow(data_evtcount.CR6counts_err, 2.) + pow(data_evtcount.CR8counts_err, 2.));
-	double oddCRcount_err = sqrt( pow(data_evtcount.CR3counts_err, 2.) + pow(data_evtcount.CR5counts_err, 2.) + pow(data_evtcount.CR7counts_err, 2.));
+	double evenCRcount_err = sqrt( pow(Data_evtcount.CR4counts_err, 2.) + pow(Data_evtcount.CR6counts_err, 2.) + pow(Data_evtcount.CR8counts_err, 2.));
+	double oddCRcount_err = sqrt( pow(Data_evtcount.CR3counts_err, 2.) + pow(Data_evtcount.CR5counts_err, 2.) + pow(Data_evtcount.CR7counts_err, 2.));
 	double evenCRnonQCDbg_err = sqrt( pow(nonQCDmc_evtcount.CR4counts_err, 2.) + pow(nonQCDmc_evtcount.CR6counts_err, 2.) + pow(nonQCDmc_evtcount.CR8counts_err, 2.));
 	double oddCRnonQCDbg_err = sqrt( pow(nonQCDmc_evtcount.CR3counts_err, 2.) + pow(nonQCDmc_evtcount.CR5counts_err, 2.) + pow(nonQCDmc_evtcount.CR7counts_err, 2.));
 
@@ -258,14 +262,14 @@ void qcdbgprediction(bool isLSchannel, string plotname, double minMET, double ma
 
 	//MC Syst Uncertainty
 
-	double weightedmeanbgpred = qcdbackgroundprediction(data_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts, weightedmeaneff);
-	double weightedmeanbgpred_err = qcdbackgroundprediction_staterr(data_evtcount.CR2counts, data_evtcount.CR2counts_err, nonQCDmc_evtcount.CR2counts , nonQCDmc_evtcount.CR2counts_err, weightedmeaneff, weightedmeaneff_err);
+	double weightedmeanbgpred = qcdbackgroundprediction(Data_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts, weightedmeaneff);
+	double weightedmeanbgpred_err = qcdbackgroundprediction_staterr(Data_evtcount.CR2counts, Data_evtcount.CR2counts_err, nonQCDmc_evtcount.CR2counts , nonQCDmc_evtcount.CR2counts_err, weightedmeaneff, weightedmeaneff_err);
 
-	double weightedmeanbgpred_nonqcdmc_upwardvar = qcdbackgroundprediction(data_evtcount.CR2counts, (nonQCDmc_evtcount.CR2counts * 0.5), weightedmeaneff_nonqcdmc_upwardvar);
-	double weightedmeanbgpred_nonqcdmc_downwardvar = qcdbackgroundprediction(data_evtcount.CR2counts, (nonQCDmc_evtcount.CR2counts * 1.5), weightedmeaneff_nonqcdmc_downwardvar);
+	double weightedmeanbgpred_nonqcdmc_upwardvar = qcdbackgroundprediction(Data_evtcount.CR2counts, (nonQCDmc_evtcount.CR2counts * 0.5), weightedmeaneff_nonqcdmc_upwardvar);
+	double weightedmeanbgpred_nonqcdmc_downwardvar = qcdbackgroundprediction(Data_evtcount.CR2counts, (nonQCDmc_evtcount.CR2counts * 1.5), weightedmeaneff_nonqcdmc_downwardvar);
 
-	double weightedmeanbgpred_eff_upwardvar = qcdbackgroundprediction(data_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts, weightedmeaneff_eff_upwardvar);
-	double weightedmeanbgpred_eff_downwardvar = qcdbackgroundprediction(data_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts, weightedmeaneff_eff_downwardvar);
+	double weightedmeanbgpred_eff_upwardvar = qcdbackgroundprediction(Data_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts, weightedmeaneff_eff_upwardvar);
+	double weightedmeanbgpred_eff_downwardvar = qcdbackgroundprediction(Data_evtcount.CR2counts, nonQCDmc_evtcount.CR2counts, weightedmeaneff_eff_downwardvar);
 
 	double weightedmeanbgpred_nonqcdmc_upsyst = weightedmeanbgpred_nonqcdmc_upwardvar - weightedmeanbgpred;
 	double weightedmeanbgpred_nonqcdmc_downsyst = weightedmeanbgpred - weightedmeanbgpred_nonqcdmc_downwardvar;
@@ -306,13 +310,14 @@ void qcdbgprediction(bool isLSchannel, string plotname, double minMET, double ma
 	cout << endl;
 	cout << "//-------------------LATEX OUTPUT------------------------//" << endl;
 	cout << "#Event Counting#" << endl;
-	printtableentry(&data_evtcount);
+	printtableentry(&Data_evtcount);
 	printtableentry(&DY_evtcount);
 	printtableentry(&VV_evtcount);
 	printtableentry(&W_evtcount);
 	printtableentry(&T_evtcount);
 	printtableentry(&TTbar_evtcount);
 	printtableentry(&Higgs_evtcount);
+	printtableentry(&QCD_evtcount);
 	cout << "\\hline" <<endl;
 	printtableentry(&nonQCDmc_evtcount);
 	cout << endl;
