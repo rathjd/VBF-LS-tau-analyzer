@@ -108,8 +108,8 @@ int main(int argc, char** argv)
 	//TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/V2-FlavouredMaps.root", "read");
 	//TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/V2-ReducedFlavourResponseProfiles_25down.root", "read");
 	
-	TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/AmandeepID_FlavouredMaps_PUw.root", "read");
-	TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/AmandeepID_ProfiledResponses_AllFlavours_PUw.root", "read");
+	TFile file_eff("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Efficiency/Maps010714.root", "read");//AmandeepID_FlavouredMaps_PUw.root", "read");
+	TFile file_Resp("/nfs/dust/cms/user/rathjd/VBF-LS-tau/Response/Profiles010714.root", "read");//AmandeepID_ProfiledResponses_AllFlavours_PUw.root", "read");
 	
 	MyHistoCollection myHistoColl_Skim 		(ofile.file_, "Skim");
 	
@@ -124,6 +124,8 @@ int main(int argc, char** argv)
 	MyHistoCollection myHistoColl_OS_CR8 		(ofile.file_, "OS_Central_invertedVBF_AntiMediumIso_CR8");
 	MyHistoCollection myHistoColl_OS_CR9 		(ofile.file_, "OS_Central_AntiLooseIso_CR9");
 	MyHistoCollection myHistoColl_OS_CR10 		(ofile.file_, "OS_Central_invertedVBF_AntiLooseIso_CR10");
+	MyHistoCollection myHistoColl_OS_SignalRegion_M0(ofile.file_, "OS_SignalRegion_M0");				//same as SR without MET cut
+	MyHistoCollection myHistoColl_OS_CR2_M0 	(ofile.file_, "OS_Central_invertedVBF_2TightIso_CR2_M0");	//same as CR2 without MET cut
 	
 	MyHistoCollection myHistoColl_LS_SignalRegion	(ofile.file_, "LS_SignalRegion");        
 	MyHistoCollection myHistoColl_LS_CR1 		(ofile.file_, "LS_Ztautau_CR1");
@@ -136,6 +138,8 @@ int main(int argc, char** argv)
 	MyHistoCollection myHistoColl_LS_CR8 		(ofile.file_, "LS_Central_invertedVBF_AntiMediumIso_CR8");
 	MyHistoCollection myHistoColl_LS_CR9 		(ofile.file_, "LS_Central_AntiLooseIso_CR9");
 	MyHistoCollection myHistoColl_LS_CR10 		(ofile.file_, "LS_Central_invertedVBF_AntiLooseIso_CR10");
+	MyHistoCollection myHistoColl_LS_SignalRegion_M0(ofile.file_, "LS_SignalRegion_M0");				//same as SR without MET cut
+	MyHistoCollection myHistoColl_LS_CR2_M0 	(ofile.file_, "LS_Central_invertedVBF_2TightIso_CR2_M0");	//same as CR2 without MET cut	
 	
 	//preliminary selection collections
 	MyEventCollection TauTightIsoObjectSelectionCollection ("TauTightIsoObjectSelection");
@@ -156,16 +160,18 @@ int main(int argc, char** argv)
   // Loop over events
   //---------------------------------------------------------------------------
 
+bool Triggerswitch=false;
+
 //declare efficiencies
-double eff_real_T=sqrt(0.701);//0.834;//1;
-double eff_real_M=0.442*eff_real_T;//0.88;
-double eff_real_L=0.405*eff_real_T;//0.7;
+double eff_real_T=0.83563;//sqrt(0.701);//0.834;//1;
+double eff_real_M=0.376025;//0.442*eff_real_T;//0.88;
+double eff_real_L=0.330156;//0.405*eff_real_T;//0.7;
 double eff_real_N=0.;//0.229*eff_real_T;//0.43;
 
 double eff_fake_N=0.;//0.0451/eff_real_T;//0.052;
-double eff_fake_L=0.3522/eff_real_T;//0.46;
-double eff_fake_M=0.5729/eff_real_T;//0.64;
-double eff_fake_T=0.621/eff_real_T;//0.72;
+double eff_fake_L=0.426422;//0.3522/eff_real_T;//0.46;
+double eff_fake_M=0.6409;//0.5729/eff_real_T;//0.64;
+double eff_fake_T=0.771298;//0.621/eff_real_T;//0.72;
 
 //scale ChargeMaps with Trigger efficiencies
 TH2F *ChargeMapN_eff_Uds = (TH2F*)file_eff.Get("ChargeMapN_eff_Uds");
@@ -289,7 +295,7 @@ TProfile *ScaleFactorEnergyT_Un  = (TProfile*)file_Resp.Get("ScaleFactorEnergyT_
 
   for(int entry=0; entry < nevents; ++entry)
 	{
-	  
+	if(verbose) std::cout<<"event: "<<entry<<  std::endl;
 	//PU weights
 	if(!eventhelper_isRealData){
  	  weight=PUweights->GetBinContent(PUweights->FindBin(PileupSummaryInfo_getTrueNumInteractions[0]));
@@ -333,6 +339,22 @@ TProfile *ScaleFactorEnergyT_Un  = (TProfile*)file_Resp.Get("ScaleFactorEnergyT_
 	  // -- object selection --
 	  // ----------------------
 	  
+	if(
+             (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v3 == 1) ||
+             (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v4 == 1) ||
+             (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v2 == 1) ||
+             (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v3 == 1) ||
+             (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v4 == 1) ||
+             (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk5_eta2p1_Prong1_v6 == 1) ||
+	     (triggerresultshelper_value_HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Prong1_v1 == 1)
+
+            ) { 		
+            		TauTTIsoObjectSelectionCollection.passedTrigger = true;
+	        	TauTMiIsoObjectSelectionCollection.passedTrigger = true;
+	        	TauMMiIsoObjectSelectionCollection.passedTrigger = true;
+			TauLLiIsoObjectSelectionCollection.passedTrigger = true;
+			TauNNIsoObjectSelectionCollection.passedTrigger = true;
+              }  
 	  
 	//search for gentaus
 	std::vector<genparticlehelper_s*> genTau; 
@@ -364,7 +386,24 @@ TProfile *ScaleFactorEnergyT_Un  = (TProfile*)file_Resp.Get("ScaleFactorEnergyT_
             if(!(       tau[t].tauID_againstMuonLoose3 > 0.5                        				)) continue;
             if(!(       (tau[t].tauID_decayModeFindingNewDMs > 0.5) && (tau[t].signalPFChargedHadrCands_size == 1)	)) continue;
 	    double dR=5.;
-	    if(genTau.size()>0) dR=deltaR(tau[t].eta, tau[t].phi, genTau[0]->eta, genTau[0]->phi);
+	    if(genTau.size()>0){
+	      for(unsigned int g=0; g<genTau.size(); g++){
+	        double temp=deltaR(tau[t].eta, tau[t].phi, genTau[g]->eta, genTau[g]->phi);
+	        if(temp<dR)dR=temp;
+	      } 
+	    }
+	    if(genMu.size()>0){
+	      for(unsigned int g=0; g<genMu.size(); g++){
+	        double temp=deltaR(tau[t].eta, tau[t].phi, genMu[g]->eta, genMu[g]->phi);
+	        if(temp<dR)dR=temp;
+	      } 
+	    }
+	    if(genE.size()>0){
+	      for(unsigned int g=0; g<genE.size(); g++){
+	        double temp=deltaR(tau[t].eta, tau[t].phi, genE[g]->eta, genE[g]->phi);
+	        if(temp<dR)dR=temp;
+	      } 
+	    }
             if(dR<0.3){
 	      if(!(tau[t].tauID_byTightIsolationMVA3newDMwLT  <= 0.5)) TauTightIsoObjectSelectionCollection.tau.push_back(&tau[t]);
 	      else if(!(tau[t].tauID_byMediumIsolationMVA3newDMwLT  <= 0.5)) TauMediumIsoObjectSelectionCollection.tau.push_back(&tau[t]);
@@ -372,6 +411,9 @@ TProfile *ScaleFactorEnergyT_Un  = (TProfile*)file_Resp.Get("ScaleFactorEnergyT_
 	      else TauNoIsoObjectSelectionCollection.tau.push_back(&tau[t]);
 	    }
           }
+	
+	unsigned int LeptonicSize=TauTightIsoObjectSelectionCollection.tau.size()+TauMediumIsoObjectSelectionCollection.tau.size()+TauLooseIsoObjectSelectionCollection.tau.size();
+	if(verbose)std::cout<<"leptons reconstructed as tau: "<<LeptonicSize<<std::endl;
 	  
 	realTauMass(TauTightIsoObjectSelectionCollection);
 	realTauMass(TauMediumIsoObjectSelectionCollection);
@@ -389,14 +431,17 @@ TProfile *ScaleFactorEnergyT_Un  = (TProfile*)file_Resp.Get("ScaleFactorEnergyT_
 	// jet baseline selection
 	for(unsigned int j = 0;j<jet.size();++j){
 	  double dR=5.;
-	  if(genTau.size()>0) dR=deltaR(jet[j].eta, jet[j].phi, genTau[0]->eta, genTau[0]->phi); //remove real taus out of jet sample
-	  for(int i=0; i<genMu.size(); i++){
-	    double dRtemp = deltaR(jet[j].eta, jet[j].phi, genMu[i]->eta, genMu[i]->phi);
-	    if(dRtemp<dR) dR;
+	  for(unsigned int i=0; i<genTau.size(); i++){
+	    double dRtemp = deltaR(jet[j].eta, jet[j].phi, genTau[i]->eta, genTau[i]->phi);
+	    if(dRtemp<dR) dR=dRtemp;
 	  }
-	  for(int i=0; i<genE.size(); i++){
+	  for(unsigned int i=0; i<genMu.size(); i++){
+	    double dRtemp = deltaR(jet[j].eta, jet[j].phi, genMu[i]->eta, genMu[i]->phi);
+	    if(dRtemp<dR) dR=dRtemp;
+	  }
+	  for(unsigned int i=0; i<genE.size(); i++){
 	    double dRtemp = deltaR(jet[j].eta, jet[j].phi, genE[i]->eta, genE[i]->phi);
-	    if(dRtemp<dR) dR;
+	    if(dRtemp<dR) dR=dRtemp;
 	  }
 	  if(dR<0.3) continue;
 	  if(!( jet[j].pt >= 30. )) 		continue;
@@ -512,7 +557,7 @@ TProfile *ScaleFactorEnergyT_Un  = (TProfile*)file_Resp.Get("ScaleFactorEnergyT_
 	    if(verbose) std::cout<<j<<": "<<jet_taufakerateN[j]<<", "<<jet_taufakerateL[j]<<", "<<jet_taufakerateM[j]<<", "<<jet_taufakerateT[j]<<std::endl;
 	}
 	if(verbose) std::cout<<"---------------"<<std::endl;
-	if(genTau.size()==1){
+	if(LeptonicSize==1){//genTau.size()==1){
 	if(verbose)std::cout<<"enter one genTau scenario"<<std::endl;
 	
 	//choose scenario, then roll fakes
@@ -1055,7 +1100,7 @@ TProfile *ScaleFactorEnergyT_Un  = (TProfile*)file_Resp.Get("ScaleFactorEnergyT_
     }
     
     //beginning 0 lepton scenario for QCD, W+jets and Single Top hadronic
-    else if(genTau.size()==0){//if(genMu.size()+genE.size()+genTau.size()==0){
+    else if(LeptonicSize==0){//if(genMu.size()+genE.size()+genTau.size()==0){
         if(verbose)std::cout<<"enter 0 tau scenario"<<std::endl;
     	Fake FakeTausN("FakeTaus");
 	FakeTausN.generate(jet_taufakerateN,jet_taufakerateN, true);
@@ -1472,6 +1517,32 @@ TProfile *ScaleFactorEnergyT_Un  = (TProfile*)file_Resp.Get("ScaleFactorEnergyT_
 	  weightTT=FakeTausTT.weight;
 	}    
     }
+    else if(LeptonicSize>=2){
+    if(verbose) std::cout<<"2 genTau HIT!"<<", T="<<TauTightIsoObjectSelectionCollection.tau.size()<<", M="<<TauMediumIsoObjectSelectionCollection.tau.size()<<", L="<<TauLooseIsoObjectSelectionCollection.tau.size()<<std::endl;
+    	Triggerswitch=true;
+	//sort into the right collections
+	if(TauTightIsoObjectSelectionCollection.tau.size()>=2){
+	  for(unsigned int t=0; t<TauTightIsoObjectSelectionCollection.tau.size(); t++)TauTTIsoObjectSelectionCollection.tau.push_back(TauTightIsoObjectSelectionCollection.tau[t]);
+	  weightTT=1;
+	  if(verbose)std::cout<<"enter 2 tight real"<<weightTT<<std::endl;
+	}
+	else if(TauTightIsoObjectSelectionCollection.tau.size()==1 && (TauMediumIsoObjectSelectionCollection.tau.size()>=1 || TauLooseIsoObjectSelectionCollection.tau.size()>=1)){
+	  TauTMiIsoObjectSelectionCollection.tau.push_back(TauTightIsoObjectSelectionCollection.tau[0]);
+	  for(unsigned int t=0; t<TauMediumIsoObjectSelectionCollection.tau.size(); t++) TauTMiIsoObjectSelectionCollection.tau.push_back(TauMediumIsoObjectSelectionCollection.tau[t]);
+	  for(unsigned int t=0; t<TauLooseIsoObjectSelectionCollection.tau.size(); t++)  TauTMiIsoObjectSelectionCollection.tau.push_back(TauLooseIsoObjectSelectionCollection.tau[t]);
+	  weightTMi=1;
+	}
+	else if(TauMediumIsoObjectSelectionCollection.tau.size()>0 && (TauMediumIsoObjectSelectionCollection.tau.size() + TauLooseIsoObjectSelectionCollection.tau.size())>=2){
+	  for(unsigned int t=0; t<TauMediumIsoObjectSelectionCollection.tau.size(); t++) TauMMiIsoObjectSelectionCollection.tau.push_back(TauMediumIsoObjectSelectionCollection.tau[t]);
+	  for(unsigned int t=0; t<TauLooseIsoObjectSelectionCollection.tau.size(); t++)  TauMMiIsoObjectSelectionCollection.tau.push_back(TauLooseIsoObjectSelectionCollection.tau[t]);
+	  weightMMi=1;
+	}
+	else if(TauLooseIsoObjectSelectionCollection.tau.size()>=2){
+	  for(unsigned int t=0; t<TauLooseIsoObjectSelectionCollection.tau.size(); t++)  TauLLiIsoObjectSelectionCollection.tau.push_back(TauLooseIsoObjectSelectionCollection.tau[t]);
+	  weightLLi=1;
+	}
+    }
+    if(verbose)std::cout<<"genTau size="<<genTau.size()<<std::endl;
     if(verbose)std::cout<<"start jet search"<<std::endl;
     	// jet && bjet selection
 	// ? id ?
@@ -1530,17 +1601,47 @@ TProfile *ScaleFactorEnergyT_Un  = (TProfile*)file_Resp.Get("ScaleFactorEnergyT_
 	weightMMi*=weight;
 	weightLLi*=weight;
 	weightNN *=weight;
-	
+
+// ---------------------
+// -- Signal Region No MET cut --
+// ---------------------
+//if(TauTTIsoObjectSelectionCollection.jet.size()>=2){
+Selection LS_Signal_M0("LS_Signal_M0"); 				//label and initialisation
+LS_Signal_M0.InputCollection 	= &TauTTIsoObjectSelectionCollection;	//input collection
+LS_Signal_M0.OutputCollection 	= &myHistoColl_LS_SignalRegion_M0;      //output collection
+LS_Signal_M0.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
+LS_Signal_M0.RunData        	= false;        			//real data allowed
+LS_Signal_M0.RequireTriggers    = Triggerswitch;			//require at least one of the triggers fired
+LS_Signal_M0.weight        	= weightTT;       			//event weight
+CutConfiguration(&LS_Signal_M0, true, LS); 				//selection, VBF, LS
+
+LS_Signal_M0.select(false);        					//do selection, fill histograms
+
+// -------------------------------------------
+// -- CENTRAL + INVERTED VBF + 2 Iso Tau CR No MET cut --
+// -------------------------------------------
+
+Selection InvertedVBF_LS_CR2_M0("InvertedVBF_LS_CR2_M0"); 			//label and initialisation
+InvertedVBF_LS_CR2_M0.InputCollection 	= &TauTTIsoObjectSelectionCollection;	//input collection
+InvertedVBF_LS_CR2_M0.OutputCollection 	= &myHistoColl_LS_CR2_M0;        	//output collection
+InvertedVBF_LS_CR2_M0.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
+InvertedVBF_LS_CR2_M0.RunData        	= false;        			//real data allowed
+InvertedVBF_LS_CR2_M0.RequireTriggers   = Triggerswitch;			//require at least one of the triggers fired
+InvertedVBF_LS_CR2_M0.weight        	= weightTT;        			//event weight
+CutConfiguration(&InvertedVBF_LS_CR2_M0, false, LS); 				//selection, VBF, LS
+
+InvertedVBF_LS_CR2_M0.select(false); 
+
 // ---------------------
 // -- Signal Region --
 // ---------------------
-if(TauTTIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauTTIsoObjectSelectionCollection.jet.size()>=2){
 Selection LS_Signal("LS_Signal"); 					//label and initialisation
 LS_Signal.InputCollection 	= &TauTTIsoObjectSelectionCollection;	//input collection
 LS_Signal.OutputCollection 	= &myHistoColl_LS_SignalRegion;        	//output collection
 LS_Signal.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
 LS_Signal.RunData        	= false;        			//real data allowed
-LS_Signal.RequireTriggers       = false;       				//require at least one of the triggers fired
+LS_Signal.RequireTriggers       = Triggerswitch;			//require at least one of the triggers fired
 LS_Signal.weight        	= weightTT;       			//event weight
 CutConfiguration(&LS_Signal, true, LS); 				//selection, VBF, LS
 LS_Signal.METMin = 30.;
@@ -1556,24 +1657,24 @@ InvertedVBF_LS_CR2.InputCollection 	= &TauTTIsoObjectSelectionCollection;	//inpu
 InvertedVBF_LS_CR2.OutputCollection 	= &myHistoColl_LS_CR2;        		//output collection
 InvertedVBF_LS_CR2.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
 InvertedVBF_LS_CR2.RunData        	= false;        			//real data allowed
-InvertedVBF_LS_CR2.RequireTriggers      = false;       				//require at least one of the triggers fired
+InvertedVBF_LS_CR2.RequireTriggers      = Triggerswitch;			//require at least one of the triggers fired
 InvertedVBF_LS_CR2.weight        	= weightTT;        			//event weight
 CutConfiguration(&InvertedVBF_LS_CR2, false, LS); 				//selection, VBF, LS
 InvertedVBF_LS_CR2.METMin = 30.;
 
 InvertedVBF_LS_CR2.select(false);        						//do selection, fill histograms
-}
+//}
 
 // -------------------------------
 // -- CENTRAL + 1 Tight Tau CR3 --
 // -------------------------------
-if(TauTMiIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauTMiIsoObjectSelectionCollection.jet.size()>=2){
 Selection oneTightTau_LS_CR3("oneTightTau_LS_CR3"); 					//label and initialisation
 oneTightTau_LS_CR3.InputCollection 	= &TauTMiIsoObjectSelectionCollection;		//input collection
 oneTightTau_LS_CR3.OutputCollection 	= &myHistoColl_LS_CR3;        			//output collection
 oneTightTau_LS_CR3.RealData        	= eventhelper_isRealData;        		//pass information if event is real data
 oneTightTau_LS_CR3.RunData        	= false;        				//real data allowed
-oneTightTau_LS_CR3.RequireTriggers      = false;       					//require at least one of the triggers fired
+oneTightTau_LS_CR3.RequireTriggers      = Triggerswitch;				//require at least one of the triggers fired
 oneTightTau_LS_CR3.weight        	= weightTMi;        				//event weight
 CutConfiguration(&oneTightTau_LS_CR3, true, LS); 					//selection, VBF, LS
 
@@ -1587,27 +1688,27 @@ InvertedVBF_oneTightTau_LS_CR4.InputCollection 	= &TauTMiIsoObjectSelectionColle
 InvertedVBF_oneTightTau_LS_CR4.OutputCollection = &myHistoColl_LS_CR4;        			//output collection
 InvertedVBF_oneTightTau_LS_CR4.RealData        	= eventhelper_isRealData;        		//pass information if event is real data
 InvertedVBF_oneTightTau_LS_CR4.RunData        	= false;        				//real data allowed
-InvertedVBF_oneTightTau_LS_CR4.RequireTriggers  = false;       					//require at least one of the triggers fired
+InvertedVBF_oneTightTau_LS_CR4.RequireTriggers  = Triggerswitch;       				//require at least one of the triggers fired
 InvertedVBF_oneTightTau_LS_CR4.weight        	= weightTMi;        				//event weight
 CutConfiguration(&InvertedVBF_oneTightTau_LS_CR4, false, LS); 					//selection, VBF, LS
 
 InvertedVBF_oneTightTau_LS_CR4.select(false);        						//do selection, fill histograms
-}
+//}
 
 // ----------------------------------
 // -- CENTRAL + Anti Tight Tau CR5 --
 // ----------------------------------
-if(TauMMiIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauMMiIsoObjectSelectionCollection.jet.size()>=2){
 Selection AntiTightTau_LS_CR5("AntiTightTau_LS_CR5"); 					//label and initialisation
 AntiTightTau_LS_CR5.InputCollection 	= &TauMMiIsoObjectSelectionCollection;		//input collection
 AntiTightTau_LS_CR5.OutputCollection 	= &myHistoColl_LS_CR5;        			//output collection
 AntiTightTau_LS_CR5.RealData        	= eventhelper_isRealData;        		//pass information if event is real data
 AntiTightTau_LS_CR5.RunData        	= false;        				//real data allowed
-AntiTightTau_LS_CR5.RequireTriggers     = false;       					//require at least one of the triggers fired
+AntiTightTau_LS_CR5.RequireTriggers     = Triggerswitch;       				//require at least one of the triggers fired
 AntiTightTau_LS_CR5.weight        	= weightMMi;        				//event weight
 CutConfiguration(&AntiTightTau_LS_CR5, true, LS); 					//selection, VBF, LS
 
-AntiTightTau_LS_CR5.select(false);        							//do selection, fill histograms
+AntiTightTau_LS_CR5.select(false);        						//do selection, fill histograms
 
 // ------------------------------------------------
 // -- CENTRAL + InvertedVBF + Anti Tight Tau CR6 --
@@ -1618,27 +1719,27 @@ InvertedVBF_AntiTightTau_LS_CR6.InputCollection 	= &TauMMiIsoObjectSelectionColl
 InvertedVBF_AntiTightTau_LS_CR6.OutputCollection 	= &myHistoColl_LS_CR6;        		//output collection
 InvertedVBF_AntiTightTau_LS_CR6.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
 InvertedVBF_AntiTightTau_LS_CR6.RunData        		= false;        			//real data allowed
-InvertedVBF_AntiTightTau_LS_CR6.RequireTriggers         = false;       				//require at least one of the triggers fired
+InvertedVBF_AntiTightTau_LS_CR6.RequireTriggers         = Triggerswitch;       			//require at least one of the triggers fired
 InvertedVBF_AntiTightTau_LS_CR6.weight        		= weightMMi;        			//event weight
 CutConfiguration(&InvertedVBF_AntiTightTau_LS_CR6, false, LS); 					//selection, VBF, LS
 
 InvertedVBF_AntiTightTau_LS_CR6.select(false);        						//do selection, fill histograms
-}	
+//}	
 
 // -----------------------------------
 // -- CENTRAL + Anti Medium Tau CR7 --
 // -----------------------------------
-if(TauLLiIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauLLiIsoObjectSelectionCollection.jet.size()>=2){
 Selection AntiMediumTau_LS_CR7("AntiMediumTau_LS_CR7"); 			//label and initialisation
 AntiMediumTau_LS_CR7.InputCollection 	= &TauLLiIsoObjectSelectionCollection;	//input collection
 AntiMediumTau_LS_CR7.OutputCollection 	= &myHistoColl_LS_CR7;        		//output collection
 AntiMediumTau_LS_CR7.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
-AntiMediumTau_LS_CR7.RunData        	= false;        				//real data allowed
-AntiMediumTau_LS_CR7.RequireTriggers    = false;       				//require at least one of the triggers fired
-AntiMediumTau_LS_CR7.weight        	= weightLLi;        				//event weight
+AntiMediumTau_LS_CR7.RunData        	= false;        			//real data allowed
+AntiMediumTau_LS_CR7.RequireTriggers    = Triggerswitch;       			//require at least one of the triggers fired
+AntiMediumTau_LS_CR7.weight        	= weightLLi;        			//event weight
 CutConfiguration(&AntiMediumTau_LS_CR7, true, LS); 				//selection, VBF, LS
 
-AntiMediumTau_LS_CR7.select(false);        						//do selection, fill histograms
+AntiMediumTau_LS_CR7.select(false);        					//do selection, fill histograms
 
 // -------------------------------------------------
 // -- CENTRAL + InvertedVBF + Anti Medium Tau CR8 --
@@ -1649,27 +1750,27 @@ InvertedVBF_AntiMediumTau_LS_CR8.InputCollection 	= &TauLLiIsoObjectSelectionCol
 InvertedVBF_AntiMediumTau_LS_CR8.OutputCollection 	= &myHistoColl_LS_CR8;        		//output collection
 InvertedVBF_AntiMediumTau_LS_CR8.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
 InvertedVBF_AntiMediumTau_LS_CR8.RunData        	= false;        			//real data allowed
-InvertedVBF_AntiMediumTau_LS_CR8.RequireTriggers        = false;       				//require at least one of the triggers fired
+InvertedVBF_AntiMediumTau_LS_CR8.RequireTriggers        = Triggerswitch;       			//require at least one of the triggers fired
 InvertedVBF_AntiMediumTau_LS_CR8.weight        		= weightLLi;        			//event weight
 CutConfiguration(&InvertedVBF_AntiMediumTau_LS_CR8, false, LS); 				//selection, VBF, LS
 
 InvertedVBF_AntiMediumTau_LS_CR8.select(false);        						//do selection, fill histograms
-}
+//}
 
 // -----------------------------------
 // -- CENTRAL + Anti Loose Tau CR9 ---
 // -----------------------------------
-if(TauNNIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauNNIsoObjectSelectionCollection.jet.size()>=2){
 Selection AntiLooseTau_LS_CR9("AntiLooseTauLS_CR9"); 				//label and initialisation
 AntiLooseTau_LS_CR9.InputCollection 	= &TauNNIsoObjectSelectionCollection;	//input collection
 AntiLooseTau_LS_CR9.OutputCollection 	= &myHistoColl_LS_CR9;        		//output collection
 AntiLooseTau_LS_CR9.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
 AntiLooseTau_LS_CR9.RunData        	= false;        			//real data allowed
-AntiLooseTau_LS_CR9.RequireTriggers     = false;       				//require at least one of the triggers fired
+AntiLooseTau_LS_CR9.RequireTriggers     = Triggerswitch;       			//require at least one of the triggers fired
 AntiLooseTau_LS_CR9.weight        	= weightNN;        			//event weight
 CutConfiguration(&AntiLooseTau_LS_CR9, true, LS); 				//selection, VBF, LS
 
-AntiLooseTau_LS_CR9.select(false);        						//do selection, fill histograms
+AntiLooseTau_LS_CR9.select(false);        					//do selection, fill histograms
 
 // -------------------------------------------------
 // -- CENTRAL + InvertedVBF + Anti Loose Tau CR10 --
@@ -1680,12 +1781,12 @@ InvertedVBF_AntiLooseTau_LS_CR10.InputCollection 	= &TauNNIsoObjectSelectionColl
 InvertedVBF_AntiLooseTau_LS_CR10.OutputCollection 	= &myHistoColl_LS_CR10;        		//output collection
 InvertedVBF_AntiLooseTau_LS_CR10.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
 InvertedVBF_AntiLooseTau_LS_CR10.RunData        	= false;        			//real data allowed
-InvertedVBF_AntiLooseTau_LS_CR10.RequireTriggers        = false;       				//require at least one of the triggers fired
+InvertedVBF_AntiLooseTau_LS_CR10.RequireTriggers        = Triggerswitch;       			//require at least one of the triggers fired
 InvertedVBF_AntiLooseTau_LS_CR10.weight        		= weightNN;        			//event weight
 CutConfiguration(&InvertedVBF_AntiLooseTau_LS_CR10, false, LS); 				//selection, VBF, LS
 
 InvertedVBF_AntiLooseTau_LS_CR10.select(false);        						//do selection, fill histograms
-}
+//}
 
 // ---------------------
 // -- Z -> TauTau CR --
@@ -1733,20 +1834,50 @@ Ztautau_LS_CR1.select(false);        						//do selection, fill histograms
 LS=false;
 
 // ---------------------
+// -- Signal Region No MET cut --
+// ---------------------
+//if(TauTTIsoObjectSelectionCollection.jet.size()>=2){
+Selection OS_Signal_M0("OS_Signal_M0"); 				//label and initialisation
+OS_Signal_M0.InputCollection 	= &TauTTIsoObjectSelectionCollection;	//input collection
+OS_Signal_M0.OutputCollection 	= &myHistoColl_OS_SignalRegion_M0;      //output collection
+OS_Signal_M0.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
+OS_Signal_M0.RunData        	= false;        			//real data allowed
+OS_Signal_M0.RequireTriggers    = Triggerswitch;			//require at least one of the triggers fired
+OS_Signal_M0.weight        	= weightTT;       			//event weight
+CutConfiguration(&OS_Signal_M0, true, LS); 				//selection, VBF, LS
+
+OS_Signal_M0.select(false);        					//do selection, fill histograms
+
+// -------------------------------------------
+// -- CENTRAL + INVERTED VBF + 2 Iso Tau CR No MET cut --
+// -------------------------------------------
+
+Selection InvertedVBF_OS_CR2_M0("InvertedVBF_OS_CR2_M0"); 			//label and initialisation
+InvertedVBF_OS_CR2_M0.InputCollection 	= &TauTTIsoObjectSelectionCollection;	//input collection
+InvertedVBF_OS_CR2_M0.OutputCollection 	= &myHistoColl_OS_CR2_M0;        	//output collection
+InvertedVBF_OS_CR2_M0.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
+InvertedVBF_OS_CR2_M0.RunData        	= false;        			//real data allowed
+InvertedVBF_OS_CR2_M0.RequireTriggers   = Triggerswitch;			//require at least one of the triggers fired
+InvertedVBF_OS_CR2_M0.weight        	= weightTT;        			//event weight
+CutConfiguration(&InvertedVBF_OS_CR2_M0, false, LS); 				//selection, VBF, LS
+
+InvertedVBF_OS_CR2_M0.select(false); 
+
+// ---------------------
 // -- Signal Region --
 // ---------------------
-if(TauTTIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauTTIsoObjectSelectionCollection.jet.size()>=2){
 Selection OS_Signal("OS_Signal"); //label and initialisation
 OS_Signal.InputCollection 		= &TauTTIsoObjectSelectionCollection;	//input collection
 OS_Signal.OutputCollection 		= &myHistoColl_OS_SignalRegion;        	//output collection
 OS_Signal.RealData        		= eventhelper_isRealData;        	//pass information if event is real data
 OS_Signal.RunData        		= false;        			//real data allowed
-OS_Signal.RequireTriggers          	= false;       				//require at least one of the triggers fired
+OS_Signal.RequireTriggers          	= Triggerswitch;       			//require at least one of the triggers fired
 OS_Signal.weight        		= weightTT;        			//event weight
 CutConfiguration(&OS_Signal, true, LS); 					//selection, VBF, LS
 OS_Signal.METMin = 30.;
 
-OS_Signal.select(false);        							//do selection, fill histograms
+OS_Signal.select(false);        						//do selection, fill histograms
 
 // -------------------------------------------
 // -- CENTRAL + INVERTED VBF + 2 Iso Tau CR --
@@ -1757,28 +1888,28 @@ InvertedVBF_OS_CR2.InputCollection 	= &TauTTIsoObjectSelectionCollection;	//inpu
 InvertedVBF_OS_CR2.OutputCollection 	= &myHistoColl_OS_CR2;        		//output collection
 InvertedVBF_OS_CR2.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
 InvertedVBF_OS_CR2.RunData        	= false;        			//real data allowed
-InvertedVBF_OS_CR2.RequireTriggers      = false;       				//require at least one of the triggers fired
+InvertedVBF_OS_CR2.RequireTriggers      = Triggerswitch;       			//require at least one of the triggers fired
 InvertedVBF_OS_CR2.weight        	= weightTT;        			//event weight
 CutConfiguration(&InvertedVBF_OS_CR2, false, LS); 				//selection, VBF, LS
 InvertedVBF_OS_CR2.METMin = 30.;
 
-InvertedVBF_OS_CR2.select(false);        						//do selection, fill histograms
-}
+InvertedVBF_OS_CR2.select(false);        					//do selection, fill histograms
+//}
 
 // -------------------------------
 // -- CENTRAL + 1 Tight Tau CR3 --
 // -------------------------------
-if(TauTMiIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauTMiIsoObjectSelectionCollection.jet.size()>=2){
 Selection oneTightTau_OS_CR3("oneTightTau_OS_CR3"); 					//label and initialisation
 oneTightTau_OS_CR3.InputCollection 	= &TauTMiIsoObjectSelectionCollection;		//input collection
 oneTightTau_OS_CR3.OutputCollection 	= &myHistoColl_OS_CR3;        			//output collection
 oneTightTau_OS_CR3.RealData        	= eventhelper_isRealData;        		//pass information if event is real data
 oneTightTau_OS_CR3.RunData        	= false;        				//real data allowed
-oneTightTau_OS_CR3.RequireTriggers      = false;       					//require at least one of the triggers fired
+oneTightTau_OS_CR3.RequireTriggers      = Triggerswitch;       				//require at least one of the triggers fired
 oneTightTau_OS_CR3.weight        	= weightTMi;        				//event weight
 CutConfiguration(&oneTightTau_OS_CR3, true, LS); 					//selection, VBF, LS
 
-oneTightTau_OS_CR3.select(false);        							//do selection, fill histograms
+oneTightTau_OS_CR3.select(false);        						//do selection, fill histograms
 
 // ---------------------------------------------
 // -- CENTRAL + InvertedVBF + 1 Tight Tau CR4 --
@@ -1788,23 +1919,23 @@ InvertedVBF_oneTightTau_OS_CR4.InputCollection 		= &TauTMiIsoObjectSelectionColl
 InvertedVBF_oneTightTau_OS_CR4.OutputCollection 	= &myHistoColl_OS_CR4;        			//output collection
 InvertedVBF_oneTightTau_OS_CR4.RealData        		= eventhelper_isRealData;        		//pass information if event is real data
 InvertedVBF_oneTightTau_OS_CR4.RunData        		= false;        				//real data allowed
-InvertedVBF_oneTightTau_OS_CR4.RequireTriggers          = false;       					//require at least one of the triggers fired
+InvertedVBF_oneTightTau_OS_CR4.RequireTriggers          = Triggerswitch;       				//require at least one of the triggers fired
 InvertedVBF_oneTightTau_OS_CR4.weight        		= weightTMi;        				//event weight
 CutConfiguration(&InvertedVBF_oneTightTau_OS_CR4, false, LS); 						//selection, VBF, LS
 
 InvertedVBF_oneTightTau_OS_CR4.select(false);        							//do selection, fill histograms
-}
+//}
 
 // ----------------------------------
 // -- CENTRAL + Anti Tight Tau CR5 --
 // ----------------------------------
-if(TauMMiIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauMMiIsoObjectSelectionCollection.jet.size()>=2){
 Selection AntiTightTau_OS_CR5("AntiTightTau_OS_CR5"); 						//label and initialisation
 AntiTightTau_OS_CR5.InputCollection 		= &TauMMiIsoObjectSelectionCollection;		//input collection
 AntiTightTau_OS_CR5.OutputCollection 		= &myHistoColl_OS_CR5;        			//output collection
 AntiTightTau_OS_CR5.RealData        		= eventhelper_isRealData;        		//pass information if event is real data
 AntiTightTau_OS_CR5.RunData        		= false;        				//real data allowed
-AntiTightTau_OS_CR5.RequireTriggers             = false;       					//require at least one of the triggers fired
+AntiTightTau_OS_CR5.RequireTriggers             = Triggerswitch;       				//require at least one of the triggers fired
 AntiTightTau_OS_CR5.weight        		= weightMMi;        				//event weight
 CutConfiguration(&AntiTightTau_OS_CR5, true, LS); 						//selection, VBF, LS
 
@@ -1819,27 +1950,27 @@ InvertedVBF_AntiTightTau_OS_CR6.InputCollection 	= &TauMMiIsoObjectSelectionColl
 InvertedVBF_AntiTightTau_OS_CR6.OutputCollection 	= &myHistoColl_OS_CR6;        		//output collection
 InvertedVBF_AntiTightTau_OS_CR6.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
 InvertedVBF_AntiTightTau_OS_CR6.RunData        		= false;        			//real data allowed
-InvertedVBF_AntiTightTau_OS_CR6.RequireTriggers 	= false;       				//require at least one of the triggers fired
+InvertedVBF_AntiTightTau_OS_CR6.RequireTriggers 	= Triggerswitch;       			//require at least one of the triggers fired
 InvertedVBF_AntiTightTau_OS_CR6.weight        		= weightMMi;        			//event weight
 CutConfiguration(&InvertedVBF_AntiTightTau_OS_CR6, false, LS); 					//selection, VBF, LS
 
 InvertedVBF_AntiTightTau_OS_CR6.select(false);        						//do selection, fill histograms
-}	
+//}	
 
 // -----------------------------------
 // -- CENTRAL + Anti Medium Tau CR7 --
 // -----------------------------------
-if(TauLLiIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauLLiIsoObjectSelectionCollection.jet.size()>=2){
 Selection AntiMediumTau_OS_CR7("AntiMediumTau_OS_CR7"); 			//label and initialisation
 AntiMediumTau_OS_CR7.InputCollection 	= &TauLLiIsoObjectSelectionCollection;	//input collection
 AntiMediumTau_OS_CR7.OutputCollection 	= &myHistoColl_OS_CR7;        		//output collection
 AntiMediumTau_OS_CR7.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
 AntiMediumTau_OS_CR7.RunData        	= false;        			//real data allowed
-AntiMediumTau_OS_CR7.RequireTriggers    = false;       				//require at least one of the triggers fired
+AntiMediumTau_OS_CR7.RequireTriggers    = Triggerswitch;       			//require at least one of the triggers fired
 AntiMediumTau_OS_CR7.weight        	= weightLLi;        			//event weight
 CutConfiguration(&AntiMediumTau_OS_CR7, true, LS); 				//selection, VBF, LS
 
-AntiMediumTau_OS_CR7.select(false);        						//do selection, fill histograms
+AntiMediumTau_OS_CR7.select(false);        					//do selection, fill histograms
 
 // -------------------------------------------------
 // -- CENTRAL + InvertedVBF + Anti Medium Tau CR8 --
@@ -1850,23 +1981,23 @@ InvertedVBF_AntiMediumTau_OS_CR8.InputCollection 	= &TauLLiIsoObjectSelectionCol
 InvertedVBF_AntiMediumTau_OS_CR8.OutputCollection 	= &myHistoColl_OS_CR8;        		//output collection
 InvertedVBF_AntiMediumTau_OS_CR8.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
 InvertedVBF_AntiMediumTau_OS_CR8.RunData        	= false;        			//real data allowed
-InvertedVBF_AntiMediumTau_OS_CR8.RequireTriggers        = false;       				//require at least one of the triggers fired
+InvertedVBF_AntiMediumTau_OS_CR8.RequireTriggers        = Triggerswitch;       			//require at least one of the triggers fired
 InvertedVBF_AntiMediumTau_OS_CR8.weight        		= weightLLi;        			//event weight
 CutConfiguration(&InvertedVBF_AntiMediumTau_OS_CR8, false, LS); 				//selection, VBF, LS
 
 InvertedVBF_AntiMediumTau_OS_CR8.select(false);        						//do selection, fill histograms
-}
+//}
 
 // -----------------------------------
 // -- CENTRAL + Anti Loose Tau CR9 ---
 // -----------------------------------
-if(TauNNIsoObjectSelectionCollection.jet.size()>=2){
+//if(TauNNIsoObjectSelectionCollection.jet.size()>=2){
 Selection AntiLooseTau_OS_CR9("AntiLooseTau_OS_CR9"); 				//label and initialisation
 AntiLooseTau_OS_CR9.InputCollection 	= &TauNNIsoObjectSelectionCollection;	//input collection
 AntiLooseTau_OS_CR9.OutputCollection 	= &myHistoColl_OS_CR9;        		//output collection
 AntiLooseTau_OS_CR9.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
 AntiLooseTau_OS_CR9.RunData        	= false;        			//real data allowed
-AntiLooseTau_OS_CR9.RequireTriggers     = false;       				//require at least one of the triggers fired
+AntiLooseTau_OS_CR9.RequireTriggers     = Triggerswitch;       			//require at least one of the triggers fired
 AntiLooseTau_OS_CR9.weight        	= weightNN;        			//event weight
 CutConfiguration(&AntiLooseTau_OS_CR9, true, LS); 				//selection, VBF, LS
 
@@ -1881,12 +2012,12 @@ InvertedVBF_AntiLooseTau_OS_CR10.InputCollection 	= &TauNNIsoObjectSelectionColl
 InvertedVBF_AntiLooseTau_OS_CR10.OutputCollection 	= &myHistoColl_OS_CR10;        		//output collection
 InvertedVBF_AntiLooseTau_OS_CR10.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
 InvertedVBF_AntiLooseTau_OS_CR10.RunData        	= false;        			//real data allowed
-InvertedVBF_AntiLooseTau_OS_CR10.RequireTriggers        = false;       				//require at least one of the triggers fired
+InvertedVBF_AntiLooseTau_OS_CR10.RequireTriggers        = Triggerswitch;       			//require at least one of the triggers fired
 InvertedVBF_AntiLooseTau_OS_CR10.weight        		= weightNN;        			//event weight
 CutConfiguration(&InvertedVBF_AntiLooseTau_OS_CR10, false, LS); 				//selection, VBF, LS
 
 InvertedVBF_AntiLooseTau_OS_CR10.select(false);        						//do selection, fill histograms
-}
+//}
 
 // ---------------------
 // -- Z -> TauTau CR --
