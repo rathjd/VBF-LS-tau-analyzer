@@ -35,12 +35,24 @@ double vbfefficiency(double evenCRcounts, double oddCRcounts, double evenCRnonQC
 	return ( (oddCRcounts - oddCRnonQCDbg) / ( (oddCRcounts - oddCRnonQCDbg) + (evenCRcounts - evenCRnonQCDbg) ));
 }
 
+double vbfefficiency_weightedmean(double vbfeff_onetight, double vbfeff_onetight_err, double vbfeff_antitight, double vbfeff_antitight_err, double vbfeff_antimedium, double vbfeff_antimedium_err){
+
+	return (( (vbfeff_onetight/(vbfeff_onetight_err * vbfeff_onetight_err)) + (vbfeff_antitight/(vbfeff_antitight_err * vbfeff_antitight_err)) + (vbfeff_antimedium/(vbfeff_antimedium_err * vbfeff_antimedium_err)) )/((1./(vbfeff_onetight_err * vbfeff_onetight_err)) + (1./(vbfeff_antitight_err * vbfeff_antitight_err)) + (1./(vbfeff_antimedium_err * vbfeff_antimedium_err))));
+
+}
+
 double vbfefficiency_staterr(double evenCRcounts, double evenCRcounts_err,double oddCRcounts, double oddCRcounts_err, double evenCRnonQCDbg, double evenCRnonQCDbg_err, double oddCRnonQCDbg, double oddCRnonQCDbg_err) {
 	double temp_evenCRcounts = evenCRcounts - evenCRnonQCDbg;
 	double temp_evenCRcounts_err = sqrt( pow(evenCRcounts_err,2.) + pow(evenCRnonQCDbg_err,2.)  );
 	double temp_oddCRcounts = oddCRcounts - oddCRnonQCDbg;
 	double temp_oddCRcounts_err = sqrt( pow(oddCRcounts_err,2.) + pow(oddCRnonQCDbg_err,2.)  );
 	return sqrt( pow(  (( temp_evenCRcounts * temp_oddCRcounts_err)/(pow((temp_oddCRcounts + temp_evenCRcounts),2.))), 2.)  + pow(  ((temp_oddCRcounts * temp_evenCRcounts_err)/(pow((temp_oddCRcounts + evenCRcounts),2.))), 2.)    );
+}
+
+double vbfefficiency_weightedmean_staterr(double vbfeff_onetight_err, double vbfeff_antitight_err, double vbfeff_antimedium_err){
+
+	return sqrt( 1. /((1./(vbfeff_onetight_err * vbfeff_onetight_err)) + (1./(vbfeff_antitight_err * vbfeff_antitight_err)) + (1./(vbfeff_antimedium_err * vbfeff_antimedium_err))));
+
 }
 
 double qcdbackgroundprediction(double CR2counts, double CR2nonqcdbg, double vbfefficiency) {
@@ -214,20 +226,28 @@ void qcdbgprediction(bool isLSchannel, string plotname, double minMET, double ma
 
 	//Efficiency Systematics
 	
-	double evenCRcount = (double)Data_evtcount.CR4counts + (double)Data_evtcount.CR6counts + (double)Data_evtcount.CR8counts;
-	double oddCRcount = (double)Data_evtcount.CR3counts + (double)Data_evtcount.CR5counts + (double)Data_evtcount.CR7counts;
-	double evenCRnonQCDbg = nonQCDmc_evtcount.CR4counts + nonQCDmc_evtcount.CR6counts + nonQCDmc_evtcount.CR8counts;
-	double oddCRnonQCDbg = nonQCDmc_evtcount.CR3counts + nonQCDmc_evtcount.CR5counts + nonQCDmc_evtcount.CR7counts;
-	double evenCRcount_err = sqrt( pow(Data_evtcount.CR4counts_err, 2.) + pow(Data_evtcount.CR6counts_err, 2.) + pow(Data_evtcount.CR8counts_err, 2.));
-	double oddCRcount_err = sqrt( pow(Data_evtcount.CR3counts_err, 2.) + pow(Data_evtcount.CR5counts_err, 2.) + pow(Data_evtcount.CR7counts_err, 2.));
-	double evenCRnonQCDbg_err = sqrt( pow(nonQCDmc_evtcount.CR4counts_err, 2.) + pow(nonQCDmc_evtcount.CR6counts_err, 2.) + pow(nonQCDmc_evtcount.CR8counts_err, 2.));
-	double oddCRnonQCDbg_err = sqrt( pow(nonQCDmc_evtcount.CR3counts_err, 2.) + pow(nonQCDmc_evtcount.CR5counts_err, 2.) + pow(nonQCDmc_evtcount.CR7counts_err, 2.));
+	double onetighteff_mcupwardvar = vbfefficiency(Data_evtcount.CR4counts, Data_evtcount.CR3counts, 1.5*nonQCDmc_evtcount.CR4counts, 1.5*nonQCDmc_evtcount.CR3counts);
+	double antitighteff_mcupwardvar = vbfefficiency(Data_evtcount.CR6counts, Data_evtcount.CR5counts, 1.5*nonQCDmc_evtcount.CR8counts, 1.5*nonQCDmc_evtcount.CR5counts);
+	double antimediumeff_mcupwardvar = vbfefficiency(Data_evtcount.CR8counts, Data_evtcount.CR7counts, 1.5*nonQCDmc_evtcount.CR8counts, 1.5*nonQCDmc_evtcount.CR7counts);
 
-	double weightedmeaneff = vbfefficiency(evenCRcount, oddCRcount, evenCRnonQCDbg, oddCRnonQCDbg);
-	double weightedmeaneff_err = vbfefficiency_staterr(evenCRcount, evenCRcount_err, oddCRcount, oddCRcount_err, evenCRnonQCDbg, evenCRnonQCDbg_err, oddCRnonQCDbg, oddCRnonQCDbg_err);
+	double onetighteff_mcupwardvar_err = vbfefficiency_staterr(Data_evtcount.CR4counts, Data_evtcount.CR4counts_err, Data_evtcount.CR3counts, Data_evtcount.CR3counts_err, 1.5*nonQCDmc_evtcount.CR4counts, 1.5*nonQCDmc_evtcount.CR4counts_err, 1.5*nonQCDmc_evtcount.CR3counts, 1.5*nonQCDmc_evtcount.CR3counts_err);
+	double antitighteff_mcupwardvar_err = vbfefficiency_staterr(Data_evtcount.CR6counts, Data_evtcount.CR6counts_err, Data_evtcount.CR5counts, Data_evtcount.CR5counts_err, 1.5*nonQCDmc_evtcount.CR6counts, 1.5*nonQCDmc_evtcount.CR6counts_err, 1.5*nonQCDmc_evtcount.CR5counts, 1.5*nonQCDmc_evtcount.CR5counts_err);
+	double antimediumeff_mcupwardvar_err = vbfefficiency_staterr(Data_evtcount.CR8counts, Data_evtcount.CR8counts_err, Data_evtcount.CR7counts, Data_evtcount.CR7counts_err, 1.5*nonQCDmc_evtcount.CR8counts, 1.5*nonQCDmc_evtcount.CR8counts_err, 1.5*nonQCDmc_evtcount.CR7counts, 1.5*nonQCDmc_evtcount.CR7counts_err);
 
-	double weightedmeaneff_nonqcdmc_upwardvar = vbfefficiency(evenCRcount, oddCRcount, (evenCRnonQCDbg * 0.5), (oddCRnonQCDbg * 0.5));
-	double weightedmeaneff_nonqcdmc_downwardvar = vbfefficiency(evenCRcount, oddCRcount, (evenCRnonQCDbg * 1.5), (oddCRnonQCDbg * 1.5));
+	double onetighteff_mcdownwardvar = vbfefficiency(Data_evtcount.CR4counts, Data_evtcount.CR3counts, 0.5*nonQCDmc_evtcount.CR4counts, 0.5*nonQCDmc_evtcount.CR3counts);
+	double antitighteff_mcdownwardvar = vbfefficiency(Data_evtcount.CR6counts, Data_evtcount.CR5counts, 0.5*nonQCDmc_evtcount.CR8counts, 0.5*nonQCDmc_evtcount.CR5counts);
+	double antimediumeff_mcdownwardvar = vbfefficiency(Data_evtcount.CR8counts, Data_evtcount.CR7counts, 0.5*nonQCDmc_evtcount.CR8counts, 0.5*nonQCDmc_evtcount.CR7counts);
+
+	double onetighteff_mcdownwardvar_err = vbfefficiency_staterr(Data_evtcount.CR4counts, Data_evtcount.CR4counts_err, Data_evtcount.CR3counts, Data_evtcount.CR3counts_err, 0.5*nonQCDmc_evtcount.CR4counts, 0.5*nonQCDmc_evtcount.CR4counts_err, 0.5*nonQCDmc_evtcount.CR3counts, 0.5*nonQCDmc_evtcount.CR3counts_err);
+	double antitighteff_mcdownwardvar_err = vbfefficiency_staterr(Data_evtcount.CR6counts, Data_evtcount.CR6counts_err, Data_evtcount.CR5counts, Data_evtcount.CR5counts_err, 0.5*nonQCDmc_evtcount.CR6counts, 0.5*nonQCDmc_evtcount.CR6counts_err, 0.5*nonQCDmc_evtcount.CR5counts, 0.5*nonQCDmc_evtcount.CR5counts_err);
+	double antimediumeff_mcdownwardvar_err = vbfefficiency_staterr(Data_evtcount.CR8counts, Data_evtcount.CR8counts_err, Data_evtcount.CR7counts, Data_evtcount.CR7counts_err, 0.5*nonQCDmc_evtcount.CR8counts, 0.5*nonQCDmc_evtcount.CR8counts_err, 0.5*nonQCDmc_evtcount.CR7counts, 0.5*nonQCDmc_evtcount.CR7counts_err);
+
+	//double weightedmeaneff = vbfefficiency(evenCRcount, oddCRcount, evenCRnonQCDbg, oddCRnonQCDbg);
+	double weightedmeaneff = vbfefficiency_weightedmean(onetighteff, onetighteff_err, antitighteff, antitighteff_err, antimediumeff, antimediumeff_err);
+	double weightedmeaneff_err = vbfefficiency_weightedmean_staterr(onetighteff_err, antitighteff_err, antimediumeff_err);
+
+	double weightedmeaneff_nonqcdmc_upwardvar = vbfefficiency_weightedmean(onetighteff_mcdownwardvar, onetighteff_mcdownwardvar_err, antitighteff_mcdownwardvar, antitighteff_mcdownwardvar_err, antimediumeff_mcdownwardvar, antimediumeff_mcdownwardvar_err);
+	double weightedmeaneff_nonqcdmc_downwardvar = vbfefficiency_weightedmean(onetighteff_mcupwardvar, onetighteff_mcupwardvar_err, antitighteff_mcupwardvar, antitighteff_mcupwardvar_err, antimediumeff_mcupwardvar, antimediumeff_mcupwardvar_err);
 
 	std::vector<double> v_eff;
 	v_eff.push_back(onetighteff);
@@ -280,6 +300,8 @@ void qcdbgprediction(bool isLSchannel, string plotname, double minMET, double ma
 
 	cout << "//-------------------Study Done using Eventcount as input------------------------//" << endl;
 	cout << endl;
+	cout << "Data in CR2" << Data_evtcount.CR2counts << endl;
+	cout << "nonQCDMC in CR2" << nonQCDmc_evtcount.CR2counts << endl;
 	cout << endl;
 	cout << "#VBF Efficency#" << endl;
 	cout <<"One tight region-- "<<"VBF Efficency: "<< onetighteff << " +- "<<onetighteff_err<<endl;
