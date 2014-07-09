@@ -2,6 +2,7 @@
 #define STRUCTURES_H
 
 #include "analyzer.h"
+#include "TProfile.h"
 
 using namespace std;
 using namespace evt;
@@ -186,6 +187,101 @@ struct MyHistoCollection {
 		
 		h_PU_NumInteractions = new TH1F("h_PUTrueInteractions","number of in-time true pileup", 100, -0.5,99.5);
 		h_PU_NumInteractions->GetXaxis()->SetTitle("NVtx^{true}");
+	}
+};
+
+struct MyProfileCollection {
+
+	std::string label;
+	TProfile* p_count;
+	TProfile* p_njet;
+	TProfile* p_jetpt;
+	TProfile* p_jeteta;
+	TProfile* p_jet1pt;
+	TProfile* p_jet1eta;
+	TProfile* p_jet2pt;
+	TProfile* p_jet2eta;
+	TProfile* p_dijetinvariantmass;
+	TProfile* p_dijetdeltaeta;
+
+	TProfile* p_tau1pt;
+	TProfile* p_tau1eta;
+	TProfile* p_tau2pt;
+	TProfile* p_tau2eta;
+	TProfile* p_ditauinvariantmass;
+	TProfile* p_ditaucharge;
+	TProfile* p_ditaucosdeltaphi;
+	TProfile* p_ditaudeltaeta;
+
+	TProfile* p_met;
+
+	TProfile* p_ht;
+	TProfile* p_ht_withtau;
+	
+	TProfile* p_jetTauDistanceFirst;
+	TProfile* p_jetTauDistanceSecond;
+	
+	TProfile* p_NVtx;
+	TProfile* p_PU_NumInteractions;
+
+	MyProfileCollection(TFile * f, const std::string & inputlabel) {
+
+		label = inputlabel;
+		f->mkdir(inputlabel.c_str());
+        	f->cd(inputlabel.c_str());
+
+		p_count = new TProfile("counts", "", 1,0,1);
+		p_count->SetBit(TH1::kCanRebin);
+		p_count->SetStats(0);
+		p_njet = new TProfile("p_njet", "p_njet", 21, -0.5, 20.5);
+		p_njet->GetXaxis()->SetTitle("number of jets not matched to #tau");
+		p_jetpt = new TProfile("p_jetpt", "p_jetpt", 50, 0., 500.);
+		p_jetpt->GetXaxis()->SetTitle("p_{T}^{jet} [GeV]");
+		p_jeteta = new TProfile("p_jeteta", "p_jeteta", 30 , -5., 5.);
+		p_jeteta->GetXaxis()->SetTitle("#eta^{jet}");
+		p_jet1pt = new TProfile("p_jet1pt", "p_jet1pt", 50, 0., 500.);
+		p_jet1pt->GetXaxis()->SetTitle("p_{T}^{jet 1} [GeV]");
+		p_jet1eta = new TProfile("p_jet1eta", "p_jet1eta", 50 , -5., 5.);
+		p_jet1eta->GetXaxis()->SetTitle("#eta^{jet 1}");
+		p_jet2pt = new TProfile("p_jet2pt", "p_jet2pt", 50, 0., 500.);
+		p_jet2pt->GetXaxis()->SetTitle("p_{T}^{jet 2} [GeV]");
+		p_jet2eta = new TProfile("p_jet2eta", "p_jet2eta", 50 , -5., 5.);
+		p_jet2eta->GetXaxis()->SetTitle("#eta^{jet 2}");
+		p_dijetinvariantmass = new TProfile("p_dijetinvariantmass","p_dijetinvariantmass", 10, 0., 2500.);
+		p_dijetinvariantmass->GetXaxis()->SetTitle("M^{(jet,jet)} [GeV]");
+		p_dijetdeltaeta = new TProfile ("p_dijetdeltaeta", "p_dijetdeltaeta", 20, 0., 10.);
+		p_dijetdeltaeta->GetXaxis()->SetTitle("#Delta#eta^{jj}");
+
+		p_tau1pt = new TProfile("p_tau1pt", "p_tau1pt", 50, 0., 500.);
+		p_tau1pt->GetXaxis()->SetTitle("p_{T}^{#tau 1} [GeV]");
+		p_tau1eta = new TProfile("p_tau1eta", "p_tau1eta", 30 , -3., 3.);
+		p_tau1eta->GetXaxis()->SetTitle("#eta^{#tau 1}");
+		p_tau2pt = new TProfile("p_tau2pt", "p_tau2pt", 50, 0., 500.);
+		p_tau2pt->GetXaxis()->SetTitle("p_{T}^{#tau 2} [GeV]");
+		p_tau2eta = new TProfile("p_tau2eta", "p_tau2eta", 30 , -3., 3.);
+		p_tau2eta->GetXaxis()->SetTitle("#eta^{#tau 2}");
+		p_ditauinvariantmass = new TProfile("p_ditauinvariantmass", "p_ditauinvariantmass", 50, 0., 500.);
+		p_ditauinvariantmass->GetXaxis()->SetTitle("M^{(#tau,#tau)} [GeV]");
+		p_ditaucharge = new TProfile("p_ditaucharge", "p_ditaucharge", 5, -4., 6.);
+		p_ditaucharge->GetXaxis()->SetTitle("sign(#tau^{1}) #upoint sign(#tau^{2})");
+		p_ditaucosdeltaphi = new TProfile("p_ditaucosdeltaphi", "p_ditaucosdeltaphi", 50, -1.1, 1.1);
+		p_ditaucosdeltaphi->GetXaxis()->SetTitle("cos(#Delta#phi(#tau,#tau))");
+		p_ditaudeltaeta = new TProfile ("p_ditaudeltaeta", "p_ditaudeltaeta", 20, 0., 10.);
+		p_ditaudeltaeta->GetXaxis()->SetTitle("#Delta#eta(#tau,#tau)");
+
+		p_met = new TProfile("p_met", "p_met", 24, 0., 240.);
+		p_met->GetXaxis()->SetTitle("E_{T}^{miss} [GeV]");
+
+		p_ht = new TProfile("p_ht", "p_ht", 50, 0., 1300.);
+		p_ht->GetXaxis()->SetTitle("p_{T} [GeV]");
+		p_ht_withtau = new TProfile("p_ht_withtau", "p_ht_withtau", 50, 0., 1300.);
+		p_ht_withtau->GetXaxis()->SetTitle("p_{T}+#Sigma p_{T}^{#tau} [GeV]");
+		
+		p_NVtx = new TProfile("p_NVtx","number of reco vertices", 100, -0.5,99.5);
+		p_NVtx->GetXaxis()->SetTitle("NVtx");
+		
+		p_PU_NumInteractions = new TProfile("p_PUTrueInteractions","number of in-time true pileup", 100, -0.5,99.5);
+		p_PU_NumInteractions->GetXaxis()->SetTitle("NVtx^{true}");
 	}
 };
 

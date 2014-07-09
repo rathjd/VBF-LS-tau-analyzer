@@ -9,6 +9,7 @@ struct Selection {
 	std::string label;
 	MyEventCollection *InputCollection;
 	MyHistoCollection *OutputCollection;
+	MyProfileCollection *ProfileCollection;
 	bool RealData;
 	bool RunData;
 	bool RequireTriggers;
@@ -141,7 +142,10 @@ struct Selection {
 	  else (*OutputCollection).h_count->Fill("NoCuts",weight);
 	  
 	  if(RequireTriggers || RealData){
-	    if(!(*InputCollection).passedTrigger) 		return; //check on trigger pass, if sample is real data
+	    if(!(*InputCollection).passedTrigger){
+	    	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	    	return; //check on trigger pass, if sample is real data
+	    }
 	    else (*OutputCollection).h_count->Fill("TriggerRequirement",weight);
 	  }
 	  
@@ -152,10 +156,14 @@ struct Selection {
 	      if(invertTauRequirements) {
 	        (*OutputCollection).h_count->Fill("InverseAtLeastNtaus",weight);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 		passed=true;
 		return;
 	      }
-	      else return;
+	      else {
+	      	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	      	return;
+	      }
 	    }
 	    else if(!invertTauRequirements)(*OutputCollection).h_count->Fill("AtLeastNtaus",weight);
 	  }
@@ -165,10 +173,14 @@ struct Selection {
 	      if(invertTauRequirements) {
 	        (*OutputCollection).h_count->Fill("InverseAtMostNtaus",weight);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 		passed=true;
 		return;
 	      }
-	      else return;
+	      else {
+	      	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	      	return;
+	      }
 	    }
 	    else if(!invertTauRequirements) (*OutputCollection).h_count->Fill("AtMostNtaus",weight);
 	  }
@@ -183,10 +195,14 @@ struct Selection {
 	      if(invertTauProperties) {
 	        (*OutputCollection).h_count->Fill("InverseDiTauDeltaRCut", weight);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 		passed=true;
 		return;
 	      }
-	      else return;
+	      else {
+	      	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	      	return;
+	      }
 	    }
 	    else if(!invertTauProperties) (*OutputCollection).h_count->Fill("DiTauDeltaRCut", weight);
 	  }
@@ -198,10 +214,14 @@ struct Selection {
 	      if(invertTauProperties){
 	        (*OutputCollection).h_count->Fill("InverseDiTauInvMassMinCut", weight);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 		passed=true;
 		return;
 	      }
-	      else return;
+	      else{
+	      	fillProfileCollection((*ProfileCollection),(*InputCollection),0.); 
+	      	return;
+	      }
 	    }
 	    else if(!invertTauProperties) (*OutputCollection).h_count->Fill("DiTauInvMassMinCut", weight);
 	  }
@@ -211,9 +231,13 @@ struct Selection {
 	      if(invertTauProperties){
 	        (*OutputCollection).h_count->Fill("InverseDiTauInvMassMaxCut", weight);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 		return;
 	      }
-	      else return;
+	      else{
+	      	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	       	return;
+	      }
 	    }
 	    else if(!invertTauProperties) (*OutputCollection).h_count->Fill("DiTauInvMassMaxCut", weight);
 	  }	  
@@ -225,10 +249,14 @@ struct Selection {
 	      if(invertTauProperties) {
 	        (*OutputCollection).h_count->Fill("InverseDiTauSignCut",weight);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 		passed=true;
 		return;
 	      }
-	      else return;
+	      else{ 
+	      	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	      	return;
+	      }
 	    }
 	    else if(!invertTauProperties) (*OutputCollection).h_count->Fill("DiTauSignCut",weight);
 	  }
@@ -240,10 +268,14 @@ struct Selection {
 	      if(invertBtagRequirement){
 	        (*OutputCollection).h_count->Fill("InverseNoBTag",weight);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 		passed=true;
 		return;
 	      }
-	      else return;
+	      else{ 
+	      	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	      	return;
+	      }
 	    }
 	    else if(!invertBtagRequirement) (*OutputCollection).h_count->Fill("NoBTag",weight);
 	  }
@@ -255,10 +287,14 @@ struct Selection {
 	      if(invertMETRequirement){
 	        (*OutputCollection).h_count->Fill("InverseMinMETCut",weight);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 		passed=true;
 		return;
 	      }
-	      else return;
+	      else{
+	      	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	      	return;
+	      }
 	    }
 	    else if(!invertMETRequirement) (*OutputCollection).h_count->Fill("MinMETCut",weight);
 	  }
@@ -268,10 +304,14 @@ struct Selection {
 	      if(invertMETRequirement){
 	        (*OutputCollection).h_count->Fill("InverseMaxMETCut",weight);
 		fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+		fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 		passed=true;
 		return;
 	      }
-	      else return;
+	      else{
+	      	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	      	return;
+	      }
 	    }
 	    else if(!invertMETRequirement) (*OutputCollection).h_count->Fill("MaxMETCut",weight);
 	  }
@@ -293,10 +333,13 @@ struct Selection {
 	    /*if(invertJetRequirements){
 	      (*OutputCollection).h_count->Fill("InverseNumberOfJetsCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	      fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 	      passed=true;
 	      return;
 	    }
-	    else*/ return;
+	    else*/ 
+	    fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	    return;
 	  }
 	  
 	  //old leading jet cuts version
@@ -312,7 +355,7 @@ struct Selection {
 	  //find properties of dijet-system
           MassAndIndex Inv2j = Inv2jMassIndex((*InputCollection));
 	  
-	  //if(jetIndex.first+jetIndex.second != Inv2j.first + Inv2j.second) std::cout<<"!!!!! DISPARATE JETS !!!!!"<<std::endl;
+	  if(verbose && jetIndex.first+jetIndex.second != Inv2j.first + Inv2j.second) std::cout<<"!!!!! DISPARATE JETS !!!!!"<<std::endl;
 	  
 	  //LeadJet
 	  double leadJetPt = (*InputCollection).jet[jetIndex.first]->pt;//.jet[Inv2j.first]->pt;
@@ -332,7 +375,10 @@ struct Selection {
 	    if(!(fabs(leadJetEta)	<	JetEtaMax))			leadJet = false;
 	    if(!(fabs(subLeadJetEta)	<	JetEtaMax))			subLeadJet = false;
 	  }
-	  if((!leadJet || !subLeadJet) && invertJetRequirements) return;
+	  if((!leadJet || !subLeadJet) && invertJetRequirements){
+	    fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	    return;
+	  }
 	  
 	  //check jet pt requirements
 	  if(LeadJetPtMin > 0){
@@ -348,9 +394,13 @@ struct Selection {
 	      (*OutputCollection).h_count->Fill("InverseLeadJetCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
 	      passed=true;
+	      fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 	      return;
 	    }
-	    else return;
+	    else{
+	    	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	    	return;
+	    }
 	  }
 	  else if(!invertJetRequirements) (*OutputCollection).h_count->Fill("LeadJetCut",weight);
 	  
@@ -366,10 +416,14 @@ struct Selection {
 	    if(invertJetRequirements){
 	      (*OutputCollection).h_count->Fill("InverseSecondJetCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	      fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 	      passed=true;
 	      return;
 	    }
-	    else return;
+	    else{
+	    	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	    	return;
+	    }
 	  }
 	  else if(!invertJetRequirements) (*OutputCollection).h_count->Fill("SecondJetCut",weight);
 	  
@@ -393,10 +447,14 @@ struct Selection {
 	    if(invertDijetProperties){
 	      (*OutputCollection).h_count->Fill("InverseDiJetDeltaRCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	      fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 	      passed=true;
 	      return;
 	    }
-	    else return;
+	    else{
+	    	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	    	return;
+	    }
 	  }
 	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetDeltaRCut",weight);
 	  
@@ -415,10 +473,14 @@ struct Selection {
 	    if(invertDijetProperties){
 	      (*OutputCollection).h_count->Fill("InverseDiJetInvMassCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	      fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 	      passed=true;
 	      return;
 	    }
-	    else return;
+	    else{
+	    	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	    	return;
+	    }
 	  }
 	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetInvMassCut",weight);
 	  
@@ -428,10 +490,14 @@ struct Selection {
 	    if(invertDijetProperties) {
 	      (*OutputCollection).h_count->Fill("InverseDiJetEtaSignCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	      fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 	      passed=true;
 	      return;
 	    }
-	    else return; 
+	    else{
+	    	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	     	return; 
+	    }
 	  }
 	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetEtaSignCut",weight);
 	  
@@ -450,10 +516,14 @@ struct Selection {
 	    if(invertDijetProperties) {
 	      (*OutputCollection).h_count->Fill("InverseDiJetDetaCut",weight);
 	      fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	      fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 	      passed=true;
 	      return;
 	    }
-	    else return;
+	    else{
+	    	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	    	return;
+	    }
 	  }  
 	  else if(!invertDijetProperties) (*OutputCollection).h_count->Fill("DiJetDetaCut",weight);
 	  
@@ -461,9 +531,13 @@ struct Selection {
 	  
 	  if(!invertJetRequirements && !invertTauRequirements && !invertTauProperties && !invertDijetProperties && !invertBtagRequirement){
 	    fillHistoCollection((*OutputCollection), (*InputCollection), weight);
+	    fillProfileCollection((*ProfileCollection),(*InputCollection),1.);
 	    passed=true;
 	  }
-	  else return;
+	  else{
+	  	fillProfileCollection((*ProfileCollection),(*InputCollection),0.);
+	  	return;
+	  }
 	}
 };
 
