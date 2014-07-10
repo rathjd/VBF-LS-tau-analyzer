@@ -23,10 +23,37 @@ struct sampleplots_str {
 	TH1F* h1_CR8plot;
 };
 
+sampleplots_str* addsamplesplots(sampleplots_str *sample_sampleplots_str1, sampleplots_str *sample_sampleplots_str2) {
+
+	sample_sampleplots_str1->h1_SRplot->Add(sample_sampleplots_str2->h1_SRplot);
+	sample_sampleplots_str1->h1_CR2plot->Add(sample_sampleplots_str2->h1_CR2plot);
+	sample_sampleplots_str1->h1_CR3plot->Add(sample_sampleplots_str2->h1_CR3plot);
+	sample_sampleplots_str1->h1_CR4plot->Add(sample_sampleplots_str2->h1_CR4plot);
+	sample_sampleplots_str1->h1_CR5plot->Add(sample_sampleplots_str2->h1_CR5plot);
+	sample_sampleplots_str1->h1_CR6plot->Add(sample_sampleplots_str2->h1_CR6plot);
+	sample_sampleplots_str1->h1_CR7plot->Add(sample_sampleplots_str2->h1_CR7plot);
+	sample_sampleplots_str1->h1_CR8plot->Add(sample_sampleplots_str2->h1_CR8plot);
+
+	return sample_sampleplots_str1;
+
+}
+
 TH1F* normalizeplot(TH1F* plot) {
 	double eventsnumber = plot->Integral(0 , -1 );
 	if (eventsnumber > 0. ) plot->Scale(1./eventsnumber);
 	return plot;	
+}
+
+void normalizesampleplots (sampleplots_str *sample_sampleplots_str){
+
+	sample_sampleplots_str->h1_SRplot = normalizeplot(sample_sampleplots_str->h1_SRplot);
+        sample_sampleplots_str->h1_CR2plot = normalizeplot(sample_sampleplots_str->h1_CR2plot);
+        sample_sampleplots_str->h1_CR3plot = normalizeplot(sample_sampleplots_str->h1_CR3plot);
+        sample_sampleplots_str->h1_CR4plot = normalizeplot(sample_sampleplots_str->h1_CR4plot);
+        sample_sampleplots_str->h1_CR5plot = normalizeplot(sample_sampleplots_str->h1_CR5plot);
+        sample_sampleplots_str->h1_CR6plot = normalizeplot(sample_sampleplots_str->h1_CR6plot);
+        sample_sampleplots_str->h1_CR7plot = normalizeplot(sample_sampleplots_str->h1_CR7plot);
+        sample_sampleplots_str->h1_CR8plot = normalizeplot(sample_sampleplots_str->h1_CR8plot);
 }
 
 void mjjplots_init (TFile* inputfile, sampleplots_str *sample_sampleplots_str, bool isLSchannel, string plotname) {
@@ -53,14 +80,6 @@ void mjjplots_init (TFile* inputfile, sampleplots_str *sample_sampleplots_str, b
 		sample_sampleplots_str->h1_CR8plot = ((TH1F*)(inputfile->Get(("OS_Central_invertedVBF_AntiMediumIso_CR8/"+plotname).c_str())));
 	}
 
-	sample_sampleplots_str->h1_SRplot = normalizeplot(sample_sampleplots_str->h1_SRplot);
-        sample_sampleplots_str->h1_CR2plot = normalizeplot(sample_sampleplots_str->h1_CR2plot);
-        sample_sampleplots_str->h1_CR3plot = normalizeplot(sample_sampleplots_str->h1_CR3plot);
-        sample_sampleplots_str->h1_CR4plot = normalizeplot(sample_sampleplots_str->h1_CR4plot);
-        sample_sampleplots_str->h1_CR5plot = normalizeplot(sample_sampleplots_str->h1_CR5plot);
-        sample_sampleplots_str->h1_CR6plot = normalizeplot(sample_sampleplots_str->h1_CR6plot);
-        sample_sampleplots_str->h1_CR7plot = normalizeplot(sample_sampleplots_str->h1_CR7plot);
-        sample_sampleplots_str->h1_CR8plot = normalizeplot(sample_sampleplots_str->h1_CR8plot);
 }
 
 void mjjshapestudy(bool isLSchannel, string plotname) {
@@ -106,6 +125,7 @@ void mjjshapestudy(bool isLSchannel, string plotname) {
 	mjjplots_init(_allHiggs, &Higgs_sampleplots, isLSchannel, plotname);
 	mjjplots_init(_allQCD, &QCD_sampleplots, isLSchannel, plotname);
 	mjjplots_init(_allData, &Data_sampleplots, isLSchannel, plotname);
+	normalizesampleplots (&Data_sampleplots);
 
 	//TCanvas* c1 = new TCanvas("c1","c1",1,1);
 	//c1->cd();
