@@ -401,7 +401,7 @@ LS_Signal.InputCollection 	= &TauTightIsoObjectSelectionCollection;//input colle
 LS_Signal.OutputCollection 	= &myHistoColl_LS_SignalRegion;        	//output collection
 LS_Signal.ProfileCollection 	= &myProfileColl_LS_SignalRegion;      	//profile collection
 LS_Signal.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
-LS_Signal.RunData        	= false;        			//real data allowed
+LS_Signal.RunData        	= true;        				//real data allowed
 LS_Signal.RequireTriggers       = true;       				//require at least one of the triggers fired
 LS_Signal.weight        	= weight;      				//event weight
 CutConfiguration(&LS_Signal, true, LS); 				//selection, VBF, LS
