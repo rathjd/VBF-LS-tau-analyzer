@@ -7,24 +7,25 @@
 
 #ifdef PROJECT_NAME
 #include "PhysicsTools/TheNtupleMaker/interface/pdg.h"
-#include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
-#include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
 #else
 #include "pdg.h"
 #endif
 
 
 #include <vector>
+#include "TROOT.h"
 #include "CommonHistoCollection.h"
 #include "CutConfiguration.h"
 #include "analyzer.h"
+#include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
+#include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
 
 // Structs useful for Analyzer
 
-gROOT->ProcessLine(".L CondFormats/JetMETObjects/src/Utilities.cc+");
-gROOT->ProcessLine(".L CondFormats/JetMETObjects/src/JetCorrectorParameters.cc+");
-gROOT->ProcessLine(".L CondFormats/JetMETObjects/src/SimpleJetCorrectionUncertainty.cc+");
-gROOT->ProcessLine(".L CondFormats/JetMETObjects/src/JetCorrectionUncertainty.cc+");
+//gROOT->ProcessLine(".L CondFormats/JetMETObjects/src/Utilities.cc+");
+//gROOT->ProcessLine(".L CondFormats/JetMETObjects/src/JetCorrectorParameters.cc+");
+//gROOT->ProcessLine(".L CondFormats/JetMETObjects/src/SimpleJetCorrectionUncertainty.cc+");
+//gROOT->ProcessLine(".L CondFormats/JetMETObjects/src/JetCorrectionUncertainty.cc+");
 
 //-----------------------------------------------------------------------------
 int main(int argc, char** argv)
@@ -331,11 +332,32 @@ for(unsigned int m =0;m<muon.size();++m){
 	  realTauMass(TauLooseIsoObjectSelectionCollection);
 	  realTauMass(TauNoIsoObjectSelectionCollection);
 	  
+	  // JES uncertainty
+	  JetCorrectorParameters *p = new JetCorrectorParameters("Summer13_V5_DATA_UncertaintySources_AK5PFchs.txt","Total");
+	  JetCorrectionUncertainty *unc = new JetCorrectionUncertainty(*p);
+	  bool scaleJESUP = false;
+	  double sigma = 1.;
+
+	  for(unsigned int j = 0;j<jet.size();++j){
+		  unc->setJetPt(jet[j].pt);
+		  unc->setJetEta(jet[j].eta);
+		  double scaleunc = unc->getUncertainty(true);
+		  TLorentzVector v;
+		  v.SetPtEtaPhiE(jet[j].pt, jet[j].eta, jet[j].phi, jet[j].energy);
+		  double jetmass = v.M();
+		  if (scaleJESUP) {
+			  v.SetPtEtaPhiM(jet[j].pt + sigma *scaleunc * jet[j].pt , jet[j].eta, jet[j].phi, jetmass);
+			  jet[j].pt = jet[j].pt + sigma * scaleunc * jet[j].pt;
+		  } else {
+			  v.SetPtEtaPhiM(jet[j].pt - sigma * scaleunc * jet[j].pt , jet[j].eta, jet[j].phi, jetmass);
+			  jet[j].pt = jet[j].pt - sigma * scaleunc * jet[j].pt;
+		  }
+		  jet[j].energy = v.Energy();
+	  }
+
           // jet && bjet selection
 	  // ? id ?
 	  for(unsigned int j = 0;j<jet.size();++j){
-	    JetCorrectorParameters *p = new JetCorrectorParameters("Summer13_V5_DATA_UncertaintySources_AK5PFchs.txt", "Total");
-	    JetCorrectionUncertainty *unc = new JetCorrectionUncertainty(*p);
 	    if(!(      jet[j].pt >= 30.                                                	)) continue;  // Original value 20
 	    if(!(      fabs(jet[j].eta) <= 5.0                                          )) continue;
 	    double baseDistance = TauJetMinDistance(baselineObjectSelectionCollection, jet[j].eta, jet[j].phi);
