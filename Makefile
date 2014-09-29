@@ -62,7 +62,7 @@ CXX	:= g++
 
 # 	Define paths to be searched for C++ header files (#include ....)
 
-CPPFLAGS:= -I. -I$(incdir) -I$(srcdir) $(shell root-config --cflags) 
+CPPFLAGS:= -I. -I$(incdir) -I$(srcdir) $(shell root-config --cflags) -I $(CMSSW_RELEASE_BASE)/src/
 
 # 	Define compiler flags to be used
 #	-c		perform compilation step only 
@@ -93,8 +93,7 @@ LDFLAGS := -ggdb -std=c++0x
 
 # 	Libraries
 
-LIBS	:=  $(shell root-config --libs) -L$(libdir) -lMinuit  -lMathMore -lMathCore
-
+LIBS    :=  $(shell root-config --libs) -L$(libdir) -lMinuit  -lMathMore -lMathCore -L$(CMSSW_RELEASE_BASE)/lib/slc5_amd64_gcc462 -lCondFormatsJetMETObjects
 
 #	Rules
 #	The structure of a rule is
