@@ -329,8 +329,8 @@ for(unsigned int m =0;m<muon.size();++m){
 
 	  //JER Uncertainty study
 
-	bool JERuncUp = false;
-	bool JERuncDown = true;
+	bool JERuncUp = true;
+	bool JERuncDown = false;
 
 	double myJERetaEdgesArray[] = {0.0, 0.5, 1.1, 1.7, 2.3, 2.8, 3.2, 5.0};
 double myJERetaWeightsArray[] = {1.079, 1.099, 1.121, 1.208, 1.254, 1.395, 1.056};
@@ -343,6 +343,16 @@ std::vector<double> myJERetaWeightsUp_ (myJERetaWeightsUpArray, myJERetaWeightsU
 std::vector<double> myJERetaWeightsDown_ (myJERetaWeightsDownArray, myJERetaWeightsDownArray + sizeof(myJERetaWeightsDownArray) / sizeof(double) );
 
 unsigned int nbins = myJERetaEdges_.size()-1;
+
+TLorentzVector alljetsystem_nocorr_v;
+
+for(unsigned int i = 0;i<jet.size();++i){
+
+	TLorentzVector temp_v;
+	temp_v.SetPtEtaPhiE(jet[i].pt, jet[i].eta, jet[i].phi, jet[i].energy);
+	alljetsystem_nocorr_v += temp_v;
+	
+}
 
 for(unsigned int i = 0;i<jet.size();++i){
 
@@ -386,6 +396,24 @@ for(unsigned int i = 0;i<jet.size();++i){
 	}
 
 }
+
+
+// MET correction
+
+TLorentzVector alljetsystem_corr_v;
+
+for(unsigned int i = 0;i<jet.size();++i){
+
+	TLorentzVector temp_v;
+	temp_v.SetPtEtaPhiE(jet[i].pt, jet[i].eta, jet[i].phi, jet[i].energy);
+	alljetsystem_corr_v += temp_v;
+	
+}
+
+met2[0].pt = met2[0].pt + (alljetsystem_nocorr_v.Pt() - alljetsystem_corr_v.Pt());
+
+
+//cout << "Met correction: " << alljetsystem_nocorr_v.Pt() - alljetsystem_corr_v.Pt() << endl;
 
 // jet && bjet selection
 // ? id ?

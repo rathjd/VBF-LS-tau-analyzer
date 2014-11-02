@@ -331,8 +331,21 @@ for(unsigned int m =0;m<muon.size();++m){
 	  realTauMass(TauMediumIsoObjectSelectionCollection);
 	  realTauMass(TauLooseIsoObjectSelectionCollection);
 	  realTauMass(TauNoIsoObjectSelectionCollection);
-	  
+	 
+
+
 	  // JES uncertainty
+	  
+
+	  TLorentzVector alljetsystem_nocorr_v;
+
+	  for(unsigned int i = 0;i<jet.size();++i){
+		  TLorentzVector temp_v;
+		  temp_v.SetPtEtaPhiE(jet[i].pt, jet[i].eta, jet[i].phi, jet[i].energy);
+		  alljetsystem_nocorr_v += temp_v;
+	  }
+
+
 	  JetCorrectorParameters *p = new JetCorrectorParameters("Summer13_V5_DATA_UncertaintySources_AK5PFchs.txt","Total");
 	  JetCorrectionUncertainty *unc = new JetCorrectionUncertainty(*p);
 	  bool scaleJESUP = false;
@@ -354,6 +367,22 @@ for(unsigned int m =0;m<muon.size();++m){
 		  }
 		  jet[j].energy = v.Energy();
 	  }
+
+
+// MET correction
+
+TLorentzVector alljetsystem_corr_v;
+
+for(unsigned int i = 0;i<jet.size();++i){
+
+	TLorentzVector temp_v;
+	temp_v.SetPtEtaPhiE(jet[i].pt, jet[i].eta, jet[i].phi, jet[i].energy);
+	alljetsystem_corr_v += temp_v;
+	
+}
+
+met2[0].pt = met2[0].pt + (alljetsystem_nocorr_v.Pt() - alljetsystem_corr_v.Pt());
+
 
           // jet && bjet selection
 	  // ? id ?
