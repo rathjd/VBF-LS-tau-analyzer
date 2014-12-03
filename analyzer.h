@@ -57,6 +57,7 @@ int	eventhelper_isRealData;
 int	eventhelper_luminosityBlock;
 int	eventhelper_orbitNumber;
 int	eventhelper_run;
+std::vector<double>     pdfWeights_cteq66(100,0); 
 int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v1;
 int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v10;
 int	triggerresultshelper_prescale_HLT_DiPFJetAve140_v11;
@@ -2488,6 +2489,7 @@ void selectVariables(itreestream& stream)
   stream.select("edmEventHelper_info.luminosityBlock", eventhelper_luminosityBlock);
   stream.select("edmEventHelper_info.orbitNumber", eventhelper_orbitNumber);
   stream.select("edmEventHelper_info.run", eventhelper_run);
+  stream.select("doubles_pdfWeights_cteq66_PATuple", pdfWeights_cteq66);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v1", triggerresultshelper_prescale_HLT_DiPFJetAve140_v1);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v10", triggerresultshelper_prescale_HLT_DiPFJetAve140_v10);
   stream.select("edmTriggerResultsHelper_TriggerResults_HLT.prescale_HLT_DiPFJetAve140_v11", triggerresultshelper_prescale_HLT_DiPFJetAve140_v11);
