@@ -6,7 +6,7 @@ Created: Thu May 30 15:41:56 2013
 
     o To build another program in this directory do
 
-	  make program=<program-name>
+	  make applications=<program-name>
 
     example:
 
