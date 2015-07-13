@@ -1,71 +1,65 @@
 #!/usr/bin/env python
-# -----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 #  File:        analyzer.py
-#  Description: Analyzer for ntuples created by TheNtupleMaker
-#  Created:     Thu May 30 14:27:18 2013 by mkntanalyzer.py
-#  Author:      Lukas Vanelderen
-# -----------------------------------------------------------------------------
-from ROOT import *
-from string import *
-from analyzerlib import *
+#  Description: Analyzer for simple ntuples, such as those created by
+#               TheNtupleMaker
+#  Created:     Mon Jun 29 15:52:41 2015 by mkanalyzer.py
+#  Author:      Daniele Marconi
+# ----------------------------------------------------------------------------
 import os, sys, re
-# -----------------------------------------------------------------------------
-# -- Procedures and functions
-# -----------------------------------------------------------------------------
+from tnm import *
+from ROOT import *
+# ----------------------------------------------------------------------------
+# -- Constants, procedures and functions
+# ----------------------------------------------------------------------------
 
 
-# -----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 def main():
 
-	# Get number of events
-	nevents = stream.size()
-	print "Number of events:", nevents
+    cl = commandLine()
+    
+    # Get names of ntuple files to be processed
+    filenames = fileNames(cl.filelist)
 
+    # Create tree reader
+    stream = itreestream(filenames, "Events")
+    if not stream.good():
+        error("can't read input files")
 
-	# Notes:
-	#
-	# 1. Use
-	#   ofile = outputFile(cmdline.outputfile, stream)
-	#
-	# to skim events to output file in addition to writing out histograms.
-	#
-	# 2. Use
-	#   ofile.addEvent(event-weight)
-	#
-	# to specify that the current event is to be added to the output file. If
-	# omitted, the event-weight is taken to be 1.
-	#
-	# 3. Use
-	#    ofile.count(cut-name, event-weight)
-	#
-	# to keep track, in the count histogram, of the number of events passing
-	# a given cut. If omitted, the event-weight is taken to be 1. If you want
-	# the counts in the count histogram to appear in a given order, specify
-	# the order, before entering the event loop, as in the example below
-	# 
-	#   ofile.count("NoCuts", 0)
-	#	ofile.count("GoodEvent", 0)
-	#	ofile.count("Vertex", 0)
-	#	ofile.count("MET", 0)
-	
-	ofile = outputFile(cmdline.outputfilename)
+    # Create a buffer to receive events from the stream
+    ev = eventBuffer(stream)
 
-	# -------------------------------------------------------------------------
-	# Define histograms
-	# -------------------------------------------------------------------------
-	setStyle()
+    nevents = ev.size()
+    print "number of events:", nevents
 
+    # Create file to store histograms
+    of = outputFile(cl.outputfilename)
 
+    # ------------------------------------------------------------------------
+    # Define histograms
+    # ------------------------------------------------------------------------
+    setStyle()
 
-	# -------------------------------------------------------------------------
-	# Loop over events
-	# -------------------------------------------------------------------------
-	for entry in xrange(nevents):
-		stream.read(entry)
+    # ------------------------------------------------------------------------
+    # Loop over events
+    # ------------------------------------------------------------------------
+    
+    for entry in xrange(nevents):
+        ev.read(entry)
 
-		# -- Event selection
+        # Uncomment the following line if you wish to copy variables into
+        # structs. See the header eventBuffer.h to find out what structs
+        # are available. Alternatively, you can call individual fill
+        # functions, such as ev.fillJets().
+        #ev.fillObjects();
 
-	stream.close()
-	ofile.close()
-# -----------------------------------------------------------------------------
-main()
+        # analysis
+        
+    ev.close()
+    of.close()
+# ----------------------------------------------------------------------------
+try:
+   main()
+except KeyboardInterrupt:
+   print "bye!"
