@@ -175,11 +175,19 @@ int main(int argc, char** argv)
 	MyEventCollection TauLooseIsoObjectSelectionCollection ("TauLooseIsoObjectSelection");
 	MyEventCollection TauNoIsoObjectSelectionCollection ("TauNoIsoObjectSelection");
 
-	//init weight plot
+	//init PDFweight plot
+	
+	bool LSChannel = false;
+	bool debugON = true;
+	bool cteqON = false;
+	bool MSTW2008ON = true;
+	
 	stream.read(0);
 	fillObjects();
 	bool nnpdfFlag = false;  //set true if the pdf collection comes from any of the NNPDF
-	unsigned int  nbins_pdfweight = pdfWeights_cteq66.size();
+	unsigned int  nbins_pdfweight = 0;
+	if (cteqON && !MSTW2008ON) nbins_pdfweight = pdfWeights_cteq66.size();
+	if (!cteqON && MSTW2008ON) nbins_pdfweight = pdfWeights_MSTW2008nnlo90cl.size();
 	unsigned int originalEvents_ = nevents;
 	unsigned int selectedEvents_ = 0;
 	std::vector<double> weightedSelectedEvents_;
@@ -217,7 +225,10 @@ int main(int argc, char** argv)
 
 	  //PDF weights
 	  for (unsigned int i = 0; i < nbins_pdfweight; i++){ 
-		  weightedEvents_[i]=+pdfWeights_cteq66[i];
+		  if (cteqON && !MSTW2008ON) weightedEvents_[i]=+(pdfWeights_cteq66[i]/pdfWeights_cteq66[0]);
+		  if (!cteqON && MSTW2008ON) weightedEvents_[i]=+(pdfWeights_MSTW2008nnlo90cl[i]/pdfWeights_MSTW2008nnlo90cl[0]);
+		  if (debugON && cteqON )cout << "weightedEvents_[" << i <<"] filled with = " << pdfWeights_cteq66[i]/pdfWeights_cteq66[0] << endl;
+		  if (debugON && MSTW2008ON )cout << "weightedEvents_[" << i <<"] filled with = " << pdfWeights_MSTW2008nnlo90cl[i]/pdfWeights_MSTW2008nnlo90cl[0] << endl;
 	  }
 
 
@@ -419,26 +430,33 @@ bool LS=true;
 // ---------------------
 // -- Signal Region --
 // ---------------------
-//if(TauTightIsoObjectSelectionCollection.jet.size()>=2){
-Selection LS_Signal("LS_Signal"); 					//label and initialisation
-LS_Signal.InputCollection 	= &TauTightIsoObjectSelectionCollection;//input collection
-LS_Signal.OutputCollection 	= &myHistoColl_LS_SignalRegion;        	//output collection
-LS_Signal.ProfileCollection 	= &myProfileColl_LS_SignalRegion;      	//profile collection
-LS_Signal.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
-LS_Signal.RunData        	= true;        				//real data allowed
-LS_Signal.RequireTriggers       = true;       				//require at least one of the triggers fired
-LS_Signal.weight        	= weight;      				//event weight
-CutConfiguration(&LS_Signal, true, LS); 				//selection, VBF, LS
-LS_Signal.METMin = 30.;
+if(TauTightIsoObjectSelectionCollection.jet.size()>=2){
+	Selection LS_Signal("LS_Signal"); 					//label and initialisation
+	LS_Signal.InputCollection 	= &TauTightIsoObjectSelectionCollection;//input collection
+	LS_Signal.OutputCollection 	= &myHistoColl_LS_SignalRegion;        	//output collection
+	LS_Signal.ProfileCollection 	= &myProfileColl_LS_SignalRegion;      	//profile collection
+	LS_Signal.RealData        	= eventhelper_isRealData;        	//pass information if event is real data
+	LS_Signal.RunData        	= true;        				//real data allowed
+	LS_Signal.RequireTriggers       = true;       				//require at least one of the triggers fired
+	LS_Signal.weight        	= weight;      				//event weight
+	CutConfiguration(&LS_Signal, true, LS); 				//selection, VBF, LS
+	LS_Signal.METMin = 30.;
 
-LS_Signal.select(false);        						//do selection, fill histograms
+	LS_Signal.select(false);        						//do selection, fill histograms
 
-if(LS_Signal.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollection.passedTrigger, 1);
-if(LS_Signal.passed){
-	selectedEvents_++;
-	for (unsigned int i; i < nbins_pdfweight; i++){ 
-		weightedSelectedEvents_[i] += pdfWeights_cteq66[i];
-		weighted2SelectedEvents_[i] += pdfWeights_cteq66[i]*pdfWeights_cteq66[i];
+	if(LS_Signal.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollection.passedTrigger, 1);
+	if(LS_Signal.passed && LSChannel){
+		selectedEvents_++;
+		for (unsigned int i; i < nbins_pdfweight; i++){ 
+			if (cteqON && !MSTW2008ON) {
+				weightedSelectedEvents_[i] += (pdfWeights_cteq66[i]/pdfWeights_cteq66[0]);
+				weighted2SelectedEvents_[i] += (pdfWeights_cteq66[i]*pdfWeights_cteq66[i])/(pdfWeights_cteq66[0]*pdfWeights_cteq66[0]);
+			}
+			if (!cteqON && MSTW2008ON) {
+				weightedSelectedEvents_[i] += pdfWeights_MSTW2008nnlo90cl[i];
+				weighted2SelectedEvents_[i] += pdfWeights_MSTW2008nnlo90cl[i]*pdfWeights_MSTW2008nnlo90cl[i];
+			}
+		}
 	}
 }
 
@@ -642,22 +660,36 @@ LS=false;
 // ---------------------
 // -- Signal Region --
 // ---------------------
-//if(TauTightIsoObjectSelectionCollection.jet.size()>=2){
-Selection OS_Signal("OS_Signal"); //label and initialisation
-OS_Signal.InputCollection 		= &TauTightIsoObjectSelectionCollection;//input collection
-OS_Signal.OutputCollection 		= &myHistoColl_OS_SignalRegion;        	//output collection
-OS_Signal.ProfileCollection 		= &myProfileColl_OS_SignalRegion;       //profile collection
-OS_Signal.RealData        		= eventhelper_isRealData;        	//pass information if event is real data
-OS_Signal.RunData        		= false;        			//real data allowed
-OS_Signal.RequireTriggers          	= true;       				//require at least one of the triggers fired
-OS_Signal.weight        		= weight;      				//event weight
-CutConfiguration(&OS_Signal, true, LS); 					//selection, VBF, LS
-OS_Signal.METMin = 30.;
+if(TauTightIsoObjectSelectionCollection.jet.size()>=2){
+	Selection OS_Signal("OS_Signal"); //label and initialisation
+	OS_Signal.InputCollection 		= &TauTightIsoObjectSelectionCollection;//input collection
+	OS_Signal.OutputCollection 		= &myHistoColl_OS_SignalRegion;        	//output collection
+	OS_Signal.ProfileCollection 		= &myProfileColl_OS_SignalRegion;       //profile collection
+	OS_Signal.RealData        		= eventhelper_isRealData;        	//pass information if event is real data
+	OS_Signal.RunData        		= false;        			//real data allowed
+	OS_Signal.RequireTriggers          	= true;       				//require at least one of the triggers fired
+	OS_Signal.weight        		= weight;      				//event weight
+	CutConfiguration(&OS_Signal, true, LS); 					//selection, VBF, LS
+	OS_Signal.METMin = 30.;
 
-OS_Signal.select(false);        							//do selection, fill histograms
+	OS_Signal.select(false);        							//do selection, fill histograms
 
-if(OS_Signal.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollection.passedTrigger, 1);
+	if(OS_Signal.passed) h2_Trigger->Fill(TauTightIsoObjectSelectionCollection.passedTrigger, 1);
 
+	if(OS_Signal.passed && !(LSChannel) ){
+		selectedEvents_++;
+		for (unsigned int i; i < nbins_pdfweight; i++){ 
+			if (cteqON && !MSTW2008ON) {
+				weightedSelectedEvents_[i] += (pdfWeights_cteq66[i]/pdfWeights_cteq66[0]);
+				weighted2SelectedEvents_[i] += (pdfWeights_cteq66[i]*pdfWeights_cteq66[i])/(pdfWeights_cteq66[0]*pdfWeights_cteq66[0]);
+			}
+			if (!cteqON && MSTW2008ON) {
+				weightedSelectedEvents_[i] += pdfWeights_MSTW2008nnlo90cl[i];
+				weighted2SelectedEvents_[i] += pdfWeights_MSTW2008nnlo90cl[i]*pdfWeights_MSTW2008nnlo90cl[i];
+			}
+		}
+	}
+}
 // -------------------------------------------
 // -- CENTRAL + INVERTED VBF + 2 Iso Tau CR --
 // -------------------------------------------
@@ -858,6 +890,7 @@ TauNoIsoObjectSelectionCollection.clear();
 baselineObjectSelectionCollection.clear();
 }
 
+
 cout << "\n>>>> Begin of PDF weight systematics summary >>>>" << endl;
 cout << "Total number of analyzed data: " << originalEvents_ << " [events]" << endl;
 double originalAcceptance = double(selectedEvents_)/originalEvents_;
@@ -865,13 +898,16 @@ cout << "Total number of selected data: " << selectedEvents_ << " [events], corr
 
 cout << "\n>>>>> PDF UNCERTAINTIES ON RATE >>>>>>" << endl;
 unsigned int nmembers = weightedSelectedEvents_.size();
-//cout << "DEBUG: weightedSelectedEvents_.size() = " << nmembers << endl;
-//for (unsigned int i = 0; i < weightedSelectedEvents_.size(); i++){
-//cout << "DEBUG: weightedSelectedEvents_["<< i << "] = " << weightedSelectedEvents_[i] << endl;
-//}
+if (debugON) {
+	cout << "DEBUG: weightedSelectedEvents_.size() = " << nmembers << endl;
+	for (unsigned int i = 0; i < weightedSelectedEvents_.size(); i++){
+		cout << "DEBUG: weightedSelectedEvents_["<< i << "] = " << weightedSelectedEvents_[i] << endl;
+	}
+}
+
 unsigned int npairs = (nmembers-1)/2;
 double events_central = weightedSelectedEvents_[0];
-cout << "\tEstimate for central PDF member: " << int(events_central) << " [events]" << endl;
+cout << "\tEstimate for central PDF member: " << double(events_central) << " [events]" << endl;
 double events2_central = weighted2SelectedEvents_[0];
 cout << "\ti.e. [" << std::setprecision(4) << 100*(events_central-selectedEvents_)/selectedEvents_ << " +- " <<
 100*sqrt(events2_central-events_central+selectedEvents_*(1-originalAcceptance))/selectedEvents_
@@ -929,19 +965,21 @@ cout << "\n>>>>> PDF UNCERTAINTIES ON ACCEPTANCE >>>>>>" << endl;
 //cout << "ACCEPTANCE Results for PDF set " << pdfWeightTags_[i].instance() << " ---->";
 double acc_central = 0.;
 double acc2_central = 0.;
-cout << "DEBUG: weighted2SelectedEvents_.size() = " << nmembers << endl;
-for (unsigned int i = 0; i < weighted2SelectedEvents_.size(); i++){
-cout << "DEBUG: weighted2SelectedEvents_["<< i << "] = " << weighted2SelectedEvents_[i] << endl;
+if (debugON) cout << "DEBUG: weighted2SelectedEvents_.size() = " << nmembers << endl;
+if (debugON) { 
+	for (unsigned int i = 0; i < weighted2SelectedEvents_.size(); i++){
+		cout << "DEBUG: weighted2SelectedEvents_["<< i << "] = " << weighted2SelectedEvents_[i] << endl;
+	}
 }
-cout << "DEBUG: weightedEvents_[0] = " << weightedEvents_[0] << endl;
+if(debugON) cout << "DEBUG: weightedEvents_[0] = " << weightedEvents_[0] << endl;
 if (weightedEvents_[0]>0) {
 	acc_central = weightedSelectedEvents_[0]/weightedEvents_[0];
 	acc2_central = weighted2SelectedEvents_[0]/weightedEvents_[0];
 }
-cout << "DEBUG: acc_central = " << acc_central << endl;
-cout << "DEBUG: acc2_central = " << acc2_central << endl;
+if(debugON) cout << "DEBUG: acc_central = " << acc_central << endl;
+if(debugON) cout << "DEBUG: acc2_central = " << acc2_central << endl;
 double waverage = weightedEvents_[0]/originalEvents_;
-cout << "DEBUG: waverage = " << waverage << endl;
+if(debugON) cout << "DEBUG: waverage = " << waverage << endl;
 	cout << "\tEstimate for central PDF member acceptance: [" << std::setprecision(4) << acc_central*100 << " +- " <<
 100*sqrt((acc2_central/waverage-acc_central*acc_central)/originalEvents_)
 	<< "] %" << endl;

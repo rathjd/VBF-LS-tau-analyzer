@@ -329,8 +329,8 @@ for(unsigned int m =0;m<muon.size();++m){
 
 	  //JER Uncertainty study
 
-	bool JERuncUp = true;
-	bool JERuncDown = false;
+	bool JERuncUp = false;
+	bool JERuncDown = true;
 
 	double myJERetaEdgesArray[] = {0.0, 0.5, 1.1, 1.7, 2.3, 2.8, 3.2, 5.0};
 double myJERetaWeightsArray[] = {1.079, 1.099, 1.121, 1.208, 1.254, 1.395, 1.056};
