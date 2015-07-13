@@ -200,7 +200,7 @@ int main(int argc, char** argv)
 
 //PU weights
 if(!eventhelper_isRealData){
- weight=PUweights->GetBinContent(PUweights->FindBin(PileupSummaryInfo_getTrueNumInteractions[0]));
+ //weight=PUweights->GetBinContent(PUweights->FindBin(PileupSummaryInfo_getTrueNumInteractions[0]));
  //std::cout<<"NVtx="<<PileupSummaryInfo_getTrueNumInteractions[0]<<", weight="<<weight<<std::endl;
 } 
 

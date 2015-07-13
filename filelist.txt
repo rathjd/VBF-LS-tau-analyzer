@@ -1,3 +1,0 @@
-dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_Dec13/QCD_Pt-300to470_TuneZ2star_8TeV_pythia6/ntuple_115_1_QuX.root
-dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_Dec13/QCD_Pt-50to80_TuneZ2star_8TeV_pythia6/ntuple_100_1_XBg.root
-dcap://dcache-cms-dcap.desy.de:22125//pnfs/desy.de/cms/tier2/store/user/dmarconi/VBF_ntuples_Dec13/QCD_Pt-50to80_TuneZ2star_8TeV_pythia6/ntuple_101_1_CSx.root
