@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 // File:        analyzer.h
 // Description: Analyzer header for ntuples created by TheNtupleMaker
-// Created:     Wed Jul 15 15:50:50 2015 by mkanalyzer.py
+// Created:     Wed Jul 15 17:37:36 2015 by mkanalyzer.py
 // Author:      Daniele Marconi
 //-----------------------------------------------------------------------------
 // -- System
@@ -33,6 +33,7 @@
 #include "TKey.h"
 #include "TH1F.h"
 #include "TH2F.h"
+#include "TLorentzVector.h"
 
 namespace evt {
 //-----------------------------------------------------------------------------
@@ -117,15 +118,15 @@ std::vector<double>	jet_pt(31,0);
 std::vector<double>	jet_px(31,0);
 std::vector<double>	jet_py(31,0);
 std::vector<double>	jet_pz(31,0);
-std::vector<double>	met_energy(3,0);
-std::vector<double>	met_et(3,0);
-std::vector<double>	met_eta(3,0);
-std::vector<double>	met_p(3,0);
-std::vector<double>	met_phi(3,0);
-std::vector<double>	met_pt(3,0);
-std::vector<double>	met_px(3,0);
-std::vector<double>	met_py(3,0);
-std::vector<double>	met_pz(3,0);
+std::vector<double>	met2_energy(3,0);
+std::vector<double>	met2_et(3,0);
+std::vector<double>	met2_eta(3,0);
+std::vector<double>	met2_p(3,0);
+std::vector<double>	met2_phi(3,0);
+std::vector<double>	met2_pt(3,0);
+std::vector<double>	met2_px(3,0);
+std::vector<double>	met2_py(3,0);
+std::vector<double>	met2_pz(3,0);
 std::vector<double>	muon_charge(11,0);
 std::vector<double>	muon_energy(11,0);
 std::vector<double>	muon_et(11,0);
@@ -166,7 +167,7 @@ std::vector<double>	muon_pz(11,0);
 int	nelectron;
 int	ngenparticlehelper;
 int	njet;
-int	nmet;
+int	nmet2;
 int	nmuon;
 int	ntau;
 int	nvertex;
@@ -190,6 +191,7 @@ std::vector<double>	tau_leadChargedHadrCand_pz(7,0);
 std::vector<double>	tau_leadChargedHadrCand_rapidity(7,0);
 std::vector<double>	tau_leadChargedHadrCand_theta(7,0);
 std::vector<double>	tau_leadChargedHadrCand_y(7,0);
+std::vector<float>	tau_mass(7,0);
 std::vector<double>	tau_p(7,0);
 std::vector<double>	tau_phi(7,0);
 std::vector<double>	tau_pt(7,0);
@@ -487,7 +489,7 @@ std::ostream& operator<<(std::ostream& os, const jet_s& o)
   return os;
 }
 //-----------------------------------------------------------------------------
-struct met_s
+struct met2_s
 {
   double	energy;
   double	et;
@@ -499,12 +501,12 @@ struct met_s
   double	py;
   double	pz;
 };
-std::vector<met_s> met(3);
+std::vector<met2_s> met2(3);
 
-std::ostream& operator<<(std::ostream& os, const met_s& o)
+std::ostream& operator<<(std::ostream& os, const met2_s& o)
 {
   char r[1024];
-  os << "met" << std::endl;
+  os << "met2" << std::endl;
   sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
   sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
   sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
@@ -609,6 +611,7 @@ struct tau_s
   double	energy;
   double	et;
   double	eta;
+  float	mass;
   double	leadChargedHadrCand_energy;
   double	leadChargedHadrCand_et;
   double	leadChargedHadrCand_eta;
@@ -701,6 +704,7 @@ std::ostream& operator<<(std::ostream& os, const tau_s& o)
   sprintf(r, "  %-32s: %f\n", "energy", (double)o.energy); os << r;
   sprintf(r, "  %-32s: %f\n", "et", (double)o.et); os << r;
   sprintf(r, "  %-32s: %f\n", "eta", (double)o.eta); os << r;
+  sprintf(r, "  %-32s: %f\n", "mass", (double)o.mass); os << r;
   sprintf(r, "  %-32s: %f\n", "leadChargedHadrCand_energy", (double)o.leadChargedHadrCand_energy); os << r;
   sprintf(r, "  %-32s: %f\n", "leadChargedHadrCand_et", (double)o.leadChargedHadrCand_et); os << r;
   sprintf(r, "  %-32s: %f\n", "leadChargedHadrCand_eta", (double)o.leadChargedHadrCand_eta); os << r;
@@ -912,20 +916,20 @@ inline void filljet()
     }
 }
 
-inline void fillmet()
+inline void fillmet2()
 {
-  met.resize(met_energy.size());
-  for(unsigned int i=0; i < met.size(); ++i)
+  met2.resize(met2_energy.size());
+  for(unsigned int i=0; i < met2.size(); ++i)
     {
-      met[i].energy	= met_energy[i];
-      met[i].et	= met_et[i];
-      met[i].eta	= met_eta[i];
-      met[i].p	= met_p[i];
-      met[i].phi	= met_phi[i];
-      met[i].pt	= met_pt[i];
-      met[i].px	= met_px[i];
-      met[i].py	= met_py[i];
-      met[i].pz	= met_pz[i];
+      met2[i].energy	= met2_energy[i];
+      met2[i].et	= met2_et[i];
+      met2[i].eta	= met2_eta[i];
+      met2[i].p	= met2_p[i];
+      met2[i].phi	= met2_phi[i];
+      met2[i].pt	= met2_pt[i];
+      met2[i].px	= met2_px[i];
+      met2[i].py	= met2_py[i];
+      met2[i].pz	= met2_pz[i];
     }
 }
 
@@ -983,6 +987,7 @@ inline void filltau()
       tau[i].energy	= tau_energy[i];
       tau[i].et	= tau_et[i];
       tau[i].eta	= tau_eta[i];
+      tau[i].mass	= tau_mass[i];
       tau[i].leadChargedHadrCand_energy	= tau_leadChargedHadrCand_energy[i];
       tau[i].leadChargedHadrCand_et	= tau_leadChargedHadrCand_et[i];
       tau[i].leadChargedHadrCand_eta	= tau_leadChargedHadrCand_eta[i];
@@ -1088,7 +1093,7 @@ void fillObjects()
   fillelectron();
   fillgenparticlehelper();
   filljet();
-  fillmet();
+  fillmet2();
   fillmuon();
   filltau();
   fillvertex();
@@ -1233,27 +1238,27 @@ void saveSelectedObjects()
   n = 0;
   try
     {
-       n = indexmap["met"].size();
+       n = indexmap["met2"].size();
     }
   catch (...)
     {}
   if ( n > 0 )
     {
-      std::vector<int>& index = indexmap["met"];
+      std::vector<int>& index = indexmap["met2"];
       for(int i=0; i < n; ++i)
         {
           int j = index[i];
-          met_energy[i]	= met_energy[j];
-          met_et[i]	= met_et[j];
-          met_eta[i]	= met_eta[j];
-          met_p[i]	= met_p[j];
-          met_phi[i]	= met_phi[j];
-          met_pt[i]	= met_pt[j];
-          met_px[i]	= met_px[j];
-          met_py[i]	= met_py[j];
-          met_pz[i]	= met_pz[j];
+          met2_energy[i]	= met2_energy[j];
+          met2_et[i]	= met2_et[j];
+          met2_eta[i]	= met2_eta[j];
+          met2_p[i]	= met2_p[j];
+          met2_phi[i]	= met2_phi[j];
+          met2_pt[i]	= met2_pt[j];
+          met2_px[i]	= met2_px[j];
+          met2_py[i]	= met2_py[j];
+          met2_pz[i]	= met2_pz[j];
         }
-      nmet = n;
+      nmet2 = n;
     }
 
   n = 0;
@@ -1327,6 +1332,7 @@ void saveSelectedObjects()
           tau_energy[i]	= tau_energy[j];
           tau_et[i]	= tau_et[j];
           tau_eta[i]	= tau_eta[j];
+          tau_mass[i]	= tau_mass[j];
           tau_leadChargedHadrCand_energy[i]	= tau_leadChargedHadrCand_energy[j];
           tau_leadChargedHadrCand_et[i]	= tau_leadChargedHadrCand_et[j];
           tau_leadChargedHadrCand_eta[i]	= tau_leadChargedHadrCand_eta[j];
@@ -1521,15 +1527,15 @@ void selectVariables(itreestream& stream)
   stream.select("patJet_slimmedJets.px", jet_px);
   stream.select("patJet_slimmedJets.py", jet_py);
   stream.select("patJet_slimmedJets.pz", jet_pz);
-  stream.select("patMET_slimmedMETs.energy", met_energy);
-  stream.select("patMET_slimmedMETs.et", met_et);
-  stream.select("patMET_slimmedMETs.eta", met_eta);
-  stream.select("patMET_slimmedMETs.p", met_p);
-  stream.select("patMET_slimmedMETs.phi", met_phi);
-  stream.select("patMET_slimmedMETs.pt", met_pt);
-  stream.select("patMET_slimmedMETs.px", met_px);
-  stream.select("patMET_slimmedMETs.py", met_py);
-  stream.select("patMET_slimmedMETs.pz", met_pz);
+  stream.select("patMET_slimmedMETs.energy", met2_energy);
+  stream.select("patMET_slimmedMETs.et", met2_et);
+  stream.select("patMET_slimmedMETs.eta", met2_eta);
+  stream.select("patMET_slimmedMETs.p", met2_p);
+  stream.select("patMET_slimmedMETs.phi", met2_phi);
+  stream.select("patMET_slimmedMETs.pt", met2_pt);
+  stream.select("patMET_slimmedMETs.px", met2_px);
+  stream.select("patMET_slimmedMETs.py", met2_py);
+  stream.select("patMET_slimmedMETs.pz", met2_pz);
   stream.select("patMuon_slimmedMuons.charge", muon_charge);
   stream.select("patMuon_slimmedMuons.energy", muon_energy);
   stream.select("patMuon_slimmedMuons.et", muon_et);
@@ -1570,7 +1576,7 @@ void selectVariables(itreestream& stream)
   stream.select("npatElectron_slimmedElectrons", nelectron);
   stream.select("nrecoGenParticleHelper2_prunedGenParticles", ngenparticlehelper);
   stream.select("npatJet_slimmedJets", njet);
-  stream.select("npatMET_slimmedMETs", nmet);
+  stream.select("npatMET_slimmedMETs", nmet2);
   stream.select("npatMuon_slimmedMuons", nmuon);
   stream.select("npatTau_slimmedTaus", ntau);
   stream.select("nrecoVertex_offlineSlimmedPrimaryVertices", nvertex);
@@ -1594,6 +1600,7 @@ void selectVariables(itreestream& stream)
   stream.select("patTau_slimmedTaus.leadChargedHadrCand_rapidity", tau_leadChargedHadrCand_rapidity);
   stream.select("patTau_slimmedTaus.leadChargedHadrCand_theta", tau_leadChargedHadrCand_theta);
   stream.select("patTau_slimmedTaus.leadChargedHadrCand_y", tau_leadChargedHadrCand_y);
+  stream.select("patTau_slimmedTaus.mass", tau_mass);
   stream.select("patTau_slimmedTaus.p", tau_p);
   stream.select("patTau_slimmedTaus.phi", tau_phi);
   stream.select("patTau_slimmedTaus.pt", tau_pt);

@@ -4,6 +4,8 @@
 // Created:     Wed Jul 15 14:54:46 2015 by mkanalyzer.py
 // Author:      Daniele Marconi
 //-----------------------------------------------------------------------------
+#include "CommonHistoCollection.h"
+#include "CutConfiguration.h"
 #include "analyzer.h"
 using namespace std;
 using namespace evt;
