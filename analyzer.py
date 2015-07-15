@@ -1,65 +1,74 @@
 #!/usr/bin/env python
-# ----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #  File:        analyzer.py
-#  Description: Analyzer for simple ntuples, such as those created by
-#               TheNtupleMaker
-#  Created:     Mon Jun 29 15:52:41 2015 by mkanalyzer.py
+#  Description: Analyzer for ntuples created by TheNtupleMaker
+#  Created:     Wed Jul 15 14:54:46 2015 by mkanalyzer.py
 #  Author:      Daniele Marconi
-# ----------------------------------------------------------------------------
-import os, sys, re
-from tnm import *
-from ROOT import *
-# ----------------------------------------------------------------------------
-# -- Constants, procedures and functions
-# ----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+from analyzerlib import *
+# -----------------------------------------------------------------------------
+# -- Procedures and functions
+# -----------------------------------------------------------------------------
 
 
-# ----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 def main():
 
-    cl = commandLine()
-    
-    # Get names of ntuple files to be processed
-    filenames = fileNames(cl.filelist)
+	cmdline = decodeCommandLine()
 
-    # Create tree reader
-    stream = itreestream(filenames, "Events")
-    if not stream.good():
-        error("can't read input files")
+	#  Get names of ntuple files to be processed and open chain of ntuples
 
-    # Create a buffer to receive events from the stream
-    ev = eventBuffer(stream)
+	filenames = getFilenames(cmdline.filelist)
+	stream = itreestream(filenames, "Events")
+	if not stream.good(): error("unable to open ntuple file(s)")
 
-    nevents = ev.size()
-    print "number of events:", nevents
+	# Get number of events
+	nevents = stream.size()
+	print "Number of events:", nevents
 
-    # Create file to store histograms
-    of = outputFile(cl.outputfilename)
+	# Notes:
+	#
+	# 1. Use
+	#   ofile = outputFile(cmdline.outputfile, stream)
+	#
+	# to skim events to output file in addition to writing out histograms.
+	#
+	# 2. Use
+	#   ofile.addEvent(event-weight)
+	#
+	# to specify that the current event is to be added to the output file. If
+	# omitted, the event-weight is taken to be 1.
+	#
+	# 3. Use
+	#    ofile.count(cut-name, event-weight)
+	#
+	# to keep track, in the count histogram, of the number of events passing
+	# a given cut. If omitted, the event-weight is taken to be 1. If you want
+	# the counts in the count histogram to appear in a given order, specify
+	# the order, before entering the event loop, as in the example below
+	# 
+	#   ofile.count("NoCuts", 0)
+	#	ofile.count("GoodEvent", 0)
+	#	ofile.count("Vertex", 0)
+	#	ofile.count("MET", 0)
 
-    # ------------------------------------------------------------------------
-    # Define histograms
-    # ------------------------------------------------------------------------
-    setStyle()
+	ofile = outputFile(cmdline.outputfilename)
 
-    # ------------------------------------------------------------------------
-    # Loop over events
-    # ------------------------------------------------------------------------
-    
-    for entry in xrange(nevents):
-        ev.read(entry)
+	# -------------------------------------------------------------------------
+	# Define histograms
+	# -------------------------------------------------------------------------
+	setStyle()
 
-        # Uncomment the following line if you wish to copy variables into
-        # structs. See the header eventBuffer.h to find out what structs
-        # are available. Alternatively, you can call individual fill
-        # functions, such as ev.fillJets().
-        #ev.fillObjects();
 
-        # analysis
-        
-    ev.close()
-    of.close()
-# ----------------------------------------------------------------------------
-try:
-   main()
-except KeyboardInterrupt:
-   print "bye!"
+
+	# -------------------------------------------------------------------------
+	# Loop over events
+	# -------------------------------------------------------------------------
+	for entry in xrange(nevents):
+		stream.read(entry)
+
+
+	stream.close()
+	ofile.close()
+# -----------------------------------------------------------------------------
+main()

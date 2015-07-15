@@ -1065,7 +1065,7 @@ itreestream::_open(vector<string>& fname, vector<string>& tname)
        filepath.push_back(fname[j]);
      }
      //filepath.push_back(fname[0]);
-     //std::cout << "filepath size: " << filepath.size() << endl;  
+      std::cout << "filepath size: " << filepath.size() << endl;  
 #endif
       //DBUG("itreestream::ctor - new TFile ", 2);
       DBUG("itreestream::ctor - TFile::Open ", 2);
@@ -1089,10 +1089,27 @@ itreestream::_open(vector<string>& fname, vector<string>& tname)
           // ----------------------------------------
           _tree = 0; // make sure to zero
           
-	  treename = _gettree(file_);
-
+          TIter nextkey(file_->GetListOfKeys());
+          
+          while ( TKey* key = (TKey*)nextkey() )
+            {
+              TObject* o = key->ReadObj();
+              if ( o->IsA()->InheritsFrom("TTree") )
+                {
+                  if ( _tree == 0 ) _tree = (TTree*)o; // Record first tree
+                  
+                  if ( string(_tree->GetName()) == "Events" )
+                    {
+                      // Found a tree called Events, so use it
+                      _tree = (TTree*)o;
+                      break;
+                    }
+                }
+            }
           if ( ! _tree )
             fatal("itreestream - NO tree found in file " + filepath[0]);
+          
+          treename = string(_tree->GetName());
           
           cout << endl << "** NB. itreestream - using tree: " 
                << treename << endl << endl;
@@ -1211,37 +1228,6 @@ itreestream::~itreestream()
   close();
 }
 
-string
-itreestream::_gettree(TDirectory* dir, string treename, int depth)
-{
-  depth += 1;
-  if ( depth > 5 ) return treename;
-
-  TIter nextkey(dir->GetListOfKeys());          
-  while ( TKey* key = (TKey*)nextkey() )
-    {
-      TObject* o = key->ReadObj();
-      if ( o->IsA()->InheritsFrom("TTree") )
-	{
-	  if ( _tree == 0 ) _tree = (TTree*)o; // Record first tree
-	  string tname = string(_tree->GetName());
-          treename += tname;
-
-	  if ( tname == "Events" )
-	    {
-	      // Found a tree called Events, so use it
-	      _tree = (TTree*)o;
-	      break;
-	    }
-	}
-      else if ( o->IsA()->InheritsFrom("TDirectory") )
-	{
-	  treename += string(o->GetName())+"/";
-	  treename = _gettree((TDirectory*)o, treename, depth);
-	}
-    }
-  return treename;
-}
 // ------------------------------------------------------------------------
 // Get all branches from the root-file, recursively. Create a
 // Field for each branch/leaf. By doing this recursively we do not have 
@@ -1644,12 +1630,18 @@ itreestream::str() const
       TLeaf* leafcounter = field.leaf->GetLeafCounter(maxcount);
 
       string lfsym("");
-      if (field.iscounter) lfsym = string(" *");
+	  if (field.iscounter) lfsym = string(" *");
 
-      char record[8192];
+      char record[512];
       if ( leafcounter != 0 )
         {
           // This variable has a leaf counter
+ //          sprintf(record, "%5d %s \t/ %s (%d) [%s]\n",
+//                   count,
+//                   field.fullname.c_str(),
+//                   field.leaf->GetTypeName(),
+//                   leafcounter->GetMaximum(),
+//                   leafcounter->GetName());
           sprintf(record, "%5d %s \t/ %s (%d)\n",
                   count,
                   field.fullname.c_str(),

@@ -1,8 +1,8 @@
-#----------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 # Description: Makefile to build analyzers
-# Created:     Mon Jun 29 15:52:41 2015 by mkanalyzer.py
+# Created:     Wed Jul 15 15:50:50 2015 by mkanalyzer.py
 # Author:      Daniele Marconi
-#----------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 ifndef ROOTSYS
 $(error *** Please set up Root)
 endif
@@ -18,6 +18,7 @@ incdir	:= include
 $(shell mkdir -p tmp)
 $(shell mkdir -p lib)
 
+
 # Set this equal to the @ symbol to suppress display of instructions
 # while make executes
 ifdef verbose
@@ -25,12 +26,6 @@ AT 	:=
 else
 AT	:= @
 endif
-
-header  := $(incdir)/tnm.h
-linkdef := $(incdir)/linkdef.h
-cinthdr := $(tmpdir)/dictionary.h
-cintsrc := $(tmpdir)/dictionary.cc
-cintobj := $(tmpdir)/dictionary.o
 
 # Get list of sources to be compiled into applications
 appsrcs	:= $(wildcard *.cc)
@@ -47,9 +42,9 @@ cppobjs	:= $(subst $(srcdir)/,$(tmpdir)/,$(cppsrcs:.cpp=.o))
 
 ccsrcs	:= $(wildcard $(srcdir)/*.cc) 
 ccobjs	:= $(subst $(srcdir)/,$(tmpdir)/,$(ccsrcs:.cc=.o))
-objects	:= $(cppobjs) $(ccobjs) $(cintobj)
+objects	:= $(cppobjs) $(ccobjs)
 
-sharedlib := $(libdir)/libtnm.so
+sharedlib := $(libdir)/lib$(name).so
 
 # Display list of applications to be built
 #say	:= $(shell echo -e "Apps: $(applications)" >& 2)
@@ -58,12 +53,12 @@ sharedlib := $(libdir)/libtnm.so
 #$(error bye!) 
 
 #-----------------------------------------------------------------------
+
 # 	Define which compilers and linkers to use
 
-# 	C++ Compiler/Linker
-CXX	:= clang++
-LINK	:= clang++
-CINT	:= rootcint
+# 	C++ Compiler
+CXX	:= g++
+
 
 # 	Define paths to be searched for C++ header files (#include ....)
 
@@ -78,18 +73,18 @@ CPPFLAGS:= -I. -I$(incdir) -I$(srcdir) $(shell root-config --cflags)
 #	-pipe	communicate via different stages of compilation
 #			using pipes rather than temporary files
 
-CXXFLAGS:= -c -g -O2 -ansi -Wall -pipe -fPIC -Wno-ignored-qualifiers
+CXXFLAGS:= -c -g -O2 -ansi -Wall -pipe -fPIC
 
 #	C++ Linker
 #   set default path to shared library
 
-LD	:= $(LINK) -Wl,-rpath,$(PWD)/$(libdir)
+LD	:= g++ -Wl,-rpath,$(PWD)/$(libdir)
 
 OS	:= $(shell uname -s)
 ifeq ($(OS),Darwin)
-    LDSHARED	:= $(LD) -dynamiclib
+	LDSHARED	:= $(LD) -dynamiclib
 else
-    LDSHARED	:= $(LD) -shared
+	LDSHARED	:= $(LD) -shared
 endif
 
 #	Linker flags
@@ -124,7 +119,7 @@ lib:	$(sharedlib)
 
 $(applications)	: %	: $(tmpdir)/%.o  $(sharedlib)
 	@echo "---> Linking $@"
-	$(AT)$(LD) $(LDFLAGS) $< $(LIBS) -ltnm -o $@
+	$(AT)$(LD) $(LDFLAGS) $< $(LIBS) -lanalyzer -o $@
 
 $(sharedlib)	: $(objects)
 	@echo "---> Linking `basename $@`"
@@ -144,16 +139,9 @@ $(appobjs)	: $(tmpdir)/%.o	: %.cc
 	@echo "---> Compiling `basename $<`" 
 	$(AT)$(CXX) $(CXXFLAGS) $(CPPFLAGS)  $< -o $@ >& $*.FAILED
 	$(AT)rm -rf $*.FAILED
-
-$(cintobj)  : $(cintsrc)
-	@echo "---> Compiling `basename $<`"
-	$(AT)$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
-
-$(cintsrc)  : $(header) $(linkdef)
-	@echo "---> Generating dictionary `basename $@`"
-	$(AT)$(CINT) -f $@ -c -I. -Iinclude -I$(ROOTSYS)/include $+
-
-
 # 	Define clean up rules
 clean   :
+	rm -rf $(tmpdir)/*.o
+
+veryclean   :
 	rm -rf $(tmpdir)/*.o $(applications) $(libdir)/*.so
