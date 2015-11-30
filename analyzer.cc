@@ -225,15 +225,28 @@ int main(int argc, char** argv)
 	  std::vector<int> nones;
 
 	  //smart tau selection
+	  //cout << "DEBUG: Tau vector size: " << tau.size() << endl;
 	  for(unsigned int t =0;t<tau.size();++t){
+		  //cout << "DEBUG: Tau counter: " << t << endl;
 		  if(!(	fabs(tau[t].eta) <= 2.1                              					)) continue;
-		  if(!(       tau[t].pt >= 45.                                            				)) continue;
-		  if(!(       tau[t].tauID_againstElectronMediumMVA5 > 0.5                				)) continue;
+		  //cout << "DEBUG: Eta cut passed for tau : " << t << endl;
+		  //cout << "DEBUG: Tau pt : " << tau[t].pt << endl;
+		  //cout << "DEBUG: Tau eta : " << tau[t].eta << endl;
+		  //cout << "DEBUG: Tau phi : " << tau[t].phi << endl;
+		  //OLDID    //if(!(       tau[t].pt >= 45.                                            				)) continue;
+		  if(!(       tau[t].pt >= 20.                                            				)) continue;
+		  //cout << "DEBUG: Pt cut passed for tau : " << t << endl;
+		  //OLDID  //if(!(       tau[t].tauID_againstElectronMediumMVA5 > 0.5                				)) continue;
+		  if(!(       tau[t].tauID_againstElectronVLooseMVA5 > 0.5                				)) continue;
+		  //cout << "DEBUG: Electron veto cut passed for tau : " << t << endl;
 		  if(!(       tau[t].tauID_againstMuonLoose3 > 0.5                        				)) continue;
+		  //cout << "DEBUG: Muon veto cut passed for tau : " << t << endl;
 		  if(!(       tau[t].leadChargedHadrCand_pt >= 5.0                      				)) continue;
+		  //cout << "DEBUG: leadChargedHadrCand_pt cut passed for tau : " << t << endl;
 		  if(!(       (tau[t].tauID_decayModeFindingNewDMs > 0.5) 
 //TODO(Lele): check if the variable is the miniaods					  //&& (tau[t].signalPFChargedHadrCands_size == 1)	
 					  )) continue;
+		  //cout << "DEBUG: decayModeFindingNewDMs cut passed for tau : " << t << endl;
 
 		  baselineObjectSelectionCollection.tau.push_back(&tau[t]);
 		  /*pTchargedHad->Fill(tau[t].leadPFChargedHadrCand_pt);
@@ -242,9 +255,13 @@ int main(int argc, char** argv)
 		    DMFandProng->Fill(tau[t].tauID_decayModeFindingNewDMs,tau[t].signalPFChargedHadrCands_size);
 		    TightIso->Fill(tau[t].tauID_byTightIsolationMVA3newDMwLT);*/
 
-		  if(!(tau[t].tauID_byTightIsolationMVA3newDMwLT  <= 0.5)) tights.push_back(t);
-		  else if(!(tau[t].tauID_byMediumIsolationMVA3newDMwLT  <= 0.5)) mediums.push_back(t);
-		  else if(!(tau[t].tauID_byLooseIsolationMVA3newDMwLT  <= 0.5)) looses.push_back(t);
+		  //OLDID   if(!(tau[t].tauID_byTightIsolationMVA3newDMwLT  <= 0.5)) tights.push_back(t);
+		  //OLDID   else if(!(tau[t].tauID_byMediumIsolationMVA3newDMwLT  <= 0.5)) mediums.push_back(t);
+		  //OLDID   else if(!(tau[t].tauID_byLooseIsolationMVA3newDMwLT  <= 0.5)) looses.push_back(t);
+		  
+		  if(!(tau[t].tauID_byLooseCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) tights.push_back(t);
+		  else if(!(tau[t].tauID_byMediumCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) mediums.push_back(t);
+		  else if(!(tau[t].tauID_byTightCombinedIsolationDeltaBetaCorr3Hits  <= 0.5)) looses.push_back(t);
 		  //else nones.push_back(t);
 	  }
 
